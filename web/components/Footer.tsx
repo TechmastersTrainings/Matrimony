@@ -3,114 +3,120 @@ import Link from 'next/link';
 
 export function Footer() {
   return (
-    <footer className="bg-[#17202A] text-stone-300 border-t border-[#172554] pt-16 pb-12 text-xs">
+    <footer className="bg-slate-950 text-slate-300 border-t border-red-950 pt-16 pb-12 text-xs">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-2 md:grid-cols-5 gap-8 mb-12">
           {/* Brand Info */}
           <div className="col-span-2 space-y-4">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-full bg-[#172554] text-[#C9A227] flex items-center justify-center font-serif text-sm font-bold border border-[#C9A227]/40">
+              <div className="w-9 h-9 rounded-xl bg-red-800 text-amber-300 flex items-center justify-center font-serif text-lg font-bold border border-amber-400/40">
                 ✝
               </div>
-              <span className="font-serif-heading text-lg font-bold text-white tracking-tight">
-                Christian Matrimony
+              <span className="font-playfair text-xl font-extrabold text-white tracking-tight">
+                Christian<span className="text-amber-500">Matrimony</span>
               </span>
             </div>
 
-            <p className="text-stone-400 max-w-sm leading-relaxed text-xs">
-              A trusted, faith-centered matrimonial platform dedicated to connecting Christian brides, grooms, and families with prayer, integrity, and privacy.
+            <p className="text-slate-400 max-w-sm leading-relaxed text-xs font-medium">
+              India&apos;s dedicated matrimonial portal connecting Christian brides, grooms and families with faith, privacy, and prayer.
             </p>
 
-            <p className="text-[11px] text-stone-500">
-              Initially serving <strong>Bidar, Karnataka</strong> and extending across Christian communities in India.
-            </p>
+            <div className="text-[11px] text-slate-500 space-y-1">
+              <p>📍 Regional Head Office: <strong>Bidar, Karnataka - 585401</strong></p>
+              <p>Serving: <strong>Bidar • Bengaluru • Kalaburagi • Hyderabad • South India</strong></p>
+            </div>
           </div>
 
-          {/* Platform */}
+          {/* Denominations */}
           <div className="space-y-3">
-            <h4 className="font-bold text-white uppercase text-[11px] tracking-wider text-[#C9A227]">
-              Platform
+            <h4 className="font-extrabold text-white uppercase text-[11px] tracking-wider text-amber-400">
+              Denominations
             </h4>
-            <ul className="space-y-2">
+            <ul className="space-y-2 text-slate-400 font-medium">
               <li>
-                <Link href="/" className="hover:text-white transition-colors">
-                  Home
+                <Link href="/discover?denomination=METHODIST" className="hover:text-amber-300 transition-colors">
+                  Methodist Matrimony (MCI)
                 </Link>
               </li>
               <li>
-                <Link href="/#how-it-works" className="hover:text-white transition-colors">
-                  How It Works
+                <Link href="/discover?denomination=CSI" className="hover:text-amber-300 transition-colors">
+                  CSI Christian Matrimony
                 </Link>
               </li>
               <li>
-                <Link href="/#success-stories" className="hover:text-white transition-colors">
-                  Success Stories
+                <Link href="/discover?denomination=CATHOLIC" className="hover:text-amber-300 transition-colors">
+                  Roman Catholic Matrimony
                 </Link>
               </li>
               <li>
-                <Link href="/discover" className="hover:text-white transition-colors">
-                  Browse Profiles
+                <Link href="/discover?denomination=BAPTIST" className="hover:text-amber-300 transition-colors">
+                  Baptist Matrimony
                 </Link>
               </li>
               <li>
-                <Link href="/subscriptions" className="hover:text-white transition-colors">
-                  Membership Plans
+                <Link href="/discover?denomination=PENTECOSTAL" className="hover:text-amber-300 transition-colors">
+                  Pentecostal Matrimony
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Support & Safety */}
+          {/* Quick Links */}
           <div className="space-y-3">
-            <h4 className="font-bold text-white uppercase text-[11px] tracking-wider text-[#C9A227]">
-              Support & Safety
+            <h4 className="font-extrabold text-white uppercase text-[11px] tracking-wider text-amber-400">
+              Explore
             </h4>
-            <ul className="space-y-2">
+            <ul className="space-y-2 text-slate-400 font-medium">
               <li>
-                <span className="text-stone-400">Help Center (Bidar)</span>
+                <Link href="/discover" className="hover:text-amber-300 transition-colors">
+                  Search Matches
+                </Link>
               </li>
               <li>
-                <span className="text-stone-400">Pastoral Support</span>
+                <Link href="/register" className="hover:text-amber-300 transition-colors">
+                  Register Free
+                </Link>
               </li>
               <li>
-                <span className="text-stone-400">Safety & Trust Guidelines</span>
+                <Link href="/subscriptions" className="hover:text-amber-300 transition-colors">
+                  Membership Plans
+                </Link>
               </li>
               <li>
-                <Link href="/verification-status" className="hover:text-white transition-colors">
+                <Link href="/verification-status" className="hover:text-amber-300 transition-colors">
                   Verification Status
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Legal */}
+          {/* Support & Legal */}
           <div className="space-y-3">
-            <h4 className="font-bold text-white uppercase text-[11px] tracking-wider text-[#C9A227]">
-              Legal
+            <h4 className="font-extrabold text-white uppercase text-[11px] tracking-wider text-amber-400">
+              Help & Trust
             </h4>
-            <ul className="space-y-2">
+            <ul className="space-y-2 text-slate-400 font-medium">
               <li>
-                <span className="text-stone-400">Terms of Service</span>
+                <span>Controlled Contact Reveal Policy</span>
               </li>
               <li>
-                <span className="text-stone-400">Privacy Policy</span>
+                <span>Photo Privacy Guidelines</span>
               </li>
               <li>
-                <span className="text-stone-400">Contact Reveal Policy</span>
+                <span>Terms of Service</span>
               </li>
               <li>
-                <span className="text-stone-400">Refund Policy</span>
+                <span>Privacy Policy</span>
               </li>
             </ul>
           </div>
         </div>
 
         {/* Bottom bar */}
-        <div className="pt-8 border-t border-stone-800 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-stone-500">
-          <p>© 2026 Christian Matrimony. All rights reserved.</p>
-          <div className="flex items-center gap-6">
-            <span>Faith • Love • Commitment</span>
-            <span>Made with Prayer for Christian Families</span>
+        <div className="pt-8 border-t border-slate-900 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-slate-500 font-medium">
+          <p>© 2026 Christian Matrimony. Built for Christian Families across India.</p>
+          <div className="flex items-center gap-4 text-amber-400/80">
+            <span>✝ Faith • Family • Commitment</span>
           </div>
         </div>
       </div>

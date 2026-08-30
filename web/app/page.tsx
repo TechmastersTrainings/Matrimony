@@ -1,47 +1,27 @@
 import React from 'react';
-import { HeroSection } from '../components/homepage/HeroSection';
-import { TrustBar } from '../components/homepage/TrustBar';
-import { HowItWorks } from '../components/homepage/HowItWorks';
-import { FeaturedProfiles } from '../components/homepage/FeaturedProfiles';
-import { FaithSection } from '../components/homepage/FaithSection';
-import { WhyChooseUs } from '../components/homepage/WhyChooseUs';
-import { ContactRevealSection } from '../components/homepage/ContactRevealSection';
-import { SuccessStories } from '../components/homepage/SuccessStories';
-import { CommunitySection } from '../components/homepage/CommunitySection';
-import { FinalCTA } from '../components/homepage/FinalCTA';
+import { IndianHeroSection } from '../components/homepage/IndianHeroSection';
+import { DynamicProfilesSection } from '../components/homepage/DynamicProfilesSection';
+import { DenominationsGrid } from '../components/homepage/DenominationsGrid';
+import { IndianTrustSection } from '../components/homepage/IndianTrustSection';
+import { IndianMatchProcess } from '../components/homepage/IndianMatchProcess';
 
 export default function HomePage() {
   return (
-    <div className="flex flex-col min-h-screen">
-      {/* 1. Hero Section */}
-      <HeroSection />
+    <div className="flex flex-col min-h-screen bg-white">
+      {/* 1. Indian Matrimony Hero with Quick Search & Quick Registration */}
+      <IndianHeroSection />
 
-      {/* 2. Trust Strip */}
-      <TrustBar />
+      {/* 2. Real Dynamic Profiles Feed (No dummy mock data, live from DB) */}
+      <DynamicProfilesSection />
 
-      {/* 3. How It Works (4 Connected Steps) */}
-      <HowItWorks />
+      {/* 3. Denominations & Christian Communities Grid */}
+      <DenominationsGrid />
 
-      {/* 4. Featured Profiles Preview */}
-      <FeaturedProfiles />
+      {/* 4. Indian Family Trust, Privacy & Safety */}
+      <IndianTrustSection />
 
-      {/* 5. Faith-Centered Section */}
-      <FaithSection />
-
-      {/* 6. Why Choose Us (4 Feature Cards) */}
-      <WhyChooseUs />
-
-      {/* 7. Contact Reveal Controlled Consent USP */}
-      <ContactRevealSection />
-
-      {/* 8. Real Success Stories & Testimonials */}
-      <SuccessStories />
-
-      {/* 9. Christian Community & 5 Pillars */}
-      <CommunitySection />
-
-      {/* 10. Final Call to Action */}
-      <FinalCTA />
+      {/* 5. 3-Step Matchmaking & Bottom Free Registration Banner */}
+      <IndianMatchProcess />
     </div>
   );
 }
