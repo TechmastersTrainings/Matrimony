@@ -2,21 +2,21 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import { apiClient } from '../../../lib/api-client';
 
-export default function CandidateDetailPage() {
+export default function CandidateProfileDetailPage() {
   const params = useParams();
-  const router = useRouter();
-  const profileId = params?.id ? parseInt(String(params.id)) : null;
+  const profileId = params.id ? parseInt(String(params.id)) : 0;
 
   const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [revealData, setRevealData] = useState<any>(null);
+  const [activePhotoIdx, setActivePhotoIdx] = useState(0);
 
   useEffect(() => {
-    async function load() {
-      if (!profileId) return;
+    async function loadData() {
       try {
         const data = await apiClient.getCandidateProfile(profileId);
         setProfile(data);
@@ -26,24 +26,24 @@ export default function CandidateDetailPage() {
         setLoading(false);
       }
     }
-    load();
+    if (profileId) loadData();
   }, [profileId]);
 
   const handleSendInterest = async () => {
     if (!profile) return;
     try {
       await apiClient.sendInterest(profile.user_id);
-      alert('✓ Matrimonial interest sent successfully!');
+      alert('Matrimonial interest sent successfully.');
     } catch (err: any) {
       alert(`Notice: ${err.message}`);
     }
   };
 
-  const handleContactReveal = async () => {
+  const handleRequestReveal = async () => {
     if (!profile) return;
     try {
-      await apiClient.requestContactReveal(profile.user_id);
-      alert('✓ Contact reveal request submitted. You will be notified upon mutual confirmation.');
+      const res = await apiClient.requestContactReveal(profile.user_id);
+      alert(res.message || 'Contact reveal request sent.');
     } catch (err: any) {
       alert(`Notice: ${err.message}`);
     }
@@ -51,150 +51,232 @@ export default function CandidateDetailPage() {
 
   if (loading) {
     return (
-      <div className="max-w-4xl mx-auto py-20 px-4 text-center">
-        <div className="animate-spin h-8 w-8 border-4 border-amber-700 border-t-transparent rounded-full mx-auto mb-3" />
-        <p className="text-stone-500 text-sm">Loading verified profile...</p>
+      <div className="bg-slate-50 min-h-screen py-16 flex items-center justify-center">
+        <p className="text-xs font-semibold text-slate-500">Loading candidate profile...</p>
       </div>
     );
   }
 
   if (error || !profile) {
     return (
-      <div className="max-w-md mx-auto py-16 px-4 text-center">
-        <div className="p-6 bg-red-50 border border-red-200 rounded-2xl text-red-700">
-          <h3 className="font-bold mb-1">Profile Unavailable</h3>
-          <p className="text-xs">{error || 'This profile is not active or under review.'}</p>
-          <Link href="/discover" className="inline-block mt-4 text-xs font-semibold bg-stone-900 text-white px-4 py-2 rounded-lg">
-            Back to Discover
+      <div className="bg-slate-50 min-h-screen py-16 text-center">
+        <div className="bg-white border border-slate-200 rounded-xl p-8 max-w-md mx-auto">
+          <h2 className="text-lg font-bold text-slate-900 mb-2">Profile Not Available</h2>
+          <p className="text-xs text-slate-600 mb-4">{error || 'This profile is currently under review.'}</p>
+          <Link href="/discover" className="inline-block bg-blue-700 text-white text-xs font-semibold px-4 py-2 rounded-lg">
+            Browse All Profiles
           </Link>
         </div>
       </div>
     );
   }
 
+  const photos: string[] = profile.photos && profile.photos.length > 0
+    ? profile.photos.map((p: any) => p.r2_url || p.url || p)
+    : [profile.primary_photo || ''];
+
   return (
-    <div className="max-w-5xl mx-auto px-4 py-8">
-      {/* Top Banner */}
-      <div className="bg-white border border-stone-200 rounded-3xl p-6 md:p-8 shadow-sm mb-8">
-        <div className="flex flex-col md:flex-row gap-8 items-start">
-          {/* Photo Gallery */}
-          <div className="w-full md:w-80 shrink-0">
-            <div className="aspect-3/4 rounded-2xl overflow-hidden bg-stone-100 mb-3 shadow">
-              <img
-                src={profile.photos?.[0]?.r2_url || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500&auto=format&fit=crop&q=80'}
-                alt={profile.first_name}
-                className="w-full h-full object-cover"
-              />
-            </div>
-            {profile.photos && profile.photos.length > 1 && (
-              <div className="grid grid-cols-4 gap-2">
-                {profile.photos.slice(1, 5).map((p: any) => (
-                  <div key={p.id} className="aspect-square rounded-lg overflow-hidden bg-stone-100">
-                    <img src={p.thumbnail_url || p.r2_url} alt="Photo" className="w-full h-full object-cover" />
+    <div className="bg-slate-50 min-h-screen py-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Navigation Breadcrumb */}
+        <div className="mb-6 flex items-center justify-between">
+          <Link href="/discover" className="text-xs font-semibold text-blue-700 hover:underline flex items-center gap-1">
+            <span>←</span> Back to Search Profiles
+          </Link>
+          <span className="text-xs text-slate-500 font-medium">Profile ID: CM-{profile.id}</span>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          {/* Left Column: Photo Gallery & Quick CTAs */}
+          <div className="lg:col-span-5 space-y-6">
+            <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-xs">
+              {/* Main Photo */}
+              <div className="aspect-4/5 rounded-xl bg-slate-100 overflow-hidden relative">
+                {photos[activePhotoIdx] ? (
+                  <img
+                    src={photos[activePhotoIdx]}
+                    alt={profile.first_name}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-slate-400 text-xs font-medium">
+                    Protected Photo
                   </div>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Core Info & Actions */}
-          <div className="flex-1">
-            <div className="flex items-center justify-between">
-              <div>
-                <span className="text-xs font-bold text-amber-800 bg-amber-50 border border-amber-200 px-3 py-1 rounded-full">
-                  {profile.denomination} • {profile.district}
-                </span>
-                <h1 className="text-3xl font-extrabold text-stone-900 mt-2">
-                  {profile.first_name} {profile.last_name}
-                </h1>
-                <p className="text-sm text-stone-600 mt-1">
-                  {profile.age} Years • {profile.height_cm ? `${profile.height_cm} cm` : ''} • {profile.marital_status?.replace('_', ' ')}
-                </p>
+                )}
+                <div className="absolute top-3 left-3 bg-slate-900/90 text-white text-[10px] font-semibold px-2 py-0.5 rounded-md">
+                  {profile.denomination}
+                </div>
+                <div className="absolute top-3 right-3 bg-emerald-600 text-white text-[10px] font-semibold px-2 py-0.5 rounded-md">
+                  Verified Member
+                </div>
               </div>
 
-              {profile.match_score && (
-                <div className="text-right">
-                  <span className="text-2xl font-black text-emerald-700">{profile.match_score}%</span>
-                  <p className="text-[10px] text-stone-500 uppercase font-semibold">Match Score</p>
+              {/* Thumbnail strip */}
+              {photos.length > 1 && (
+                <div className="flex gap-2 mt-3 overflow-x-auto pb-1">
+                  {photos.map((img, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => setActivePhotoIdx(idx)}
+                      className={`w-14 h-14 rounded-lg overflow-hidden border-2 shrink-0 transition-all ${
+                        activePhotoIdx === idx ? 'border-blue-600 ring-2 ring-blue-100' : 'border-slate-200'
+                      }`}
+                    >
+                      <img src={img} alt="thumb" className="w-full h-full object-cover" />
+                    </button>
+                  ))}
                 </div>
               )}
+
+              {/* Action Buttons */}
+              <div className="mt-5 space-y-2.5">
+                <button
+                  onClick={handleSendInterest}
+                  className="w-full py-2.5 rounded-lg bg-blue-700 hover:bg-blue-800 text-white text-xs font-semibold transition-all shadow-xs"
+                >
+                  Express Matrimonial Interest
+                </button>
+                <button
+                  onClick={handleRequestReveal}
+                  className="w-full py-2.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold border border-slate-300 transition-all"
+                >
+                  Request Contact Details (Phone / Email)
+                </button>
+              </div>
             </div>
 
-            {/* Quick Badges */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 my-6">
-              <div className="p-3 bg-stone-50 rounded-xl border border-stone-100 text-xs">
-                <span className="text-stone-400 block text-[10px] font-semibold uppercase">Church / Parish</span>
-                <span className="font-bold text-stone-800">{profile.church_name || 'Christian Church'}</span>
-              </div>
-              <div className="p-3 bg-stone-50 rounded-xl border border-stone-100 text-xs">
-                <span className="text-stone-400 block text-[10px] font-semibold uppercase">Profession</span>
-                <span className="font-bold text-stone-800">{profile.occupation_title || 'Professional'}</span>
-              </div>
-              <div className="p-3 bg-stone-50 rounded-xl border border-stone-100 text-xs">
-                <span className="text-stone-400 block text-[10px] font-semibold uppercase">Education</span>
-                <span className="font-bold text-stone-800">{profile.highest_education || 'Degree'}</span>
-              </div>
-            </div>
-
-            {/* CTAs */}
-            <div className="flex flex-wrap gap-3">
-              <button
-                onClick={handleSendInterest}
-                className="bg-amber-700 hover:bg-amber-800 text-white text-xs font-semibold px-6 py-3 rounded-xl shadow-xs"
-              >
-                Send Matrimonial Interest
-              </button>
-              <button
-                onClick={handleContactReveal}
-                className="bg-stone-900 hover:bg-stone-800 text-white text-xs font-semibold px-6 py-3 rounded-xl shadow-xs"
-              >
-                Request Contact Reveal
-              </button>
-              <Link
-                href="/chat"
-                className="bg-stone-100 hover:bg-stone-200 text-stone-800 text-xs font-semibold px-6 py-3 rounded-xl"
-              >
-                Chat
-              </Link>
+            {/* Privacy Notice Box */}
+            <div className="bg-blue-50/60 border border-blue-200 rounded-xl p-4 text-xs text-blue-900 space-y-1">
+              <p className="font-semibold">Privacy & Controlled Reveal</p>
+              <p className="text-[11px] text-blue-800 leading-relaxed">
+                Contact information is released only when both candidates/families mutually agree to the request.
+              </p>
             </div>
           </div>
-        </div>
-      </div>
 
-      {/* Sections: Faith, Family, Lifestyle, Preferences */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div className="bg-white border border-stone-200 rounded-3xl p-6 shadow-sm">
-          <h2 className="text-base font-bold text-stone-900 mb-4 flex items-center gap-2">
-            <span>✝</span> Christian Faith & Testimony
-          </h2>
-          <div className="space-y-3 text-xs text-stone-700">
-            <p><strong>Denomination:</strong> {profile.denomination}</p>
-            <p><strong>Church Name:</strong> {profile.church_name || 'N/A'}</p>
-            <p><strong>Pastor / Parish:</strong> {profile.parish_or_pastor || 'N/A'}</p>
-            <p><strong>Baptized:</strong> {profile.is_baptized ? 'Yes (Baptized Believer)' : 'No'}</p>
-            {profile.faith_testimony && (
-              <div className="mt-4 p-3 bg-amber-50/50 border border-amber-100 rounded-xl italic">
-                &quot;{profile.faith_testimony}&quot;
+          {/* Right Column: Detailed Profile Information */}
+          <div className="lg:col-span-7 space-y-6">
+            {/* Header Card */}
+            <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs">
+              <div className="flex items-start justify-between">
+                <div>
+                  <h1 className="text-2xl font-bold text-slate-900">
+                    {profile.first_name} {profile.last_name}
+                  </h1>
+                  <p className="text-xs text-slate-600 mt-1">
+                    {profile.age || '—'} Yrs • {profile.height_cm ? `${profile.height_cm} cm` : '—'} • {profile.marital_status || 'Never Married'}
+                  </p>
+                  <p className="text-xs text-blue-700 font-semibold mt-0.5">
+                    {profile.district}, {profile.state}
+                  </p>
+                </div>
+                <span className="text-xs font-bold text-blue-800 bg-blue-50 border border-blue-200 px-3 py-1 rounded-lg">
+                  {profile.denomination}
+                </span>
               </div>
-            )}
-          </div>
-        </div>
+            </div>
 
-        <div className="bg-white border border-stone-200 rounded-3xl p-6 shadow-sm">
-          <h2 className="text-base font-bold text-stone-900 mb-4 flex items-center gap-2">
-            <span>👨‍👩‍👧‍👦</span> Family & Background
-          </h2>
-          <div className="space-y-3 text-xs text-stone-700">
-            <p><strong>Father&apos;s Name:</strong> {profile.father_name || 'N/A'}</p>
-            <p><strong>Father&apos;s Profession:</strong> {profile.father_occupation || 'N/A'}</p>
-            <p><strong>Mother&apos;s Name:</strong> {profile.mother_name || 'N/A'}</p>
-            <p><strong>Mother&apos;s Profession:</strong> {profile.mother_occupation || 'N/A'}</p>
-            <p><strong>Family Values:</strong> {profile.family_values || 'Traditional'}</p>
-            {profile.about_family && (
-              <div className="mt-4 p-3 bg-stone-50 rounded-xl">
-                {profile.about_family}
+            {/* About & Faith Testimony */}
+            <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs space-y-4">
+              <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider pb-2 border-b border-slate-100">
+                About & Faith Testimony
+              </h2>
+              <div className="space-y-3 text-xs text-slate-700 leading-relaxed">
+                <div>
+                  <h3 className="font-semibold text-slate-900 mb-1">About Me:</h3>
+                  <p className="text-slate-600">{profile.bio || 'Candidate has not added bio details yet.'}</p>
+                </div>
+                {profile.faith_testimony && (
+                  <div>
+                    <h3 className="font-semibold text-slate-900 mb-1">Faith & Church Testimony:</h3>
+                    <p className="text-slate-600">{profile.faith_testimony}</p>
+                  </div>
+                )}
               </div>
-            )}
+            </div>
+
+            {/* Church & Denominational Background */}
+            <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs space-y-4">
+              <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider pb-2 border-b border-slate-100">
+                Church & Denominational Background
+              </h2>
+              <div className="grid grid-cols-2 gap-4 text-xs">
+                <div>
+                  <span className="text-slate-500 block">Denomination</span>
+                  <span className="font-semibold text-slate-900">{profile.denomination || '—'}</span>
+                </div>
+                <div>
+                  <span className="text-slate-500 block">Sub-Denomination</span>
+                  <span className="font-semibold text-slate-900">{profile.sub_denomination || '—'}</span>
+                </div>
+                <div>
+                  <span className="text-slate-500 block">Church / Parish</span>
+                  <span className="font-semibold text-slate-900">{profile.church_name || '—'}</span>
+                </div>
+                <div>
+                  <span className="text-slate-500 block">Pastor / Parish In-Charge</span>
+                  <span className="font-semibold text-slate-900">{profile.parish_or_pastor || '—'}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Education & Career */}
+            <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs space-y-4">
+              <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider pb-2 border-b border-slate-100">
+                Education & Career
+              </h2>
+              <div className="grid grid-cols-2 gap-4 text-xs">
+                <div>
+                  <span className="text-slate-500 block">Highest Education</span>
+                  <span className="font-semibold text-slate-900">{profile.highest_education || '—'}</span>
+                </div>
+                <div>
+                  <span className="text-slate-500 block">Education Field</span>
+                  <span className="font-semibold text-slate-900">{profile.education_field || '—'}</span>
+                </div>
+                <div>
+                  <span className="text-slate-500 block">Occupation</span>
+                  <span className="font-semibold text-slate-900">{profile.occupation_title || '—'}</span>
+                </div>
+                <div>
+                  <span className="text-slate-500 block">Employment Sector</span>
+                  <span className="font-semibold text-slate-900">{profile.employed_in || '—'}</span>
+                </div>
+                <div>
+                  <span className="text-slate-500 block">Work Location</span>
+                  <span className="font-semibold text-slate-900">{profile.work_location || `${profile.district}, ${profile.state}`}</span>
+                </div>
+                <div>
+                  <span className="text-slate-500 block">Annual Income</span>
+                  <span className="font-semibold text-slate-900">{profile.annual_income_min ? `₹ ${profile.annual_income_min.toLocaleString()} PA` : 'Confidential'}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Family Details */}
+            <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs space-y-4">
+              <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider pb-2 border-b border-slate-100">
+                Family Background
+              </h2>
+              <div className="grid grid-cols-2 gap-4 text-xs">
+                <div>
+                  <span className="text-slate-500 block">Father&apos;s Occupation</span>
+                  <span className="font-semibold text-slate-900">{profile.father_occupation || '—'}</span>
+                </div>
+                <div>
+                  <span className="text-slate-500 block">Mother&apos;s Occupation</span>
+                  <span className="font-semibold text-slate-900">{profile.mother_occupation || '—'}</span>
+                </div>
+                <div>
+                  <span className="text-slate-500 block">Family Values</span>
+                  <span className="font-semibold text-slate-900">{profile.family_values || 'Moderate / Traditional'}</span>
+                </div>
+                <div>
+                  <span className="text-slate-500 block">Native Place</span>
+                  <span className="font-semibold text-slate-900">{profile.native_place || profile.district || '—'}</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

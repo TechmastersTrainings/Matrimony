@@ -1,215 +1,149 @@
-"use client";
+'use client';
 
-import React, { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import Link from "next/link";
-import { apiClient } from "../../lib/api-client";
+import React, { useEffect, useState, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import Link from 'next/link';
+import { apiClient } from '../../lib/api-client';
 
-export default function VerifyOtpPage() {
+function VerifyOtpContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const targetParam = searchParams.get("target") || "";
-  const typeParam = searchParams.get("type") || "REGISTRATION";
+  const targetParam = searchParams.get('target') || '';
 
   const [target, setTarget] = useState(targetParam);
-  const [otpCode, setOtpCode] = useState("");
+  const [otpCode, setOtpCode] = useState('');
   const [debugOtp, setDebugOtp] = useState<string | null>(null);
-  const [timer, setTimer] = useState(60);
   const [isLoading, setIsLoading] = useState(false);
+  const [resending, setResending] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [infoMsg, setInfoMsg] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (!target) {
-      const savedTarget = sessionStorage.getItem("verify_target");
-      if (savedTarget) setTarget(savedTarget);
-    }
-    const savedDebug = sessionStorage.getItem("debug_otp");
-    if (savedDebug) setDebugOtp(savedDebug);
-  }, [target]);
-
-  useEffect(() => {
-    if (timer <= 0) return;
-    const interval = setInterval(() => setTimer((t) => t - 1), 1000);
-    return () => clearInterval(interval);
-  }, [timer]);
-
-  const handleVerify = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
+  const handleSendOtp = async () => {
+    if (!target.trim()) return;
+    setResending(true);
     setError(null);
-
     try {
-      const res = await apiClient.verifyOtp(target, otpCode, typeParam);
-      // If user has not completed draft, go to profile creation wizard
-      router.push("/profile/create");
+      const res = await apiClient.sendOtp(target.trim(), 'REGISTRATION');
+      if (res.debug_otp) setDebugOtp(res.debug_otp);
     } catch (err: any) {
-      setError(err.message || "OTP verification failed. Please check the code.");
+      setError(err.message || 'Failed to send OTP.');
     } finally {
-      setIsLoading(false);
+      setResending(false);
     }
   };
 
-  const handleResend = async () => {
-    if (timer > 0) return;
+  useEffect(() => {
+    if (targetParam) {
+      handleSendOtp();
+    }
+  }, [targetParam]);
+
+  const handleVerify = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (otpCode.length !== 6) {
+      setError('Please enter a valid 6-digit OTP code.');
+      return;
+    }
     setIsLoading(true);
     setError(null);
-    setInfoMsg(null);
 
     try {
-      const res = await apiClient.sendOtp(target, typeParam);
-      setTimer(60);
-      setInfoMsg(res.message);
-      if (res.debug_otp) {
-        setDebugOtp(res.debug_otp);
-      }
+      await apiClient.verifyOtp(target.trim(), otpCode.trim(), 'REGISTRATION');
+      router.push('/profile/create');
     } catch (err: any) {
-      setError(err.message || "Failed to resend OTP.");
+      setError(err.message || 'Verification failed. Please check the code.');
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="container" style={{ padding: "60px 0", maxWidth: "480px" }}>
-      <div className="card" style={{ padding: "36px", textAlign: "center" }}>
-        <div
-          style={{
-            width: "56px",
-            height: "56px",
-            borderRadius: "50%",
-            background: "var(--primary-light)",
-            color: "var(--primary)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            margin: "0 auto 16px",
-            fontSize: "1.5rem",
-          }}
-        >
-          📱
+    <div className="bg-slate-50 min-h-[calc(100vh-140px)] py-14 flex items-center justify-center px-4">
+      <div className="bg-white border border-slate-200 rounded-2xl p-8 max-w-md w-full shadow-xs">
+        <div className="text-center mb-6">
+          <div className="w-10 h-10 rounded-xl bg-blue-900 text-white font-bold flex items-center justify-center text-sm mx-auto mb-3 shadow-xs">
+            CM
+          </div>
+          <h1 className="text-2xl font-bold text-slate-900">
+            Verify Mobile Number
+          </h1>
+          <p className="text-xs text-slate-500 mt-1">
+            Enter the 6-digit OTP code sent to your mobile
+          </p>
         </div>
 
-        <h1 style={{ fontSize: "1.75rem", fontWeight: 800, color: "var(--text-main)" }}>
-          Verify Your Mobile / Email
-        </h1>
-        <p style={{ color: "var(--text-muted)", fontSize: "0.9rem", marginTop: "8px" }}>
-          We have sent a 6-digit verification code to: <br />
-          <strong style={{ color: "var(--text-main)" }}>{target || "your mobile/email"}</strong>
-        </p>
-
-        {debugOtp && (
-          <div
-            style={{
-              marginTop: "16px",
-              padding: "10px",
-              backgroundColor: "#fef9c3",
-              border: "1px dashed #ca8a04",
-              borderRadius: "6px",
-              fontSize: "0.85rem",
-              color: "#854d0e",
-            }}
-          >
-            ⚡ Test Mode OTP: <strong>{debugOtp}</strong>
-          </div>
-        )}
-
         {error && (
-          <div
-            style={{
-              marginTop: "16px",
-              padding: "10px",
-              backgroundColor: "#fee2e2",
-              border: "1px solid #f87171",
-              borderRadius: "6px",
-              color: "#b91c1c",
-              fontSize: "0.85rem",
-            }}
-          >
+          <div className="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-xs">
             {error}
           </div>
         )}
 
-        {infoMsg && (
-          <div
-            style={{
-              marginTop: "16px",
-              padding: "10px",
-              backgroundColor: "#dcfce7",
-              border: "1px solid #86efac",
-              borderRadius: "6px",
-              color: "#166534",
-              fontSize: "0.85rem",
-            }}
-          >
-            {infoMsg}
+        {debugOtp && (
+          <div className="mb-4 p-3 rounded-lg bg-blue-50 border border-blue-200 text-blue-900 text-xs font-medium">
+            Test Mode OTP: <strong>{debugOtp}</strong>
           </div>
         )}
 
-        <form onSubmit={handleVerify} style={{ marginTop: "24px" }}>
-          <div style={{ marginBottom: "20px" }}>
+        <form onSubmit={handleVerify} className="space-y-4">
+          <div>
+            <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+              Mobile Number
+            </label>
             <input
               type="text"
+              required
+              value={target}
+              onChange={(e) => setTarget(e.target.value)}
+              placeholder="e.g. 9876543210"
+              className="w-full text-xs font-medium border border-slate-300 rounded-lg p-2.5 bg-slate-50 focus:outline-none focus:border-blue-600 focus:bg-white"
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+              6-Digit OTP Code
+            </label>
+            <input
+              type="text"
+              required
               maxLength={6}
               value={otpCode}
-              onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ""))}
+              onChange={(e) => setOtpCode(e.target.value)}
               placeholder="123456"
-              required
-              autoFocus
-              style={{
-                width: "100%",
-                padding: "14px",
-                fontSize: "1.5rem",
-                letterSpacing: "8px",
-                textAlign: "center",
-                fontWeight: 700,
-                borderRadius: "8px",
-                border: "2px solid var(--primary)",
-                outline: "none",
-              }}
+              className="w-full text-center text-lg tracking-widest font-bold border border-slate-300 rounded-lg p-2.5 bg-slate-50 focus:outline-none focus:border-blue-600 focus:bg-white"
             />
           </div>
 
           <button
             type="submit"
-            disabled={isLoading || otpCode.length < 4}
-            style={{
-              width: "100%",
-              padding: "12px",
-              backgroundColor: "var(--primary)",
-              color: "#ffffff",
-              border: "none",
-              borderRadius: "8px",
-              fontSize: "1rem",
-              fontWeight: 700,
-              cursor: isLoading || otpCode.length < 4 ? "not-allowed" : "pointer",
-              opacity: isLoading || otpCode.length < 4 ? 0.7 : 1,
-            }}
+            disabled={isLoading}
+            className="w-full py-2.5 rounded-lg bg-blue-700 hover:bg-blue-800 text-white font-semibold text-xs transition-all shadow-xs"
           >
-            {isLoading ? "Verifying..." : "Verify & Continue"}
+            {isLoading ? 'Verifying...' : 'Verify OTP & Continue'}
           </button>
         </form>
 
-        <div style={{ marginTop: "24px", fontSize: "0.9rem", color: "var(--text-muted)" }}>
-          {timer > 0 ? (
-            <span>Resend OTP in <strong>{timer}s</strong></span>
-          ) : (
-            <button
-              onClick={handleResend}
-              style={{
-                background: "none",
-                border: "none",
-                color: "var(--primary)",
-                fontWeight: 700,
-                cursor: "pointer",
-                textDecoration: "underline",
-              }}
-            >
-              Resend OTP Now
-            </button>
-          )}
+        <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs">
+          <button
+            type="button"
+            onClick={handleSendOtp}
+            disabled={resending}
+            className="text-blue-700 font-semibold hover:underline"
+          >
+            {resending ? 'Sending...' : 'Resend OTP Code'}
+          </button>
+          <Link href="/login" className="text-slate-500 hover:text-slate-800">
+            Back to Sign In
+          </Link>
         </div>
       </div>
     </div>
+  );
+}
+
+export default function VerifyOtpPage() {
+  return (
+    <Suspense fallback={<div className="p-8 text-center text-xs text-slate-500">Loading verification...</div>}>
+      <VerifyOtpContent />
+    </Suspense>
   );
 }

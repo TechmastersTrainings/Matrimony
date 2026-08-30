@@ -1,16 +1,16 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { apiClient } from "../../lib/api-client";
+import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { apiClient } from '../../lib/api-client';
 
 export default function LoginPage() {
   const router = useRouter();
-  const [loginType, setLoginType] = useState<"password" | "otp">("password");
-  const [identifier, setIdentifier] = useState("");
-  const [password, setPassword] = useState("");
-  const [otpCode, setOtpCode] = useState("");
+  const [loginType, setLoginType] = useState<'password' | 'otp'>('password');
+  const [identifier, setIdentifier] = useState('');
+  const [password, setPassword] = useState('');
+  const [otpCode, setOtpCode] = useState('');
   const [otpSent, setOtpSent] = useState(false);
   const [debugOtp, setDebugOtp] = useState<string | null>(null);
 
@@ -19,18 +19,18 @@ export default function LoginPage() {
 
   const handleSendOtp = async () => {
     if (!identifier.trim()) {
-      setError("Please enter your mobile number or email address.");
+      setError('Please enter your mobile number or email address.');
       return;
     }
     setIsLoading(true);
     setError(null);
 
     try {
-      const res = await apiClient.sendOtp(identifier.trim(), "LOGIN");
+      const res = await apiClient.sendOtp(identifier.trim(), 'LOGIN');
       setOtpSent(true);
       if (res.debug_otp) setDebugOtp(res.debug_otp);
     } catch (err: any) {
-      setError(err.message || "Failed to send OTP.");
+      setError(err.message || 'Failed to send OTP.');
     } finally {
       setIsLoading(false);
     }
@@ -44,120 +44,81 @@ export default function LoginPage() {
     try {
       await apiClient.login({
         identifier: identifier.trim(),
-        password: loginType === "password" ? password : undefined,
-        otp_code: loginType === "otp" ? otpCode : undefined,
+        password: loginType === 'password' ? password : undefined,
+        otp_code: loginType === 'otp' ? otpCode : undefined,
         login_type: loginType,
       });
 
-      router.push("/profile/create");
+      router.push('/discover');
     } catch (err: any) {
-      setError(err.message || "Login failed. Please check your credentials.");
+      setError(err.message || 'Login failed. Please check your credentials.');
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="container" style={{ padding: "60px 0", maxWidth: "480px" }}>
-      <div className="card" style={{ padding: "36px" }}>
-        <div style={{ textAlign: "center", marginBottom: "28px" }}>
-          <h1 style={{ fontSize: "1.85rem", fontWeight: 800, color: "var(--text-main)" }}>
-            Welcome Back
+    <div className="bg-slate-50 min-h-[calc(100vh-140px)] py-14 flex items-center justify-center px-4">
+      <div className="bg-white border border-slate-200 rounded-2xl p-8 max-w-md w-full shadow-xs">
+        <div className="text-center mb-8">
+          <div className="w-10 h-10 rounded-xl bg-blue-900 text-white font-bold flex items-center justify-center text-sm mx-auto mb-3 shadow-xs">
+            CM
+          </div>
+          <h1 className="text-2xl font-bold text-slate-900">
+            Member Login
           </h1>
-          <p style={{ color: "var(--text-muted)", fontSize: "0.9rem", marginTop: "6px" }}>
-            Login to your Christian Matrimony account
+          <p className="text-xs text-slate-500 mt-1">
+            Access your Christian Matrimony account
           </p>
         </div>
 
         {/* Tab Toggle */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap: "8px",
-            backgroundColor: "var(--bg-main)",
-            padding: "4px",
-            borderRadius: "8px",
-            marginBottom: "24px",
-          }}
-        >
+        <div className="grid grid-cols-2 gap-2 bg-slate-100 p-1 rounded-xl mb-6">
           <button
             type="button"
             onClick={() => {
-              setLoginType("password");
+              setLoginType('password');
               setError(null);
             }}
-            style={{
-              padding: "8px 12px",
-              border: "none",
-              borderRadius: "6px",
-              fontWeight: 600,
-              fontSize: "0.85rem",
-              backgroundColor: loginType === "password" ? "#ffffff" : "transparent",
-              color: loginType === "password" ? "var(--primary)" : "var(--text-muted)",
-              boxShadow: loginType === "password" ? "0 1px 3px rgba(0,0,0,0.1)" : "none",
-              cursor: "pointer",
-            }}
+            className={`py-2 text-xs font-semibold rounded-lg transition-all ${
+              loginType === 'password'
+                ? 'bg-white text-slate-900 shadow-xs'
+                : 'text-slate-600 hover:text-slate-900'
+            }`}
           >
             Password Login
           </button>
           <button
             type="button"
             onClick={() => {
-              setLoginType("otp");
+              setLoginType('otp');
               setError(null);
             }}
-            style={{
-              padding: "8px 12px",
-              border: "none",
-              borderRadius: "6px",
-              fontWeight: 600,
-              fontSize: "0.85rem",
-              backgroundColor: loginType === "otp" ? "#ffffff" : "transparent",
-              color: loginType === "otp" ? "var(--primary)" : "var(--text-muted)",
-              boxShadow: loginType === "otp" ? "0 1px 3px rgba(0,0,0,0.1)" : "none",
-              cursor: "pointer",
-            }}
+            className={`py-2 text-xs font-semibold rounded-lg transition-all ${
+              loginType === 'otp'
+                ? 'bg-white text-slate-900 shadow-xs'
+                : 'text-slate-600 hover:text-slate-900'
+            }`}
           >
             OTP Login
           </button>
         </div>
 
         {error && (
-          <div
-            style={{
-              padding: "10px 14px",
-              backgroundColor: "#fee2e2",
-              border: "1px solid #f87171",
-              borderRadius: "8px",
-              color: "#b91c1c",
-              fontSize: "0.85rem",
-              marginBottom: "20px",
-            }}
-          >
+          <div className="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-xs">
             {error}
           </div>
         )}
 
         {debugOtp && (
-          <div
-            style={{
-              padding: "10px 14px",
-              backgroundColor: "#fef9c3",
-              border: "1px dashed #ca8a04",
-              borderRadius: "8px",
-              color: "#854d0e",
-              fontSize: "0.85rem",
-              marginBottom: "20px",
-            }}
-          >
-            ⚡ Test Mode OTP: <strong>{debugOtp}</strong>
+          <div className="mb-4 p-3 rounded-lg bg-blue-50 border border-blue-200 text-blue-900 text-xs font-medium">
+            Test Mode OTP: <strong>{debugOtp}</strong>
           </div>
         )}
 
-        <form onSubmit={handleLogin}>
-          <div style={{ marginBottom: "18px" }}>
-            <label style={{ display: "block", fontSize: "0.85rem", fontWeight: 600, marginBottom: "6px" }}>
+        <form onSubmit={handleLogin} className="space-y-4">
+          <div>
+            <label className="block text-xs font-semibold text-slate-700 mb-1.5">
               Mobile Number or Email
             </label>
             <input
@@ -166,24 +127,15 @@ export default function LoginPage() {
               value={identifier}
               onChange={(e) => setIdentifier(e.target.value)}
               placeholder="e.g. 9876543210 or user@example.com"
-              style={{
-                width: "100%",
-                padding: "10px 12px",
-                borderRadius: "8px",
-                border: "1px solid var(--border)",
-                fontSize: "0.95rem",
-              }}
+              className="w-full text-xs font-medium border border-slate-300 rounded-lg p-2.5 bg-slate-50 focus:outline-none focus:border-blue-600 focus:bg-white transition-all"
             />
           </div>
 
-          {loginType === "password" ? (
-            <div style={{ marginBottom: "20px" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "6px" }}>
-                <label style={{ fontSize: "0.85rem", fontWeight: 600 }}>Password</label>
-                <Link
-                  href="/forgot-password"
-                  style={{ fontSize: "0.8rem", color: "var(--primary)", fontWeight: 600 }}
-                >
+          {loginType === 'password' ? (
+            <div>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="text-xs font-semibold text-slate-700">Password</label>
+                <Link href="/forgot-password" className="text-xs font-semibold text-blue-700 hover:underline">
                   Forgot Password?
                 </Link>
               </div>
@@ -193,52 +145,30 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                style={{
-                  width: "100%",
-                  padding: "10px 12px",
-                  borderRadius: "8px",
-                  border: "1px solid var(--border)",
-                  fontSize: "0.95rem",
-                }}
+                className="w-full text-xs font-medium border border-slate-300 rounded-lg p-2.5 bg-slate-50 focus:outline-none focus:border-blue-600 focus:bg-white transition-all"
               />
             </div>
           ) : (
-            <div style={{ marginBottom: "20px" }}>
-              <div style={{ display: "flex", gap: "8px", marginBottom: "8px" }}>
+            <div>
+              <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                OTP Code
+              </label>
+              <div className="flex gap-2">
                 <input
                   type="text"
                   maxLength={6}
                   value={otpCode}
-                  onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ""))}
-                  placeholder="Enter 6-digit OTP"
-                  style={{
-                    flex: 1,
-                    padding: "10px 12px",
-                    borderRadius: "8px",
-                    border: "1px solid var(--border)",
-                    fontSize: "0.95rem",
-                    textAlign: "center",
-                    letterSpacing: "4px",
-                    fontWeight: 700,
-                  }}
+                  onChange={(e) => setOtpCode(e.target.value)}
+                  placeholder="6-digit OTP"
+                  className="flex-1 text-xs font-medium border border-slate-300 rounded-lg p-2.5 bg-slate-50 focus:outline-none focus:border-blue-600 focus:bg-white transition-all"
                 />
                 <button
                   type="button"
                   onClick={handleSendOtp}
                   disabled={isLoading}
-                  style={{
-                    padding: "10px 14px",
-                    backgroundColor: "var(--primary-light)",
-                    color: "var(--primary)",
-                    border: "1px solid var(--primary)",
-                    borderRadius: "8px",
-                    fontSize: "0.85rem",
-                    fontWeight: 600,
-                    cursor: "pointer",
-                    whiteSpace: "nowrap",
-                  }}
+                  className="px-4 py-2.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold transition-colors border border-slate-300"
                 >
-                  {otpSent ? "Resend OTP" : "Send OTP"}
+                  {otpSent ? 'Resend' : 'Send OTP'}
                 </button>
               </div>
             </div>
@@ -247,28 +177,19 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={isLoading}
-            style={{
-              width: "100%",
-              padding: "12px",
-              backgroundColor: "var(--primary)",
-              color: "#ffffff",
-              border: "none",
-              borderRadius: "8px",
-              fontSize: "1rem",
-              fontWeight: 700,
-              cursor: isLoading ? "not-allowed" : "pointer",
-              opacity: isLoading ? 0.7 : 1,
-            }}
+            className="w-full py-2.5 rounded-lg bg-blue-700 hover:bg-blue-800 text-white font-semibold text-xs transition-all shadow-xs"
           >
-            {isLoading ? "Signing in..." : "Login"}
+            {isLoading ? 'Authenticating...' : 'Sign In to Account'}
           </button>
         </form>
 
-        <div style={{ marginTop: "24px", textAlign: "center", fontSize: "0.9rem", color: "var(--text-muted)" }}>
-          Don&apos;t have an account?{" "}
-          <Link href="/register" style={{ color: "var(--primary)", fontWeight: 600 }}>
-            Register Free
-          </Link>
+        <div className="mt-6 pt-6 border-t border-slate-100 text-center">
+          <p className="text-xs text-slate-500">
+            Don&apos;t have an account?{' '}
+            <Link href="/register" className="font-semibold text-blue-700 hover:underline">
+              Register Free
+            </Link>
+          </p>
         </div>
       </div>
     </div>

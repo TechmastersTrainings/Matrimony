@@ -1,272 +1,205 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { apiClient } from "../../lib/api-client";
+import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { apiClient } from '../../lib/api-client';
 
 export default function RegisterPage() {
   const router = useRouter();
-  const [formData, setFormData] = useState({
-    profile_created_by: "SELF",
-    first_name: "",
-    last_name: "",
-    gender: "MALE",
-    mobile_number: "",
-    email: "",
-    password: "",
-  });
+  const [profileCreatedFor, setProfileCreatedFor] = useState('SELF');
+  const [managerRelation, setManagerRelation] = useState('');
+  const [managerName, setManagerName] = useState('');
+
+  const [mobileNumber, setMobileNumber] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-    setError(null);
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (password !== confirmPassword) {
+      setError('Passwords do not match.');
+      return;
+    }
     setIsLoading(true);
     setError(null);
 
     try {
-      const res = await apiClient.register({
-        ...formData,
-        role: formData.profile_created_by === "SELF" ? "CANDIDATE" : "MANAGER",
+      await apiClient.register({
+        mobile_number: mobileNumber.trim(),
+        email: email.trim(),
+        password: password,
+        role: profileCreatedFor === 'SELF' ? 'CANDIDATE' : 'MANAGER',
+        profile_created_by: profileCreatedFor,
+        manager_name: managerName || undefined,
+        manager_relation: managerRelation || undefined,
       });
 
-      // Save target in session and redirect to OTP verification
-      sessionStorage.setItem("verify_target", formData.mobile_number);
-      sessionStorage.setItem("verify_email", formData.email);
-      if (res.debug_otp) {
-        sessionStorage.setItem("debug_otp", res.debug_otp);
-      }
-
-      router.push(`/verify?target=${encodeURIComponent(formData.mobile_number)}&type=REGISTRATION`);
+      router.push(`/verify?target=${encodeURIComponent(mobileNumber.trim())}`);
     } catch (err: any) {
-      setError(err.message || "Registration failed. Please try again.");
+      setError(err.message || 'Registration failed.');
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="container" style={{ padding: "50px 0", maxWidth: "600px" }}>
-      <div className="card" style={{ padding: "36px" }}>
-        <div style={{ textAlign: "center", marginBottom: "28px" }}>
-          <span className="badge" style={{ marginBottom: "8px", display: "inline-block" }}>
-            Bidar Christian Matrimony
-          </span>
-          <h1 style={{ fontSize: "1.85rem", fontWeight: 800, color: "var(--text-main)" }}>
-            Create Your Account
+    <div className="bg-slate-50 min-h-[calc(100vh-140px)] py-12 flex items-center justify-center px-4">
+      <div className="bg-white border border-slate-200 rounded-2xl p-8 max-w-lg w-full shadow-xs">
+        <div className="text-center mb-8">
+          <div className="w-10 h-10 rounded-xl bg-blue-900 text-white font-bold flex items-center justify-center text-sm mx-auto mb-3 shadow-xs">
+            CM
+          </div>
+          <h1 className="text-2xl font-bold text-slate-900">
+            Create Free Account
           </h1>
-          <p style={{ color: "var(--text-muted)", fontSize: "0.95rem", marginTop: "6px" }}>
-            Begin your journey towards a blessed Christian marriage.
+          <p className="text-xs text-slate-500 mt-1">
+            Join the Christian Matrimony community in Bidar and across India
           </p>
         </div>
 
         {error && (
-          <div
-            style={{
-              padding: "12px 16px",
-              backgroundColor: "#fee2e2",
-              border: "1px solid #f87171",
-              borderRadius: "8px",
-              color: "#b91c1c",
-              fontSize: "0.9rem",
-              marginBottom: "20px",
-            }}
-          >
+          <div className="mb-5 p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-xs">
             {error}
           </div>
         )}
 
-        <form onSubmit={handleSubmit}>
-          <div style={{ marginBottom: "18px" }}>
-            <label style={{ display: "block", fontSize: "0.85rem", fontWeight: 600, marginBottom: "6px" }}>
+        <form onSubmit={handleRegister} className="space-y-4">
+          {/* Profile Created By */}
+          <div>
+            <label className="block text-xs font-semibold text-slate-700 mb-1.5">
               Profile Created By
             </label>
             <select
-              name="profile_created_by"
-              value={formData.profile_created_by}
-              onChange={handleChange}
-              style={{
-                width: "100%",
-                padding: "10px 12px",
-                borderRadius: "8px",
-                border: "1px solid var(--border)",
-                fontSize: "0.95rem",
-                backgroundColor: "#fff",
-              }}
+              value={profileCreatedFor}
+              onChange={(e) => setProfileCreatedFor(e.target.value)}
+              className="w-full text-xs font-medium border border-slate-300 rounded-lg p-2.5 bg-slate-50 focus:outline-none focus:border-blue-600 focus:bg-white"
             >
               <option value="SELF">Self (Candidate)</option>
-              <option value="PARENT">Parent</option>
-              <option value="SIBLING">Sibling</option>
-              <option value="RELATIVE">Relative</option>
-              <option value="FRIEND">Friend</option>
-              <option value="GUARDIAN">Guardian</option>
+              <option value="PARENT">Parent (Father / Mother)</option>
+              <option value="SIBLING">Sibling (Brother / Sister)</option>
+              <option value="RELATIVE">Relative / Guardian</option>
             </select>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px", marginBottom: "18px" }}>
-            <div>
-              <label style={{ display: "block", fontSize: "0.85rem", fontWeight: 600, marginBottom: "6px" }}>
-                First Name
-              </label>
-              <input
-                type="text"
-                name="first_name"
-                required
-                value={formData.first_name}
-                onChange={handleChange}
-                placeholder="Joshua"
-                style={{
-                  width: "100%",
-                  padding: "10px 12px",
-                  borderRadius: "8px",
-                  border: "1px solid var(--border)",
-                  fontSize: "0.95rem",
-                }}
-              />
-            </div>
-            <div>
-              <label style={{ display: "block", fontSize: "0.85rem", fontWeight: 600, marginBottom: "6px" }}>
-                Last Name
-              </label>
-              <input
-                type="text"
-                name="last_name"
-                required
-                value={formData.last_name}
-                onChange={handleChange}
-                placeholder="Fernandes"
-                style={{
-                  width: "100%",
-                  padding: "10px 12px",
-                  borderRadius: "8px",
-                  border: "1px solid var(--border)",
-                  fontSize: "0.95rem",
-                }}
-              />
-            </div>
-          </div>
-
-          <div style={{ marginBottom: "18px" }}>
-            <label style={{ display: "block", fontSize: "0.85rem", fontWeight: 600, marginBottom: "6px" }}>
-              Gender
-            </label>
-            <div style={{ display: "flex", gap: "24px", padding: "6px 0" }}>
-              <label style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer" }}>
+          {profileCreatedFor !== 'SELF' && (
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                  Your Full Name
+                </label>
                 <input
-                  type="radio"
-                  name="gender"
-                  value="MALE"
-                  checked={formData.gender === "MALE"}
-                  onChange={handleChange}
+                  type="text"
+                  required
+                  value={managerName}
+                  onChange={(e) => setManagerName(e.target.value)}
+                  placeholder="Manager / Parent Name"
+                  className="w-full text-xs font-medium border border-slate-300 rounded-lg p-2.5 bg-slate-50 focus:outline-none focus:border-blue-600 focus:bg-white"
                 />
-                <span>Male (Groom)</span>
-              </label>
-              <label style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer" }}>
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                  Relation to Candidate
+                </label>
                 <input
-                  type="radio"
-                  name="gender"
-                  value="FEMALE"
-                  checked={formData.gender === "FEMALE"}
-                  onChange={handleChange}
+                  type="text"
+                  required
+                  value={managerRelation}
+                  onChange={(e) => setManagerRelation(e.target.value)}
+                  placeholder="e.g. Father, Sister"
+                  className="w-full text-xs font-medium border border-slate-300 rounded-lg p-2.5 bg-slate-50 focus:outline-none focus:border-blue-600 focus:bg-white"
                 />
-                <span>Female (Bride)</span>
-              </label>
+              </div>
             </div>
-          </div>
+          )}
 
-          <div style={{ marginBottom: "18px" }}>
-            <label style={{ display: "block", fontSize: "0.85rem", fontWeight: 600, marginBottom: "6px" }}>
+          {/* Contact details */}
+          <div>
+            <label className="block text-xs font-semibold text-slate-700 mb-1.5">
               Mobile Number (10 Digits)
             </label>
-            <input
-              type="tel"
-              name="mobile_number"
-              required
-              value={formData.mobile_number}
-              onChange={handleChange}
-              placeholder="9876543210"
-              style={{
-                width: "100%",
-                padding: "10px 12px",
-                borderRadius: "8px",
-                border: "1px solid var(--border)",
-                fontSize: "0.95rem",
-              }}
-            />
+            <div className="flex rounded-lg border border-slate-300 overflow-hidden focus-within:border-blue-600">
+              <span className="bg-slate-100 px-3 py-2 text-xs font-semibold text-slate-600 border-r border-slate-300 flex items-center">
+                +91
+              </span>
+              <input
+                type="tel"
+                required
+                maxLength={10}
+                value={mobileNumber}
+                onChange={(e) => setMobileNumber(e.target.value)}
+                placeholder="9876543210"
+                className="w-full text-xs font-medium p-2.5 bg-slate-50 focus:outline-none focus:bg-white"
+              />
+            </div>
           </div>
 
-          <div style={{ marginBottom: "18px" }}>
-            <label style={{ display: "block", fontSize: "0.85rem", fontWeight: 600, marginBottom: "6px" }}>
+          <div>
+            <label className="block text-xs font-semibold text-slate-700 mb-1.5">
               Email Address
             </label>
             <input
               type="email"
-              name="email"
               required
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="joshua@example.com"
-              style={{
-                width: "100%",
-                padding: "10px 12px",
-                borderRadius: "8px",
-                border: "1px solid var(--border)",
-                fontSize: "0.95rem",
-              }}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="name@example.com"
+              className="w-full text-xs font-medium border border-slate-300 rounded-lg p-2.5 bg-slate-50 focus:outline-none focus:border-blue-600 focus:bg-white"
             />
           </div>
 
-          <div style={{ marginBottom: "24px" }}>
-            <label style={{ display: "block", fontSize: "0.85rem", fontWeight: 600, marginBottom: "6px" }}>
-              Password (Optional for OTP-only login)
-            </label>
-            <input
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="••••••••"
-              style={{
-                width: "100%",
-                padding: "10px 12px",
-                borderRadius: "8px",
-                border: "1px solid var(--border)",
-                fontSize: "0.95rem",
-              }}
-            />
+          {/* Password fields */}
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                Password
+              </label>
+              <input
+                type="password"
+                required
+                minLength={8}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Min 8 chars"
+                className="w-full text-xs font-medium border border-slate-300 rounded-lg p-2.5 bg-slate-50 focus:outline-none focus:border-blue-600 focus:bg-white"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                Confirm Password
+              </label>
+              <input
+                type="password"
+                required
+                minLength={8}
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="Repeat password"
+                className="w-full text-xs font-medium border border-slate-300 rounded-lg p-2.5 bg-slate-50 focus:outline-none focus:border-blue-600 focus:bg-white"
+              />
+            </div>
           </div>
 
           <button
             type="submit"
             disabled={isLoading}
-            style={{
-              width: "100%",
-              padding: "12px",
-              backgroundColor: "var(--primary)",
-              color: "#ffffff",
-              border: "none",
-              borderRadius: "8px",
-              fontSize: "1rem",
-              fontWeight: 700,
-              cursor: isLoading ? "not-allowed" : "pointer",
-              opacity: isLoading ? 0.7 : 1,
-            }}
+            className="w-full py-2.5 rounded-lg bg-blue-700 hover:bg-blue-800 text-white font-semibold text-xs transition-all shadow-xs mt-2"
           >
-            {isLoading ? "Sending OTP..." : "Continue to OTP Verification"}
+            {isLoading ? 'Creating Account...' : 'Continue to OTP Verification'}
           </button>
         </form>
 
-        <div style={{ marginTop: "24px", textAlign: "center", fontSize: "0.9rem", color: "var(--text-muted)" }}>
-          Already have an account?{" "}
-          <Link href="/login" style={{ color: "var(--primary)", fontWeight: 600 }}>
-            Login here
-          </Link>
+        <div className="mt-6 pt-6 border-t border-slate-100 text-center">
+          <p className="text-xs text-slate-500">
+            Already registered?{' '}
+            <Link href="/login" className="font-semibold text-blue-700 hover:underline">
+              Sign In
+            </Link>
+          </p>
         </div>
       </div>
     </div>

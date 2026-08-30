@@ -2,25 +2,25 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { apiClient } from '../../../lib/api-client';
 import { ProfilePhotoItem } from '../../../types';
 
-export default function PhotosManagerPage() {
-  const router = useRouter();
+export default function ProfilePhotosPage() {
   const [photos, setPhotos] = useState<ProfilePhotoItem[]>([]);
   const [hasMin5, setHasMin5] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
 
   const loadPhotos = async () => {
     try {
       const data = await apiClient.getMyPhotos();
-      setPhotos(data.photos);
+      setPhotos(data.photos || []);
       setHasMin5(data.has_min_5);
     } catch (err: any) {
       setError(err.message || 'Failed to load photos');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -29,18 +29,12 @@ export default function PhotosManagerPage() {
   }, []);
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files || files.length === 0) return;
-
+    const file = e.target.files?.[0];
+    if (!file) return;
     setUploading(true);
     setError(null);
-    setSuccess(null);
-
     try {
-      for (let i = 0; i < files.length; i++) {
-        await apiClient.uploadPhoto(files[i]);
-      }
-      setSuccess(`Successfully uploaded ${files.length} photo(s).`);
+      await apiClient.uploadPhoto(file, photos.length === 0);
       await loadPhotos();
     } catch (err: any) {
       setError(err.message || 'Photo upload failed');
@@ -52,10 +46,9 @@ export default function PhotosManagerPage() {
   const handleSetPrimary = async (photoId: number) => {
     try {
       await apiClient.setPrimaryPhoto(photoId);
-      setSuccess('Primary profile photo updated.');
       await loadPhotos();
     } catch (err: any) {
-      setError(err.message);
+      setError(err.message || 'Failed to set primary photo');
     }
   };
 
@@ -63,113 +56,129 @@ export default function PhotosManagerPage() {
     if (!confirm('Are you sure you want to delete this photo?')) return;
     try {
       await apiClient.deletePhoto(photoId);
-      setSuccess('Photo removed.');
       await loadPhotos();
     } catch (err: any) {
-      setError(err.message);
+      setError(err.message || 'Failed to delete photo');
     }
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-bold text-stone-900">Manage Profile Photos</h1>
-          <p className="text-sm text-stone-600">
-            Upload at least <strong>5 clear photos</strong> of the candidate to submit for pastoral & admin verification.
-          </p>
-        </div>
-        <Link
-          href="/verification-status"
-          className="text-xs bg-stone-100 hover:bg-stone-200 text-stone-800 font-semibold px-3 py-2 rounded-lg"
-        >
-          Check Verification Status →
-        </Link>
-      </div>
-
-      {error && (
-        <div className="p-4 mb-6 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
-          {error}
-        </div>
-      )}
-
-      {success && (
-        <div className="p-4 mb-6 bg-emerald-50 border border-emerald-200 rounded-lg text-emerald-800 text-sm">
-          {success}
-        </div>
-      )}
-
-      {/* Progress banner */}
-      <div className={`p-4 rounded-xl mb-6 flex items-center justify-between ${hasMin5 ? 'bg-emerald-50 border border-emerald-200 text-emerald-900' : 'bg-amber-50 border border-amber-200 text-amber-900'}`}>
-        <div>
-          <h3 className="font-semibold text-sm">
-            {hasMin5 ? '✓ Minimum Photos Requirement Fulfilled' : `⚠ ${5 - photos.length} More Photos Required`}
-          </h3>
-          <p className="text-xs mt-0.5 opacity-90">
-            Currently uploaded: <strong>{photos.length} / 5 minimum</strong>. Supported: JPEG, PNG, WebP (Max 10MB each).
-          </p>
-        </div>
-        <label className="cursor-pointer bg-amber-700 hover:bg-amber-800 text-white text-xs font-semibold px-4 py-2 rounded-lg inline-block">
-          {uploading ? 'Processing...' : '+ Upload Photos'}
-          <input
-            type="file"
-            multiple
-            accept="image/jpeg,image/png,image/webp"
-            className="hidden"
-            onChange={handleFileUpload}
-            disabled={uploading}
-          />
-        </label>
-      </div>
-
-      {/* Photos Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mb-8">
-        {photos.map((photo, idx) => (
-          <div
-            key={photo.id}
-            className={`relative rounded-xl overflow-hidden border-2 bg-stone-100 group aspect-square flex flex-col justify-between ${photo.is_primary ? 'border-amber-700 shadow-md' : 'border-stone-200'}`}
-          >
-            <img
-              src={photo.thumbnail_url || photo.r2_url}
-              alt={`Photo ${idx + 1}`}
-              className="w-full h-full object-cover"
-            />
-            {photo.is_primary && (
-              <span className="absolute top-2 left-2 bg-amber-700 text-white text-[10px] font-bold px-2 py-0.5 rounded shadow">
-                ★ Main Photo
+    <div className="bg-slate-50 min-h-screen py-10">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="bg-white border border-slate-200 rounded-2xl p-8 shadow-xs">
+          {/* Top Title */}
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-6 border-b border-slate-100 gap-4">
+            <div>
+              <span className="text-xs font-bold uppercase tracking-wider text-blue-700 block mb-1">
+                Profile Media Manager
               </span>
-            )}
-            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-              {!photo.is_primary && (
-                <button
-                  onClick={() => handleSetPrimary(photo.id)}
-                  className="bg-white/90 hover:bg-white text-stone-900 text-xs px-2.5 py-1.5 rounded font-medium shadow"
-                >
-                  Set Main
-                </button>
-              )}
-              <button
-                onClick={() => handleDelete(photo.id)}
-                className="bg-red-600 hover:bg-red-700 text-white text-xs px-2.5 py-1.5 rounded font-medium shadow"
-              >
-                Delete
-              </button>
+              <h1 className="text-2xl font-bold text-slate-900">
+                Manage Profile Photos
+              </h1>
+              <p className="text-xs text-slate-500 mt-1">
+                A minimum of 5 photos is required for profile verification and discoverability.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <span className={`text-xs font-bold px-3 py-1 rounded-md ${
+                hasMin5
+                  ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                  : 'bg-amber-50 text-amber-700 border border-amber-200'
+              }`}>
+                {photos.length} of 5 Photos Uploaded
+              </span>
             </div>
           </div>
-        ))}
-      </div>
 
-      {/* Action Footer */}
-      <div className="flex items-center justify-between border-t border-stone-200 pt-6">
-        <Link href="/profile/create" className="text-sm font-medium text-stone-600 hover:text-stone-900">
-          ← Back to Profile Wizard
-        </Link>
-        <Link
-          href="/verification-status"
-          className="bg-amber-700 hover:bg-amber-800 text-white font-semibold text-sm px-6 py-2.5 rounded-lg shadow-sm"
-        >
-          Proceed to Verification →
-        </Link>
+          {error && (
+            <div className="mt-4 p-3 rounded-lg bg-red-50 text-red-700 text-xs border border-red-200">
+              {error}
+            </div>
+          )}
+
+          {/* Photo Grid */}
+          <div className="py-6">
+            {loading ? (
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+                {[1, 2, 3, 4, 5].map((i) => (
+                  <div key={i} className="aspect-square bg-slate-100 rounded-xl animate-pulse" />
+                ))}
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+                {photos.map((p) => (
+                  <div
+                    key={p.id}
+                    className={`relative aspect-square rounded-xl overflow-hidden border-2 group bg-slate-100 ${
+                      p.is_primary ? 'border-blue-600 ring-2 ring-blue-100' : 'border-slate-200'
+                    }`}
+                  >
+                    <img
+                      src={p.r2_url}
+                      alt="Uploaded photo"
+                      className="w-full h-full object-cover"
+                    />
+
+                    {p.is_primary && (
+                      <div className="absolute top-2 left-2 bg-blue-700 text-white text-[9px] font-bold px-2 py-0.5 rounded-md shadow-xs">
+                        Primary
+                      </div>
+                    )}
+
+                    {/* Actions Overlay */}
+                    <div className="absolute inset-0 bg-slate-950/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2 p-2">
+                      {!p.is_primary && (
+                        <button
+                          onClick={() => handleSetPrimary(p.id)}
+                          className="w-full py-1 text-[10px] font-semibold rounded bg-white text-slate-900 hover:bg-slate-100 transition-colors"
+                        >
+                          Set Primary
+                        </button>
+                      )}
+                      <button
+                        onClick={() => handleDelete(p.id)}
+                        className="w-full py-1 text-[10px] font-semibold rounded bg-red-600 text-white hover:bg-red-700 transition-colors"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                ))}
+
+                {/* Upload Placeholder Tile */}
+                <label className="aspect-square rounded-xl border-2 border-dashed border-slate-300 hover:border-blue-600 bg-slate-50 hover:bg-blue-50/50 flex flex-col items-center justify-center p-4 cursor-pointer transition-all">
+                  <span className="text-xs font-bold text-blue-700 mb-1">
+                    {uploading ? 'Processing...' : '+ Add Photo'}
+                  </span>
+                  <span className="text-[10px] text-slate-400 text-center leading-tight">
+                    JPG or PNG (Auto-compressed)
+                  </span>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    disabled={uploading}
+                    onChange={handleFileUpload}
+                    className="hidden"
+                  />
+                </label>
+              </div>
+            )}
+          </div>
+
+          {/* Bottom Actions */}
+          <div className="pt-6 border-t border-slate-100 flex items-center justify-between">
+            <Link href="/verification-status" className="text-xs font-semibold text-blue-700 hover:underline">
+              ← Check Verification Status
+            </Link>
+            <Link
+              href="/discover"
+              className="bg-blue-700 hover:bg-blue-800 text-white text-xs font-semibold px-5 py-2.5 rounded-lg shadow-xs transition-colors"
+            >
+              Browse Matches
+            </Link>
+          </div>
+        </div>
       </div>
     </div>
   );
