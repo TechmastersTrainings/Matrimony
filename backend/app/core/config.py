@@ -39,8 +39,8 @@ class Settings(BaseSettings):
             return [i.strip() for i in v.split(",") if i.strip()]
         return v
 
-    # Database Configuration (Aiven MySQL)
-    DATABASE_URL: Optional[str] = None
+    # Database Configuration (MySQL / Aiven / SQLite dev default)
+    DATABASE_URL: Optional[str] = "sqlite:///./backend/matrimony.db"
     DB_POOL_SIZE: int = 10
     DB_MAX_OVERFLOW: int = 20
     DB_POOL_TIMEOUT: int = 30
@@ -55,7 +55,7 @@ class Settings(BaseSettings):
     R2_ACCESS_KEY_ID: Optional[str] = None
     R2_SECRET_ACCESS_KEY: Optional[str] = None
     R2_BUCKET_NAME: Optional[str] = "christian-matrimony-media"
-    R2_PUBLIC_URL: Optional[str] = None
+    R2_PUBLIC_URL: Optional[str] = "https://media.christianmatrimony.app"
 
     # Monitoring & Error Reporting
     SENTRY_DSN: Optional[str] = None

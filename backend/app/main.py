@@ -15,6 +15,9 @@ from backend.app.core.exceptions import (
     validation_exception_handler,
 )
 from backend.app.core.logger import logger
+from backend.app.models import *  # Import all models to register with Base
+from backend.app.services.database import Base, get_engine, get_session_factory
+from backend.app.services.payment_service import PaymentService
 
 # Initialize Sentry if configured
 if settings.SENTRY_DSN:
@@ -29,6 +32,20 @@ if settings.SENTRY_DSN:
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     logger.info(f"Starting {settings.APP_NAME} in [{settings.ENVIRONMENT}] environment.")
+    # Initialize DB schema
+    try:
+        engine = get_engine()
+        if engine:
+            Base.metadata.create_all(bind=engine)
+            logger.info("Database tables verified and created successfully.")
+            # Seed default subscription plans
+            factory = get_session_factory()
+            if factory:
+                with factory() as db:
+                    PaymentService.initialize_default_plans(db)
+    except Exception as e:
+        logger.warning(f"Database table initialization notice: {e}")
+
     yield
     logger.info(f"Shutting down {settings.APP_NAME}.")
 

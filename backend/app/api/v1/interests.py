@@ -63,7 +63,7 @@ async def respond_interest(
     summary="Get Interests (Received, Sent, or Mutual Matches)",
 )
 async def get_interests(
-    tab: str = Query("received", regex="^(received|sent|matches)$"),
+    tab: str = Query("received", pattern="^(received|sent|matches)$"),
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
