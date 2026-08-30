@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ../../backend
+      dockerfile: Dockerfile
+    container_name: christian_matrimony_backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - ENVIRONMENT=development
+      - DEBUG=True
+      - DATABASE_URL=mysql+pymysql://matrimony_user:matrimony_pass@mysql:3306/matrimony_db
+      - REDIS_URL=redis://redis:6379/0
+      - CORS_ORIGINS=["http://localhost:3000","http://localhost:3001","http://localhost:8000"]
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - matrimony_network
+
+  mysql:
+    image: mysql:8.0
+    container_name: christian_matrimony_local_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: matrimony_db
+      MYSQL_USER: matrimony_user
+      MYSQL_PASSWORD: matrimony_pass
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot_password"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - matrimony_network
+
+  redis:
+    image: redis:7-alpine
+    container_name: christian_matrimony_local_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - matrimony_network
+
+volumes:
+  mysql_data:
+
+networks:
+  matrimony_network:
+    driver: bridge
