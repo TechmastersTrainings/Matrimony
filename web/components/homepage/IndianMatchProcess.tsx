@@ -7,93 +7,91 @@ export function IndianMatchProcess() {
   const steps = [
     {
       num: '1',
-      title: 'Register Free & Add Photos',
-      desc: 'Fill basic details, Christian denomination, church background, and upload 5+ photos.',
+      title: 'Register & Add Profile Details',
+      desc: 'Provide education, career, denomination, and upload 5+ profile photos for moderation.',
       badge: 'Step 1',
     },
     {
       num: '2',
-      title: 'Find Matches & Send Interest',
-      desc: 'Filter by age, city, and denomination. Express interest with mutual respect.',
+      title: 'Search & Express Interest',
+      desc: 'Browse verified profiles by age, city, and denomination, and express interest.',
       badge: 'Step 2',
     },
     {
       num: '3',
-      title: 'Connect & Involve Families',
-      desc: 'Chat in-app, reveal verified contact details with mutual consent, and arrange family meetings.',
+      title: 'Connect with Mutual Consent',
+      desc: 'Communicate via in-app chat and securely exchange verified contact numbers when mutually agreed.',
       badge: 'Step 3',
     },
   ];
 
   return (
-    <section id="how-it-works" className="py-16 bg-gradient-to-b from-white to-amber-50/50 border-t border-rose-100">
+    <section id="how-it-works" className="py-14 bg-slate-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-2xl mx-auto mb-14">
-          <span className="text-xs font-extrabold uppercase tracking-widest text-red-700 bg-red-100 px-3.5 py-1 rounded-full">
-            Simple 3-Step Journey
+        <div className="text-center max-w-2xl mx-auto mb-10">
+          <span className="text-xs font-bold uppercase tracking-wider text-blue-700 block mb-1">
+            Simple 3-Step Process
           </span>
-          <h2 className="font-playfair text-3xl sm:text-4xl font-extrabold text-red-950 mt-3 tracking-tight">
+          <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
             How Christian Matrimony Works
           </h2>
-          <p className="text-sm text-slate-600 mt-2 font-medium">
-            Designed for ease of use by candidates, parents, and elder relatives.
+          <p className="text-xs sm:text-sm text-slate-500 mt-1">
+            An intuitive and transparent workflow for candidates, parents, and families.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
           {steps.map((s, idx) => (
             <div
               key={idx}
-              className="bg-white border-2 border-rose-100 rounded-3xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 card-hover-indian relative flex flex-col justify-between"
+              className="bg-white border border-slate-200 rounded-xl p-6 shadow-2xs hover:shadow-md transition-all duration-200 card-hover-pro flex flex-col justify-between"
             >
               <div>
-                <div className="flex items-center justify-between mb-6">
-                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-red-700 to-rose-900 text-amber-300 flex items-center justify-center font-playfair text-xl font-bold shadow-md">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="w-10 h-10 rounded-lg bg-blue-900 text-white flex items-center justify-center text-sm font-bold shadow-xs">
                     {s.num}
                   </div>
-                  <span className="text-[10px] font-extrabold uppercase tracking-wider px-3 py-1 rounded-full bg-amber-50 text-amber-900 border border-amber-200">
+                  <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-md bg-blue-50 text-blue-700 border border-blue-200">
                     {s.badge}
                   </span>
                 </div>
 
-                <h3 className="font-playfair text-lg font-bold text-red-950 mb-2">
+                <h3 className="text-base font-bold text-slate-900 mb-1.5">
                   {s.title}
                 </h3>
-                <p className="text-xs text-slate-600 leading-relaxed font-medium">
+                <p className="text-xs text-slate-600 leading-relaxed">
                   {s.desc}
                 </p>
               </div>
 
-              <div className="mt-6 pt-4 border-t border-slate-100 text-xs font-bold text-red-800">
-                <span>Free & Safe</span>
+              <div className="mt-5 pt-3 border-t border-slate-100 text-xs font-semibold text-blue-700">
+                <span>Free Registration</span>
               </div>
             </div>
           ))}
         </div>
 
-        {/* Large Indian Matrimonial Bottom Callout Banner */}
-        <div className="bg-gradient-to-r from-red-900 via-rose-900 to-red-950 rounded-3xl p-8 sm:p-12 text-white shadow-2xl relative overflow-hidden text-center border-2 border-amber-400/40">
-          <div className="absolute top-0 right-0 w-80 h-80 bg-amber-400/10 rounded-full blur-3xl pointer-events-none" />
-          <div className="relative z-10 max-w-2xl mx-auto space-y-5">
-            <span className="text-4xl block">✝</span>
-            <h3 className="font-playfair text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-              Your Soulmate Could Be Waiting
+        {/* Bottom Callout Banner */}
+        <div className="bg-slate-900 rounded-2xl p-8 sm:p-10 text-white shadow-xl text-center border border-slate-800">
+          <div className="max-w-xl mx-auto space-y-4">
+            <h3 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+              Begin Your Matrimonial Search Today
             </h3>
-            <p className="text-xs sm:text-sm text-rose-100 font-medium leading-relaxed">
-              Join Christian Matrimony today. Free registration for Christian candidates & families in Bidar, Karnataka, and across India.
+            <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+              Join Christian Matrimony for verified matrimonial matchmaking across Bidar, Karnataka, and India.
             </p>
             <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
               <Link
                 href="/register"
-                className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-slate-950 font-extrabold text-sm shadow-lg transition-all"
+                className="w-full sm:w-auto px-6 py-2.5 rounded-lg bg-blue-700 hover:bg-blue-800 text-white font-semibold text-xs shadow-sm transition-all"
               >
-                Register Free Today →
+                Register Free Profile
               </Link>
               <Link
                 href="/discover"
-                className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-white/10 hover:bg-white/20 text-white font-bold text-sm border border-white/20 transition-all"
+                className="w-full sm:w-auto px-6 py-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs border border-slate-700 transition-all"
               >
-                Browse Matches
+                Browse Profiles
               </Link>
             </div>
           </div>

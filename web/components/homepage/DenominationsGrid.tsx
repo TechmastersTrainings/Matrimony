@@ -8,95 +8,80 @@ export function DenominationsGrid() {
     {
       name: 'Methodist Church in India (MCI)',
       code: 'METHODIST',
-      badge: 'Popular in Bidar & Hyderabad-Karnataka',
-      color: 'from-red-800 to-rose-900',
-      icon: '⛪',
-      desc: 'Centenary Methodist churches and historical community connections.',
+      badge: 'Bidar & Hyderabad-Karnataka',
+      desc: 'Methodist church communities and regional family alliances.',
     },
     {
       name: 'Church of South India (CSI)',
       code: 'CSI',
       badge: 'Karnataka & South India',
-      color: 'from-blue-900 to-indigo-950',
-      icon: '✝',
-      desc: 'United Protestant fellowship across Karnataka & South India dioceses.',
+      desc: 'Protestant fellowship across Karnataka and South India dioceses.',
     },
     {
       name: 'Roman Catholic (RC)',
       code: 'CATHOLIC',
       badge: 'Parish Verified',
-      color: 'from-amber-700 to-amber-900',
-      icon: '🕊️',
-      desc: 'Parish-registered Catholic brides and grooms with baptism certificates.',
+      desc: 'Catholic brides and grooms across Karnataka dioceses.',
     },
     {
       name: 'Baptist Fellowship',
       code: 'BAPTIST',
-      badge: 'Bible Centered',
-      color: 'from-emerald-800 to-teal-950',
-      icon: '📖',
-      desc: 'Independent and Convention Baptist Christian family alliances.',
+      badge: 'Convention & Independent',
+      desc: 'Baptist Christian family alliances and church fellowships.',
     },
     {
       name: 'Pentecostal Assembly',
       code: 'PENTECOSTAL',
-      badge: 'Spirit Led',
-      color: 'from-purple-800 to-purple-950',
-      icon: '🔥',
-      desc: 'Assemblies of God, IPC, Church of God & Spirit-filled believers.',
+      badge: 'Assemblies & IPC',
+      desc: 'Assemblies of God, IPC, Church of God and Spirit-led fellowships.',
     },
     {
       name: 'Protestant & Other Fellowships',
       code: 'PROTESTANT',
-      badge: 'All India',
-      color: 'from-stone-800 to-stone-950',
-      icon: '🌟',
-      desc: 'Mar Thoma, Orthodox, Brethren & Independent Evangelical believers.',
+      badge: 'Pan India',
+      desc: 'Mar Thoma, Orthodox, Brethren and independent evangelical believers.',
     },
   ];
 
   return (
-    <section id="denominations" className="py-16 bg-gradient-to-b from-rose-50/50 via-white to-amber-50/40 border-t border-rose-100">
+    <section id="denominations" className="py-14 bg-slate-50 border-b border-slate-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-2xl mx-auto mb-12">
-          <span className="text-xs font-extrabold uppercase tracking-widest text-red-700 px-3 py-1 bg-red-100 rounded-full">
-            Christian Communities in India
+        <div className="text-center max-w-2xl mx-auto mb-10">
+          <span className="text-xs font-bold uppercase tracking-wider text-blue-700 block mb-1">
+            Christian Communities
           </span>
-          <h2 className="font-playfair text-3xl sm:text-4xl font-extrabold text-red-950 mt-3 tracking-tight">
-            Browse Matches by Christian Denomination
+          <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
+            Browse Profiles by Denomination
           </h2>
-          <p className="text-sm text-slate-600 mt-2 font-medium">
-            Find candidates who share your specific church traditions, fellowship, and family beliefs.
+          <p className="text-xs sm:text-sm text-slate-500 mt-1">
+            Search candidates who share your specific church traditions and family background.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {denominations.map((d) => (
             <Link
               key={d.code}
               href={`/discover?denomination=${d.code}`}
-              className="bg-white border border-rose-100 rounded-3xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 group card-hover-indian flex flex-col justify-between"
+              className="bg-white border border-slate-200 rounded-xl p-5 shadow-2xs hover:shadow-md transition-all duration-200 group card-hover-pro flex flex-col justify-between"
             >
               <div>
-                <div className="flex items-center justify-between mb-4">
-                  <div className="w-12 h-12 rounded-2xl bg-rose-50 border border-rose-200 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
-                    {d.icon}
-                  </div>
-                  <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-amber-50 text-amber-900 border border-amber-200">
+                <div className="flex items-center justify-between mb-2.5">
+                  <span className="text-[11px] font-bold text-blue-700 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-md">
                     {d.badge}
                   </span>
                 </div>
 
-                <h3 className="font-playfair text-lg font-bold text-red-950 group-hover:text-red-700 transition-colors">
+                <h3 className="text-base font-bold text-slate-900 group-hover:text-blue-700 transition-colors">
                   {d.name}
                 </h3>
-                <p className="text-xs text-slate-500 mt-1.5 leading-relaxed">
+                <p className="text-xs text-slate-500 mt-1 leading-relaxed">
                   {d.desc}
                 </p>
               </div>
 
-              <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-extrabold text-red-900 group-hover:text-red-700">
-                <span>Search {d.code} Profiles</span>
+              <div className="mt-5 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-blue-700 group-hover:text-blue-800">
+                <span>View {d.code} Profiles</span>
                 <span className="group-hover:translate-x-1 transition-transform">→</span>
               </div>
             </Link>
