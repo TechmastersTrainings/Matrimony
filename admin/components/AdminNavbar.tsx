@@ -12,11 +12,11 @@ export const AdminNavbar: React.FC = () => {
             <span>{ADMIN_CONFIG.portalName}</span>
           </Link>
           <div className="admin-links">
-            <Link href="/login" className="admin-link">
-              Login (Placeholder)
+            <Link href="/dashboard" className="admin-link">
+              Dashboard
             </Link>
-            <Link href="/dashboard" className="admin-link admin-btn">
-              Dashboard (Placeholder)
+            <Link href="/login" className="admin-link admin-btn">
+              Login (Placeholder)
             </Link>
           </div>
         </div>

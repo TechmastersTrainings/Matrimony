@@ -1,1 +1,40 @@
-"""Database Models (SQLAlchemy). No matrimonial models created in Phase 1."""
+from backend.app.models.enums import (
+    AccountStatus,
+    Denomination,
+    Diet,
+    FamilyStatus,
+    FamilyValues,
+    Gender,
+    HabitStatus,
+    MaritalStatus,
+    OccupationType,
+    OtpType,
+    PhysicalStatus,
+    ProfileCreatedBy,
+    ProfileStatus,
+    UserRole,
+)
+from backend.app.models.profile import Profile, ProfileDraft
+from backend.app.models.user import OtpVerification, RefreshToken, User
+
+__all__ = [
+    "User",
+    "RefreshToken",
+    "OtpVerification",
+    "Profile",
+    "ProfileDraft",
+    "AccountStatus",
+    "UserRole",
+    "ProfileCreatedBy",
+    "Gender",
+    "MaritalStatus",
+    "PhysicalStatus",
+    "Denomination",
+    "OccupationType",
+    "FamilyStatus",
+    "FamilyValues",
+    "Diet",
+    "HabitStatus",
+    "ProfileStatus",
+    "OtpType",
+]

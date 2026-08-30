@@ -1,0 +1,110 @@
+import enum
+
+
+class AccountStatus(str, enum.Enum):
+    PENDING_VERIFICATION = "PENDING_VERIFICATION"
+    ACTIVE = "ACTIVE"
+    SUSPENDED = "SUSPENDED"
+    DEACTIVATED = "DEACTIVATED"
+
+
+class UserRole(str, enum.Enum):
+    CANDIDATE = "CANDIDATE"
+    MANAGER = "MANAGER"
+    ADMIN = "ADMIN"
+    SUPERADMIN = "SUPERADMIN"
+
+
+class ProfileCreatedBy(str, enum.Enum):
+    SELF = "SELF"
+    PARENT = "PARENT"
+    SIBLING = "SIBLING"
+    RELATIVE = "RELATIVE"
+    FRIEND = "FRIEND"
+    GUARDIAN = "GUARDIAN"
+
+
+class Gender(str, enum.Enum):
+    MALE = "MALE"
+    FEMALE = "FEMALE"
+
+
+class MaritalStatus(str, enum.Enum):
+    NEVER_MARRIED = "NEVER_MARRIED"
+    DIVORCED = "DIVORCED"
+    WIDOWED = "WIDOWED"
+    AWAITING_DIVORCE = "AWAITING_DIVORCE"
+
+
+class PhysicalStatus(str, enum.Enum):
+    NORMAL = "NORMAL"
+    PHYSICALLY_CHALLENGED = "PHYSICALLY_CHALLENGED"
+
+
+class Denomination(str, enum.Enum):
+    CATHOLIC = "CATHOLIC"
+    CSI = "CSI"
+    METHODIST = "METHODIST"
+    BAPTIST = "BAPTIST"
+    PENTECOSTAL = "PENTECOSTAL"
+    PROTESTANT = "PROTESTANT"
+    MAR_THOMA = "MAR_THOMA"
+    ORTHODOX = "ORTHODOX"
+    SYRIAN_CATHOLIC = "SYRIAN_CATHOLIC"
+    SEVENTH_DAY_ADVENTIST = "SEVENTH_DAY_ADVENTIST"
+    LUTHERAN = "LUTHERAN"
+    OTHER = "OTHER"
+
+
+class OccupationType(str, enum.Enum):
+    PRIVATE = "PRIVATE"
+    GOVERNMENT = "GOVERNMENT"
+    BUSINESS = "BUSINESS"
+    SELF_EMPLOYED = "SELF_EMPLOYED"
+    DOCTOR_MEDICAL = "DOCTOR_MEDICAL"
+    IT_SOFTWARE = "IT_SOFTWARE"
+    DEFENCE = "DEFENCE"
+    NOT_WORKING = "NOT_WORKING"
+    OTHER = "OTHER"
+
+
+class FamilyStatus(str, enum.Enum):
+    MIDDLE_CLASS = "MIDDLE_CLASS"
+    UPPER_MIDDLE_CLASS = "UPPER_MIDDLE_CLASS"
+    AFFLUENT = "AFFLUENT"
+    RICH = "RICH"
+
+
+class FamilyValues(str, enum.Enum):
+    TRADITIONAL = "TRADITIONAL"
+    MODERATE = "MODERATE"
+    LIBERAL = "LIBERAL"
+
+
+class Diet(str, enum.Enum):
+    VEGETARIAN = "VEGETARIAN"
+    NON_VEGETARIAN = "NON_VEGETARIAN"
+    EGGETARIAN = "EGGETARIAN"
+    VEGAN = "VEGAN"
+
+
+class HabitStatus(str, enum.Enum):
+    NO = "NO"
+    OCCASIONALLY = "OCCASIONALLY"
+    YES = "YES"
+
+
+class ProfileStatus(str, enum.Enum):
+    DRAFT = "DRAFT"
+    SUBMITTED = "SUBMITTED"
+    VERIFIED = "VERIFIED"
+    APPROVED = "APPROVED"
+    REJECTED = "REJECTED"
+
+
+class OtpType(str, enum.Enum):
+    REGISTRATION = "REGISTRATION"
+    LOGIN = "LOGIN"
+    PASSWORD_RESET = "PASSWORD_RESET"
+    VERIFY_MOBILE = "VERIFY_MOBILE"
+    VERIFY_EMAIL = "VERIFY_EMAIL"

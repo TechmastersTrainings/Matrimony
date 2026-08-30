@@ -11,6 +11,17 @@ class Settings(BaseSettings):
     API_V1_STR: str = "/api/v1"
     LOG_LEVEL: str = "INFO"
 
+    # Security & JWT
+    JWT_SECRET_KEY: str = "christian-matrimony-secret-key-change-in-prod-2026"
+    JWT_ALGORITHM: str = "HS256"
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60
+    REFRESH_TOKEN_EXPIRE_DAYS: int = 30
+
+    # OTP Configuration
+    OTP_EXPIRE_MINUTES: int = 10
+    OTP_TEST_MODE: bool = True
+    DEFAULT_TEST_OTP: str = "123456"
+
     # CORS Settings
     CORS_ORIGINS: List[str] = [
         "http://localhost:3000",
@@ -52,7 +63,7 @@ class Settings(BaseSettings):
     # Future Service Abstraction Placeholders
     INDIAN_SMS_PROVIDER_API_KEY: Optional[str] = None
     UPI_PAYMENT_GATEWAY_KEY: Optional[str] = None
-    UPI_PAYMENT_GATEWAY_SECRET: Optional[str] = None
+    UPI_PAYWAY_SECRET: Optional[str] = None
     FIREBASE_CREDENTIALS_PATH: Optional[str] = None
     SMTP_HOST: Optional[str] = None
     SMTP_PORT: int = 587
