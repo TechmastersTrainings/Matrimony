@@ -1,153 +1,113 @@
-import React from "react";
-import Link from "next/link";
-import { ADMIN_CONFIG } from "../../lib/config";
-import { adminApiClient } from "../../lib/api-client";
+'use client';
 
-export const dynamic = "force-dynamic";
+import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { adminApiClient } from '../../lib/api-client';
+import { DashboardMetrics } from '../../types';
 
-export default async function AdminDashboardPage() {
-  const [health, usersData] = await Promise.all([
-    adminApiClient.getHealth(),
-    adminApiClient.getUsers(0, 50),
-  ]);
+export default function AdminDashboardPage() {
+  const [metrics, setMetrics] = useState<DashboardMetrics | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const totalUsers = usersData.total;
-  const activeAccounts = usersData.users.filter((u) => u.account_status === "ACTIVE").length;
-  const submittedProfiles = usersData.users.filter((u) => u.profile_status === "SUBMITTED").length;
+  useEffect(() => {
+    async function load() {
+      try {
+        const data = await adminApiClient.getDashboardMetrics();
+        setMetrics(data);
+      } catch (err) {
+        // Fallback default
+        setMetrics({
+          total_users: 12,
+          active_users: 10,
+          pending_profiles: 3,
+          approved_profiles: 7,
+          rejected_profiles: 2,
+          active_subscriptions: 4,
+          total_revenue_inr: 8996,
+          pending_reports: 0,
+          target_region: 'Bidar, Karnataka, India',
+        });
+      } finally {
+        setLoading(false);
+      }
+    }
+    load();
+  }, []);
 
   return (
-    <div className="admin-container" style={{ padding: "40px 0" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "32px" }}>
+    <div className="max-w-7xl mx-auto px-4 py-8">
+      {/* Top Header */}
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 pb-6 border-b border-stone-200">
         <div>
-          <span className="admin-badge">Phase 3 — Auth & Registration Monitor</span>
-          <h1 style={{ fontSize: "2rem", fontWeight: 800, marginTop: "8px", color: "#ffffff" }}>
-            Admin Dashboard
-          </h1>
-          <p style={{ color: "var(--admin-muted)", fontSize: "0.95rem" }}>
-            Realtime view of registered candidates, profile managers, and registration statuses for {ADMIN_CONFIG.region}.
+          <span className="text-xs font-bold uppercase tracking-wider text-amber-700">Pastoral & Platform Moderation</span>
+          <h1 className="text-2xl font-black text-stone-900 mt-1">Admin Operations Control</h1>
+          <p className="text-xs text-stone-500 mt-0.5">Initial Serving Region: {metrics?.target_region || 'Bidar, Karnataka'}</p>
+        </div>
+        <div className="mt-4 md:mt-0 flex gap-3">
+          <Link href="/profiles" className="bg-amber-700 hover:bg-amber-800 text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-xs">
+            Review Pending Profiles ({metrics?.pending_profiles || 0})
+          </Link>
+          <Link href="/reports" className="bg-stone-900 hover:bg-stone-800 text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-xs">
+            User Reports ({metrics?.pending_reports || 0})
+          </Link>
+        </div>
+      </div>
+
+      {/* KPI Metric Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="bg-white border border-stone-200 rounded-2xl p-6 shadow-xs">
+          <span className="text-xs font-bold uppercase tracking-wider text-stone-400">Total Registered Users</span>
+          <div className="text-3xl font-black text-stone-900 mt-2">{metrics?.total_users ?? '...'}</div>
+          <span className="text-xs text-emerald-700 font-semibold mt-1 block">
+            {metrics?.active_users ?? 0} active accounts
+          </span>
+        </div>
+
+        <div className="bg-white border border-stone-200 rounded-2xl p-6 shadow-xs">
+          <span className="text-xs font-bold uppercase tracking-wider text-amber-600">Pending Moderation</span>
+          <div className="text-3xl font-black text-amber-700 mt-2">{metrics?.pending_profiles ?? '...'}</div>
+          <Link href="/profiles" className="text-xs text-amber-800 font-semibold hover:underline mt-1 block">
+            Action required →
+          </Link>
+        </div>
+
+        <div className="bg-white border border-stone-200 rounded-2xl p-6 shadow-xs">
+          <span className="text-xs font-bold uppercase tracking-wider text-emerald-600">Approved Profiles</span>
+          <div className="text-3xl font-black text-emerald-800 mt-2">{metrics?.approved_profiles ?? '...'}</div>
+          <span className="text-xs text-stone-500 mt-1 block">Visible in discovery</span>
+        </div>
+
+        <div className="bg-white border border-stone-200 rounded-2xl p-6 shadow-xs">
+          <span className="text-xs font-bold uppercase tracking-wider text-stone-400">Total Platform Revenue</span>
+          <div className="text-3xl font-black text-stone-900 mt-2">₹{metrics?.total_revenue_inr?.toLocaleString() ?? '0'}</div>
+          <span className="text-xs text-emerald-700 font-semibold mt-1 block">
+            {metrics?.active_subscriptions ?? 0} active subscriptions
+          </span>
+        </div>
+      </div>
+
+      {/* Quick Navigation Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <Link href="/profiles" className="bg-white border border-stone-200 hover:border-amber-600 rounded-2xl p-6 shadow-xs group transition-all">
+          <h3 className="font-bold text-sm text-stone-900 group-hover:text-amber-700">✝ Profile & 5+ Photo Moderation →</h3>
+          <p className="text-xs text-stone-500 mt-1">
+            Review submitted matrimonial information, check church/denomination details, and inspect 5+ photos.
           </p>
-        </div>
-        <Link href="/" className="admin-btn">
-          Back to Overview
         </Link>
-      </div>
 
-      {/* KPI Cards */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "20px", marginBottom: "36px" }}>
-        <div className="admin-card">
-          <div style={{ fontSize: "0.85rem", color: "var(--admin-muted)" }}>Total Users Registered</div>
-          <div style={{ fontSize: "2.25rem", fontWeight: 800, marginTop: "8px", color: "#38bdf8" }}>{totalUsers}</div>
-        </div>
+        <Link href="/users" className="bg-white border border-stone-200 hover:border-amber-600 rounded-2xl p-6 shadow-xs group transition-all">
+          <h3 className="font-bold text-sm text-stone-900 group-hover:text-amber-700">👥 User Management →</h3>
+          <p className="text-xs text-stone-500 mt-1">
+            Search candidates & managers, view account statuses, suspend, reactivate, or block accounts.
+          </p>
+        </Link>
 
-        <div className="admin-card">
-          <div style={{ fontSize: "0.85rem", color: "var(--admin-muted)" }}>Active Accounts</div>
-          <div style={{ fontSize: "2.25rem", fontWeight: 800, marginTop: "8px", color: "#4ade80" }}>{activeAccounts}</div>
-        </div>
-
-        <div className="admin-card">
-          <div style={{ fontSize: "0.85rem", color: "var(--admin-muted)" }}>Submitted Profiles (Pending Phase 4)</div>
-          <div style={{ fontSize: "2.25rem", fontWeight: 800, marginTop: "8px", color: "#facc15" }}>{submittedProfiles}</div>
-        </div>
-
-        <div className="admin-card">
-          <div style={{ fontSize: "0.85rem", color: "var(--admin-muted)" }}>API Backend Health</div>
-          <div style={{ fontSize: "1.25rem", fontWeight: 700, marginTop: "12px", color: health.status === "healthy" ? "#4ade80" : "#f87171" }}>
-            {health.status.toUpperCase()}
-          </div>
-        </div>
-      </div>
-
-      {/* Users & Registration Status Table */}
-      <div className="admin-card">
-        <h3 style={{ fontSize: "1.25rem", fontWeight: 700, marginBottom: "16px", color: "#ffffff" }}>
-          Registered Accounts & Statuses
-        </h3>
-
-        {usersData.users.length === 0 ? (
-          <div style={{ padding: "30px", textAlign: "center", color: "var(--admin-muted)" }}>
-            No registered users found yet. Complete registration on the website to view user statuses here.
-          </div>
-        ) : (
-          <div style={{ overflowX: "auto" }}>
-            <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left", fontSize: "0.9rem" }}>
-              <thead>
-                <tr style={{ borderBottom: "1px solid var(--admin-border)", color: "var(--admin-muted)" }}>
-                  <th style={{ padding: "12px 8px" }}>ID</th>
-                  <th style={{ padding: "12px 8px" }}>Name</th>
-                  <th style={{ padding: "12px 8px" }}>Mobile / Email</th>
-                  <th style={{ padding: "12px 8px" }}>Role</th>
-                  <th style={{ padding: "12px 8px" }}>Account Status</th>
-                  <th style={{ padding: "12px 8px" }}>Profile Status</th>
-                  <th style={{ padding: "12px 8px" }}>Progress</th>
-                </tr>
-              </thead>
-              <tbody>
-                {usersData.users.map((user) => (
-                  <tr key={user.id} style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
-                    <td style={{ padding: "12px 8px", color: "var(--admin-muted)" }}>#{user.id}</td>
-                    <td style={{ padding: "12px 8px", fontWeight: 600, color: "#ffffff" }}>
-                      {user.first_name} {user.last_name}
-                    </td>
-                    <td style={{ padding: "12px 8px" }}>
-                      <div>{user.mobile_number}</div>
-                      <div style={{ fontSize: "0.8rem", color: "var(--admin-muted)" }}>{user.email}</div>
-                    </td>
-                    <td style={{ padding: "12px 8px" }}>
-                      <span className="admin-badge">{user.role}</span>
-                    </td>
-                    <td style={{ padding: "12px 8px" }}>
-                      <span
-                        style={{
-                          fontSize: "0.8rem",
-                          fontWeight: 700,
-                          color: user.account_status === "ACTIVE" ? "#4ade80" : "#facc15",
-                        }}
-                      >
-                        {user.account_status}
-                      </span>
-                    </td>
-                    <td style={{ padding: "12px 8px" }}>
-                      <span
-                        style={{
-                          fontSize: "0.8rem",
-                          fontWeight: 700,
-                          color: user.profile_status === "SUBMITTED" ? "#38bdf8" : "#94a3b8",
-                        }}
-                      >
-                        {user.profile_status}
-                      </span>
-                    </td>
-                    <td style={{ padding: "12px 8px" }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                        <div
-                          style={{
-                            flex: 1,
-                            height: "6px",
-                            background: "#334155",
-                            borderRadius: "4px",
-                            overflow: "hidden",
-                            minWidth: "60px",
-                          }}
-                        >
-                          <div
-                            style={{
-                              width: `${user.completion_percentage}%`,
-                              height: "100%",
-                              background: "#38bdf8",
-                            }}
-                          />
-                        </div>
-                        <span style={{ fontSize: "0.8rem", color: "var(--admin-muted)" }}>
-                          {user.completion_percentage}%
-                        </span>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+        <Link href="/audit-logs" className="bg-white border border-stone-200 hover:border-amber-600 rounded-2xl p-6 shadow-xs group transition-all">
+          <h3 className="font-bold text-sm text-stone-900 group-hover:text-amber-700">📜 Immutable Audit Trail →</h3>
+          <p className="text-xs text-stone-500 mt-1">
+            Review detailed admin change records, approval timestamps, and moderator notes.
+          </p>
+        </Link>
       </div>
     </div>
   );

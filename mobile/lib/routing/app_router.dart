@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../screens/chat_screen.dart';
+import '../screens/discover_screen.dart';
 import '../screens/home_screen.dart';
 import '../screens/login_screen.dart';
 import '../screens/otp_screen.dart';
@@ -12,6 +14,8 @@ class AppRouter {
   static const String register = '/register';
   static const String otp = '/otp';
   static const String profileWizard = '/profile-wizard';
+  static const String discover = '/discover';
+  static const String chat = '/chat';
   static const String home = '/home';
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
@@ -33,6 +37,16 @@ class AppRouter {
         );
       case profileWizard:
         return MaterialPageRoute(builder: (_) => const ProfileWizardScreen());
+      case discover:
+        return MaterialPageRoute(builder: (_) => const DiscoverScreen());
+      case chat:
+        final args = settings.arguments as Map<String, dynamic>? ?? {};
+        return MaterialPageRoute(
+          builder: (_) => ChatScreen(
+            otherUserId: args['otherUserId'],
+            partnerName: args['partnerName'],
+          ),
+        );
       case home:
         return MaterialPageRoute(builder: (_) => const HomeScreen());
       default:

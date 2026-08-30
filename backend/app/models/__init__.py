@@ -1,21 +1,35 @@
 from backend.app.models.enums import (
     AccountStatus,
+    AuditAction,
+    ContactRevealStatus,
     Denomination,
     Diet,
     FamilyStatus,
     FamilyValues,
     Gender,
     HabitStatus,
+    InterestStatus,
     MaritalStatus,
     OccupationType,
     OtpType,
+    PaymentPurpose,
+    PaymentStatus,
+    PhotoStatus,
     PhysicalStatus,
     ProfileCreatedBy,
     ProfileStatus,
+    ReportStatus,
+    ReportType,
+    SubscriptionPlanCode,
     UserRole,
 )
+from backend.app.models.interaction import ChatMessage, UserBlock, UserInterest, UserReport
+from backend.app.models.photo import ProfilePhoto
 from backend.app.models.profile import Profile, ProfileDraft
+from backend.app.models.settings import PlatformSetting
+from backend.app.models.subscription import ContactRevealRequest, PaymentOrder, SubscriptionPlan, UserSubscription
 from backend.app.models.user import OtpVerification, RefreshToken, User
+from backend.app.models.verification import AuditLog, ProfileVerification
 
 __all__ = [
     "User",
@@ -23,6 +37,18 @@ __all__ = [
     "OtpVerification",
     "Profile",
     "ProfileDraft",
+    "ProfilePhoto",
+    "ProfileVerification",
+    "AuditLog",
+    "UserInterest",
+    "UserBlock",
+    "UserReport",
+    "ChatMessage",
+    "SubscriptionPlan",
+    "UserSubscription",
+    "PaymentOrder",
+    "ContactRevealRequest",
+    "PlatformSetting",
     "AccountStatus",
     "UserRole",
     "ProfileCreatedBy",
@@ -36,5 +62,14 @@ __all__ = [
     "Diet",
     "HabitStatus",
     "ProfileStatus",
+    "PhotoStatus",
     "OtpType",
+    "InterestStatus",
+    "ReportType",
+    "ReportStatus",
+    "SubscriptionPlanCode",
+    "PaymentStatus",
+    "PaymentPurpose",
+    "ContactRevealStatus",
+    "AuditAction",
 ]

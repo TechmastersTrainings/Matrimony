@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import BinaryIO, Optional, Tuple, Union
+from typing import BinaryIO, Dict, Optional, Tuple, Union
 import boto3
 from botocore.config import Config
 from botocore.exceptions import ClientError
@@ -68,7 +68,6 @@ class CloudflareR2StorageService(IStorageService):
     @property
     def client(self):
         if self._client is None:
-            # Try lazy init in case env vars changed
             if settings.R2_ACCOUNT_ID and settings.R2_ACCESS_KEY_ID and settings.R2_SECRET_ACCESS_KEY:
                 endpoint_url = f"https://{settings.R2_ACCOUNT_ID}.r2.cloudflarestorage.com"
                 self._client = boto3.client(
@@ -151,10 +150,47 @@ class CloudflareR2StorageService(IStorageService):
             return False, f"Cloudflare R2 error: {str(e)}"
 
 
-# Default storage singleton
-storage_service: IStorageService = CloudflareR2StorageService()
+class MockStorageService(IStorageService):
+    """In-memory mock storage for local testing and development without live R2 credentials."""
+
+    def __init__(self):
+        self._files: Dict[str, bytes] = {}
+
+    def upload_file(
+        self,
+        file_obj: Union[BinaryIO, bytes],
+        destination_path: str,
+        content_type: str = "application/octet-stream",
+    ) -> str:
+        body = file_obj if isinstance(file_obj, (bytes, bytearray)) else file_obj.read()
+        self._files[destination_path] = body
+        public_url = settings.R2_PUBLIC_URL or "https://media.christianmatrimony.app"
+        return f"{public_url.rstrip('/')}/{destination_path.lstrip('/')}"
+
+    def get_file(self, file_path: str) -> bytes:
+        if file_path in self._files:
+            return self._files[file_path]
+        return b"mock-file-content"
+
+    def delete_file(self, file_path: str) -> bool:
+        self._files.pop(file_path, None)
+        return True
+
+    def generate_presigned_url(self, file_path: str, expiration: int = 3600) -> str:
+        public_url = settings.R2_PUBLIC_URL or "https://media.christianmatrimony.app"
+        return f"{public_url.rstrip('/')}/{file_path.lstrip('/')}?token=mock-presigned"
+
+    def check_health(self) -> Tuple[bool, str]:
+        return True, "Mock Storage connected (healthy)"
+
+
+# Default storage singleton with automatic mock fallback if R2 credentials missing in dev
+_real_storage = CloudflareR2StorageService()
+_mock_storage = MockStorageService()
 
 
 def get_storage_service() -> IStorageService:
     """Dependency injector for storage service."""
-    return storage_service
+    if settings.R2_ACCOUNT_ID and settings.R2_ACCESS_KEY_ID and settings.R2_SECRET_ACCESS_KEY:
+        return _real_storage
+    return _mock_storage

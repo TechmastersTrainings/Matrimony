@@ -6,13 +6,15 @@ class AccountStatus(str, enum.Enum):
     ACTIVE = "ACTIVE"
     SUSPENDED = "SUSPENDED"
     DEACTIVATED = "DEACTIVATED"
+    BLOCKED = "BLOCKED"
 
 
 class UserRole(str, enum.Enum):
     CANDIDATE = "CANDIDATE"
     MANAGER = "MANAGER"
+    MODERATOR = "MODERATOR"
     ADMIN = "ADMIN"
-    SUPERADMIN = "SUPERADMIN"
+    SUPER_ADMIN = "SUPER_ADMIN"
 
 
 class ProfileCreatedBy(str, enum.Enum):
@@ -97,7 +99,15 @@ class HabitStatus(str, enum.Enum):
 class ProfileStatus(str, enum.Enum):
     DRAFT = "DRAFT"
     SUBMITTED = "SUBMITTED"
-    VERIFIED = "VERIFIED"
+    UNDER_REVIEW = "UNDER_REVIEW"
+    APPROVED = "APPROVED"
+    CHANGES_REQUIRED = "CHANGES_REQUIRED"
+    REJECTED = "REJECTED"
+    SUSPENDED = "SUSPENDED"
+
+
+class PhotoStatus(str, enum.Enum):
+    PENDING_REVIEW = "PENDING_REVIEW"
     APPROVED = "APPROVED"
     REJECTED = "REJECTED"
 
@@ -108,3 +118,65 @@ class OtpType(str, enum.Enum):
     PASSWORD_RESET = "PASSWORD_RESET"
     VERIFY_MOBILE = "VERIFY_MOBILE"
     VERIFY_EMAIL = "VERIFY_EMAIL"
+
+
+class InterestStatus(str, enum.Enum):
+    PENDING = "PENDING"
+    ACCEPTED = "ACCEPTED"
+    DECLINED = "DECLINED"
+    CANCELLED = "CANCELLED"
+
+
+class ReportType(str, enum.Enum):
+    PROFILE = "PROFILE"
+    PHOTO = "PHOTO"
+    MESSAGE = "MESSAGE"
+    BEHAVIOUR = "BEHAVIOUR"
+    OTHER = "OTHER"
+
+
+class ReportStatus(str, enum.Enum):
+    PENDING = "PENDING"
+    REVIEWED = "REVIEWED"
+    ACTION_TAKEN = "ACTION_TAKEN"
+    DISMISSED = "DISMISSED"
+
+
+class SubscriptionPlanCode(str, enum.Enum):
+    FREE = "FREE"
+    STANDARD = "STANDARD"
+    PREMIUM = "PREMIUM"
+
+
+class PaymentStatus(str, enum.Enum):
+    CREATED = "CREATED"
+    PAID = "PAID"
+    FAILED = "FAILED"
+    REFUNDED = "REFUNDED"
+
+
+class PaymentPurpose(str, enum.Enum):
+    SUBSCRIPTION = "SUBSCRIPTION"
+    CONTACT_REVEAL = "CONTACT_REVEAL"
+
+
+class ContactRevealStatus(str, enum.Enum):
+    PENDING_APPROVAL = "PENDING_APPROVAL"
+    APPROVED_PENDING_PAYMENT = "APPROVED_PENDING_PAYMENT"
+    COMPLETED = "COMPLETED"
+    DECLINED = "DECLINED"
+    EXPIRED = "EXPIRED"
+
+
+class AuditAction(str, enum.Enum):
+    PROFILE_APPROVE = "PROFILE_APPROVE"
+    PROFILE_REJECT = "PROFILE_REJECT"
+    PROFILE_REQUEST_CHANGES = "PROFILE_REQUEST_CHANGES"
+    PROFILE_SUSPEND = "PROFILE_SUSPEND"
+    PROFILE_EDIT_APPROVED = "PROFILE_EDIT_APPROVED"
+    PHOTO_MODERATE = "PHOTO_MODERATE"
+    USER_SUSPEND = "USER_SUSPEND"
+    USER_REACTIVATE = "USER_REACTIVATE"
+    USER_BLOCK = "USER_BLOCK"
+    REPORT_RESOLVE = "REPORT_RESOLVE"
+    SETTINGS_UPDATE = "SETTINGS_UPDATE"
