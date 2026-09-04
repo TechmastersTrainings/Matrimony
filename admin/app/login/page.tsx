@@ -20,7 +20,13 @@ export default function AdminLoginPage() {
     setError(null);
 
     try {
-      const res = await fetch('http://localhost:8000/api/v1/auth/login', {
+      const apiBase = (
+        process.env.NEXT_PUBLIC_API_BASE_URL ||
+        process.env.NEXT_PUBLIC_API_URL ||
+        'https://matrimony-hxs5.onrender.com/api/v1'
+      ).replace(/\/+$/, '');
+
+      const res = await fetch(`${apiBase}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

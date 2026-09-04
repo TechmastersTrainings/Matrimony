@@ -152,7 +152,7 @@ export default function AdminProfilesPage() {
         <div className="fixed top-6 right-6 z-50 p-4 rounded-2xl bg-emerald-500 text-slate-950 font-extrabold text-xs shadow-2xl border border-emerald-400 flex items-center gap-3">
           <span>{toastMessage}</span>
           <a
-            href="http://localhost:3000/discover"
+            href={`${(process.env.NEXT_PUBLIC_WEB_URL || 'https://matrimony-psi-wheat.vercel.app').replace(/\/+$/, '')}/discover`}
             target="_blank"
             rel="noreferrer"
             className="px-3 py-1 bg-slate-950 text-white rounded-lg text-[10px] font-mono hover:bg-slate-900"
@@ -333,7 +333,8 @@ export default function AdminProfilesPage() {
                   <button
                     onClick={() => {
                       const token = typeof window !== 'undefined' ? localStorage.getItem('token') || '' : '';
-                      window.open(`http://localhost:3000/discover?admin_token=${encodeURIComponent(token)}`, '_blank');
+                      const candidateWeb = (process.env.NEXT_PUBLIC_WEB_URL || 'https://matrimony-psi-wheat.vercel.app').replace(/\/+$/, '');
+                      window.open(`${candidateWeb}/discover?admin_token=${encodeURIComponent(token)}`, '_blank');
                     }}
                     className="px-3.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs shadow-md transition-all shrink-0 flex items-center gap-1.5"
                   >

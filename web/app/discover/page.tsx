@@ -357,12 +357,13 @@ export default function DiscoverPage() {
               </div>
             </div>
             <a
-              href="http://localhost:3001/profiles"
+              href={`${(process.env.NEXT_PUBLIC_ADMIN_URL || 'http://localhost:3001').replace(/\/+$/, '')}/profiles`}
               target="_blank"
               rel="noreferrer"
-              className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs text-center shadow-md transition-all shrink-0"
+              className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs text-center shadow-md transition-all shrink-0 flex items-center gap-1.5"
             >
-              Open Admin Review Console (Port 3001) →
+              <span>Open Admin Review Console</span>
+              <span>→</span>
             </a>
           </div>
         )}
