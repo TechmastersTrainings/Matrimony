@@ -38,9 +38,9 @@ def get_engine():
             _engine = test_engine
             logger.info("Database engine initialized successfully.")
         except Exception as e:
-            logger.warning(f"Primary database connection notice ({e}). Using local database fallback.")
+            fallback_path = "./backend/matrimony.db" if os.path.isdir("./backend") else "./matrimony.db"
             _engine = create_engine(
-                "sqlite:///./backend/matrimony.db",
+                f"sqlite:///{fallback_path}",
                 connect_args={"check_same_thread": False},
                 pool_pre_ping=True,
             )
