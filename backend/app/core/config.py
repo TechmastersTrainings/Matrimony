@@ -23,7 +23,7 @@ class Settings(BaseSettings):
     DEFAULT_TEST_OTP: str = "123456"
 
     # CORS Settings
-    CORS_ORIGINS: List[str] = [
+    CORS_ORIGINS: Union[List[str], str] = [
         "http://localhost:3000",
         "http://localhost:3001",
         "http://127.0.0.1:3000",
@@ -34,20 +34,23 @@ class Settings(BaseSettings):
 
     @field_validator("CORS_ORIGINS", mode="before")
     @classmethod
-    def assemble_cors_origins(cls, v: Union[str, List[str]]) -> List[str]:
+    def assemble_cors_origins(cls, v: Any) -> List[str]:
         if isinstance(v, str):
-            if v.startswith("[") and v.endswith("]"):
+            v_stripped = v.strip()
+            if v_stripped == "*":
+                return ["*"]
+            if v_stripped.startswith("[") and v_stripped.endswith("]"):
                 import json
                 try:
-                    parsed = json.loads(v)
+                    parsed = json.loads(v_stripped)
                     if isinstance(parsed, list):
                         return [str(i).strip() for i in parsed if str(i).strip()]
                 except Exception:
                     pass
-            return [i.strip() for i in v.split(",") if i.strip()]
+            return [i.strip() for i in v_stripped.split(",") if i.strip()]
         elif isinstance(v, list):
-            return [i.strip() for i in v if i.strip()]
-        return []
+            return [str(i).strip() for i in v if str(i).strip()]
+        return ["*"]
 
     # Database Configuration (MySQL / Aiven / SQLite dev default)
     DATABASE_URL: Optional[str] = "sqlite:///./backend/matrimony.db"
