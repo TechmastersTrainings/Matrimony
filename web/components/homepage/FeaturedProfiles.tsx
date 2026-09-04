@@ -67,9 +67,9 @@ export function FeaturedProfiles() {
               >
                 {/* Photo Area */}
                 <div className="relative aspect-4/5 bg-slate-950 overflow-hidden flex items-center justify-center">
-                  {p.primary_photo?.photo_url ? (
+                  {p.primary_photo ? (
                     <img
-                      src={p.primary_photo.photo_url}
+                      src={typeof p.primary_photo === 'string' ? p.primary_photo : (p.primary_photo as any)?.photo_url}
                       alt={`${p.first_name} ${p.last_name}`}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
@@ -111,10 +111,10 @@ export function FeaturedProfiles() {
                 <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
                   <div className="space-y-1.5 text-xs text-slate-400">
                     <p className="font-medium text-slate-200 truncate">
-                      💼 {p.occupation_title || p.education_level || 'Professional'}
+                      {p.occupation_title || p.highest_education || 'Professional'}
                     </p>
                     <p className="text-[11px] truncate">
-                      ⛪ {p.church_name || 'Verified Member'}
+                      {p.church_name || 'Verified Member'}
                     </p>
                   </div>
 
