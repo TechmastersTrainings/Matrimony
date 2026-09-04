@@ -1,4 +1,4 @@
-# Multi-stage production-ready Dockerfile for FastAPI Backend on Render / Cloud
+# Multi-stage production-ready Dockerfile for FastAPI Backend (Repository Root Context)
 FROM python:3.11-slim as builder
 
 WORKDIR /app
@@ -9,7 +9,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     pkg-config \
     && rm -rf /var/lib/apt/lists/*
 
-COPY requirements.txt .
+# Copy requirements from backend
+COPY backend/requirements.txt .
 RUN pip install --no-cache-dir --user -r requirements.txt
 
 # Final runtime stage
@@ -28,7 +29,7 @@ ENV PATH=/root/.local/bin:$PATH
 
 # Copy backend application source code into /app/backend
 # so that all `from backend.app...` module imports resolve cleanly
-COPY . /app/backend/
+COPY backend/ /app/backend/
 
 ENV PYTHONPATH=/app
 ENV PYTHONUNBUFFERED=1
