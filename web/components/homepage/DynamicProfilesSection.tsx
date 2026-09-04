@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { apiClient } from '../../lib/api-client';
 import { CandidateCard } from '../../types';
+import { getPhotoUrl, DEFAULT_AVATAR_SVG } from '../../lib/utils';
 
 export function DynamicProfilesSection() {
   const [profiles, setProfiles] = useState<CandidateCard[]>([]);
@@ -73,9 +74,12 @@ export function DynamicProfilesSection() {
                 <div className="relative aspect-4/5 bg-slate-100 overflow-hidden">
                   {p.primary_photo ? (
                     <img
-                      src={p.primary_photo}
+                      src={getPhotoUrl(p.primary_photo) || DEFAULT_AVATAR_SVG}
                       alt={`${p.first_name} ${p.last_name}`}
                       className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-300"
+                      onError={(e) => {
+                        e.currentTarget.src = DEFAULT_AVATAR_SVG;
+                      }}
                     />
                   ) : (
                     <div className="w-full h-full flex flex-col items-center justify-center bg-slate-100 text-slate-400">

@@ -2,16 +2,20 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { apiClient } from '../../lib/api-client';
 import { CandidateCard } from '../../types';
-import { getPhotoUrl } from '../../lib/utils';
+import { getPhotoUrl, DEFAULT_AVATAR_SVG } from '../../lib/utils';
 
 export default function DiscoverPage() {
+  const router = useRouter();
   const [candidates, setCandidates] = useState<CandidateCard[]>([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isSubscribed, setIsSubscribed] = useState(false);
+  const [planName, setPlanName] = useState<string | null>(null);
 
   // View Mode: 'horizontal' (Jeevansathi style) vs 'grid'
   const [viewMode, setViewMode] = useState<'horizontal' | 'grid'>('horizontal');
@@ -27,6 +31,12 @@ export default function DiscoverPage() {
   // Shortlisted IDs
   const [shortlisted, setShortlisted] = useState<number[]>([]);
   const [isAuthRequired, setIsAuthRequired] = useState(false);
+
+  // Subscription Modal State
+  const [subscriptionModalOpen, setSubscriptionModalOpen] = useState(false);
+  const [modalActionType, setModalActionType] = useState<'interest' | 'view_profile'>('interest');
+  const [selectedCandidate, setSelectedCandidate] = useState<CandidateCard | null>(null);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const fetchProfiles = async () => {
     setLoading(true);
@@ -55,6 +65,7 @@ export default function DiscoverPage() {
     }
   };
 
+  // Check user role and active subscription
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const urlParams = new URLSearchParams(window.location.search);
@@ -64,6 +75,7 @@ export default function DiscoverPage() {
         localStorage.setItem('token', adminToken);
         localStorage.setItem('user_role', 'SUPER_ADMIN');
         setIsAdmin(true);
+        setIsSubscribed(true);
         setIsAuthRequired(false);
         window.history.replaceState({}, document.title, window.location.pathname);
       } else {
@@ -74,7 +86,20 @@ export default function DiscoverPage() {
           return;
         }
         const role = localStorage.getItem('user_role');
-        setIsAdmin(role === 'ADMIN' || role === 'SUPER_ADMIN');
+        const adminFlag = role === 'ADMIN' || role === 'SUPER_ADMIN';
+        setIsAdmin(adminFlag);
+        if (adminFlag) {
+          setIsSubscribed(true);
+        } else {
+          // Check user subscription status
+          apiClient
+            .getMySubscription()
+            .then((sub) => {
+              setIsSubscribed(!!sub.has_active_subscription);
+              if (sub.plan_name) setPlanName(sub.plan_name);
+            })
+            .catch(() => setIsSubscribed(false));
+        }
       }
     }
     fetchProfiles();
@@ -104,10 +129,40 @@ export default function DiscoverPage() {
   const handleSendInterest = async (userId: number) => {
     try {
       await apiClient.sendInterest(userId);
-      alert('Matrimonial interest sent successfully.');
+      setToastMessage('✓ Matrimonial interest sent successfully. You will be notified when they respond.');
+      setTimeout(() => setToastMessage(null), 5000);
     } catch (err: any) {
-      alert(`Notice: ${err.message}`);
+      if (err.status === 402 || err.message?.toLowerCase().includes('subscription')) {
+        const candidate = candidates.find((c) => c.user_id === userId) || null;
+        setSelectedCandidate(candidate);
+        setModalActionType('interest');
+        setSubscriptionModalOpen(true);
+      } else {
+        setToastMessage(`Notice: ${err.message}`);
+        setTimeout(() => setToastMessage(null), 5000);
+      }
     }
+  };
+
+  const handleExpressInterestClick = (candidate: CandidateCard) => {
+    if (!isSubscribed && !isAdmin) {
+      setSelectedCandidate(candidate);
+      setModalActionType('interest');
+      setSubscriptionModalOpen(true);
+      return;
+    }
+    handleSendInterest(candidate.user_id);
+  };
+
+  const handleViewProfileClick = (e: React.MouseEvent, candidate: CandidateCard) => {
+    if (!isSubscribed && !isAdmin) {
+      e.preventDefault();
+      setSelectedCandidate(candidate);
+      setModalActionType('view_profile');
+      setSubscriptionModalOpen(true);
+      return;
+    }
+    router.push(`/profile/${candidate.id}`);
   };
 
   const toggleShortlist = (id: number) => {
@@ -123,6 +178,136 @@ export default function DiscoverPage() {
       {/* Ambient Background Glows */}
       <div className="absolute top-10 right-1/4 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-10 left-1/4 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+
+      {/* Floating Action Notification Toast */}
+      {toastMessage && (
+        <div className="fixed top-20 right-6 z-50 p-4 rounded-2xl bg-slate-900/95 border border-amber-500/40 text-amber-300 text-xs font-bold shadow-2xl backdrop-blur-xl animate-fade-in flex items-center gap-3">
+          <span>{toastMessage}</span>
+          <button onClick={() => setToastMessage(null)} className="text-slate-400 hover:text-white">
+            ✕
+          </button>
+        </div>
+      )}
+
+      {/* Interactive Subscription Modal */}
+      {subscriptionModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-fade-in">
+          <div className="relative w-full max-w-lg bg-slate-900 border border-amber-500/40 rounded-3xl p-6 sm:p-8 shadow-2xl shadow-blue-950/50 space-y-6">
+            {/* Close Button */}
+            <button
+              onClick={() => setSubscriptionModalOpen(false)}
+              className="absolute top-5 right-5 w-8 h-8 rounded-full bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center text-sm font-bold transition-all"
+            >
+              ✕
+            </button>
+
+            {/* Modal Header */}
+            <div className="text-center space-y-2">
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-500/20 to-blue-600/20 border border-amber-500/40 text-amber-400 flex items-center justify-center mx-auto text-xl shadow-lg">
+                🔒
+              </div>
+              <h3 className="text-xl sm:text-2xl font-extrabold text-white">
+                {modalActionType === 'interest'
+                  ? 'Active Subscription Required'
+                  : 'Full Candidate Profile Protected'}
+              </h3>
+              <p className="text-xs sm:text-sm text-slate-300 max-w-sm mx-auto leading-relaxed">
+                {modalActionType === 'interest'
+                  ? 'To express matrimonial interest and connect directly with verified candidates, an active membership plan is required.'
+                  : 'Detailed family background, parish endorsements, and direct phone reveals are reserved for active Christian Matrimony members.'}
+              </p>
+            </div>
+
+            {/* Candidate Summary Card Preview inside Modal */}
+            {selectedCandidate && (
+              <div className="p-3.5 rounded-2xl bg-slate-950 border border-slate-800 flex items-center gap-3.5">
+                <div className="w-12 h-12 rounded-xl overflow-hidden bg-slate-900 border border-slate-800 shrink-0">
+                  <img
+                    src={getPhotoUrl(selectedCandidate.primary_photo) || DEFAULT_AVATAR_SVG}
+                    alt={selectedCandidate.first_name}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      e.currentTarget.src = DEFAULT_AVATAR_SVG;
+                    }}
+                  />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h4 className="text-xs font-bold text-white truncate">
+                    {selectedCandidate.first_name} {selectedCandidate.last_name}
+                  </h4>
+                  <p className="text-[11px] text-amber-400 font-semibold truncate">
+                    {selectedCandidate.denomination || 'Christian'} • {selectedCandidate.district || 'Bidar'}, {selectedCandidate.state || 'Karnataka'}
+                  </p>
+                  <p className="text-[10px] text-slate-400 truncate">
+                    {selectedCandidate.occupation_title || selectedCandidate.highest_education || 'Member'}
+                  </p>
+                </div>
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-emerald-950 text-emerald-300 border border-emerald-800 shrink-0">
+                  Verified
+                </span>
+              </div>
+            )}
+
+            {/* Value Highlights */}
+            <div className="p-4 rounded-2xl bg-slate-950/60 border border-slate-800/80 space-y-2 text-xs">
+              <p className="font-extrabold text-amber-400 uppercase text-[10px] tracking-wider">
+                Membership Plan Benefits:
+              </p>
+              <ul className="space-y-1.5 text-slate-300 text-[11px]">
+                <li className="flex items-center gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span>
+                  <span>Express unlimited matrimonial interests to Christian brides &amp; grooms.</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span>
+                  <span>Request verified direct phone number and WhatsApp reveals.</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span>
+                  <span>Unlock complete pastoral recommendations &amp; spiritual testimonies.</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span>
+                  <span>Direct candidate messaging once interest is mutually accepted.</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Modal Actions */}
+            <div className="space-y-2.5 pt-1">
+              <Link
+                href="/subscriptions"
+                onClick={() => setSubscriptionModalOpen(false)}
+                className="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-extrabold text-xs text-center shadow-xl shadow-amber-950/40 transition-all flex items-center justify-center gap-2"
+              >
+                <span>View Subscription Plans &amp; Activate</span>
+                <span>→</span>
+              </Link>
+
+              {modalActionType === 'view_profile' && selectedCandidate && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSubscriptionModalOpen(false);
+                    router.push(`/profile/${selectedCandidate.id}`);
+                  }}
+                  className="w-full py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold transition-all text-center border border-slate-700"
+                >
+                  Continue with Summary Preview Only →
+                </button>
+              )}
+
+              <button
+                type="button"
+                onClick={() => setSubscriptionModalOpen(false)}
+                className="w-full py-2 text-center text-xs text-slate-400 hover:text-white transition-colors"
+              >
+                Maybe Later
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-6">
         {/* Top Header Card */}
@@ -179,6 +364,49 @@ export default function DiscoverPage() {
             >
               Open Admin Review Console (Port 3001) →
             </a>
+          </div>
+        )}
+
+        {/* Free Member Informational Notice Banner (Shown when not subscribed and not admin) */}
+        {!isSubscribed && !isAdmin && (
+          <div className="p-5 rounded-2xl bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-blue-600/10 border border-amber-500/30 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="flex items-start sm:items-center gap-3.5">
+              <div className="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/30 text-amber-400 font-bold flex items-center justify-center shrink-0 text-base shadow-sm">
+                🔒
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <h3 className="text-sm font-extrabold text-white">Free Member Preview Mode</h3>
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                    Active Plan Needed
+                  </span>
+                </div>
+                <p className="text-xs text-slate-300 mt-0.5 leading-relaxed">
+                  You are viewing candidate summaries. An active subscription plan is required to express matrimonial interest and unlock full verified profiles (pastoral testimony, family background, and verified contact reveals).
+                </p>
+              </div>
+            </div>
+            <Link
+              href="/subscriptions"
+              className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-extrabold text-xs text-center shadow-lg shadow-amber-950/30 transition-all shrink-0 flex items-center justify-center gap-1.5"
+            >
+              <span>Explore Subscription Plans</span>
+              <span>→</span>
+            </Link>
+          </div>
+        )}
+
+        {/* Subscribed Active Member Status Bar */}
+        {isSubscribed && !isAdmin && (
+          <div className="p-3.5 rounded-2xl bg-emerald-950/40 border border-emerald-800/60 text-xs flex items-center justify-between gap-3 text-emerald-300">
+            <div className="flex items-center gap-2 font-bold">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span>Active Membership Active ({planName || 'Subscribed Member'})</span>
+              <span className="text-slate-400 font-normal">• Express Interest &amp; Full Profiles Unlocked</span>
+            </div>
+            <Link href="/subscriptions" className="text-[11px] underline hover:text-white font-semibold">
+              Manage Plan
+            </Link>
           </div>
         )}
 
@@ -407,6 +635,7 @@ export default function DiscoverPage() {
               <div className="space-y-5">
                 {candidates.map((c) => {
                   const isSaved = shortlisted.includes(c.id);
+                  const photoSrc = getPhotoUrl(c.primary_photo) || DEFAULT_AVATAR_SVG;
                   return (
                     <div
                       key={c.id}
@@ -414,20 +643,14 @@ export default function DiscoverPage() {
                     >
                       {/* Left: Photo & Badges Container */}
                       <div className="w-full md:w-56 h-64 md:h-auto rounded-2xl relative overflow-hidden shrink-0 bg-slate-950 border border-slate-800/80">
-                        {c.primary_photo ? (
-                          <img
-                            src={getPhotoUrl(c.primary_photo)}
-                            alt={c.first_name}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                            onError={(e) => {
-                              e.currentTarget.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25' viewBox='0 0 100 100'%3E%3Crect width='100%25' height='100%25' fill='%230f172a'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23f59e0b' font-family='sans-serif' font-weight='bold' font-size='16'%3ECM%3C/text%3E%3C/svg%3E";
-                            }}
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center font-black text-3xl text-amber-400">
-                            {c.first_name[0]}
-                          </div>
-                        )}
+                        <img
+                          src={photoSrc}
+                          alt={c.first_name}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                          onError={(e) => {
+                            e.currentTarget.src = DEFAULT_AVATAR_SVG;
+                          }}
+                        />
 
                         {/* Top Overlay Badges */}
                         <div className="absolute top-3 left-3 bg-emerald-950/90 backdrop-blur-md text-emerald-300 text-[10px] font-extrabold px-2.5 py-1 rounded-lg border border-emerald-800/80 shadow-md">
@@ -439,7 +662,7 @@ export default function DiscoverPage() {
                         </div>
 
                         <div className="absolute bottom-3 left-3 right-3 bg-slate-950/80 backdrop-blur-md text-slate-300 text-[10px] font-semibold px-2 py-1 rounded-lg border border-slate-800 text-center">
-                          5 Photos Available
+                          Christian Matrimony Profile
                         </div>
                       </div>
 
@@ -457,6 +680,12 @@ export default function DiscoverPage() {
                                   c.status === 'APPROVED' ? 'bg-emerald-950 text-emerald-300 border-emerald-800' : 'bg-blue-950 text-blue-300 border-blue-800'
                                 }`}>
                                   {c.status}
+                                </span>
+                              )}
+                              {!isSubscribed && !isAdmin && (
+                                <span className="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-300 border border-amber-500/30 flex items-center gap-1">
+                                  <span>🔒</span>
+                                  <span>Preview</span>
                                 </span>
                               )}
                             </div>
@@ -507,7 +736,9 @@ export default function DiscoverPage() {
 
                           <div className="flex items-center gap-2">
                             <span className="text-slate-400 font-semibold w-24 shrink-0">Church:</span>
-                            <span className="text-white font-medium truncate">{c.church_name || 'Local Fellowship'}</span>
+                            <span className="text-white font-medium truncate">
+                              {!isSubscribed && !isAdmin ? '🔒 (Subscribers Only)' : (c.church_name || 'Local Fellowship')}
+                            </span>
                           </div>
 
                           <div className="flex items-center gap-2">
@@ -528,7 +759,7 @@ export default function DiscoverPage() {
                           <div className="flex items-center gap-2">
                             <span className="text-slate-400 font-semibold w-24 shrink-0">Annual Income:</span>
                             <span className="text-emerald-400 font-medium truncate">
-                              {c.annual_income_min ? `₹${(c.annual_income_min / 100000).toFixed(1)} LPA+` : 'Confidential'}
+                              {!isSubscribed && !isAdmin ? '🔒 (Subscribers Only)' : (c.annual_income_min ? `₹${(c.annual_income_min / 100000).toFixed(1)} LPA+` : 'Confidential')}
                             </span>
                           </div>
                         </div>
@@ -548,20 +779,22 @@ export default function DiscoverPage() {
                         <div className="pt-2 flex flex-col sm:flex-row items-center gap-3">
                           <button
                             type="button"
-                            onClick={() => handleSendInterest(c.user_id)}
+                            onClick={() => handleExpressInterestClick(c)}
                             className="w-full sm:flex-1 py-3 px-6 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-extrabold text-xs text-center transition-all shadow-lg shadow-amber-950/30 flex items-center justify-center gap-2"
                           >
                             <span>Express Interest</span>
                             <span>→</span>
                           </button>
 
-                          <Link
-                            href={`/profile/${c.id}`}
+                          <button
+                            type="button"
+                            onClick={(e) => handleViewProfileClick(e, c)}
                             className="w-full sm:flex-1 py-3 px-6 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold text-center border border-slate-700 transition-all flex items-center justify-center gap-1.5"
                           >
                             <span>View Full Profile</span>
+                            {!isSubscribed && !isAdmin && <span className="text-[10px] text-amber-400">🔒</span>}
                             <span>→</span>
-                          </Link>
+                          </button>
                         </div>
                       </div>
                     </div>
@@ -571,85 +804,84 @@ export default function DiscoverPage() {
             ) : (
               /* GRID VIEW FALLBACK */
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {candidates.map((c) => (
-                  <div
-                    key={c.id}
-                    className="bg-slate-900/80 backdrop-blur-xl border border-slate-800 hover:border-amber-500/50 rounded-3xl overflow-hidden shadow-2xl group transition-all duration-300 flex flex-col justify-between"
-                  >
-                    <div>
-                      {/* Photo Header */}
-                      <div className="aspect-[4/5] bg-slate-950 relative overflow-hidden">
-                        {c.primary_photo ? (
+                {candidates.map((c) => {
+                  const photoSrc = getPhotoUrl(c.primary_photo) || DEFAULT_AVATAR_SVG;
+                  return (
+                    <div
+                      key={c.id}
+                      className="bg-slate-900/80 backdrop-blur-xl border border-slate-800 hover:border-amber-500/50 rounded-3xl overflow-hidden shadow-2xl group transition-all duration-300 flex flex-col justify-between"
+                    >
+                      <div>
+                        {/* Photo Header */}
+                        <div className="aspect-[4/5] bg-slate-950 relative overflow-hidden">
                           <img
-                            src={getPhotoUrl(c.primary_photo)}
+                            src={photoSrc}
                             alt={c.first_name}
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                             onError={(e) => {
-                              e.currentTarget.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25' viewBox='0 0 100 100'%3E%3Crect width='100%25' height='100%25' fill='%230f172a'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23f59e0b' font-family='sans-serif' font-weight='bold' font-size='16'%3ECM%3C/text%3E%3C/svg%3E";
+                              e.currentTarget.src = DEFAULT_AVATAR_SVG;
                             }}
                           />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center font-black text-2xl text-amber-400">
-                            {c.first_name[0]}
-                          </div>
-                        )}
 
-                        <div className="absolute top-3 left-3 bg-slate-950/80 backdrop-blur-md text-amber-400 text-[10px] font-bold px-2.5 py-1 rounded-lg border border-slate-800">
-                          {c.denomination || 'Christian'}
+                          <div className="absolute top-3 left-3 bg-slate-950/80 backdrop-blur-md text-amber-400 text-[10px] font-bold px-2.5 py-1 rounded-lg border border-slate-800">
+                            {c.denomination || 'Christian'}
+                          </div>
+
+                          <div className="absolute top-3 right-3 bg-emerald-950/80 backdrop-blur-md text-emerald-300 text-[10px] font-bold px-2.5 py-1 rounded-lg border border-emerald-800">
+                            Verified
+                          </div>
                         </div>
 
-                        <div className="absolute top-3 right-3 bg-emerald-950/80 backdrop-blur-md text-emerald-300 text-[10px] font-bold px-2.5 py-1 rounded-lg border border-emerald-800">
-                          Verified
+                        {/* Content Info */}
+                        <div className="p-5 space-y-2">
+                          <div className="flex items-center justify-between">
+                            <h3 className="font-extrabold text-base text-white group-hover:text-amber-400 transition-colors">
+                              {c.first_name} {c.last_name}
+                            </h3>
+                            <span className="text-xs text-slate-400 font-medium">
+                              {c.age || '—'} Yrs
+                            </span>
+                          </div>
+
+                          <p className="text-xs text-slate-300 font-medium">
+                            {c.occupation_title || c.highest_education || 'Member'}
+                          </p>
+
+                          <p className="text-[11px] text-amber-400/90 font-semibold">
+                            {c.district || 'Bidar'}, {c.state || 'Karnataka'}
+                          </p>
+
+                          {/* Admin Unmasked Contact Strip */}
+                          {isAdmin && (c.mobile_number || c.email) && (
+                            <div className="pt-2 border-t border-slate-800/80 text-[11px] text-amber-300 font-mono space-y-0.5">
+                              {c.mobile_number && <div>Phone: +91 {c.mobile_number}</div>}
+                              {c.email && <div className="truncate text-slate-300">Email: {c.email}</div>}
+                            </div>
+                          )}
                         </div>
                       </div>
 
-                      {/* Content Info */}
-                      <div className="p-5 space-y-2">
-                        <div className="flex items-center justify-between">
-                          <h3 className="font-extrabold text-base text-white group-hover:text-amber-400 transition-colors">
-                            {c.first_name} {c.last_name}
-                          </h3>
-                          <span className="text-xs text-slate-400 font-medium">
-                            {c.age || '—'} Yrs
-                          </span>
-                        </div>
-
-                        <p className="text-xs text-slate-300 font-medium">
-                          {c.occupation_title || c.highest_education || 'Member'}
-                        </p>
-
-                        <p className="text-[11px] text-amber-400/90 font-semibold">
-                          {c.district || 'Bidar'}, {c.state || 'Karnataka'}
-                        </p>
-
-                        {/* Admin Unmasked Contact Strip */}
-                        {isAdmin && (c.mobile_number || c.email) && (
-                          <div className="pt-2 border-t border-slate-800/80 text-[11px] text-amber-300 font-mono space-y-0.5">
-                            {c.mobile_number && <div>Phone: +91 {c.mobile_number}</div>}
-                            {c.email && <div className="truncate text-slate-300">Email: {c.email}</div>}
-                          </div>
-                        )}
+                      {/* CTAs */}
+                      <div className="p-5 pt-0 grid grid-cols-2 gap-2">
+                        <button
+                          type="button"
+                          onClick={(e) => handleViewProfileClick(e, c)}
+                          className="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold text-center border border-slate-700 transition-all flex items-center justify-center gap-1"
+                        >
+                          <span>View Bio</span>
+                          {!isSubscribed && !isAdmin && <span className="text-[10px] text-amber-400">🔒</span>}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleExpressInterestClick(c)}
+                          className="w-full py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 text-xs font-extrabold text-center transition-all shadow-md"
+                        >
+                          Express Interest
+                        </button>
                       </div>
                     </div>
-
-                    {/* CTAs */}
-                    <div className="p-5 pt-0 grid grid-cols-2 gap-2">
-                      <Link
-                        href={`/profile/${c.id}`}
-                        className="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold text-center border border-slate-700 transition-all"
-                      >
-                        View Bio
-                      </Link>
-                      <button
-                        type="button"
-                        onClick={() => handleSendInterest(c.user_id)}
-                        className="w-full py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 text-xs font-extrabold text-center transition-all shadow-md"
-                      >
-                        Express Interest
-                      </button>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>

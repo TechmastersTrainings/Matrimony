@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { apiClient } from '../../lib/api-client';
 import { CandidateCard } from '../../types';
+import { getPhotoUrl, DEFAULT_AVATAR_SVG } from '../../lib/utils';
 
 export function FeaturedProfiles() {
   const [profiles, setProfiles] = useState<CandidateCard[]>([]);
@@ -69,9 +70,12 @@ export function FeaturedProfiles() {
                 <div className="relative aspect-4/5 bg-slate-950 overflow-hidden flex items-center justify-center">
                   {p.primary_photo ? (
                     <img
-                      src={typeof p.primary_photo === 'string' ? p.primary_photo : (p.primary_photo as any)?.photo_url}
+                      src={getPhotoUrl(typeof p.primary_photo === 'string' ? p.primary_photo : (p.primary_photo as any)?.photo_url) || DEFAULT_AVATAR_SVG}
                       alt={`${p.first_name} ${p.last_name}`}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      onError={(e) => {
+                        e.currentTarget.src = DEFAULT_AVATAR_SVG;
+                      }}
                     />
                   ) : (
                     <div className="flex flex-col items-center justify-center text-slate-600 gap-2">

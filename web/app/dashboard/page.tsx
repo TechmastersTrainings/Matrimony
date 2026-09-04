@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { apiClient } from '../../lib/api-client';
-import { getPhotoUrl } from '../../lib/utils';
+import { getPhotoUrl, DEFAULT_AVATAR_SVG } from '../../lib/utils';
 
 export default function UserDashboardPage() {
   const router = useRouter();
@@ -190,8 +190,7 @@ export default function UserDashboardPage() {
                     alt={fullName}
                     className="w-full h-full object-cover"
                     onError={(e) => {
-                      // Fallback if image fails to render
-                      (e.target as HTMLElement).style.display = 'none';
+                      e.currentTarget.src = DEFAULT_AVATAR_SVG;
                     }}
                   />
                 ) : (
@@ -310,9 +309,12 @@ export default function UserDashboardPage() {
                     }`}
                   >
                     <img
-                      src={photoSrc}
+                      src={photoSrc || DEFAULT_AVATAR_SVG}
                       alt={`Photo ${idx + 1}`}
                       className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.currentTarget.src = DEFAULT_AVATAR_SVG;
+                      }}
                     />
                     {p.is_primary && (
                       <span className="absolute top-1.5 left-1.5 bg-amber-500 text-slate-950 text-[9px] font-extrabold px-2 py-0.5 rounded-md shadow-md">

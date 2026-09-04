@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { apiClient } from '../../../lib/api-client';
 import { ProfilePhotoItem } from '../../../types';
-import { getPhotoUrl } from '../../../lib/utils';
+import { getPhotoUrl, DEFAULT_AVATAR_SVG } from '../../../lib/utils';
 
 export default function ProfilePhotosPage() {
   const [photos, setPhotos] = useState<ProfilePhotoItem[]>([]);
@@ -116,9 +116,12 @@ export default function ProfilePhotosPage() {
                     }`}
                   >
                     <img
-                      src={getPhotoUrl(p.r2_url)}
+                      src={getPhotoUrl(p.r2_url) || DEFAULT_AVATAR_SVG}
                       alt="Uploaded photo"
                       className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.currentTarget.src = DEFAULT_AVATAR_SVG;
+                      }}
                     />
 
                     {p.is_primary && (

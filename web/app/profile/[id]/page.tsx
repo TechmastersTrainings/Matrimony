@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { apiClient } from '../../../lib/api-client';
-import { getPhotoUrl } from '../../../lib/utils';
+import { getPhotoUrl, DEFAULT_AVATAR_SVG } from '../../../lib/utils';
 
 export default function CandidateProfileDetailPage() {
   const params = useParams();
@@ -142,25 +142,41 @@ export default function CandidateProfileDetailPage() {
           </div>
         )}
 
+        {/* Free Member Preview Notice Banner */}
+        {isLocked && !profile.is_admin_override && (
+          <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-blue-600/10 border border-amber-500/30 shadow-xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-xs">
+            <div className="flex items-center gap-3">
+              <span className="text-2xl">🔒</span>
+              <div>
+                <h4 className="font-extrabold text-amber-300 text-sm">Free Member Preview Mode</h4>
+                <p className="text-slate-300 text-xs mt-0.5">
+                  You are viewing a summary preview. An active subscription plan is required to unlock complete pastoral testimony, family background, and connect with this candidate.
+                </p>
+              </div>
+            </div>
+            <Link
+              href="/subscriptions"
+              className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-extrabold text-xs text-center shrink-0 shadow-md transition-all flex items-center justify-center gap-1.5"
+            >
+              <span>Upgrade Subscription</span>
+              <span>→</span>
+            </Link>
+          </div>
+        )}
+
         {/* TOP HERO PROFILE HEADER CARD (Basic Preview) */}
         <div className="bg-slate-900/90 backdrop-blur-xl border border-slate-800 rounded-3xl p-5 sm:p-6 shadow-2xl flex flex-col md:flex-row items-stretch gap-6">
           {/* Candidate Photo */}
           <div className="w-full md:w-56 shrink-0 flex flex-col gap-2">
             <div className="w-full h-64 md:h-60 rounded-2xl bg-slate-950 overflow-hidden relative border border-slate-800">
-              {photos[activePhotoIdx] ? (
-                <img
-                  src={photos[activePhotoIdx]}
-                  alt={profile.first_name}
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <div className="w-full h-full flex flex-col items-center justify-center text-slate-500 text-xs gap-1.5">
-                  <div className="w-10 h-10 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-amber-400 font-bold">
-                    CM
-                  </div>
-                  <span>Photo Protected</span>
-                </div>
-              )}
+              <img
+                src={photos[activePhotoIdx] || DEFAULT_AVATAR_SVG}
+                alt={profile.first_name}
+                className="w-full h-full object-cover"
+                onError={(e) => {
+                  e.currentTarget.src = DEFAULT_AVATAR_SVG;
+                }}
+              />
 
               <div className="absolute top-2.5 left-2.5 bg-emerald-950/90 backdrop-blur-md text-emerald-300 text-[10px] font-extrabold px-2 py-0.5 rounded-md border border-emerald-800/80">
                 ✓ Verified
@@ -182,7 +198,14 @@ export default function CandidateProfileDetailPage() {
                       activePhotoIdx === idx ? 'border-amber-400 ring-1 ring-amber-500/20' : 'border-slate-800 opacity-60 hover:opacity-100'
                     }`}
                   >
-                    <img src={img} alt="Thumbnail" className="w-full h-full object-cover" />
+                    <img
+                      src={img}
+                      alt="Thumbnail"
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.currentTarget.src = DEFAULT_AVATAR_SVG;
+                      }}
+                    />
                   </button>
                 ))}
               </div>

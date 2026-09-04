@@ -4,6 +4,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
 import { apiClient } from '../../lib/api-client';
 import { ChatMessageItem } from '../../types';
+import { getPhotoUrl, DEFAULT_AVATAR_SVG } from '../../lib/utils';
 
 export default function ChatPage() {
   const [conversations, setConversations] = useState<any[]>([]);
@@ -170,7 +171,14 @@ export default function ChatPage() {
                       {/* Avatar */}
                       <div className="relative w-11 h-11 rounded-2xl bg-slate-900 border border-slate-800 overflow-hidden shrink-0">
                         {photo ? (
-                          <img src={photo} alt="Avatar" className="w-full h-full object-cover" />
+                          <img
+                            src={getPhotoUrl(photo) || DEFAULT_AVATAR_SVG}
+                            alt="Avatar"
+                            className="w-full h-full object-cover"
+                            onError={(e) => {
+                              e.currentTarget.src = DEFAULT_AVATAR_SVG;
+                            }}
+                          />
                         ) : (
                           <div className="w-full h-full flex items-center justify-center text-amber-400 font-extrabold text-xs">
                             {conv.other_user?.first_name?.[0]}
@@ -209,7 +217,14 @@ export default function ChatPage() {
                   <div className="flex items-center gap-3 min-w-0">
                     <div className="relative w-10 h-10 rounded-xl bg-slate-900 border border-slate-800 overflow-hidden shrink-0">
                       {activeUser.primary_photo ? (
-                        <img src={activeUser.primary_photo} alt="User" className="w-full h-full object-cover" />
+                        <img
+                          src={getPhotoUrl(activeUser.primary_photo) || DEFAULT_AVATAR_SVG}
+                          alt="User"
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            e.currentTarget.src = DEFAULT_AVATAR_SVG;
+                          }}
+                        />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center text-amber-400 font-bold text-xs">
                           {activeUser.first_name?.[0]}

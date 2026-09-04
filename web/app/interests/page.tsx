@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { apiClient } from '../../lib/api-client';
 import { InterestItem } from '../../types';
+import { getPhotoUrl, DEFAULT_AVATAR_SVG } from '../../lib/utils';
 
 export default function InterestsPage() {
   const [tab, setTab] = useState<'received' | 'sent' | 'matches'>('received');
@@ -132,9 +133,12 @@ export default function InterestsPage() {
                   <div className="w-14 h-14 rounded-lg bg-slate-100 overflow-hidden border border-slate-200 shrink-0">
                     {item.other_user?.primary_photo ? (
                       <img
-                        src={item.other_user.primary_photo}
+                        src={getPhotoUrl(item.other_user.primary_photo) || DEFAULT_AVATAR_SVG}
                         alt="Profile"
                         className="w-full h-full object-cover"
+                        onError={(e) => {
+                          e.currentTarget.src = DEFAULT_AVATAR_SVG;
+                        }}
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-[10px] text-slate-400 font-semibold">

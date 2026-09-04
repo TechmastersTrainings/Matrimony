@@ -107,7 +107,8 @@ class CloudflareR2StorageService(IStorageService):
             )
             if self.public_url and self.public_url.strip():
                 return f"{self.public_url.rstrip('/')}/{destination_path.lstrip('/')}"
-            return f"http://localhost:8000/media/{destination_path.lstrip('/')}"
+            backend_url = os.getenv("RENDER_EXTERNAL_URL") or os.getenv("API_BASE_URL") or "https://matrimony-hxs5.onrender.com"
+            return f"{backend_url.rstrip('/')}/media/{destination_path.lstrip('/')}"
         except ClientError as e:
             logger.error(f"R2 upload error for {destination_path}: {e}")
             raise StorageServiceException(f"Failed to upload file to R2: {str(e)}")

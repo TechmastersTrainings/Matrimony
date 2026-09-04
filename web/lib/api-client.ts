@@ -234,7 +234,11 @@ class ApiClient {
       body: JSON.stringify({ target_user_id: targetUserId, message }),
     });
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error?.message || 'Failed to send interest');
+    if (!res.ok) {
+      const err: any = new Error(data.error?.message || data.detail || 'Failed to send interest');
+      err.status = res.status;
+      throw err;
+    }
     return data;
   }
 
@@ -288,6 +292,18 @@ class ApiClient {
   }
 
   // ------------------ SUBSCRIPTIONS & PAYMENTS ------------------
+  async getMySubscription(): Promise<{ has_active_subscription: boolean; plan_name?: string; [key: string]: any }> {
+    try {
+      const res = await fetch(`${API_BASE_URL}/subscriptions/my`, {
+        headers: this.getHeaders(),
+      });
+      if (!res.ok) return { has_active_subscription: false };
+      return res.json();
+    } catch {
+      return { has_active_subscription: false };
+    }
+  }
+
   async getPlans(): Promise<SubscriptionPlanItem[]> {
     const res = await fetch(`${API_BASE_URL}/subscriptions/plans`);
     if (!res.ok) throw new Error('Failed to fetch plans');
