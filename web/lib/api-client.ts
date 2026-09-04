@@ -80,6 +80,7 @@ class ApiClient {
     if (typeof window !== 'undefined' && resData.access_token) {
       localStorage.setItem('access_token', resData.access_token);
       if (resData.refresh_token) localStorage.setItem('refresh_token', resData.refresh_token);
+      if (resData.role) localStorage.setItem('user_role', resData.role);
     }
     return resData;
   }
@@ -308,12 +309,15 @@ class ApiClient {
       headers: this.getHeaders(),
       body: JSON.stringify({
         order_id: orderId,
+        razorpay_order_id: orderId,
         gateway_payment_id: paymentId,
+        razorpay_payment_id: paymentId,
         gateway_signature: signature,
+        razorpay_signature: signature,
       }),
     });
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error?.message || 'Payment verification failed');
+    if (!res.ok) throw new Error(data.error?.message || data.detail || 'Payment verification failed');
     return data;
   }
 

@@ -130,3 +130,6 @@ class ProfileRegistrationMeResponse(BaseModel):
     current_step: int = 1
     completion_percentage: int = 15
     profile_status: ProfileStatus = ProfileStatus.DRAFT
+    is_active_subscriber: bool = False
+    active_plan_name: Optional[str] = None
+    subscription_end_date: Optional[datetime] = None

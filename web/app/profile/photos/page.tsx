@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { apiClient } from '../../../lib/api-client';
 import { ProfilePhotoItem } from '../../../types';
+import { getPhotoUrl } from '../../../lib/utils';
 
 export default function ProfilePhotosPage() {
   const [photos, setPhotos] = useState<ProfilePhotoItem[]>([]);
@@ -115,7 +116,7 @@ export default function ProfilePhotosPage() {
                     }`}
                   >
                     <img
-                      src={p.r2_url}
+                      src={getPhotoUrl(p.r2_url)}
                       alt="Uploaded photo"
                       className="w-full h-full object-cover"
                     />

@@ -140,6 +140,8 @@ export default function ForgotPasswordPage() {
                   borderRadius: "8px",
                   border: "1px solid var(--border)",
                   fontSize: "0.95rem",
+                  color: "#000000",
+                  backgroundColor: "#ffffff",
                 }}
               />
             </div>
@@ -183,6 +185,8 @@ export default function ForgotPasswordPage() {
                   letterSpacing: "4px",
                   textAlign: "center",
                   fontWeight: 700,
+                  color: "#000000",
+                  backgroundColor: "#ffffff",
                 }}
               />
             </div>

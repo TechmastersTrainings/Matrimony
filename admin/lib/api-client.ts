@@ -94,6 +94,19 @@ class AdminApiClient {
     return res.json();
   }
 
+  async deleteProfile(profileId: number, reason?: string): Promise<any> {
+    const res = await fetch(`${API_BASE_URL}/admin/profiles/${profileId}`, {
+      method: 'DELETE',
+      headers: this.getHeaders(),
+      body: JSON.stringify({ reason: reason || 'Candidate decommissioned (found match / requested deletion)', delete_user_account: true }),
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error?.message || err.detail || 'Failed to delete profile');
+    }
+    return res.json();
+  }
+
   async listReports(): Promise<{ reports: AdminReportItem[] }> {
     const res = await fetch(`${API_BASE_URL}/admin/reports`, { headers: this.getHeaders() });
     if (!res.ok) throw new Error('Failed to load reports');

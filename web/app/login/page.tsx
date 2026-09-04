@@ -38,6 +38,10 @@ export default function LoginPage() {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!identifier.trim()) {
+      setError('Please enter your registered mobile number or email address.');
+      return;
+    }
     setIsLoading(true);
     setError(null);
 
@@ -58,138 +62,148 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="bg-slate-50 min-h-[calc(100vh-140px)] py-14 flex items-center justify-center px-4">
-      <div className="bg-white border border-slate-200 rounded-2xl p-8 max-w-md w-full shadow-xs">
-        <div className="text-center mb-8">
-          <div className="w-10 h-10 rounded-xl bg-blue-900 text-white font-bold flex items-center justify-center text-sm mx-auto mb-3 shadow-xs">
-            CM
+    <div className="relative min-h-[calc(100vh-80px)] flex items-center justify-center py-16 px-4 bg-slate-950 overflow-hidden font-sans">
+      {/* Ambient Background Glows */}
+      <div className="absolute top-1/4 left-1/3 w-96 h-96 bg-blue-600/15 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-1/4 right-1/3 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+
+      <div className="relative z-10 w-full max-w-md">
+        {/* Branding Header */}
+        <div className="text-center mb-8 space-y-2">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-900/40 border border-blue-700/50 text-blue-300 text-xs font-bold uppercase tracking-wider backdrop-blur-md">
+            Secure Member Portal
           </div>
-          <h1 className="text-2xl font-bold text-slate-900">
-            Member Login
+          <h1 className="text-3xl font-extrabold text-white tracking-tight">
+            Welcome <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-500">Back</span>
           </h1>
-          <p className="text-xs text-slate-500 mt-1">
-            Access your Christian Matrimony account
+          <p className="text-xs text-slate-400">
+            Sign in to access your matrimony matches and chat
           </p>
         </div>
 
-        {/* Tab Toggle */}
-        <div className="grid grid-cols-2 gap-2 bg-slate-100 p-1 rounded-xl mb-6">
-          <button
-            type="button"
-            onClick={() => {
-              setLoginType('password');
-              setError(null);
-            }}
-            className={`py-2 text-xs font-semibold rounded-lg transition-all ${
-              loginType === 'password'
-                ? 'bg-white text-slate-900 shadow-xs'
-                : 'text-slate-600 hover:text-slate-900'
-            }`}
-          >
-            Password Login
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              setLoginType('otp');
-              setError(null);
-            }}
-            className={`py-2 text-xs font-semibold rounded-lg transition-all ${
-              loginType === 'otp'
-                ? 'bg-white text-slate-900 shadow-xs'
-                : 'text-slate-600 hover:text-slate-900'
-            }`}
-          >
-            OTP Login
-          </button>
-        </div>
-
-        {error && (
-          <div className="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-xs">
-            {error}
-          </div>
-        )}
-
-        {debugOtp && (
-          <div className="mb-4 p-3 rounded-lg bg-blue-50 border border-blue-200 text-blue-900 text-xs font-medium">
-            Test Mode OTP: <strong>{debugOtp}</strong>
-          </div>
-        )}
-
-        <form onSubmit={handleLogin} className="space-y-4">
-          <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-              Mobile Number or Email
-            </label>
-            <input
-              type="text"
-              required
-              value={identifier}
-              onChange={(e) => setIdentifier(e.target.value)}
-              placeholder="e.g. 9876543210 or user@example.com"
-              className="w-full text-xs font-medium border border-slate-300 rounded-lg p-2.5 bg-slate-50 focus:outline-none focus:border-blue-600 focus:bg-white transition-all"
-            />
+        {/* Login Card */}
+        <div className="bg-slate-900/80 backdrop-blur-xl border border-slate-800 rounded-3xl p-8 shadow-2xl shadow-blue-950/30">
+          {/* Tab Selector */}
+          <div className="grid grid-cols-2 gap-2 bg-slate-950/80 p-1.5 rounded-2xl border border-slate-800 mb-6">
+            <button
+              type="button"
+              onClick={() => {
+                setLoginType('password');
+                setError(null);
+              }}
+              className={`py-2 text-xs font-bold rounded-xl transition-all ${
+                loginType === 'password'
+                  ? 'bg-gradient-to-r from-blue-700 to-blue-900 text-white shadow-md'
+                  : 'text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              Password Login
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setLoginType('otp');
+                setError(null);
+              }}
+              className={`py-2 text-xs font-bold rounded-xl transition-all ${
+                loginType === 'otp'
+                  ? 'bg-gradient-to-r from-blue-700 to-blue-900 text-white shadow-md'
+                  : 'text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              OTP Login
+            </button>
           </div>
 
-          {loginType === 'password' ? (
-            <div>
-              <div className="flex items-center justify-between mb-1.5">
-                <label className="text-xs font-semibold text-slate-700">Password</label>
-                <Link href="/forgot-password" className="text-xs font-semibold text-blue-700 hover:underline">
-                  Forgot Password?
-                </Link>
-              </div>
-              <input
-                type="password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                className="w-full text-xs font-medium border border-slate-300 rounded-lg p-2.5 bg-slate-50 focus:outline-none focus:border-blue-600 focus:bg-white transition-all"
-              />
-            </div>
-          ) : (
-            <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-                OTP Code
-              </label>
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  maxLength={6}
-                  value={otpCode}
-                  onChange={(e) => setOtpCode(e.target.value)}
-                  placeholder="6-digit OTP"
-                  className="flex-1 text-xs font-medium border border-slate-300 rounded-lg p-2.5 bg-slate-50 focus:outline-none focus:border-blue-600 focus:bg-white transition-all"
-                />
-                <button
-                  type="button"
-                  onClick={handleSendOtp}
-                  disabled={isLoading}
-                  className="px-4 py-2.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold transition-colors border border-slate-300"
-                >
-                  {otpSent ? 'Resend' : 'Send OTP'}
-                </button>
-              </div>
+          {error && (
+            <div className="mb-4 p-3.5 rounded-xl bg-red-950/60 border border-red-800/80 text-red-300 text-xs font-medium">
+              {error}
             </div>
           )}
 
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="w-full py-2.5 rounded-lg bg-blue-700 hover:bg-blue-800 text-white font-semibold text-xs transition-all shadow-xs"
-          >
-            {isLoading ? 'Authenticating...' : 'Sign In to Account'}
-          </button>
-        </form>
+          {debugOtp && (
+            <div className="mb-4 p-3 rounded-xl bg-amber-950/50 border border-amber-800/60 text-amber-300 text-xs font-medium">
+              Test Mode OTP: <strong className="text-amber-200">{debugOtp}</strong>
+            </div>
+          )}
 
-        <div className="mt-6 pt-6 border-t border-slate-100 text-center">
-          <p className="text-xs text-slate-500">
-            Don&apos;t have an account?{' '}
-            <Link href="/register" className="font-semibold text-blue-700 hover:underline">
-              Register Free
-            </Link>
-          </p>
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">
+                Mobile Number or Email
+              </label>
+              <input
+                type="text"
+                required
+                value={identifier}
+                onChange={(e) => setIdentifier(e.target.value)}
+                placeholder="Enter your registered mobile number or email address"
+                className="w-full text-xs font-medium border border-slate-800 rounded-xl p-3.5 bg-slate-950 text-white focus:outline-none focus:border-amber-400 transition-all placeholder:text-slate-600"
+              />
+            </div>
+
+            {loginType === 'password' ? (
+              <div>
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="text-xs font-bold uppercase tracking-wider text-slate-300">
+                    Password
+                  </label>
+                  <Link href="/forgot-password" className="text-xs font-bold text-amber-400 hover:text-amber-300">
+                    Forgot?
+                  </Link>
+                </div>
+                <input
+                  type="password"
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Enter password"
+                  className="w-full text-xs font-medium border border-slate-800 rounded-xl p-3.5 bg-slate-950 text-white focus:outline-none focus:border-amber-400 transition-all placeholder:text-slate-600"
+                />
+              </div>
+            ) : (
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">
+                  OTP Code
+                </label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    maxLength={6}
+                    value={otpCode}
+                    onChange={(e) => setOtpCode(e.target.value)}
+                    placeholder="Enter 6-digit OTP code"
+                    className="flex-1 text-xs font-medium border border-slate-800 rounded-xl p-3.5 bg-slate-950 text-white focus:outline-none focus:border-amber-400 transition-all placeholder:text-slate-600"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleSendOtp}
+                    disabled={isLoading}
+                    className="px-4 py-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold transition-all border border-slate-700 shrink-0"
+                  >
+                    {otpSent ? 'Resend' : 'Send OTP'}
+                  </button>
+                </div>
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="w-full py-3.5 rounded-xl bg-gradient-to-r from-amber-500 via-amber-400 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-extrabold text-xs shadow-xl shadow-amber-950/40 transition-all transform hover:-translate-y-0.5 mt-2"
+            >
+              {isLoading ? 'Authenticating...' : 'Sign In to Account →'}
+            </button>
+          </form>
+
+          <div className="mt-6 pt-6 border-t border-slate-800/80 text-center">
+            <p className="text-xs text-slate-400">
+              Don&apos;t have an account?{' '}
+              <Link href="/register" className="font-bold text-amber-400 hover:text-amber-300 transition-colors">
+                Register Free
+              </Link>
+            </p>
+          </div>
         </div>
       </div>
     </div>

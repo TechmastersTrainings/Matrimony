@@ -1,11 +1,10 @@
-import React from "react";
-import "./globals.css";
-import { AdminNavbar } from "../components/AdminNavbar";
-import { ADMIN_CONFIG } from "../lib/config";
+import React from 'react';
+import './globals.css';
+import { AdminNavbar } from '../components/AdminNavbar';
 
 export const metadata = {
-  title: `${ADMIN_CONFIG.portalName} | Management Console`,
-  description: "Administrative console foundation for Christian Matrimony platform.",
+  title: 'Christian Matrimony Admin | Management Console',
+  description: 'Administrative moderation and management portal for Christian Matrimony.',
 };
 
 export default function RootLayout({
@@ -14,10 +13,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body>
+    <html lang="en" className="dark">
+      <body className="bg-slate-950 text-slate-100 min-h-screen antialiased selection:bg-amber-500 selection:text-slate-950">
         <AdminNavbar />
-        <main>{children}</main>
+        <main className="min-h-[calc(100vh-64px)]">{children}</main>
       </body>
     </html>
   );

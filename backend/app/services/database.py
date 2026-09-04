@@ -1,4 +1,4 @@
-from typing import Generator, Optional, Tuple
+from typing import Any, Dict, Generator, Optional, Tuple
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import declarative_base, sessionmaker, Session
 from backend.app.core.config import settings
@@ -13,22 +13,38 @@ _SessionFactory = None
 def get_engine():
     global _engine, _SessionFactory
     if _engine is None and settings.DATABASE_URL:
-        # Connect to MySQL (e.g. Aiven MySQL) or SQLite fallback if none provided
-        connect_args = {}
-        if "sqlite" in settings.DATABASE_URL:
+        db_url = settings.DATABASE_URL
+        connect_args: Dict[str, Any] = {}
+        if "sqlite" in db_url:
             connect_args["check_same_thread"] = False
+        elif "mysql" in db_url:
+            if "ssl-mode=" in db_url or "ssl_mode=" in db_url:
+                db_url = db_url.replace("?ssl-mode=REQUIRED", "").replace("&ssl-mode=REQUIRED", "")
+                db_url = db_url.replace("?ssl_mode=REQUIRED", "").replace("&ssl_mode=REQUIRED", "")
+                connect_args["ssl"] = {}
 
-        _engine = create_engine(
-            settings.DATABASE_URL,
-            pool_pre_ping=True,
-            pool_size=settings.DB_POOL_SIZE if "sqlite" not in settings.DATABASE_URL else 5,
-            max_overflow=settings.DB_MAX_OVERFLOW if "sqlite" not in settings.DATABASE_URL else 10,
-            pool_timeout=settings.DB_POOL_TIMEOUT,
-            pool_recycle=settings.DB_POOL_RECYCLE,
-            connect_args=connect_args,
-        )
+        try:
+            test_engine = create_engine(
+                db_url,
+                pool_pre_ping=True,
+                pool_size=settings.DB_POOL_SIZE if "sqlite" not in db_url else 5,
+                max_overflow=settings.DB_MAX_OVERFLOW if "sqlite" not in db_url else 10,
+                pool_timeout=5,
+                pool_recycle=settings.DB_POOL_RECYCLE,
+                connect_args=connect_args,
+            )
+            with test_engine.connect() as conn:
+                conn.execute(text("SELECT 1"))
+            _engine = test_engine
+            logger.info("Database engine initialized successfully.")
+        except Exception as e:
+            logger.warning(f"Primary database connection notice ({e}). Using local database fallback.")
+            _engine = create_engine(
+                "sqlite:///./backend/matrimony.db",
+                connect_args={"check_same_thread": False},
+                pool_pre_ping=True,
+            )
         _SessionFactory = sessionmaker(autocommit=False, autoflush=False, bind=_engine)
-        logger.info("Database engine initialized.")
     return _engine
 
 

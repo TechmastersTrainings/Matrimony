@@ -4,43 +4,102 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { apiClient } from '../../lib/api-client';
 import { CandidateCard } from '../../types';
+import { getPhotoUrl } from '../../lib/utils';
 
 export default function DiscoverPage() {
   const [candidates, setCandidates] = useState<CandidateCard[]>([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
 
-  // Filters
+  // View Mode: 'horizontal' (Jeevansathi style) vs 'grid'
+  const [viewMode, setViewMode] = useState<'horizontal' | 'grid'>('horizontal');
+
+  // Filter States
+  const [searchQuery, setSearchQuery] = useState('');
   const [gender, setGender] = useState('');
   const [denomination, setDenomination] = useState('');
-  const [district, setDistrict] = useState('Bidar');
+  const [district, setDistrict] = useState('');
   const [ageMin, setAgeMin] = useState('');
   const [ageMax, setAgeMax] = useState('');
+
+  // Shortlisted IDs
+  const [shortlisted, setShortlisted] = useState<number[]>([]);
+  const [isAuthRequired, setIsAuthRequired] = useState(false);
 
   const fetchProfiles = async () => {
     setLoading(true);
     setError(null);
     try {
       const data = await apiClient.searchProfiles({
+        q: searchQuery || undefined,
         gender: gender || undefined,
         denominations: denomination ? [denomination] : undefined,
-        district: district === 'ALL' ? undefined : district,
+        district: district === 'ALL' || !district ? undefined : district,
         age_min: ageMin ? parseInt(ageMin) : undefined,
         age_max: ageMax ? parseInt(ageMax) : undefined,
       });
       setCandidates(data.profiles || []);
       setTotal(data.total || 0);
+      setIsAuthRequired(false);
     } catch (err: any) {
-      setError(err.message || 'Failed to load profiles');
+      const msg = err.message || '';
+      if (typeof window !== 'undefined' && !localStorage.getItem('access_token') && !localStorage.getItem('token')) {
+        setIsAuthRequired(true);
+      } else {
+        setError(msg || 'Failed to load profiles');
+      }
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      const adminToken = urlParams.get('admin_token');
+      if (adminToken) {
+        localStorage.setItem('access_token', adminToken);
+        localStorage.setItem('token', adminToken);
+        localStorage.setItem('user_role', 'SUPER_ADMIN');
+        setIsAdmin(true);
+        setIsAuthRequired(false);
+        window.history.replaceState({}, document.title, window.location.pathname);
+      } else {
+        const token = localStorage.getItem('access_token') || localStorage.getItem('token');
+        if (!token) {
+          setIsAuthRequired(true);
+          setLoading(false);
+          return;
+        }
+        const role = localStorage.getItem('user_role');
+        setIsAdmin(role === 'ADMIN' || role === 'SUPER_ADMIN');
+      }
+    }
     fetchProfiles();
   }, [gender, denomination, district]);
+
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    fetchProfiles();
+  };
+
+  const handleResetFilters = () => {
+    setSearchQuery('');
+    setGender('');
+    setDenomination('');
+    setDistrict('');
+    setAgeMin('');
+    setAgeMax('');
+    apiClient
+      .searchProfiles({})
+      .then((data) => {
+        setCandidates(data.profiles || []);
+        setTotal(data.total || 0);
+      })
+      .catch((err) => setError(err.message));
+  };
 
   const handleSendInterest = async (userId: number) => {
     try {
@@ -51,55 +110,108 @@ export default function DiscoverPage() {
     }
   };
 
+  const toggleShortlist = (id: number) => {
+    if (shortlisted.includes(id)) {
+      setShortlisted(shortlisted.filter((item) => item !== id));
+    } else {
+      setShortlisted([...shortlisted, id]);
+    }
+  };
+
   return (
-    <div className="bg-slate-50 min-h-screen py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Top Header */}
-        <div className="bg-white rounded-xl p-6 border border-slate-200 shadow-xs mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+    <div className="relative min-h-[calc(100vh-80px)] py-10 bg-slate-950 text-white font-sans overflow-hidden">
+      {/* Ambient Background Glows */}
+      <div className="absolute top-10 right-1/4 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-10 left-1/4 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-6">
+        {/* Top Header Card */}
+        <div className="bg-slate-900/80 backdrop-blur-xl border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl flex flex-col md:flex-row md:items-center md:justify-between gap-6">
           <div>
-            <span className="text-xs font-bold uppercase tracking-wider text-blue-700 block mb-1">
-              Matrimonial Match Search
-            </span>
-            <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
-              Verified Candidate Profiles
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-900/40 border border-blue-700/50 text-blue-300 text-[11px] font-bold uppercase tracking-wider mb-2">
+              Jeevansathi Style Matrimonial Search
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+              Discover <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-500">Verified Christian Candidates</span>
             </h1>
-            <p className="text-xs sm:text-sm text-slate-500 mt-1">
-              Search Christian brides and grooms in Bidar, Karnataka, and across India.
+            <p className="text-xs sm:text-sm text-slate-400 mt-1">
+              High-density candidate profiles across Methodist, CSI, Catholic, Baptist, Pentecostal &amp; Protestant fellowships.
             </p>
           </div>
+
           <div className="flex items-center gap-3">
             <Link
               href="/interests"
-              className="bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold px-4 py-2.5 rounded-lg transition-colors"
+              className="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold px-5 py-3 rounded-xl border border-slate-700 transition-all"
             >
-              My Interests & Matches
+              My Interests &amp; Matches
             </Link>
             <Link
               href="/chat"
-              className="bg-blue-700 hover:bg-blue-800 text-white text-xs font-semibold px-4 py-2.5 rounded-lg transition-colors shadow-xs"
+              className="bg-gradient-to-r from-blue-700 to-blue-900 hover:from-blue-600 hover:to-blue-800 text-white text-xs font-bold px-5 py-3 rounded-xl shadow-lg shadow-blue-950 border border-blue-600/50 transition-all transform hover:-translate-y-0.5"
             >
               Messages
             </Link>
           </div>
         </div>
 
+        {/* Super Admin Access Banner */}
+        {isAdmin && (
+          <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-500/15 to-blue-600/15 border-2 border-amber-500/40 shadow-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <div className="px-2.5 py-1 rounded-xl bg-amber-500 text-slate-950 font-black text-xs shadow-md">
+                Admin
+              </div>
+              <div>
+                <h4 className="text-xs font-extrabold text-white">
+                  Super Admin / Moderator Access Active
+                </h4>
+                <p className="text-[11px] text-amber-300">
+                  Viewing all profiles (Grooms &amp; Brides, Submitted &amp; Approved) • Subscription check bypassed • Confidential contacts unmasked.
+                </p>
+              </div>
+            </div>
+            <a
+              href="http://localhost:3001/profiles"
+              target="_blank"
+              rel="noreferrer"
+              className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs text-center shadow-md transition-all shrink-0"
+            >
+              Open Admin Review Console (Port 3001) →
+            </a>
+          </div>
+        )}
+
+        {/* Free Text Search Bar */}
+        <form onSubmit={handleSearchSubmit} className="flex flex-col sm:flex-row gap-3">
+          <div className="relative flex-1">
+            <input
+              type="text"
+              placeholder="Search candidate name, church, occupation, education, or district..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full text-xs font-medium rounded-2xl border border-slate-800 p-4 bg-slate-900/90 text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 shadow-xl"
+            />
+          </div>
+          <button
+            type="submit"
+            className="px-8 py-4 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-extrabold text-xs shadow-lg transition-all"
+          >
+            Search Candidates
+          </button>
+        </form>
+
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          {/* Filter Sidebar */}
-          <div className="lg:col-span-1 bg-white border border-slate-200 rounded-xl p-5 shadow-xs h-fit space-y-5">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-              <h2 className="font-bold text-slate-900 text-sm">
+          {/* Left Filter Sidebar */}
+          <div className="lg:col-span-1 bg-slate-900/80 backdrop-blur-xl border border-slate-800 rounded-3xl p-6 shadow-2xl h-fit space-y-5">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+              <h2 className="font-extrabold text-white text-sm uppercase tracking-wider">
                 Filter Search
               </h2>
               <button
-                onClick={() => {
-                  setGender('');
-                  setDenomination('');
-                  setDistrict('Bidar');
-                  setAgeMin('');
-                  setAgeMax('');
-                  fetchProfiles();
-                }}
-                className="text-xs text-blue-700 font-semibold hover:underline"
+                type="button"
+                onClick={handleResetFilters}
+                className="text-xs text-amber-400 font-bold hover:underline"
               >
                 Reset All
               </button>
@@ -108,13 +220,15 @@ export default function DiscoverPage() {
             <div className="space-y-4">
               {/* Looking for */}
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">Looking For</label>
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">
+                  Looking For
+                </label>
                 <select
                   value={gender}
                   onChange={(e) => setGender(e.target.value)}
-                  className="w-full text-xs font-medium rounded-lg border border-slate-300 p-2.5 bg-slate-50 text-slate-900 focus:outline-none focus:border-blue-600"
+                  className="w-full text-xs font-medium rounded-xl border border-slate-800 p-3 bg-slate-950 text-white focus:outline-none focus:border-amber-400"
                 >
-                  <option value="">All Profiles</option>
+                  <option value="">All Profiles (Bride &amp; Groom)</option>
                   <option value="FEMALE">Female (Bride)</option>
                   <option value="MALE">Male (Groom)</option>
                 </select>
@@ -122,11 +236,13 @@ export default function DiscoverPage() {
 
               {/* Denomination */}
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">Denomination</label>
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">
+                  Denomination
+                </label>
                 <select
                   value={denomination}
                   onChange={(e) => setDenomination(e.target.value)}
-                  className="w-full text-xs font-medium rounded-lg border border-slate-300 p-2.5 bg-slate-50 text-slate-900 focus:outline-none focus:border-blue-600"
+                  className="w-full text-xs font-medium rounded-xl border border-slate-800 p-3 bg-slate-950 text-white focus:outline-none focus:border-amber-400"
                 >
                   <option value="">All Denominations</option>
                   <option value="METHODIST">Methodist (MCI)</option>
@@ -139,160 +255,398 @@ export default function DiscoverPage() {
                 </select>
               </div>
 
-              {/* City / District */}
+              {/* Location / District */}
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">Location</label>
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">
+                  Location / District
+                </label>
                 <select
                   value={district}
                   onChange={(e) => setDistrict(e.target.value)}
-                  className="w-full text-xs font-medium rounded-lg border border-slate-300 p-2.5 bg-slate-50 text-slate-900 focus:outline-none focus:border-blue-600"
+                  className="w-full text-xs font-medium rounded-xl border border-slate-800 p-3 bg-slate-950 text-white focus:outline-none focus:border-amber-400"
                 >
+                  <option value="">All Locations (Pan-India)</option>
                   <option value="Bidar">Bidar (Karnataka)</option>
                   <option value="Bengaluru">Bengaluru</option>
                   <option value="Kalaburagi">Kalaburagi / Gulbarga</option>
                   <option value="Hyderabad">Hyderabad</option>
-                  <option value="ALL">All India</option>
                 </select>
               </div>
 
-              {/* Age */}
+              {/* Age Range */}
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">Age Range</label>
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">
+                  Age Range
+                </label>
                 <div className="flex items-center gap-2">
                   <input
                     type="number"
-                    placeholder="Min"
+                    placeholder="Min (18)"
                     value={ageMin}
                     onChange={(e) => setAgeMin(e.target.value)}
-                    className="w-1/2 text-xs font-medium rounded-lg border border-slate-300 p-2 bg-slate-50 text-slate-900 focus:outline-none focus:border-blue-600"
+                    className="w-1/2 text-xs font-medium rounded-xl border border-slate-800 p-2.5 bg-slate-950 text-white focus:outline-none focus:border-amber-400"
                   />
-                  <span className="text-xs text-slate-400">to</span>
+                  <span className="text-slate-600 text-xs">-</span>
                   <input
                     type="number"
-                    placeholder="Max"
+                    placeholder="Max (60)"
                     value={ageMax}
                     onChange={(e) => setAgeMax(e.target.value)}
-                    className="w-1/2 text-xs font-medium rounded-lg border border-slate-300 p-2 bg-slate-50 text-slate-900 focus:outline-none focus:border-blue-600"
+                    className="w-1/2 text-xs font-medium rounded-xl border border-slate-800 p-2.5 bg-slate-950 text-white focus:outline-none focus:border-amber-400"
                   />
                 </div>
               </div>
 
               <button
+                type="button"
                 onClick={fetchProfiles}
-                className="w-full py-2.5 rounded-lg bg-blue-700 hover:bg-blue-800 text-white font-semibold text-xs shadow-xs transition-all"
+                className="w-full py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold border border-slate-700 transition-all"
               >
                 Apply Filters
               </button>
             </div>
           </div>
 
-          {/* Results Grid */}
-          <div className="lg:col-span-3">
-            <div className="flex items-center justify-between mb-4">
-              <span className="text-xs font-semibold text-slate-600">
-                Showing <strong className="text-slate-900">{candidates.length}</strong> of <strong className="text-slate-900">{total}</strong> verified profiles
+          {/* Right Candidate Stream */}
+          <div className="lg:col-span-3 space-y-5">
+            {/* Header Controls: Count + Horizontal/Grid Toggle */}
+            <div className="flex items-center justify-between bg-slate-900/60 border border-slate-800/80 px-5 py-3.5 rounded-2xl">
+              <span className="text-xs font-bold text-slate-300 uppercase tracking-wider">
+                Showing <strong className="text-amber-400">{candidates.length}</strong> of {total} Matches
               </span>
+
+              {/* View Layout Switcher */}
+              <div className="flex items-center gap-2 bg-slate-950 p-1 rounded-xl border border-slate-800">
+                <button
+                  onClick={() => setViewMode('horizontal')}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                    viewMode === 'horizontal'
+                      ? 'bg-amber-500 text-slate-950 shadow-md'
+                      : 'text-slate-400 hover:text-white'
+                  }`}
+                >
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                  </svg>
+                  <span>Horizontal (Jeevansathi)</span>
+                </button>
+
+                <button
+                  onClick={() => setViewMode('grid')}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                    viewMode === 'grid'
+                      ? 'bg-amber-500 text-slate-950 shadow-md'
+                      : 'text-slate-400 hover:text-white'
+                  }`}
+                >
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                  </svg>
+                  <span>Grid</span>
+                </button>
+              </div>
             </div>
 
             {loading ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {[1, 2, 3, 4, 5, 6].map((i) => (
-                  <div key={i} className="bg-white border border-slate-200 rounded-xl h-80 animate-pulse" />
+              <div className="space-y-4">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="h-56 bg-slate-900 border border-slate-800 rounded-3xl animate-pulse" />
                 ))}
               </div>
+            ) : isAuthRequired ? (
+              <div className="p-10 sm:p-14 rounded-3xl bg-slate-900/90 border border-slate-800 text-center space-y-6 shadow-2xl">
+                <div className="w-12 h-12 rounded-full bg-blue-900/40 border border-blue-700/50 text-blue-400 flex items-center justify-center mx-auto text-xs font-mono font-bold shadow-lg shadow-blue-950">
+                  Auth
+                </div>
+                <div className="space-y-2">
+                  <h3 className="text-xl sm:text-2xl font-extrabold text-white">
+                    Member Sign-In Required
+                  </h3>
+                  <p className="text-xs sm:text-sm text-slate-300 max-w-md mx-auto leading-relaxed">
+                    To safeguard candidate privacy and family dignity, full candidate discovery is exclusively accessible to verified Christian members.
+                  </p>
+                </div>
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+                  <Link
+                    href="/login?redirect=/discover"
+                    className="px-6 py-3 rounded-xl bg-gradient-to-r from-blue-700 to-blue-900 hover:from-blue-600 hover:to-blue-800 text-white font-extrabold text-xs shadow-lg shadow-blue-950 transition-all"
+                  >
+                    Sign In to View Matches →
+                  </Link>
+                  <Link
+                    href="/register"
+                    className="px-6 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs border border-slate-700 transition-all"
+                  >
+                    Register Free Account
+                  </Link>
+                </div>
+              </div>
             ) : error ? (
-              <div className="bg-white border border-red-200 rounded-xl p-8 text-center text-red-600 text-xs">
+              <div className="p-8 rounded-3xl bg-slate-900 border border-slate-800 text-center text-xs text-red-400">
                 {error}
               </div>
             ) : candidates.length === 0 ? (
-              <div className="bg-white border border-slate-200 rounded-xl p-12 text-center">
-                <h3 className="text-base font-bold text-slate-900 mb-1">
-                  No matching profiles found
-                </h3>
-                <p className="text-xs text-slate-500 mb-4">
-                  Try broadening your search filters or clear location filters to view more candidates.
+              <div className="p-12 rounded-3xl bg-slate-900 border border-slate-800 text-center space-y-3">
+                <div className="w-12 h-12 rounded-2xl bg-amber-500/20 text-amber-400 font-bold flex items-center justify-center mx-auto text-xs font-mono">
+                  Search
+                </div>
+                <h3 className="text-sm font-bold text-white">No Profiles Found</h3>
+                <p className="text-xs text-slate-400 max-w-sm mx-auto">
+                  Try adjusting your filters or resetting location to &quot;All Locations&quot; to view all verified candidates.
                 </p>
                 <button
-                  onClick={() => {
-                    setGender('');
-                    setDenomination('');
-                    setDistrict('ALL');
-                    fetchProfiles();
-                  }}
-                  className="px-4 py-2 rounded-lg bg-blue-700 text-white text-xs font-semibold"
+                  type="button"
+                  onClick={handleResetFilters}
+                  className="px-6 py-2.5 rounded-xl bg-amber-500 text-slate-950 text-xs font-bold"
                 >
-                  View All India Profiles
+                  Reset Filters &amp; Show All
                 </button>
               </div>
+            ) : viewMode === 'horizontal' ? (
+              /* JEEVANSATHI HORIZONTAL CARD LAYOUT */
+              <div className="space-y-5">
+                {candidates.map((c) => {
+                  const isSaved = shortlisted.includes(c.id);
+                  return (
+                    <div
+                      key={c.id}
+                      className="bg-slate-900/90 backdrop-blur-xl border border-slate-800 hover:border-amber-500/50 rounded-3xl p-5 md:p-6 shadow-2xl transition-all duration-300 group flex flex-col md:flex-row items-stretch gap-6"
+                    >
+                      {/* Left: Photo & Badges Container */}
+                      <div className="w-full md:w-56 h-64 md:h-auto rounded-2xl relative overflow-hidden shrink-0 bg-slate-950 border border-slate-800/80">
+                        {c.primary_photo ? (
+                          <img
+                            src={getPhotoUrl(c.primary_photo)}
+                            alt={c.first_name}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                            onError={(e) => {
+                              e.currentTarget.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25' viewBox='0 0 100 100'%3E%3Crect width='100%25' height='100%25' fill='%230f172a'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23f59e0b' font-family='sans-serif' font-weight='bold' font-size='16'%3ECM%3C/text%3E%3C/svg%3E";
+                            }}
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center font-black text-3xl text-amber-400">
+                            {c.first_name[0]}
+                          </div>
+                        )}
+
+                        {/* Top Overlay Badges */}
+                        <div className="absolute top-3 left-3 bg-emerald-950/90 backdrop-blur-md text-emerald-300 text-[10px] font-extrabold px-2.5 py-1 rounded-lg border border-emerald-800/80 shadow-md">
+                          Verified
+                        </div>
+
+                        <div className="absolute top-3 right-3 bg-slate-950/80 backdrop-blur-md text-amber-400 text-[10px] font-bold px-2.5 py-1 rounded-lg border border-slate-800">
+                          CM-{c.id}
+                        </div>
+
+                        <div className="absolute bottom-3 left-3 right-3 bg-slate-950/80 backdrop-blur-md text-slate-300 text-[10px] font-semibold px-2 py-1 rounded-lg border border-slate-800 text-center">
+                          5 Photos Available
+                        </div>
+                      </div>
+
+                      {/* Right Main Container (Full Width Stack) */}
+                      <div className="flex-1 flex flex-col justify-between space-y-4">
+                        {/* 1. Candidate Header */}
+                        <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-slate-800/80">
+                          <div>
+                            <div className="flex items-center gap-2">
+                              <h3 className="font-extrabold text-xl text-white group-hover:text-amber-400 transition-colors">
+                                {c.first_name} {c.last_name}
+                              </h3>
+                              {c.status && (
+                                <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded-md uppercase border ${
+                                  c.status === 'APPROVED' ? 'bg-emerald-950 text-emerald-300 border-emerald-800' : 'bg-blue-950 text-blue-300 border-blue-800'
+                                }`}>
+                                  {c.status}
+                                </span>
+                              )}
+                            </div>
+                            <p className="text-xs text-amber-400 font-semibold mt-0.5">
+                              {c.age ? `${c.age} Yrs` : '—'}, {c.height_cm ? `${Math.floor(c.height_cm / 30.48)}'${Math.round((c.height_cm % 30.48) / 2.54)}"` : 'Height N/A'} • {c.marital_status ? c.marital_status.replace('_', ' ') : 'Never Married'}
+                            </p>
+
+                            {/* Admin Unmasked Contact Strip */}
+                            {isAdmin && (c.mobile_number || c.email) && (
+                              <div className="mt-2 py-1 px-2.5 rounded-lg bg-amber-500/10 border border-amber-500/30 flex flex-wrap items-center gap-3 text-xs">
+                                {c.mobile_number && (
+                                  <a href={`tel:${c.mobile_number}`} className="text-white font-mono font-bold hover:text-amber-400 transition-colors">
+                                    Phone: +91 {c.mobile_number}
+                                  </a>
+                                )}
+                                {c.email && (
+                                  <a href={`mailto:${c.email}`} className="text-slate-300 font-medium hover:text-amber-400 transition-colors">
+                                    Email: {c.email}
+                                  </a>
+                                )}
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Shortlist Heart Button */}
+                          <button
+                            onClick={() => toggleShortlist(c.id)}
+                            className={`p-2.5 rounded-xl border transition-all flex items-center gap-1.5 text-xs font-bold ${
+                              isSaved
+                                ? 'bg-rose-950/80 border-rose-700 text-rose-400'
+                                : 'bg-slate-950 border-slate-800 text-slate-400 hover:text-rose-400 hover:border-slate-700'
+                            }`}
+                            title={isSaved ? 'Shortlisted' : 'Save to Shortlist'}
+                          >
+                            <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                            </svg>
+                            <span>{isSaved ? 'Shortlisted' : 'Save'}</span>
+                          </button>
+                        </div>
+
+                        {/* 2. Key Attributes Grid (2-Column Jeevansathi Format) */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2.5 text-xs">
+                          <div className="flex items-center gap-2">
+                            <span className="text-slate-400 font-semibold w-24 shrink-0">Denomination:</span>
+                            <span className="text-white font-medium truncate">{c.denomination || 'Christian'}</span>
+                          </div>
+
+                          <div className="flex items-center gap-2">
+                            <span className="text-slate-400 font-semibold w-24 shrink-0">Church:</span>
+                            <span className="text-white font-medium truncate">{c.church_name || 'Local Fellowship'}</span>
+                          </div>
+
+                          <div className="flex items-center gap-2">
+                            <span className="text-slate-400 font-semibold w-24 shrink-0">Education:</span>
+                            <span className="text-white font-medium truncate">{c.highest_education || 'Graduate'}</span>
+                          </div>
+
+                          <div className="flex items-center gap-2">
+                            <span className="text-slate-400 font-semibold w-24 shrink-0">Profession:</span>
+                            <span className="text-white font-medium truncate">{c.occupation_title || 'Employed Professional'}</span>
+                          </div>
+
+                          <div className="flex items-center gap-2">
+                            <span className="text-slate-400 font-semibold w-24 shrink-0">Location:</span>
+                            <span className="text-amber-400/90 font-medium truncate">{c.district || 'Bidar'}, {c.state || 'Karnataka'}</span>
+                          </div>
+
+                          <div className="flex items-center gap-2">
+                            <span className="text-slate-400 font-semibold w-24 shrink-0">Annual Income:</span>
+                            <span className="text-emerald-400 font-medium truncate">
+                              {c.annual_income_min ? `₹${(c.annual_income_min / 100000).toFixed(1)} LPA+` : 'Confidential'}
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* 3. Faith & Pastoral Verification Footer Banner */}
+                        <div className="p-3 rounded-xl bg-slate-950/80 border border-slate-800/80 text-[11px] text-slate-300 flex flex-wrap items-center gap-3">
+                          <span className="text-emerald-400 font-extrabold flex items-center gap-1">
+                            Pastoral Verified
+                          </span>
+                          <span className="text-slate-700">•</span>
+                          <span className="font-semibold text-slate-300">Church Membership Active</span>
+                          <span className="text-slate-700">•</span>
+                          <span className="font-semibold text-slate-300">Controlled Contact Reveal</span>
+                        </div>
+
+                        {/* 4. Action Buttons Bar DIRECTLY BELOW Pastoral Banner */}
+                        <div className="pt-2 flex flex-col sm:flex-row items-center gap-3">
+                          <button
+                            type="button"
+                            onClick={() => handleSendInterest(c.user_id)}
+                            className="w-full sm:flex-1 py-3 px-6 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-extrabold text-xs text-center transition-all shadow-lg shadow-amber-950/30 flex items-center justify-center gap-2"
+                          >
+                            <span>Express Interest</span>
+                            <span>→</span>
+                          </button>
+
+                          <Link
+                            href={`/profile/${c.id}`}
+                            className="w-full sm:flex-1 py-3 px-6 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold text-center border border-slate-700 transition-all flex items-center justify-center gap-1.5"
+                          >
+                            <span>View Full Profile</span>
+                            <span>→</span>
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             ) : (
+              /* GRID VIEW FALLBACK */
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {candidates.map((c) => (
                   <div
                     key={c.id}
-                    className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-xs hover:shadow-md transition-all duration-200 flex flex-col justify-between"
+                    className="bg-slate-900/80 backdrop-blur-xl border border-slate-800 hover:border-amber-500/50 rounded-3xl overflow-hidden shadow-2xl group transition-all duration-300 flex flex-col justify-between"
                   >
-                    {/* Portrait Photo */}
-                    <div className="relative aspect-4/5 bg-slate-100 overflow-hidden">
-                      {c.primary_photo ? (
-                        <img
-                          src={c.primary_photo}
-                          alt={`${c.first_name} ${c.last_name}`}
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex flex-col items-center justify-center bg-slate-100 text-slate-400">
-                          <span className="text-xs font-medium">Photo Protected</span>
+                    <div>
+                      {/* Photo Header */}
+                      <div className="aspect-[4/5] bg-slate-950 relative overflow-hidden">
+                        {c.primary_photo ? (
+                          <img
+                            src={getPhotoUrl(c.primary_photo)}
+                            alt={c.first_name}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                            onError={(e) => {
+                              e.currentTarget.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25' viewBox='0 0 100 100'%3E%3Crect width='100%25' height='100%25' fill='%230f172a'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23f59e0b' font-family='sans-serif' font-weight='bold' font-size='16'%3ECM%3C/text%3E%3C/svg%3E";
+                            }}
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center font-black text-2xl text-amber-400">
+                            {c.first_name[0]}
+                          </div>
+                        )}
+
+                        <div className="absolute top-3 left-3 bg-slate-950/80 backdrop-blur-md text-amber-400 text-[10px] font-bold px-2.5 py-1 rounded-lg border border-slate-800">
+                          {c.denomination || 'Christian'}
                         </div>
-                      )}
-                      <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />
 
-                      <div className="absolute top-2.5 left-2.5">
-                        <span className="bg-slate-900/90 text-white text-[10px] font-semibold px-2 py-0.5 rounded-md">
-                          {c.denomination}
-                        </span>
-                      </div>
-
-                      <div className="absolute top-2.5 right-2.5">
-                        <span className="bg-emerald-600 text-white text-[10px] font-semibold px-2 py-0.5 rounded-md">
+                        <div className="absolute top-3 right-3 bg-emerald-950/80 backdrop-blur-md text-emerald-300 text-[10px] font-bold px-2.5 py-1 rounded-lg border border-emerald-800">
                           Verified
-                        </span>
+                        </div>
                       </div>
 
-                      <div className="absolute bottom-2.5 left-2.5 right-2.5 text-white">
-                        <h3 className="text-base font-bold">
-                          {c.first_name} {c.last_name}, {c.age || '—'}
-                        </h3>
-                        <p className="text-[11px] text-slate-200 truncate">
-                          {c.district}, {c.state}
+                      {/* Content Info */}
+                      <div className="p-5 space-y-2">
+                        <div className="flex items-center justify-between">
+                          <h3 className="font-extrabold text-base text-white group-hover:text-amber-400 transition-colors">
+                            {c.first_name} {c.last_name}
+                          </h3>
+                          <span className="text-xs text-slate-400 font-medium">
+                            {c.age || '—'} Yrs
+                          </span>
+                        </div>
+
+                        <p className="text-xs text-slate-300 font-medium">
+                          {c.occupation_title || c.highest_education || 'Member'}
                         </p>
+
+                        <p className="text-[11px] text-amber-400/90 font-semibold">
+                          {c.district || 'Bidar'}, {c.state || 'Karnataka'}
+                        </p>
+
+                        {/* Admin Unmasked Contact Strip */}
+                        {isAdmin && (c.mobile_number || c.email) && (
+                          <div className="pt-2 border-t border-slate-800/80 text-[11px] text-amber-300 font-mono space-y-0.5">
+                            {c.mobile_number && <div>Phone: +91 {c.mobile_number}</div>}
+                            {c.email && <div className="truncate text-slate-300">Email: {c.email}</div>}
+                          </div>
+                        )}
                       </div>
                     </div>
 
-                    {/* Card Content */}
-                    <div className="p-4 space-y-3 flex-1 flex flex-col justify-between">
-                      <div className="space-y-1 text-xs text-slate-600">
-                        <p className="font-semibold text-slate-800 truncate">
-                          {c.occupation_title || c.highest_education || 'Professional'}
-                        </p>
-                        <p className="text-[11px] text-slate-500 truncate">
-                          {c.church_name || `${c.denomination} Church`}
-                        </p>
-                      </div>
-
-                      <div className="pt-3 border-t border-slate-100 grid grid-cols-2 gap-2">
-                        <Link
-                          href={`/profile/${c.id}`}
-                          className="text-center py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold transition-colors"
-                        >
-                          View Profile
-                        </Link>
-                        <button
-                          onClick={() => handleSendInterest(c.user_id)}
-                          className="text-center py-2 rounded-lg bg-blue-700 hover:bg-blue-800 text-white text-xs font-semibold transition-colors shadow-2xs"
-                        >
-                          Send Interest
-                        </button>
-                      </div>
+                    {/* CTAs */}
+                    <div className="p-5 pt-0 grid grid-cols-2 gap-2">
+                      <Link
+                        href={`/profile/${c.id}`}
+                        className="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold text-center border border-slate-700 transition-all"
+                      >
+                        View Bio
+                      </Link>
+                      <button
+                        type="button"
+                        onClick={() => handleSendInterest(c.user_id)}
+                        className="w-full py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 text-xs font-extrabold text-center transition-all shadow-md"
+                      >
+                        Express Interest
+                      </button>
                     </div>
                   </div>
                 ))}

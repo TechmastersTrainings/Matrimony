@@ -1,11 +1,18 @@
 from abc import ABC, abstractmethod
+import io
+import os
 from typing import BinaryIO, Dict, Optional, Tuple, Union
 import boto3
 from botocore.config import Config
 from botocore.exceptions import ClientError
+from PIL import Image, ImageDraw, ImageFont
+
 from backend.app.core.config import settings
 from backend.app.core.logger import logger
 from backend.app.core.exceptions import StorageServiceException
+
+UPLOAD_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "uploads"))
+os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 
 class IStorageService(ABC):
@@ -98,9 +105,9 @@ class CloudflareR2StorageService(IStorageService):
                 Body=body,
                 ContentType=content_type,
             )
-            if self.public_url:
+            if self.public_url and self.public_url.strip():
                 return f"{self.public_url.rstrip('/')}/{destination_path.lstrip('/')}"
-            return destination_path
+            return f"http://localhost:8000/media/{destination_path.lstrip('/')}"
         except ClientError as e:
             logger.error(f"R2 upload error for {destination_path}: {e}")
             raise StorageServiceException(f"Failed to upload file to R2: {str(e)}")
@@ -150,11 +157,12 @@ class CloudflareR2StorageService(IStorageService):
             return False, f"Cloudflare R2 error: {str(e)}"
 
 
-class MockStorageService(IStorageService):
-    """In-memory mock storage for local testing and development without live R2 credentials."""
+class LocalStorageService(IStorageService):
+    """Local disk storage for development and offline testing."""
 
     def __init__(self):
-        self._files: Dict[str, bytes] = {}
+        self.upload_dir = UPLOAD_DIR
+        self.base_url = "http://localhost:8000/media"
 
     def upload_file(
         self,
@@ -163,34 +171,49 @@ class MockStorageService(IStorageService):
         content_type: str = "application/octet-stream",
     ) -> str:
         body = file_obj if isinstance(file_obj, (bytes, bytearray)) else file_obj.read()
-        self._files[destination_path] = body
-        public_url = settings.R2_PUBLIC_URL or "https://media.christianmatrimony.app"
-        return f"{public_url.rstrip('/')}/{destination_path.lstrip('/')}"
+        full_path = os.path.join(self.upload_dir, destination_path)
+        os.makedirs(os.path.dirname(full_path), exist_ok=True)
+        with open(full_path, "wb") as f:
+            f.write(body)
+        return f"{self.base_url}/{destination_path.lstrip('/')}"
 
     def get_file(self, file_path: str) -> bytes:
-        if file_path in self._files:
-            return self._files[file_path]
-        return b"mock-file-content"
+        full_path = os.path.join(self.upload_dir, file_path)
+        if os.path.exists(full_path):
+            with open(full_path, "rb") as f:
+                return f.read()
+
+        # Generate a high quality fallback placeholder image on the fly
+        img = Image.new("RGB", (600, 750), color=(15, 23, 42))
+        draw = ImageDraw.Draw(img)
+        # Draw elegant decorative frame
+        draw.rectangle([(20, 20), (580, 730)], outline=(245, 158, 11), width=3)
+        draw.ellipse([(200, 200), (400, 400)], fill=(30, 41, 59), outline=(245, 158, 11), width=2)
+        # Save to memory
+        buf = io.BytesIO()
+        img.save(buf, format="JPEG", quality=90)
+        return buf.getvalue()
 
     def delete_file(self, file_path: str) -> bool:
-        self._files.pop(file_path, None)
+        full_path = os.path.join(self.upload_dir, file_path)
+        if os.path.exists(full_path):
+            os.remove(full_path)
         return True
 
     def generate_presigned_url(self, file_path: str, expiration: int = 3600) -> str:
-        public_url = settings.R2_PUBLIC_URL or "https://media.christianmatrimony.app"
-        return f"{public_url.rstrip('/')}/{file_path.lstrip('/')}?token=mock-presigned"
+        return f"{self.base_url}/{file_path.lstrip('/')}"
 
     def check_health(self) -> Tuple[bool, str]:
-        return True, "Mock Storage connected (healthy)"
+        return True, "Local Storage connected (healthy)"
 
 
-# Default storage singleton with automatic mock fallback if R2 credentials missing in dev
+# Storage singletons
 _real_storage = CloudflareR2StorageService()
-_mock_storage = MockStorageService()
+_local_storage = LocalStorageService()
 
 
 def get_storage_service() -> IStorageService:
     """Dependency injector for storage service."""
     if settings.R2_ACCOUNT_ID and settings.R2_ACCESS_KEY_ID and settings.R2_SECRET_ACCESS_KEY:
         return _real_storage
-    return _mock_storage
+    return _local_storage

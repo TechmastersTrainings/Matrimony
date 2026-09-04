@@ -1,147 +1,153 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { apiClient } from '../../lib/api-client';
+import { CandidateCard } from '../../types';
 
 export function FeaturedProfiles() {
-  const sampleProfiles = [
-    {
-      id: 1,
-      name: 'Sarah',
-      age: 26,
-      city: 'Bidar',
-      state: 'Karnataka',
-      profession: 'Software Engineer (B.Tech)',
-      denomination: 'Methodist',
-      church: 'Centenary Methodist Church',
-      photo: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&auto=format&fit=crop&q=80',
-    },
-    {
-      id: 2,
-      name: 'Joshua',
-      age: 29,
-      city: 'Bengaluru',
-      state: 'Karnataka',
-      profession: 'Senior Product Manager (MBA)',
-      denomination: 'CSI',
-      church: "St. Mark's Cathedral",
-      photo: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&auto=format&fit=crop&q=80',
-    },
-    {
-      id: 3,
-      name: 'Rebecca',
-      age: 25,
-      city: 'Bidar',
-      state: 'Karnataka',
-      profession: 'Medical Doctor (MBBS)',
-      denomination: 'Roman Catholic',
-      church: 'St. Joseph Church',
-      photo: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=600&auto=format&fit=crop&q=80',
-    },
-    {
-      id: 4,
-      name: 'David',
-      age: 28,
-      city: 'Hyderabad',
-      state: 'Telangana',
-      profession: 'Civil Engineer (M.Tech)',
-      denomination: 'Baptist',
-      church: 'Centenary Baptist Church',
-      photo: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=600&auto=format&fit=crop&q=80',
-    },
-  ];
+  const [profiles, setProfiles] = useState<CandidateCard[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadRealProfiles() {
+      try {
+        const res = await apiClient.searchProfiles({ page_size: 4 });
+        if (res && Array.isArray(res.profiles)) {
+          setProfiles(res.profiles);
+        }
+      } catch {
+        setProfiles([]);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadRealProfiles();
+  }, []);
 
   return (
-    <section className="py-20 bg-white border-t border-[#E2E8F0]">
+    <section className="py-20 bg-slate-950 border-t border-slate-800 text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-14">
           <div>
-            <span className="text-xs font-bold uppercase tracking-widest text-[#C9A227]">
-              Curated Profiles
+            <span className="text-xs font-bold uppercase tracking-widest text-amber-400">
+              Verified User Profiles
             </span>
-            <h2 className="font-serif-heading text-3xl sm:text-4xl font-bold text-[#172554] mt-2 tracking-tight">
+            <h2 className="font-brand text-3xl sm:text-4xl font-bold text-white mt-2 tracking-tight">
               Meet People Who Share Your Values
             </h2>
-            <p className="text-sm text-[#64748B] mt-2">
-              Browse genuine, church-verified Christian brides and grooms with spiritual and family alignment.
+            <p className="text-sm text-slate-400 mt-2">
+              Browse genuine, registered Christian brides and grooms with spiritual and family alignment.
             </p>
           </div>
 
           <div className="mt-6 md:mt-0">
             <Link
               href="/discover"
-              className="inline-flex items-center gap-2 text-sm font-semibold text-[#172554] hover:text-[#1D4ED8] group bg-[#FAF9F6] border border-[#E2E8F0] px-5 py-2.5 rounded-full shadow-2xs hover:bg-white transition-all"
+              className="inline-flex items-center gap-2 text-xs font-bold text-slate-200 hover:text-amber-400 group bg-slate-900 border border-slate-800 px-5 py-2.5 rounded-full hover:bg-slate-800 transition-all"
             >
-              <span>View All Profiles</span>
+              <span>Search All Profiles</span>
               <span className="group-hover:translate-x-1 transition-transform">→</span>
             </Link>
           </div>
         </div>
 
         {/* Profile Cards Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {sampleProfiles.map((p) => (
-            <div
-              key={p.id}
-              className="bg-white border border-[#E2E8F0] rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group hover:-translate-y-1.5"
-            >
-              {/* Photo Area */}
-              <div className="relative aspect-4/5 bg-stone-100 overflow-hidden">
-                <img
-                  src={p.photo}
-                  alt={`${p.name}, ${p.profession}`}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#172554]/80 via-transparent to-transparent opacity-80" />
+        {loading ? (
+          <div className="py-12 text-center text-slate-500 text-sm">
+            Loading real candidate profiles...
+          </div>
+        ) : profiles.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {profiles.map((p) => (
+              <div
+                key={p.id}
+                className="bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 flex flex-col justify-between group hover:-translate-y-1.5"
+              >
+                {/* Photo Area */}
+                <div className="relative aspect-4/5 bg-slate-950 overflow-hidden flex items-center justify-center">
+                  {p.primary_photo?.photo_url ? (
+                    <img
+                      src={p.primary_photo.photo_url}
+                      alt={`${p.first_name} ${p.last_name}`}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                  ) : (
+                    <div className="flex flex-col items-center justify-center text-slate-600 gap-2">
+                      <span className="text-4xl">👤</span>
+                      <span className="text-xs font-semibold text-slate-400">Photo Confidential</span>
+                    </div>
+                  )}
 
-                {/* Badges */}
-                <div className="absolute top-3 left-3 flex gap-2">
-                  <span className="bg-white/95 backdrop-blur-xs text-[#172554] text-[10px] font-bold px-2.5 py-1 rounded-full shadow-xs border border-white/40">
-                    {p.denomination}
-                  </span>
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-transparent to-transparent opacity-90" />
+
+                  {/* Badges */}
+                  <div className="absolute top-3 left-3 flex gap-2">
+                    <span className="bg-slate-900/90 text-amber-400 text-[10px] font-bold px-2.5 py-1 rounded-full border border-amber-500/30">
+                      {p.denomination || 'Christian'}
+                    </span>
+                  </div>
+
+                  <div className="absolute top-3 right-3">
+                    <span className="bg-emerald-600/90 text-white text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+                      <span>✓</span>
+                      <span>Verified</span>
+                    </span>
+                  </div>
+
+                  {/* Text inside overlay */}
+                  <div className="absolute bottom-3 left-3 right-3 text-white">
+                    <h3 className="font-brand text-lg font-bold text-white">
+                      {p.first_name} {p.last_name?.charAt(0)}.
+                    </h3>
+                    <p className="text-[11px] text-slate-300 truncate">
+                      📍 {p.district || 'Bidar'}, {p.state || 'Karnataka'}
+                    </p>
+                  </div>
                 </div>
 
-                <div className="absolute top-3 right-3">
-                  <span className="bg-emerald-600/90 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-xs flex items-center gap-1">
-                    <span>✓</span>
-                    <span>Verified</span>
-                  </span>
-                </div>
+                {/* Card Footer Details */}
+                <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
+                  <div className="space-y-1.5 text-xs text-slate-400">
+                    <p className="font-medium text-slate-200 truncate">
+                      💼 {p.occupation_title || p.education_level || 'Professional'}
+                    </p>
+                    <p className="text-[11px] truncate">
+                      ⛪ {p.church_name || 'Verified Member'}
+                    </p>
+                  </div>
 
-                {/* Text inside overlay */}
-                <div className="absolute bottom-3 left-3 right-3 text-white">
-                  <h3 className="font-serif-heading text-lg font-bold text-white">
-                    {p.name}, {p.age}
-                  </h3>
-                  <p className="text-[11px] text-stone-200 truncate">
-                    📍 {p.city}, {p.state}
-                  </p>
+                  <Link
+                    href={`/discover`}
+                    className="w-full text-center py-2.5 rounded-xl bg-slate-800 hover:bg-amber-500 text-slate-200 hover:text-slate-950 border border-slate-700 text-xs font-bold transition-all block"
+                  >
+                    View Profile
+                  </Link>
                 </div>
               </div>
-
-              {/* Card Footer Details */}
-              <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
-                <div className="space-y-1.5 text-xs text-[#64748B]">
-                  <p className="font-medium text-[#17202A] truncate">
-                    💼 {p.profession}
-                  </p>
-                  <p className="text-[11px] truncate">
-                    ⛪ {p.church}
-                  </p>
-                </div>
-
-                <Link
-                  href="/discover"
-                  className="w-full text-center py-2.5 rounded-xl bg-[#FAF9F6] hover:bg-[#172554] text-[#172554] hover:text-white border border-[#E2E8F0] text-xs font-semibold transition-colors block"
-                >
-                  View Profile Details
-                </Link>
-              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="py-12 px-6 rounded-3xl bg-slate-900/80 border border-slate-800 text-center max-w-2xl mx-auto space-y-4">
+            <div className="w-12 h-12 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center mx-auto text-xl font-bold">
+              ✝️
             </div>
-          ))}
-        </div>
+            <h3 className="font-brand text-xl font-bold text-white">No Profiles Registered Yet</h3>
+            <p className="text-xs text-slate-400 leading-relaxed">
+              We maintain a 100% genuine database created solely by real users. Be among the first Christian candidates in Bidar and surrounding regions to create your verified profile.
+            </p>
+            <Link
+              href="/register"
+              className="inline-block bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 px-6 py-2.5 rounded-xl font-extrabold text-xs shadow-lg"
+            >
+              Register Your Profile Free
+            </Link>
+          </div>
+        )}
       </div>
     </section>
   );
 }
+
+export default FeaturedProfiles;

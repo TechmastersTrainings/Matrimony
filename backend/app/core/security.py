@@ -79,6 +79,23 @@ def decode_token(token: str) -> dict:
         )
 
 
+async def get_optional_current_user(
+    auth: Optional[HTTPAuthorizationCredentials] = Depends(security_scheme),
+    db: Optional[Session] = Depends(get_db),
+) -> Optional[User]:
+    """Extract current user if valid bearer token is provided; else return None without error."""
+    if not auth or not auth.credentials or db is None:
+        return None
+    try:
+        payload = jwt.decode(auth.credentials, settings.JWT_SECRET_KEY, algorithms=[settings.JWT_ALGORITHM])
+        user_id_str = payload.get("sub")
+        if user_id_str:
+            return db.query(User).filter(User.id == int(user_id_str)).first()
+    except Exception:
+        return None
+    return None
+
+
 async def get_current_user(
     auth: Optional[HTTPAuthorizationCredentials] = Depends(security_scheme),
     db: Optional[Session] = Depends(get_db),

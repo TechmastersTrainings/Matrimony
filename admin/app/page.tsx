@@ -1,48 +1,27 @@
-import React from "react";
-import Link from "next/link";
-import { ADMIN_CONFIG } from "../lib/config";
-import { AdminSystemService } from "../services/api";
+'use client';
 
-export const dynamic = "force-dynamic";
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
-export default async function AdminHomePage() {
-  const health = await AdminSystemService.checkHealth();
+export default function AdminRootPage() {
+  const router = useRouter();
+
+  useEffect(() => {
+    const token = localStorage.getItem('admin_access_token');
+    if (token) {
+      router.push('/dashboard');
+    } else {
+      router.push('/login');
+    }
+  }, [router]);
 
   return (
-    <div className="admin-container" style={{ padding: "60px 0" }}>
-      <div style={{ textAlign: "center", marginBottom: "40px" }}>
-        <span className="admin-badge">Admin Portal Foundation</span>
-        <h1 style={{ fontSize: "2.5rem", fontWeight: 800, marginTop: "16px", color: "#ffffff" }}>
-          {ADMIN_CONFIG.portalName}
-        </h1>
-        <p style={{ color: "var(--admin-muted)", maxWidth: "600px", margin: "12px auto 24px" }}>
-          Administrative management interface serving Bidar, Karnataka. Phase 1 route placeholders initialized.
-        </p>
-
-        <div style={{ display: "flex", gap: "16px", justifyContent: "center" }}>
-          <Link href="/login" className="admin-btn">
-            Go to Login Route
-          </Link>
-          <Link
-            href="/dashboard"
-            style={{
-              border: "1px solid var(--admin-border)",
-              padding: "8px 16px",
-              borderRadius: "6px",
-              color: "#ffffff",
-              fontWeight: 600,
-            }}
-          >
-            Go to Dashboard Route
-          </Link>
+    <div className="min-h-screen flex items-center justify-center bg-slate-950 text-white">
+      <div className="text-center space-y-3">
+        <div className="w-10 h-10 rounded-xl bg-amber-500 text-slate-950 font-black flex items-center justify-center mx-auto animate-pulse">
+          CM
         </div>
-      </div>
-
-      <div className="admin-card">
-        <h3 style={{ fontSize: "1.1rem", marginBottom: "12px" }}>System Status Bridge</h3>
-        <p style={{ color: "var(--admin-muted)", fontSize: "0.9rem" }}>
-          API Connection: <strong style={{ color: "#38bdf8" }}>{health.status.toUpperCase()}</strong> (Environment: {health.environment})
-        </p>
+        <p className="text-xs text-slate-400 font-bold">Redirecting to Admin Portal...</p>
       </div>
     </div>
   );

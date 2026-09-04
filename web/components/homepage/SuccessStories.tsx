@@ -1,80 +1,72 @@
 import React from 'react';
 
 export function SuccessStories() {
-  const stories = [
+  const testimonies = [
     {
-      names: 'Daniel & Priya',
-      location: 'Bidar & Hyderabad',
       denomination: 'Methodist Church',
-      testimonial:
-        'We found someone who shared not just our faith and church values, but our vision for family and ministry. The profile verification gave our parents complete peace of mind.',
-      photo: 'https://images.unsplash.com/photo-1609357605129-26f69add5d6e?w=600&auto=format&fit=crop&q=80',
+      quote:
+        'Finding a life partner who shares not just our faith and church values, but our vision for family and ministry is a true blessing.',
+      tag: 'Blessed Union',
     },
     {
-      names: 'Ebenezer & Sharon',
-      location: 'Bengaluru & Bidar',
       denomination: 'CSI Fellowship',
-      testimonial:
-        'Our conversations started with private in-app chat where we connected over scripture and career goals. Today we are blessed to build a God-fearing home together.',
-      photo: 'https://images.unsplash.com/photo-1583939003579-730e3918a45a?w=600&auto=format&fit=crop&q=80',
+      quote:
+        'A faith-first platform where families can connect with complete peace of mind, privacy, and spiritual alignment.',
+      tag: 'Verified Community',
     },
     {
-      names: 'Mathew & Grace',
-      location: 'Bidar & Mumbai',
       denomination: 'Roman Catholic',
-      testimonial:
-        'The controlled contact reveal was wonderful. We felt safe, respected, and supported at every stage. We thank God for leading us to this platform.',
-      photo: 'https://images.unsplash.com/photo-1529634806980-85c3dd6d34ac?w=600&auto=format&fit=crop&q=80',
+      quote:
+        'The controlled contact reveal policy gave us complete privacy and safety at every step of our journey.',
+      tag: 'Family Centered',
     },
   ];
 
   return (
-    <section id="success-stories" className="py-20 bg-[#FAF9F6] border-t border-[#E2E8F0]">
+    <section id="success-stories" className="py-20 bg-slate-950 border-t border-slate-800 text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center max-w-2xl mx-auto mb-16">
-          <span className="text-xs font-bold uppercase tracking-widest text-[#C9A227]">
-            Real Testimonies
+          <span className="text-xs font-bold uppercase tracking-widest text-amber-400">
+            Community Pillars & Values
           </span>
-          <h2 className="font-serif-heading text-3xl sm:text-4xl font-bold text-[#172554] mt-2 tracking-tight">
-            Stories That Began With Faith
+          <h2 className="font-brand text-3xl sm:text-4xl font-bold text-white mt-2 tracking-tight">
+            Built on Faith, Integrity & Trust
           </h2>
-          <p className="text-sm text-[#64748B] mt-2">
-            Celebrating Christian couples who trusted God&apos;s guidance and found their lifelong companions.
+          <p className="text-sm text-slate-400 mt-2">
+            Connecting Christian families across Bidar, Karnataka and Pan-India with verified credentials.
           </p>
         </div>
 
         {/* Stories Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {stories.map((s, idx) => (
+          {testimonies.map((s, idx) => (
             <div
               key={idx}
-              className="bg-white border border-[#E2E8F0] rounded-3xl overflow-hidden shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col justify-between group hover:-translate-y-1.5"
+              className="bg-slate-900 border border-slate-800 rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 flex flex-col justify-between group hover:-translate-y-1.5"
             >
-              <div className="aspect-4/3 overflow-hidden bg-stone-100 relative">
-                <img
-                  src={s.photo}
-                  alt={s.names}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                <div className="absolute bottom-3 left-4 right-4 text-white">
-                  <h3 className="font-serif-heading text-lg font-bold">{s.names}</h3>
-                  <p className="text-[11px] text-stone-200">
-                    {s.denomination} • {s.location}
-                  </p>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="w-10 h-10 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold text-lg">
+                    ✝️
+                  </span>
+                  <span className="bg-slate-800 text-amber-400 text-[10px] font-bold px-3 py-1 rounded-full border border-amber-500/30">
+                    {s.tag}
+                  </span>
                 </div>
+                
+                <h3 className="font-brand text-lg font-bold text-white">
+                  {s.denomination}
+                </h3>
+                
+                <p className="text-xs text-slate-300 italic leading-relaxed">
+                  &ldquo;{s.quote}&rdquo;
+                </p>
               </div>
 
-              <div className="p-6 flex-1 flex flex-col justify-between">
-                <p className="text-xs text-[#17202A]/80 italic leading-relaxed">
-                  &quot;{s.testimonial}&quot;
-                </p>
-
-                <div className="mt-6 pt-4 border-t border-[#E2E8F0] flex items-center justify-between text-[11px] text-[#64748B]">
-                  <span className="font-semibold text-[#172554]">✝ Married with Praise</span>
-                  <span className="text-[#C9A227] font-bold">★★★★★</span>
-                </div>
+              <div className="pt-6 mt-6 border-t border-slate-800 flex items-center justify-between text-[11px] text-slate-400">
+                <span>Verified Guidelines</span>
+                <span className="text-emerald-400 font-semibold">100% Genuine</span>
               </div>
             </div>
           ))}
@@ -83,3 +75,5 @@ export function SuccessStories() {
     </section>
   );
 }
+
+export default SuccessStories;

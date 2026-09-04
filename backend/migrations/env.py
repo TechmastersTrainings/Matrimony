@@ -7,8 +7,13 @@ from sqlalchemy import pool
 
 from alembic import context
 
-# Add backend directory to sys.path
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# Add backend directory and project root to sys.path
+backend_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+project_root = os.path.dirname(backend_dir)
+if project_root not in sys.path:
+    sys.path.insert(0, project_root)
+if backend_dir not in sys.path:
+    sys.path.insert(0, backend_dir)
 
 from backend.app.core.config import settings
 from backend.app.services.database import Base
@@ -28,7 +33,11 @@ target_metadata = Base.metadata
 
 
 def get_url():
-    return settings.DATABASE_URL or config.get_main_option("sqlalchemy.url")
+    url = settings.DATABASE_URL or config.get_main_option("sqlalchemy.url")
+    if url and "mysql" in url and ("ssl-mode=" in url or "ssl_mode=" in url):
+        url = url.replace("?ssl-mode=REQUIRED", "").replace("&ssl-mode=REQUIRED", "")
+        url = url.replace("?ssl_mode=REQUIRED", "").replace("&ssl_mode=REQUIRED", "")
+    return url
 
 
 def run_migrations_offline() -> None:
@@ -63,12 +72,17 @@ def run_migrations_online() -> None:
 
     """
     configuration = config.get_section(config.config_ini_section) or {}
-    configuration["sqlalchemy.url"] = get_url()
+    url = get_url()
+    configuration["sqlalchemy.url"] = url
+    connect_args = {}
+    if url and "mysql" in url:
+        connect_args["ssl"] = {}
 
     connectable = engine_from_config(
         configuration,
         prefix="sqlalchemy.",
         poolclass=pool.NullPool,
+        connect_args=connect_args,
     )
 
     with connectable.connect() as connection:

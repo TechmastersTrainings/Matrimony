@@ -118,6 +118,9 @@ export interface CandidateCard {
   bio?: string;
   faith_testimony?: string;
   primary_photo?: string;
+  mobile_number?: string;
+  email?: string;
+  status?: string;
   photos_count: number;
   match_score?: number;
 }

@@ -35,9 +35,19 @@ class Settings(BaseSettings):
     @field_validator("CORS_ORIGINS", mode="before")
     @classmethod
     def assemble_cors_origins(cls, v: Union[str, List[str]]) -> List[str]:
-        if isinstance(v, str) and not v.startswith("["):
+        if isinstance(v, str):
+            if v.startswith("[") and v.endswith("]"):
+                import json
+                try:
+                    parsed = json.loads(v)
+                    if isinstance(parsed, list):
+                        return [str(i).strip() for i in parsed if str(i).strip()]
+                except Exception:
+                    pass
             return [i.strip() for i in v.split(",") if i.strip()]
-        return v
+        elif isinstance(v, list):
+            return [i.strip() for i in v if i.strip()]
+        return []
 
     # Database Configuration (MySQL / Aiven / SQLite dev default)
     DATABASE_URL: Optional[str] = "sqlite:///./backend/matrimony.db"
@@ -61,14 +71,23 @@ class Settings(BaseSettings):
     SENTRY_DSN: Optional[str] = None
 
     # Future Service Abstraction Placeholders
+    RAZORPAY_KEY_ID: str = "rzp_test_TWXn6r1HPxwz0r"
+    RAZORPAY_KEY_SECRET: str = "6u35s2LHnOuWVlBWF94HP1by"
     INDIAN_SMS_PROVIDER_API_KEY: Optional[str] = None
     UPI_PAYMENT_GATEWAY_KEY: Optional[str] = None
     UPI_PAYWAY_SECRET: Optional[str] = None
     FIREBASE_CREDENTIALS_PATH: Optional[str] = None
-    SMTP_HOST: Optional[str] = None
+    SMTP_HOST: Optional[str] = "smtp.gmail.com"
     SMTP_PORT: int = 587
-    SMTP_USER: Optional[str] = None
+    SMTP_USER: Optional[str] = "Techmastersinnovations@gmail.com"
     SMTP_PASSWORD: Optional[str] = None
+    SMTP_FROM_EMAIL: str = "Techmastersinnovations@gmail.com"
+    SMTP_FROM_NAME: str = "Christian Matrimony (Techmasters Innovations)"
+
+    # Super Admin Defaults
+    ADMIN_EMAIL: str = "techmastersinnovations@gmail.com"
+    ADMIN_MOBILE: str = "9876598765"
+    ADMIN_PASSWORD: str = "Fri10Feb@2023"
 
     model_config = SettingsConfigDict(
         env_file=(".env", "backend/.env"),

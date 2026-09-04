@@ -83,10 +83,10 @@ function VerifyOtpContent() {
           </div>
         )}
 
-        <form onSubmit={handleVerify} className="space-y-4">
+        <form onSubmit={handleVerify} className="space-y-5">
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-              Mobile Number
+            <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
+              Mobile Number / Email
             </label>
             <input
               type="text"
@@ -94,12 +94,13 @@ function VerifyOtpContent() {
               value={target}
               onChange={(e) => setTarget(e.target.value)}
               placeholder="e.g. 9876543210"
-              className="w-full text-xs font-medium border border-slate-300 rounded-lg p-2.5 bg-slate-50 focus:outline-none focus:border-blue-600 focus:bg-white"
+              className="w-full text-sm font-semibold text-black border border-slate-300 rounded-xl p-3 bg-white text-slate-950 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-500/20 placeholder:text-slate-400 transition-all"
+              style={{ color: '#000000' }}
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+            <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
               6-Digit OTP Code
             </label>
             <input
@@ -109,16 +110,20 @@ function VerifyOtpContent() {
               value={otpCode}
               onChange={(e) => setOtpCode(e.target.value)}
               placeholder="123456"
-              className="w-full text-center text-lg tracking-widest font-bold border border-slate-300 rounded-lg p-2.5 bg-slate-50 focus:outline-none focus:border-blue-600 focus:bg-white"
+              className="w-full text-center text-2xl tracking-[0.35em] font-extrabold text-black border border-slate-300 rounded-xl p-3.5 bg-white text-slate-950 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-500/20 placeholder:text-slate-300 transition-all"
+              style={{ color: '#000000' }}
             />
+            <p className="text-[11px] text-slate-500 mt-1.5 text-center">
+              Enter the 6-digit verification code sent to your mobile
+            </p>
           </div>
 
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full py-2.5 rounded-lg bg-blue-700 hover:bg-blue-800 text-white font-semibold text-xs transition-all shadow-xs"
+            className="w-full py-3 rounded-xl bg-gradient-to-r from-blue-700 to-blue-900 hover:from-blue-600 hover:to-blue-800 text-white font-bold text-sm transition-all shadow-md hover:shadow-lg disabled:opacity-50"
           >
-            {isLoading ? 'Verifying...' : 'Verify OTP & Continue'}
+            {isLoading ? 'Verifying...' : 'Verify OTP & Continue →'}
           </button>
         </form>
 

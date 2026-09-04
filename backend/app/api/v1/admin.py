@@ -4,7 +4,7 @@ from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
 from backend.app.core.security import get_current_user
-from backend.app.models.enums import AccountStatus, AuditAction, PhotoStatus, ProfileStatus, ReportStatus, UserRole
+from backend.app.models.enums import AccountStatus, AuditAction, PaymentStatus, PhotoStatus, ProfileStatus, ReportStatus, UserRole
 from backend.app.models.interaction import UserReport
 from backend.app.models.photo import ProfilePhoto
 from backend.app.models.profile import Profile
@@ -33,84 +33,113 @@ class ModeratePhotoRequest(BaseModel):
 
 class UserStatusChangeRequest(BaseModel):
     status: AccountStatus
-    reason: str
 
 
 class PlatformSettingRequest(BaseModel):
     key: str
-    value: Any
+    value: str
     description: Optional[str] = None
-    category: str = "GENERAL"
+    category: Optional[str] = "general"
 
 
-# ------------------ DASHBOARD ------------------
-@router.get("/dashboard", summary="Admin High-Level Operations & Revenue Metrics")
-async def get_dashboard(db: Session = Depends(get_db)):
-    metrics = AdminService.get_dashboard_metrics(db)
-    return metrics
+def require_admin_user(current_user: User = Depends(get_current_user)) -> User:
+    if current_user.role not in [UserRole.ADMIN, UserRole.SUPER_ADMIN]:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Forbidden: Administrative privileges required to access this resource.",
+        )
+    return current_user
 
 
-# ------------------ USERS ------------------
-@router.get("/users", summary="List & Search Users with Statuses")
-async def list_users(
-    search: Optional[str] = None,
-    status_filter: Optional[AccountStatus] = None,
-    skip: int = Query(0, ge=0),
-    limit: int = Query(50, ge=1, le=100),
+# ------------------ DASHBOARD METRICS ------------------
+@router.get("/dashboard", summary="Administrative Dashboard KPIs")
+@router.get("/dashboard-metrics", summary="High-level Administrative KPIs")
+async def get_dashboard_metrics(
+    current_user: User = Depends(require_admin_user),
     db: Session = Depends(get_db),
 ):
-    query = db.query(User)
+    return AdminService.get_dashboard_metrics(db)
+
+
+# ------------------ USERS MANAGEMENT ------------------
+@router.get("/users", summary="Search and List Registered Users")
+async def list_users(
+    search: Optional[str] = Query(None),
+    status_filter: Optional[AccountStatus] = Query(None),
+    skip: int = Query(0, ge=0),
+    limit: int = Query(50, ge=1, le=100),
+    current_user: User = Depends(require_admin_user),
+    db: Session = Depends(get_db),
+):
+    query = db.query(User).filter(User.role != UserRole.SUPER_ADMIN)
+    if search:
+        s = f"%{search}%"
+        query = query.filter(
+            (User.email.ilike(s)) | (User.mobile_number.ilike(s))
+        )
     if status_filter:
         query = query.filter(User.account_status == status_filter)
-    if search:
-        search_fmt = f"%{search.strip()}%"
-        query = query.join(User.profile).filter(
-            (User.mobile_number.ilike(search_fmt)) |
-            (User.email.ilike(search_fmt)) |
-            (Profile.first_name.ilike(search_fmt)) |
-            (Profile.last_name.ilike(search_fmt))
-        )
 
     total = query.count()
     users = query.order_by(User.id.desc()).offset(skip).limit(limit).all()
 
-    result = []
+    results = []
     for u in users:
-        p = u.profile
-        result.append({
+        profile = db.query(Profile).filter(Profile.user_id == u.id).first()
+        sub = db.query(UserSubscription).filter(UserSubscription.user_id == u.id, UserSubscription.status == "ACTIVE").first()
+        plan_name = None
+        if sub:
+            plan = db.query(SubscriptionPlan).filter(SubscriptionPlan.id == sub.plan_id).first()
+            plan_name = plan.name if plan else "VIP Active"
+
+        results.append({
             "id": u.id,
-            "mobile_number": u.mobile_number,
             "email": u.email,
-            "account_status": u.account_status.value,
-            "role": u.role.value,
-            "first_name": p.first_name if p else "",
-            "last_name": p.last_name if p else "",
-            "profile_status": p.status.value if p else "DRAFT",
-            "completion_percentage": p.completion_percentage if p else 15,
-            "denomination": p.denomination.value if p and p.denomination else None,
-            "city": p.city if p else "Bidar",
-            "created_at": u.created_at,
-            "last_login_at": u.last_login_at,
+            "mobile_number": u.mobile_number,
+            "role": u.role.value if hasattr(u.role, 'value') else str(u.role),
+            "account_status": u.account_status.value if hasattr(u.account_status, 'value') else str(u.account_status),
+            "is_mobile_verified": u.is_mobile_verified,
+            "is_email_verified": u.is_email_verified,
+            "first_name": profile.first_name if profile else "",
+            "last_name": profile.last_name if profile else "",
+            "denomination": profile.denomination.value if (profile and profile.denomination and hasattr(profile.denomination, 'value')) else (str(profile.denomination) if profile and profile.denomination else None),
+            "city": profile.district if (profile and profile.district) else (profile.city if profile else "Bidar"),
+            "created_at": u.created_at.isoformat() if u.created_at else None,
+            "profile_status": (profile.status.value if hasattr(profile.status, 'value') else str(profile.status)) if profile else "NONE",
+            "candidate_name": f"{profile.first_name} {profile.last_name}" if profile else None,
+            "subscription_plan": plan_name,
         })
 
-    return {"total": total, "skip": skip, "limit": limit, "users": result}
+    return {"total": total, "users": results}
 
 
-@router.put("/users/{user_id}/status", summary="Suspend, Reactivate, or Block User")
+@router.put("/users/{user_id}/status", summary="Change User Account Status (SUSPENDED, BLOCKED, ACTIVE)")
 async def update_user_status(
     user_id: int,
     payload: UserStatusChangeRequest,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    user = AdminService.change_user_status(
-        admin=current_user,
-        user_id=user_id,
-        new_status=payload.status,
-        reason=payload.reason,
-        db=db,
+    target_user = db.query(User).filter(User.id == user_id).first()
+    if not target_user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+
+    old_status = target_user.account_status
+    target_user.account_status = payload.status
+
+    log = AuditLog(
+        admin_user_id=current_user.id,
+        action=AuditAction.ACCOUNT_STATUS_CHANGE,
+        target_entity="User",
+        target_id=user_id,
+        old_value=old_status.value if hasattr(old_status, 'value') else str(old_status),
+        new_value=payload.status.value if hasattr(payload.status, 'value') else str(payload.status),
+        reason=f"Status changed to {payload.status.value if hasattr(payload.status, 'value') else str(payload.status)} by admin",
     )
-    return {"success": True, "message": f"User status updated to {user.account_status.value}."}
+    db.add(log)
+    db.commit()
+
+    return {"success": True, "message": f"User status updated to {payload.status.value if hasattr(payload.status, 'value') else str(payload.status)}."}
 
 
 # ------------------ PROFILES MODERATION ------------------
@@ -119,6 +148,7 @@ async def list_profiles(
     status_filter: Optional[ProfileStatus] = Query(None),
     skip: int = Query(0, ge=0),
     limit: int = Query(50, ge=1, le=100),
+    current_user: User = Depends(require_admin_user),
     db: Session = Depends(get_db),
 ):
     query = db.query(Profile)
@@ -128,23 +158,54 @@ async def list_profiles(
         query = query.filter(Profile.status.in_([ProfileStatus.SUBMITTED, ProfileStatus.UNDER_REVIEW, ProfileStatus.CHANGES_REQUIRED]))
 
     total = query.count()
-    profiles = query.order_by(Profile.submitted_at.desc().nullslast(), Profile.id.desc()).offset(skip).limit(limit).all()
+    profiles = query.order_by(Profile.submitted_at.desc(), Profile.id.desc()).offset(skip).limit(limit).all()
 
     results = []
     for p in profiles:
+        u = db.query(User).filter(User.id == p.user_id).first()
         photos = db.query(ProfilePhoto).filter(ProfilePhoto.profile_id == p.id).all()
         results.append({
             "id": p.id,
             "user_id": p.user_id,
             "name": f"{p.first_name} {p.last_name}",
-            "gender": p.gender.value,
+            "first_name": p.first_name,
+            "last_name": p.last_name,
+            "mobile_number": u.mobile_number if u else "",
+            "email": u.email if u else "",
+            "gender": p.gender.value if hasattr(p.gender, 'value') else str(p.gender) if p.gender else None,
+            "dob": p.dob.isoformat() if p.dob else None,
             "age": p.age,
-            "denomination": p.denomination.value if p.denomination else None,
+            "marital_status": p.marital_status.value if hasattr(p.marital_status, 'value') else str(p.marital_status) if p.marital_status else None,
+            "height_cm": p.height_cm,
+            "physical_status": p.physical_status.value if hasattr(p.physical_status, 'value') else str(p.physical_status) if p.physical_status else None,
+            "mother_tongue": p.mother_tongue,
+            "denomination": p.denomination.value if hasattr(p.denomination, 'value') else str(p.denomination) if p.denomination else None,
+            "sub_denomination": p.sub_denomination,
             "church_name": p.church_name,
-            "status": p.status.value,
+            "parish_or_pastor": p.parish_or_pastor,
+            "is_baptized": p.is_baptized,
+            "faith_testimony": p.faith_testimony,
+            "highest_education": p.highest_education,
+            "occupation_title": p.occupation_title,
+            "employed_in": p.employed_in,
+            "annual_income_min": p.annual_income_min,
+            "work_location": p.work_location,
+            "father_name": p.father_name,
+            "father_occupation": p.father_occupation,
+            "mother_name": p.mother_name,
+            "mother_occupation": p.mother_occupation,
+            "family_status": p.family_status.value if hasattr(p.family_status, 'value') else str(p.family_status) if p.family_status else None,
+            "family_values": p.family_values.value if hasattr(p.family_values, 'value') else str(p.family_values) if p.family_values else None,
+            "native_place": p.native_place,
+            "district": p.district,
+            "state": p.state,
+            "pincode": p.pincode,
+            "bio": p.bio,
+            "partner_preferences": p.partner_preferences,
+            "status": p.status.value if hasattr(p.status, 'value') else str(p.status) if p.status else None,
             "photos_count": len(photos),
             "photos": [{"id": ph.id, "url": ph.r2_url, "is_primary": ph.is_primary} for ph in photos],
-            "submitted_at": p.submitted_at,
+            "submitted_at": p.submitted_at.isoformat() if p.submitted_at else None,
             "rejection_reason": p.rejection_reason,
             "changes_requested_notes": p.changes_requested_notes,
         })
@@ -159,7 +220,7 @@ async def approve_profile(
     db: Session = Depends(get_db),
 ):
     p = AdminService.approve_profile(current_user, profile_id, db)
-    return {"success": True, "message": f"Profile #{p.id} successfully approved.", "status": p.status.value}
+    return {"success": True, "message": f"Profile #{p.id} successfully approved.", "status": p.status.value if hasattr(p.status, 'value') else str(p.status)}
 
 
 @router.post("/profiles/{profile_id}/reject", summary="Reject Matrimonial Profile with Reason")
@@ -170,7 +231,7 @@ async def reject_profile(
     db: Session = Depends(get_db),
 ):
     p = AdminService.reject_profile(current_user, profile_id, payload.reason, db)
-    return {"success": True, "message": f"Profile #{p.id} rejected.", "status": p.status.value}
+    return {"success": True, "message": f"Profile #{p.id} rejected.", "status": p.status.value if hasattr(p.status, 'value') else str(p.status)}
 
 
 @router.post("/profiles/{profile_id}/request-changes", summary="Request Information / Photo Changes from Candidate")
@@ -181,7 +242,24 @@ async def request_changes(
     db: Session = Depends(get_db),
 ):
     p = AdminService.request_changes(current_user, profile_id, payload.notes, db)
-    return {"success": True, "message": f"Changes requested for Profile #{p.id}.", "status": p.status.value}
+    return {"success": True, "message": f"Changes requested for Profile #{p.id}.", "status": p.status.value if hasattr(p.status, 'value') else str(p.status)}
+
+
+class DeleteProfilePayload(BaseModel):
+    reason: Optional[str] = "Candidate decommissioned (found match / requested deletion)"
+    delete_user_account: bool = True
+
+
+@router.delete("/profiles/{profile_id}", summary="Permanently Delete Profile and Candidate Data (Super Admin / Admin)")
+async def delete_profile(
+    profile_id: int,
+    payload: Optional[DeleteProfilePayload] = None,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    reason = payload.reason if payload and payload.reason else "Candidate found match / decommissioned"
+    del_acc = payload.delete_user_account if payload else True
+    return AdminService.delete_profile(current_user, profile_id, reason, del_acc, db)
 
 
 # ------------------ PHOTO MODERATION ------------------
@@ -193,13 +271,14 @@ async def moderate_photo(
     db: Session = Depends(get_db),
 ):
     photo = AdminService.moderate_photo(current_user, photo_id, payload.approved, db)
-    return {"success": True, "photo_id": photo.id, "status": photo.status.value}
+    return {"success": True, "photo_id": photo.id, "status": photo.status.value if hasattr(photo.status, 'value') else str(photo.status)}
 
 
 # ------------------ REPORTS QUEUE ------------------
 @router.get("/reports", summary="List Open User Reports")
 async def list_reports(
     status_filter: Optional[ReportStatus] = Query(None),
+    current_user: User = Depends(require_admin_user),
     db: Session = Depends(get_db),
 ):
     query = db.query(UserReport)
@@ -213,10 +292,10 @@ async def list_reports(
                 "id": r.id,
                 "reporter_id": r.reporter_id,
                 "reported_user_id": r.reported_user_id,
-                "report_type": r.report_type.value,
+                "report_type": r.report_type.value if hasattr(r.report_type, 'value') else str(r.report_type),
                 "description": r.description,
-                "status": r.status.value,
-                "created_at": r.created_at,
+                "status": r.status.value if hasattr(r.status, 'value') else str(r.status),
+                "created_at": r.created_at.isoformat() if r.created_at else None,
             }
             for r in reports
         ]
@@ -228,6 +307,7 @@ async def list_reports(
 async def list_audit_logs(
     skip: int = Query(0, ge=0),
     limit: int = Query(50, ge=1, le=100),
+    current_user: User = Depends(require_admin_user),
     db: Session = Depends(get_db),
 ):
     total = db.query(AuditLog).count()
@@ -239,13 +319,13 @@ async def list_audit_logs(
             {
                 "id": l.id,
                 "admin_user_id": l.admin_user_id,
-                "action": l.action.value,
+                "action": l.action.value if hasattr(l.action, 'value') else str(l.action),
                 "target_entity": l.target_entity,
                 "target_id": l.target_id,
                 "old_value": l.old_value,
                 "new_value": l.new_value,
                 "reason": l.reason,
-                "created_at": l.created_at,
+                "created_at": l.created_at.isoformat() if l.created_at else None,
             }
             for l in logs
         ],
@@ -254,7 +334,10 @@ async def list_audit_logs(
 
 # ------------------ PLATFORM SETTINGS ------------------
 @router.get("/settings", summary="Get Dynamic Platform Settings")
-async def get_settings(db: Session = Depends(get_db)):
+async def get_settings(
+    current_user: User = Depends(require_admin_user),
+    db: Session = Depends(get_db),
+):
     settings_list = db.query(PlatformSetting).all()
     return {
         "settings": [

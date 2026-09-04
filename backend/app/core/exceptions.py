@@ -5,6 +5,16 @@ from fastapi.responses import JSONResponse
 from backend.app.core.logger import logger
 
 
+def _cors_headers(request: Request) -> Dict[str, str]:
+    origin = request.headers.get("origin")
+    return {
+        "Access-Control-Allow-Origin": origin or "*",
+        "Access-Control-Allow-Credentials": "true",
+        "Access-Control-Allow-Methods": "*",
+        "Access-Control-Allow-Headers": "*",
+    }
+
+
 class AppException(Exception):
     """Base application exception."""
 
@@ -41,29 +51,36 @@ class StorageServiceException(AppException):
         super().__init__(message=message, status_code=status.HTTP_502_BAD_GATEWAY)
 
 
-async def app_exception_handler(request: Request, exc: AppException) -> JSONResponse:
-    logger.warning(f"AppException: {exc.message} on {request.method} {request.url}")
+async def app_exception_handler(request: Request, exc: Any) -> JSONResponse:
+    message = getattr(exc, "message", str(exc))
+    status_code = getattr(exc, "status_code", status.HTTP_400_BAD_REQUEST)
+    details = getattr(exc, "details", {})
+    logger.warning(f"AppException: {message} on {request.method} {request.url}")
     return JSONResponse(
-        status_code=exc.status_code,
+        status_code=status_code,
+        headers=_cors_headers(request),
         content={
             "success": False,
             "error": {
-                "message": exc.message,
+                "message": message,
                 "type": exc.__class__.__name__,
-                "details": exc.details,
+                "details": details,
             },
         },
     )
 
 
-async def http_exception_handler(request: Request, exc: HTTPException) -> JSONResponse:
-    logger.warning(f"HTTPException: {exc.detail} on {request.method} {request.url}")
+async def http_exception_handler(request: Request, exc: Any) -> JSONResponse:
+    detail = getattr(exc, "detail", str(exc))
+    status_code = getattr(exc, "status_code", status.HTTP_400_BAD_REQUEST)
+    logger.warning(f"HTTPException: {detail} on {request.method} {request.url}")
     return JSONResponse(
-        status_code=exc.status_code,
+        status_code=status_code,
+        headers=_cors_headers(request),
         content={
             "success": False,
             "error": {
-                "message": exc.detail,
+                "message": detail,
                 "type": "HTTPException",
                 "details": {},
             },
@@ -71,29 +88,32 @@ async def http_exception_handler(request: Request, exc: HTTPException) -> JSONRe
     )
 
 
-async def validation_exception_handler(request: Request, exc: RequestValidationError) -> JSONResponse:
-    logger.warning(f"Validation error on {request.method} {request.url}: {exc.errors()}")
+async def validation_exception_handler(request: Request, exc: Any) -> JSONResponse:
+    errors = exc.errors() if hasattr(exc, "errors") else []
+    logger.warning(f"Validation error on {request.method} {request.url}: {errors}")
     return JSONResponse(
         status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+        headers=_cors_headers(request),
         content={
             "success": False,
             "error": {
                 "message": "Validation Error",
                 "type": "RequestValidationError",
-                "details": {"errors": exc.errors()},
+                "details": {"errors": errors},
             },
         },
     )
 
 
-async def global_exception_handler(request: Request, exc: Exception) -> JSONResponse:
+async def global_exception_handler(request: Request, exc: Any) -> JSONResponse:
     logger.error(f"Unhandled exception on {request.method} {request.url}: {exc}", exc_info=True)
     return JSONResponse(
         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        headers=_cors_headers(request),
         content={
             "success": False,
             "error": {
-                "message": "Internal server error occurred.",
+                "message": f"Internal server error: {str(exc)}",
                 "type": "InternalServerError",
                 "details": {},
             },

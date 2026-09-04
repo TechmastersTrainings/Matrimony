@@ -1,0 +1,7 @@
+search-path = [
+  "/Users/sachin/Matrimony",
+  "/Users/sachin/Matrimony/backend"
+]
+site-package-path = [
+  "/Users/sachin/Matrimony/backend/.venv/lib/python3.14/site-packages"
+]

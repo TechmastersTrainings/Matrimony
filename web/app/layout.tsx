@@ -2,9 +2,10 @@ import React from 'react';
 import './globals.css';
 import { Navbar } from '../components/Navbar';
 import { Footer } from '../components/Footer';
+import { TopLoadingBar } from '../components/TopLoadingBar';
 
 export const metadata = {
-  title: 'Christian Matrimony | Find Your Blessed Partner in Bidar & Karnataka',
+  title: 'Christian Matrimony | Trusted Christian Matrimonial Portal | Bidar & Karnataka',
   description:
     'Dedicated Christian matrimonial portal connecting brides, grooms and families in Bidar, Bengaluru, Kalaburagi, Hyderabad and across India.',
   keywords: [
@@ -25,9 +26,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="scroll-smooth">
-      <body className="bg-[#FFFDFB] text-slate-900 antialiased selection:bg-red-200 selection:text-red-900">
+      <body className="bg-slate-950 text-slate-100 antialiased selection:bg-amber-500/30 selection:text-amber-200">
+        <TopLoadingBar />
         <Navbar />
-        <main className="min-h-screen">{children}</main>
+        <main className="min-h-screen pt-20">{children}</main>
         <Footer />
       </body>
     </html>

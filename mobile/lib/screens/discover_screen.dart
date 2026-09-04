@@ -111,7 +111,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.between,
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(
                                           '${p['first_name']} ${p['last_name']}',

@@ -88,3 +88,7 @@ Thumbs.db
 # Logs
 logs/
 *.log
+
+# Uploads & Media
+backend/uploads/*
+!backend/uploads/.gitkeep

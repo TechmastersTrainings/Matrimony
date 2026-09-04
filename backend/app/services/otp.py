@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import random
 import string
 from typing import Optional, Tuple
@@ -57,7 +57,8 @@ class OtpServiceBase(IOtpService):
 
         code = self._generate_code()
         hashed_code = self._hash_code(code)
-        expires_at = datetime.utcnow() + timedelta(minutes=settings.OTP_EXPIRE_MINUTES)
+        now_utc = datetime.now(timezone.utc).replace(tzinfo=None)
+        expires_at = now_utc + timedelta(minutes=settings.OTP_EXPIRE_MINUTES)
 
         otp_record = OtpVerification(
             target=target_clean,
@@ -114,51 +115,77 @@ class OtpServiceBase(IOtpService):
         if not record:
             return False, "No active OTP found. Please request a new one."
 
-        if record.expires_at < datetime.utcnow():
-            record.is_used = True
+        now_utc = datetime.now(timezone.utc).replace(tzinfo=None)
+        rec_expires = record.expires_at.replace(tzinfo=None) if (record.expires_at and hasattr(record.expires_at, "replace")) else record.expires_at
+        if rec_expires and rec_expires < now_utc:
+            setattr(record, "is_used", True)
             db.commit()
             return False, "OTP has expired. Please request a new one."
 
-        if record.attempts >= 5:
-            record.is_used = True
+        curr_attempts = int(getattr(record, "attempts", 0) or 0)
+        if curr_attempts >= 5:
+            setattr(record, "is_used", True)
             db.commit()
             return False, "Too many failed attempts. Please request a new OTP."
 
-        if not self._check_code(code_clean, record.otp_code_hash):
-            record.attempts += 1
+        otp_hash = str(record.otp_code_hash or "")
+        if not self._check_code(code_clean, otp_hash):
+            setattr(record, "attempts", curr_attempts + 1)
             db.commit()
-            remaining = max(0, 5 - record.attempts)
+            remaining = max(0, 5 - (curr_attempts + 1))
             return False, f"Invalid OTP code. {remaining} attempt(s) remaining."
 
         # Mark OTP as successfully used
-        record.is_used = True
+        setattr(record, "is_used", True)
         db.commit()
         return True, "OTP verified successfully."
 
 
 class MockOtpService(OtpServiceBase):
-    """Development / Test Mock OTP Service."""
+    """Hybrid OTP Service: delivers live email if target is email, live SMS if API key configured, and logs code."""
 
     async def _deliver(self, target: str, code: str, otp_type: OtpType) -> bool:
-        logger.info(f"[DEV MOCK SMS/EMAIL] Delivery to {target}: Your OTP code is {code} ({otp_type.value})")
+        # 1. If target is an email address, send live email OTP via Gmail SMTP
+        if "@" in target:
+            try:
+                from backend.app.services.email import get_email_service
+                email_svc = get_email_service()
+                await email_svc.send_otp_email(
+                    to_email=target,
+                    otp_code=code,
+                    purpose=otp_type.value.replace("_", " ").title(),
+                )
+                logger.info(f"[EMAIL OTP] Successfully delivered live OTP {code} to {target}")
+            except Exception as e:
+                logger.warning(f"[EMAIL OTP] Delivery failed for {target}: {e}")
+
+        # 2. If target is mobile and SMS gateway key is configured
+        sms_api_key = getattr(settings, "INDIAN_SMS_PROVIDER_API_KEY", None)
+        if sms_api_key and target.replace("+91", "").strip().isdigit():
+            clean_mobile = target.replace("+91", "").strip()[-10:]
+            try:
+                import urllib.request
+                import json
+                fast2sms_url = f"https://www.fast2sms.com/dev/bulkV2?authorization={sms_api_key}&variables_values={code}&route=otp&numbers={clean_mobile}"
+                req = urllib.request.Request(fast2sms_url, headers={"User-Agent": "ChristianMatrimony/1.0"})
+                with urllib.request.urlopen(req, timeout=10) as resp:
+                    resp_data = json.loads(resp.read().decode())
+                    if resp_data.get("return"):
+                        logger.info(f"[SMS GATEWAY] Live SMS successfully delivered to +91-{clean_mobile}")
+                    else:
+                        logger.warning(f"[SMS GATEWAY] SMS Provider response: {resp_data}")
+            except Exception as sms_err:
+                logger.warning(f"[SMS GATEWAY] SMS delivery error: {sms_err}")
+
+        logger.info(f"[OTP SERVICE] Target: {target} | Code: {code} | Type: {otp_type.value}")
         return True
 
 
-class IndianSmsOtpService(OtpServiceBase):
+class IndianSmsOtpService(MockOtpService):
     """Production Indian SMS Gateway OTP Service."""
-
-    async def _deliver(self, target: str, code: str, otp_type: OtpType) -> bool:
-        if not settings.INDIAN_SMS_PROVIDER_API_KEY:
-            logger.warning("INDIAN_SMS_PROVIDER_API_KEY not configured. Falling back to log delivery.")
-            return True
-
-        # Hook for production SMS gateway (e.g. Fast2SMS / MSG91 API call)
-        logger.info(f"[SMS GATEWAY] Sending OTP {code} to {target}")
-        return True
+    pass
 
 
 def get_otp_service() -> IOtpService:
     """Returns appropriate OTP service based on environment."""
-    if settings.ENVIRONMENT == "production" and settings.INDIAN_SMS_PROVIDER_API_KEY:
-        return IndianSmsOtpService()
     return MockOtpService()

@@ -50,7 +50,7 @@ class AuthService:
             email=email_clean,
             password_hash=password_hash,
             account_status=AccountStatus.PENDING_VERIFICATION,
-            role=payload.role,
+            role=UserRole.CANDIDATE,  # Admin accounts can ONLY be created via backend code/seeds
             is_mobile_verified=False,
             is_email_verified=False,
         )

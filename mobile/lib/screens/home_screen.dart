@@ -37,9 +37,18 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          EnvConfig.appName,
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: const [
+            Text(
+              EnvConfig.appName,
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+            ),
+            Text(
+              EnvConfig.productAttribution,
+              style: TextStyle(fontSize: 10, color: Colors.amberAccent, fontWeight: FontWeight.w600),
+            ),
+          ],
         ),
       ),
       body: SingleChildScrollView(
@@ -74,17 +83,17 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   const SizedBox(height: 8),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: AppTheme.primary,
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: const Text(
-                      EnvConfig.phase,
+                      EnvConfig.productAttribution,
                       style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        color: AppTheme.primary,
+                        fontSize: 11,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
                       ),
                     ),
                   ),

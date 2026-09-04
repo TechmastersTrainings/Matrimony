@@ -29,6 +29,21 @@ class ApiClient {
     return headers;
   }
 
+  Future<Map<String, dynamic>> checkHealth() async {
+    try {
+      final response = await http.get(
+        Uri.parse('$baseUrl/health'),
+        headers: _getHeaders(),
+      );
+      if (response.statusCode == 200) {
+        return json.decode(response.body) as Map<String, dynamic>;
+      }
+      return {'status': 'unhealthy', 'message': 'HTTP ${response.statusCode}'};
+    } catch (e) {
+      return {'status': 'error', 'message': e.toString()};
+    }
+  }
+
   // ------------------ AUTH ------------------
   Future<Map<String, dynamic>> register(Map<String, dynamic> data) async {
     final response = await http.post(

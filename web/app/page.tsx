@@ -1,35 +1,31 @@
 import React from 'react';
-import { TechmastersHeroSection } from '../components/homepage/TechmastersHeroSection';
-import { TechmastersSearchSection } from '../components/homepage/TechmastersSearchSection';
-import { DynamicProfilesSection } from '../components/homepage/DynamicProfilesSection';
-import { DenominationsGrid } from '../components/homepage/DenominationsGrid';
-import { TechmastersJourneySection } from '../components/homepage/TechmastersJourneySection';
-import { IndianTrustSection } from '../components/homepage/IndianTrustSection';
-import { TechmastersBottomBanner } from '../components/homepage/TechmastersBottomBanner';
+import { MatrimonyHeroSection } from '../components/homepage/MatrimonyHeroSection';
+import { MatrimonyCovenantSection } from '../components/homepage/MatrimonyCovenantSection';
+import { ScriptureSanctuarySection } from '../components/homepage/ScriptureSanctuarySection';
+import { SacredDignitySection } from '../components/homepage/SacredDignitySection';
+import { AboutTechmastersSection } from '../components/homepage/AboutTechmastersSection';
+import { MatrimonyInvitationBanner } from '../components/homepage/MatrimonyInvitationBanner';
 
 export default function HomePage() {
   return (
-    <div className="flex flex-col min-h-screen bg-white">
-      {/* 1. Hero Section (Techmasters Innovations style - Centered, ambient lighting, dual CTAs, NO registration form) */}
-      <TechmastersHeroSection />
+    <div className="flex flex-col min-h-screen bg-slate-950 font-sans">
+      {/* 1. Cinematic Sunset Matrimony Hero Section featuring uploaded bride & groom image */}
+      <MatrimonyHeroSection />
 
-      {/* 2. Floating Match Search Bar */}
-      <TechmastersSearchSection />
+      {/* 2. Sacred Pillars of Holy Matrimony: Faith, Prayer, Family Honor & Vows */}
+      <MatrimonyCovenantSection />
 
-      {/* 3. Real Dynamic Profiles Feed (Direct from DB, 0 mock data) */}
-      <DynamicProfilesSection />
+      {/* 3. Scripture Sanctuary: 1 Corinthians 13 & Ecclesiastes 4:12 */}
+      <ScriptureSanctuarySection />
 
-      {/* 4. Christian Denominations & Communities Grid */}
-      <DenominationsGrid />
+      {/* 4. Sacred Dignity, Discretion & Family Reverence */}
+      <SacredDignitySection />
 
-      {/* 5. 4-Step Matchmaking Journey Framework */}
-      <TechmastersJourneySection />
+      {/* 5. About Us & Techmasters Innovations Private Limited */}
+      <AboutTechmastersSection />
 
-      {/* 6. Security, Trust & Confidential Privacy */}
-      <IndianTrustSection />
-
-      {/* 7. Bottom Conversion Banner */}
-      <TechmastersBottomBanner />
+      {/* 6. Matrimony Invitation Closing Banner */}
+      <MatrimonyInvitationBanner />
     </div>
   );
 }
