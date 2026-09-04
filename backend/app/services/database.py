@@ -81,7 +81,8 @@ def check_database_health() -> Tuple[bool, str]:
             return False, "Failed to initialize engine"
         with engine.connect() as conn:
             conn.execute(text("SELECT 1"))
-        return True, "Database connected (healthy)"
+        dialect = engine.dialect.name
+        return True, f"Database connected ({dialect})"
     except Exception as e:
         logger.error(f"Database health check failed: {e}")
         return False, f"Database connection error: {str(e)}"
