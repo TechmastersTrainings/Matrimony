@@ -1,14 +1,15 @@
 'use client';
 
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useState, useEffect, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { apiClient } from '../../lib/api-client';
 
-export default function RegisterPage() {
+function RegisterFormContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
 
-  // Matrimonial looking for: BRIDE (Female) or GROOM (Male)
+  // Matrimonial looking for: BRIDE (Female partner) or BRIDEGROOM (Male partner)
   const [lookingFor, setLookingFor] = useState<'FEMALE' | 'MALE'>('FEMALE');
   const [profileCreatedBy, setProfileCreatedBy] = useState('SELF');
   const [managerName, setManagerName] = useState('');
@@ -25,6 +26,37 @@ export default function RegisterPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Sync initial query params if user came from homepage quick-register
+  useEffect(() => {
+    const genderParam = searchParams.get('gender')?.toUpperCase();
+    if (genderParam === 'MALE') {
+      // Candidate is MALE -> looking for FEMALE (Bride)
+      setLookingFor('FEMALE');
+    } else if (genderParam === 'FEMALE') {
+      // Candidate is FEMALE -> looking for MALE (Bridegroom)
+      setLookingFor('MALE');
+    }
+
+    const createdByParam = searchParams.get('created_by')?.toUpperCase();
+    if (createdByParam) {
+      if (['SELF', 'PARENT', 'SIBLING', 'RELATIVE', 'FRIEND'].includes(createdByParam)) {
+        setProfileCreatedBy(createdByParam);
+      }
+    }
+
+    const mobileParam = searchParams.get('mobile');
+    if (mobileParam) {
+      setMobileNumber(mobileParam);
+    }
+  }, [searchParams]);
+
+  // Core Flow Logic:
+  // If looking for a Bride (Female partner) -> Candidate account being created is for Bridegroom (MALE).
+  // If looking for a Bridegroom (Male partner) -> Candidate account being created is for Bride (FEMALE).
+  const candidateGender: 'MALE' | 'FEMALE' = lookingFor === 'FEMALE' ? 'MALE' : 'FEMALE';
+  const candidateTitle = candidateGender === 'MALE' ? 'Bridegroom' : 'Bride';
+  const isSelf = profileCreatedBy === 'SELF';
+
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     if (password !== confirmPassword) {
@@ -32,7 +64,7 @@ export default function RegisterPage() {
       return;
     }
     if (!firstName.trim() || !lastName.trim()) {
-      setError(`Please provide the ${lookingFor === 'FEMALE' ? "Bride's" : "Groom's"} first and last name.`);
+      setError(`Please provide the ${candidateTitle}'s first and last name.`);
       return;
     }
     setIsLoading(true);
@@ -42,7 +74,7 @@ export default function RegisterPage() {
       await apiClient.register({
         first_name: firstName.trim(),
         last_name: lastName.trim(),
-        gender: lookingFor,
+        gender: candidateGender, // Correct candidate gender: MALE for Bridegroom, FEMALE for Bride
         mobile_number: mobileNumber.trim(),
         email: email.trim(),
         password: password,
@@ -59,9 +91,6 @@ export default function RegisterPage() {
       setIsLoading(false);
     }
   };
-
-  const isSelf = profileCreatedBy === 'SELF';
-  const personTitle = lookingFor === 'FEMALE' ? 'Bride' : 'Bridegroom';
 
   return (
     <div className="relative min-h-[calc(100vh-80px)] flex items-center justify-center py-14 px-4 bg-slate-950 text-white overflow-hidden font-sans">
@@ -124,6 +153,17 @@ export default function RegisterPage() {
                   Bridegroom (Male)
                 </button>
               </div>
+
+              {/* Explicit Visual Helper */}
+              <div className="mt-2.5 flex items-center gap-2 text-xs text-amber-300/90 bg-amber-950/40 border border-amber-900/50 rounded-xl px-3.5 py-2">
+                <span className="inline-block w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+                <span>
+                  Creating account for:{' '}
+                  <strong className="text-white font-semibold">
+                    {candidateTitle} ({candidateGender === 'MALE' ? 'Male' : 'Female'})
+                  </strong>
+                </span>
+              </div>
             </div>
 
             {/* 2. Profile Created By Dropdown */}
@@ -136,7 +176,7 @@ export default function RegisterPage() {
                 onChange={(e) => setProfileCreatedBy(e.target.value)}
                 className="w-full text-xs sm:text-sm font-medium border border-slate-800 rounded-2xl p-3.5 bg-slate-950 text-white focus:outline-none focus:border-amber-400 transition-all cursor-pointer"
               >
-                <option value="SELF">Self (I am the {personTitle})</option>
+                <option value="SELF">Self (I am the {candidateTitle})</option>
                 <option value="PARENT">Parent (Father / Mother)</option>
                 <option value="SIBLING">Sibling (Brother / Sister)</option>
                 <option value="RELATIVE">Relative / Guardian</option>
@@ -162,7 +202,7 @@ export default function RegisterPage() {
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-slate-300 mb-1.5">
-                    Your Relationship to {personTitle}
+                    Your Relationship to {candidateTitle}
                   </label>
                   <input
                     type="text"
@@ -176,31 +216,31 @@ export default function RegisterPage() {
               </div>
             )}
 
-            {/* 3. Bride's / Groom's Full Name */}
+            {/* 3. Candidate's (Bridegroom's / Bride's) Full Name */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">
-                  {personTitle}&apos;s First Name
+                  {candidateTitle}&apos;s First Name
                 </label>
                 <input
                   type="text"
                   required
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
-                  placeholder={`e.g. ${lookingFor === 'FEMALE' ? 'Grace' : 'Joshua'}`}
+                  placeholder={`e.g. ${candidateGender === 'MALE' ? 'Joshua' : 'Grace'}`}
                   className="w-full text-xs sm:text-sm font-medium border border-slate-800 rounded-2xl p-3.5 bg-slate-950 text-white focus:outline-none focus:border-amber-400 placeholder:text-slate-600"
                 />
               </div>
               <div>
                 <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">
-                  {personTitle}&apos;s Last Name
+                  {candidateTitle}&apos;s Last Name
                 </label>
                 <input
                   type="text"
                   required
                   value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
-                  placeholder="e.g. Joseph / Kumar"
+                  placeholder={candidateGender === 'MALE' ? 'e.g. Joseph / Kumar' : 'e.g. Fernandes / Kumari'}
                   className="w-full text-xs sm:text-sm font-medium border border-slate-800 rounded-2xl p-3.5 bg-slate-950 text-white focus:outline-none focus:border-amber-400 placeholder:text-slate-600"
                 />
               </div>
@@ -301,3 +341,12 @@ export default function RegisterPage() {
     </div>
   );
 }
+
+export default function RegisterPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-slate-950" />}>
+      <RegisterFormContent />
+    </Suspense>
+  );
+}
+
