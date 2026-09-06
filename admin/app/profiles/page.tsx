@@ -1,17 +1,33 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { adminApiClient } from '../../lib/api-client';
 import { AdminProfileItem } from '../../types';
 import { getPhotoUrl } from '../../lib/utils';
 
-export default function AdminProfilesPage() {
+function AdminProfilesContent() {
+  const searchParams = useSearchParams();
+  const queryParamStatus = searchParams?.get('status_filter');
+
   const [profiles, setProfiles] = useState<AdminProfileItem[]>([]);
   const [selectedProfile, setSelectedProfile] = useState<AdminProfileItem | null>(null);
-  const [statusFilter, setStatusFilter] = useState('SUBMITTED');
+  const [statusFilter, setStatusFilter] = useState<string>('ALL');
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  // Initialize status filter once on mount
+  useEffect(() => {
+    if (queryParamStatus) {
+      setStatusFilter(queryParamStatus.toUpperCase());
+    } else if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('admin_profile_filter');
+      if (saved) {
+        setStatusFilter(saved);
+      }
+    }
+  }, [queryParamStatus]);
 
   // Dialog states
   const [rejectReason, setRejectReason] = useState('');
@@ -56,17 +72,25 @@ export default function AdminProfilesPage() {
       const res = await adminApiClient.approveProfile(profileId);
       showToast(`✓ Profile #${profileId} approved successfully and published to Discovery.`);
 
+      // Optimistically update list
+      setProfiles((prev) =>
+        prev.map((p) =>
+          p.id === profileId
+            ? { ...p, status: 'APPROVED', approved_at: new Date().toISOString() }
+            : p
+        )
+      );
+
       // Optimistically update selected profile status in state
       if (selectedProfile && selectedProfile.id === profileId) {
         setSelectedProfile({
           ...selectedProfile,
           status: 'APPROVED',
+          approved_at: new Date().toISOString(),
         });
       }
 
-      // Switch to APPROVED or ALL filter so the item stays in view
-      setStatusFilter('APPROVED');
-      await loadProfiles('APPROVED', profileId);
+      await loadProfiles(statusFilter, profileId);
     } catch (err: any) {
       showToast(`Approval Error: ${err.message}`);
     } finally {
@@ -174,17 +198,22 @@ export default function AdminProfilesPage() {
 
         {/* Status Filters */}
         <div className="flex flex-wrap gap-2">
-          {['SUBMITTED', 'UNDER_REVIEW', 'CHANGES_REQUIRED', 'APPROVED', 'REJECTED', 'ALL'].map((st) => (
+          {['ALL', 'SUBMITTED', 'UNDER_REVIEW', 'CHANGES_REQUIRED', 'APPROVED', 'REJECTED'].map((st) => (
             <button
               key={st}
-              onClick={() => setStatusFilter(st)}
+              onClick={() => {
+                setStatusFilter(st);
+                if (typeof window !== 'undefined') {
+                  localStorage.setItem('admin_profile_filter', st);
+                }
+              }}
               className={`text-xs font-bold px-3 py-1.5 rounded-xl transition-all border ${
                 statusFilter === st
                   ? 'bg-amber-500 text-slate-950 border-amber-400 shadow-md'
                   : 'bg-slate-900 text-slate-400 border-slate-800 hover:text-white'
               }`}
             >
-              {st.replace('_', ' ')}
+              {st === 'ALL' ? 'All Profiles' : st.replace('_', ' ')}
             </button>
           ))}
         </div>
@@ -282,14 +311,19 @@ export default function AdminProfilesPage() {
 
                 {/* Moderation Actions */}
                 <div className="flex items-center gap-2">
-                  {selectedProfile.status !== 'APPROVED' && (
+                  {selectedProfile.status !== 'APPROVED' ? (
                     <button
                       disabled={actionLoading}
                       onClick={() => handleApprove(selectedProfile.id)}
-                      className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-400 hover:to-emerald-500 text-slate-950 font-extrabold text-xs shadow-lg transition-all"
+                      className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-400 hover:to-emerald-500 text-slate-950 font-extrabold text-xs shadow-lg transition-all flex items-center gap-1.5"
                     >
                       {actionLoading ? 'Approving...' : '✓ Approve & Publish'}
                     </button>
+                  ) : (
+                    <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-emerald-950/80 border border-emerald-500/60 text-emerald-300 font-extrabold text-xs shadow-inner">
+                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                      <span>✓ Approved &amp; Published</span>
+                    </div>
                   )}
 
                   <button
@@ -325,22 +359,19 @@ export default function AdminProfilesPage() {
 
               {/* Status Banner */}
               {selectedProfile.status === 'APPROVED' && (
-                <div className="p-3.5 px-4 rounded-2xl bg-emerald-950/50 border border-emerald-800/80 text-emerald-200 text-xs font-medium flex items-center justify-between gap-3">
+                <div className="p-3.5 px-4 rounded-2xl bg-emerald-950/50 border border-emerald-800/80 text-emerald-200 text-xs font-medium flex flex-wrap items-center justify-between gap-3">
                   <span className="flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                    <span>Active on Discovery search</span>
+                    <span>Active &amp; Publicly Searchable on Discovery Search</span>
                   </span>
-                  <button
-                    onClick={() => {
-                      const token = typeof window !== 'undefined' ? localStorage.getItem('token') || '' : '';
-                      const candidateWeb = (process.env.NEXT_PUBLIC_WEB_URL || 'https://matrimony-psi-wheat.vercel.app').replace(/\/+$/, '');
-                      window.open(`${candidateWeb}/discover?admin_token=${encodeURIComponent(token)}`, '_blank');
-                    }}
+                  <a
+                    href={`${(process.env.NEXT_PUBLIC_WEB_URL || 'https://matrimony-psi-wheat.vercel.app').replace(/\/+$/, '')}/profile/${selectedProfile.id}`}
+                    target="_blank"
+                    rel="noreferrer"
                     className="px-3.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs shadow-md transition-all shrink-0 flex items-center gap-1.5"
                   >
-                    <span>Test Discovery View</span>
-                    <span>→</span>
-                  </button>
+                    <span>View Public Profile CM-{selectedProfile.id} ↗</span>
+                  </a>
                 </div>
               )}
 
@@ -751,5 +782,13 @@ export default function AdminProfilesPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function AdminProfilesPage() {
+  return (
+    <Suspense fallback={<div className="min-h-[60vh] flex items-center justify-center text-slate-400 font-sans text-xs">Loading Profile Moderation Queue...</div>}>
+      <AdminProfilesContent />
+    </Suspense>
   );
 }

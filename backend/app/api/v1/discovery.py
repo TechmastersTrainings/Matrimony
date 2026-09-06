@@ -2,7 +2,7 @@ from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 
-from backend.app.core.security import get_current_user
+from backend.app.core.security import get_current_user, get_optional_current_user
 from backend.app.models.enums import ProfileStatus, UserRole
 from backend.app.models.photo import ProfilePhoto
 from backend.app.models.profile import Profile
@@ -76,7 +76,7 @@ async def search_profiles(
 )
 async def get_candidate_profile(
     profile_id: int,
-    current_user: User = Depends(get_current_user),
+    current_user: Optional[User] = Depends(get_optional_current_user),
     db: Session = Depends(get_db),
 ):
     profile = db.query(Profile).filter(Profile.id == profile_id).first()

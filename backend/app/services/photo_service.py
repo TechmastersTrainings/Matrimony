@@ -111,11 +111,8 @@ class PhotoService:
         )
         db.add(new_photo)
 
-        # Frozen profile rule: If profile was already approved, putting a new photo moves review state
-        if profile.status == ProfileStatus.APPROVED:
-            profile.status = ProfileStatus.UNDER_REVIEW
-            logger.info(f"Profile {profile.id} moved to UNDER_REVIEW due to new photo upload.")
-
+        # Note: New photo is marked PhotoStatus.PENDING_REVIEW for pastoral photo moderation,
+        # while keeping already-approved candidate profiles active on Discovery search.
         db.commit()
         db.refresh(new_photo)
         return new_photo

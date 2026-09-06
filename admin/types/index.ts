@@ -94,8 +94,10 @@ export interface AdminProfileItem {
   photos_count: number;
   photos: { id: number; url: string; is_primary: boolean }[];
   submitted_at?: string;
+  approved_at?: string;
   rejection_reason?: string;
   changes_requested_notes?: string;
+  [key: string]: any;
 }
 
 export interface AdminReportItem {

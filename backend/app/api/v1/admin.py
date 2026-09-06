@@ -143,22 +143,25 @@ async def update_user_status(
 
 
 # ------------------ PROFILES MODERATION ------------------
-@router.get("/profiles", summary="List Profiles by Moderation Status (SUBMITTED, UNDER_REVIEW, etc.)")
+@router.get("/profiles", summary="List Profiles by Moderation Status (SUBMITTED, UNDER_REVIEW, APPROVED, ALL, etc.)")
 async def list_profiles(
-    status_filter: Optional[ProfileStatus] = Query(None),
+    status_filter: Optional[str] = Query(None),
     skip: int = Query(0, ge=0),
     limit: int = Query(50, ge=1, le=100),
     current_user: User = Depends(require_admin_user),
     db: Session = Depends(get_db),
 ):
     query = db.query(Profile)
-    if status_filter:
-        query = query.filter(Profile.status == status_filter)
-    else:
-        query = query.filter(Profile.status.in_([ProfileStatus.SUBMITTED, ProfileStatus.UNDER_REVIEW, ProfileStatus.CHANGES_REQUIRED]))
+    if status_filter and status_filter.strip().upper() not in ["", "ALL", "NONE"]:
+        clean_status = status_filter.strip().upper()
+        try:
+            enum_val = ProfileStatus(clean_status)
+            query = query.filter(Profile.status == enum_val)
+        except ValueError:
+            query = query.filter(Profile.status == clean_status)
 
     total = query.count()
-    profiles = query.order_by(Profile.submitted_at.desc(), Profile.id.desc()).offset(skip).limit(limit).all()
+    profiles = query.order_by(Profile.updated_at.desc(), Profile.id.desc()).offset(skip).limit(limit).all()
 
     results = []
     for p in profiles:
