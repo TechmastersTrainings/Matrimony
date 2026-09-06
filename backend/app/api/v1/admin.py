@@ -124,8 +124,8 @@ async def update_user_status(
     if not target_user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
 
-    old_status = target_user.account_status
-    target_user.account_status = payload.status
+    old_status = getattr(target_user, "account_status", None)
+    setattr(target_user, "account_status", payload.status)
 
     log = AuditLog(
         admin_user_id=current_user.id,
@@ -390,18 +390,20 @@ async def save_setting(
     db: Session = Depends(get_db),
 ):
     setting = db.query(PlatformSetting).filter(PlatformSetting.key == payload.key).first()
+    category_val = payload.category if payload.category is not None else "general"
     if not setting:
         setting = PlatformSetting(
             key=payload.key,
             value=payload.value,
             description=payload.description,
-            category=payload.category,
+            category=category_val,
         )
         db.add(setting)
     else:
-        setting.value = payload.value
-        setting.description = payload.description or setting.description
-        setting.category = payload.category
+        setattr(setting, "value", payload.value)
+        if payload.description is not None:
+            setattr(setting, "description", payload.description)
+        setattr(setting, "category", category_val)
 
     db.commit()
     return {"success": True, "message": f"Setting '{payload.key}' saved successfully."}
