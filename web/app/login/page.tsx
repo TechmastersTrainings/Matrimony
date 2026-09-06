@@ -49,14 +49,19 @@ function LoginFormContent() {
     setError(null);
 
     try {
-      await apiClient.login({
+      const res = await apiClient.login({
         identifier: identifier.trim(),
         password: loginType === 'password' ? password : undefined,
         otp_code: loginType === 'otp' ? otpCode : undefined,
         login_type: loginType,
       });
 
-      router.push('/discover');
+      // If candidate has not finished their profile details (education, faith, family), take them to profile builder
+      if (res && res.profile_status === 'DRAFT') {
+        router.push('/profile/create');
+      } else {
+        router.push('/discover');
+      }
     } catch (err: any) {
       setError(err.message || 'Login failed. Please check your credentials.');
     } finally {

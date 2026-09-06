@@ -71,6 +71,13 @@ function RegisterFormContent() {
     setError(null);
 
     try {
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('token');
+        localStorage.removeItem('refresh_token');
+        localStorage.removeItem('user_role');
+        localStorage.removeItem('profile_status');
+      }
       await apiClient.register({
         first_name: firstName.trim(),
         last_name: lastName.trim(),

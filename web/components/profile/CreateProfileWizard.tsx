@@ -318,6 +318,13 @@ export function CreateProfileWizard() {
           </div>
 
           <div className="pt-2 flex flex-col sm:flex-row gap-3 justify-center">
+            <button
+              type="button"
+              onClick={() => setIsSubmitted(false)}
+              className="px-6 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-amber-400 font-bold text-xs border border-slate-700 transition-all"
+            >
+              Review / Edit Bio Details ✎
+            </button>
             <Link
               href="/profile/photos"
               className="px-6 py-3 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-extrabold text-xs shadow-lg shadow-amber-950/30 transition-all transform hover:-translate-y-0.5"
