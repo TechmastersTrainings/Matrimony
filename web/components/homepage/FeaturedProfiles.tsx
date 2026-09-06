@@ -61,76 +61,87 @@ export function FeaturedProfiles() {
           </div>
         ) : profiles.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {profiles.map((p) => (
-              <div
-                key={p.id}
-                className="bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 flex flex-col justify-between group hover:-translate-y-1.5"
-              >
-                {/* Photo Area */}
-                <div className="relative aspect-4/5 bg-slate-950 overflow-hidden flex items-center justify-center">
-                  {p.primary_photo ? (
-                    <img
-                      src={getPhotoUrl(typeof p.primary_photo === 'string' ? p.primary_photo : (p.primary_photo as any)?.photo_url) || DEFAULT_AVATAR_SVG}
-                      alt={`${p.first_name} ${p.last_name}`}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                      onError={(e) => {
-                        e.currentTarget.src = DEFAULT_AVATAR_SVG;
-                      }}
-                    />
-                  ) : (
-                    <div className="flex flex-col items-center justify-center text-slate-600 gap-2">
-                      <span className="text-4xl">👤</span>
-                      <span className="text-xs font-semibold text-slate-400">Photo Confidential</span>
-                    </div>
-                  )}
+            {profiles.map((p) => {
+              const photoUrl = getPhotoUrl(
+                typeof p.primary_photo === 'string'
+                  ? p.primary_photo
+                  : (p.primary_photo as any)?.photo_url
+              );
 
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-transparent to-transparent opacity-90" />
-
-                  {/* Badges */}
-                  <div className="absolute top-3 left-3 flex gap-2">
-                    <span className="bg-slate-900/90 text-amber-400 text-[10px] font-bold px-2.5 py-1 rounded-full border border-amber-500/30">
+              return (
+                <div
+                  key={p.id}
+                  className="bg-slate-900/90 backdrop-blur-xl border border-slate-800 hover:border-amber-500/50 rounded-3xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300 flex flex-col justify-between group hover:-translate-y-1.5"
+                >
+                  {/* Top Badges Row (Dedicated Non-Overlapping Header) */}
+                  <div className="flex items-center justify-between gap-2 pb-1">
+                    <span className="bg-amber-500/10 text-amber-300 border border-amber-500/30 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider truncate max-w-[130px]">
                       {p.denomination || 'Christian'}
                     </span>
-                  </div>
 
-                  <div className="absolute top-3 right-3">
-                    <span className="bg-emerald-600/90 text-white text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+                    <span className="bg-emerald-950/80 text-emerald-300 border border-emerald-800/80 text-[10px] font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1 shrink-0">
                       <span>✓</span>
                       <span>Verified</span>
                     </span>
                   </div>
 
-                  {/* Text inside overlay */}
-                  <div className="absolute bottom-3 left-3 right-3 text-white">
-                    <h3 className="font-brand text-lg font-bold text-white">
-                      {p.first_name} {p.last_name?.charAt(0)}.
+                  {/* Centered Circular Profile Photo (Circle View) */}
+                  <div className="my-5 flex justify-center">
+                    <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full ring-4 ring-amber-400/20 group-hover:ring-amber-400/60 shadow-xl overflow-hidden bg-slate-950 transition-all duration-300 relative flex items-center justify-center shrink-0">
+                      {photoUrl ? (
+                        <img
+                          src={photoUrl}
+                          alt={`${p.first_name} ${p.last_name || ''}`}
+                          className="w-full h-full object-cover object-top group-hover:scale-110 transition-transform duration-500"
+                          onError={(e) => {
+                            e.currentTarget.src = DEFAULT_AVATAR_SVG;
+                          }}
+                        />
+                      ) : (
+                        <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-b from-slate-800 to-slate-950 text-slate-400 p-2">
+                          <span className="text-3xl">👤</span>
+                          <span className="text-[10px] font-semibold text-slate-400 mt-1 text-center leading-tight">
+                            Photo<br />Confidential
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Candidate Details (Never Overlaps, Natural Vertical Hierarchy) */}
+                  <div className="text-center space-y-1.5 flex-1 flex flex-col justify-center">
+                    <h3 className="font-brand text-lg font-bold text-white group-hover:text-amber-300 transition-colors truncate">
+                      {p.first_name} {p.last_name?.charAt(0) ? `${p.last_name.charAt(0)}.` : ''}
                     </h3>
-                    <p className="text-[11px] text-slate-300 truncate">
-                      📍 {p.district || 'Bidar'}, {p.state || 'Karnataka'}
+
+                    <p className="text-xs text-amber-400/90 font-medium flex items-center justify-center gap-1">
+                      <span>📍</span>
+                      <span className="truncate">{p.district || 'Bidar'}, {p.state || 'Karnataka'}</span>
                     </p>
+
+                    <div className="pt-3 border-t border-slate-800/80 space-y-1 text-xs">
+                      <p className="font-medium text-slate-200 truncate" title={p.highest_education || 'Christian Graduate'}>
+                        🎓 {p.highest_education || 'Christian Graduate'}
+                      </p>
+                      <p className="text-[11px] text-slate-400 truncate" title={p.occupation_title || p.church_name || 'Verified Member'}>
+                        💼 {p.occupation_title || p.church_name || 'Verified Member'}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Docked Action Button */}
+                  <div className="mt-5 pt-2">
+                    <Link
+                      href={`/profile/${p.id}`}
+                      className="w-full py-2.5 px-4 rounded-xl bg-slate-800/90 hover:bg-gradient-to-r hover:from-amber-500 hover:to-amber-600 text-slate-200 hover:text-slate-950 border border-slate-700 hover:border-amber-400 text-xs font-bold transition-all duration-200 flex items-center justify-center gap-1.5 shadow-md group-hover:shadow-amber-950/40"
+                    >
+                      <span>View Profile</span>
+                      <span className="transition-transform group-hover:translate-x-0.5">→</span>
+                    </Link>
                   </div>
                 </div>
-
-                {/* Card Footer Details */}
-                <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
-                  <div className="space-y-1.5 text-xs text-slate-400">
-                    <p className="font-medium text-slate-200 truncate">
-                      {p.occupation_title || p.highest_education || 'Professional'}
-                    </p>
-                    <p className="text-[11px] truncate">
-                      {p.church_name || 'Verified Member'}
-                    </p>
-                  </div>
-
-                  <Link
-                    href={`/profile/${p.id}`}
-                    className="w-full text-center py-2.5 rounded-xl bg-slate-800 hover:bg-amber-500 text-slate-200 hover:text-slate-950 border border-slate-700 text-xs font-bold transition-all block"
-                  >
-                    View Profile
-                  </Link>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         ) : (
           <div className="py-12 px-6 rounded-3xl bg-slate-900/80 border border-slate-800 text-center max-w-2xl mx-auto space-y-4">

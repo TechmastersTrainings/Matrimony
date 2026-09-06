@@ -17,7 +17,7 @@ export default function DiscoverPage() {
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [planName, setPlanName] = useState<string | null>(null);
 
-  // View Mode: 'horizontal' (Jeevansathi style) vs 'grid'
+  // View Mode: 'horizontal' (detailed card) vs 'grid'
   const [viewMode, setViewMode] = useState<'horizontal' | 'grid'>('horizontal');
 
   // Filter States
@@ -333,7 +333,7 @@ export default function DiscoverPage() {
                 ? 'Groom Matches for Christian Brides'
                 : myGender === 'MALE'
                 ? 'Bride Matches for Christian Grooms'
-                : 'Jeevansathi Style Matrimonial Search'}
+                : 'Verified Matrimonial Search'}
             </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
               {myGender === 'FEMALE' ? (
@@ -663,7 +663,7 @@ export default function DiscoverPage() {
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                   </svg>
-                  <span>Horizontal (Jeevansathi)</span>
+                  <span>Detailed View</span>
                 </button>
 
                 <button
@@ -738,7 +738,7 @@ export default function DiscoverPage() {
                 </button>
               </div>
             ) : viewMode === 'horizontal' ? (
-              /* JEEVANSATHI HORIZONTAL CARD LAYOUT */
+              /* DETAILED HORIZONTAL CARD LAYOUT */
               <div className="space-y-5">
                 {candidates.map((c) => {
                   const isSaved = shortlisted.includes(c.id);
@@ -834,7 +834,7 @@ export default function DiscoverPage() {
                           </button>
                         </div>
 
-                        {/* 2. Key Attributes Grid (2-Column Jeevansathi Format) */}
+                        {/* 2. Key Attributes Grid (2-Column Format) */}
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2.5 text-xs">
                           <div className="flex items-center gap-2">
                             <span className="text-slate-400 font-semibold w-24 shrink-0">Denomination:</span>
@@ -942,31 +942,37 @@ export default function DiscoverPage() {
                   return (
                     <div
                       key={c.id}
-                      className="bg-slate-900/80 backdrop-blur-xl border border-slate-800 hover:border-amber-500/50 rounded-3xl overflow-hidden shadow-2xl group transition-all duration-300 flex flex-col justify-between"
+                      className="bg-slate-900/90 backdrop-blur-xl border border-slate-800 hover:border-amber-500/50 rounded-3xl p-6 shadow-xl hover:shadow-2xl group transition-all duration-300 flex flex-col justify-between"
                     >
                       <div>
-                        {/* Photo Header */}
-                        <div className="aspect-[4/5] bg-slate-950 relative overflow-hidden">
-                          <img
-                            src={photoSrc}
-                            alt={c.first_name}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                            onError={(e) => {
-                              e.currentTarget.src = DEFAULT_AVATAR_SVG;
-                            }}
-                          />
-
-                          <div className="absolute top-3 left-3 bg-slate-950/80 backdrop-blur-md text-amber-400 text-[10px] font-bold px-2.5 py-1 rounded-lg border border-slate-800">
+                        {/* Top Badges Row */}
+                        <div className="flex items-center justify-between gap-2 pb-1">
+                          <span className="bg-amber-500/10 text-amber-300 border border-amber-500/30 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider truncate max-w-[130px]">
                             {c.denomination || 'Christian'}
-                          </div>
+                          </span>
 
-                          <div className="absolute top-3 right-3 bg-emerald-950/80 backdrop-blur-md text-emerald-300 text-[10px] font-bold px-2.5 py-1 rounded-lg border border-emerald-800">
-                            Verified
+                          <span className="bg-emerald-950/80 text-emerald-300 border border-emerald-800/80 text-[10px] font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1 shrink-0">
+                            <span>✓</span>
+                            <span>Verified</span>
+                          </span>
+                        </div>
+
+                        {/* Circular Photo Header */}
+                        <div className="my-5 flex justify-center">
+                          <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full ring-4 ring-amber-400/20 group-hover:ring-amber-400/60 shadow-xl overflow-hidden bg-slate-950 transition-all duration-300 relative flex items-center justify-center shrink-0">
+                            <img
+                              src={photoSrc}
+                              alt={c.first_name}
+                              className="w-full h-full object-cover object-top group-hover:scale-110 transition-transform duration-500"
+                              onError={(e) => {
+                                e.currentTarget.src = DEFAULT_AVATAR_SVG;
+                              }}
+                            />
                           </div>
                         </div>
 
                         {/* Content Info */}
-                        <div className="p-5 space-y-2">
+                        <div className="space-y-2 pt-2 border-t border-slate-800/80">
                           <div className="flex items-center justify-between">
                             <h3 className="font-extrabold text-base text-white group-hover:text-amber-400 transition-colors">
                               {c.first_name} {c.last_name}
@@ -1018,7 +1024,7 @@ export default function DiscoverPage() {
                       </div>
 
                       {/* CTAs */}
-                      <div className="p-5 pt-0 grid grid-cols-2 gap-2">
+                      <div className="mt-5 pt-1 grid grid-cols-2 gap-2.5">
                         <button
                           type="button"
                           onClick={(e) => handleViewProfileClick(e, c)}
