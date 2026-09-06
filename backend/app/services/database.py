@@ -43,17 +43,20 @@ def get_engine():
     if _engine is not None:
         return _engine
 
-    db_url = clean_db_url(settings.DATABASE_URL)
+    raw_url = settings.get_database_url() if hasattr(settings, "get_database_url") else settings.DATABASE_URL
+    db_url = clean_db_url(raw_url)
     fallback_path = "./backend/matrimony.db" if os.path.isdir("./backend") else "./matrimony.db"
 
     if db_url:
         connect_args: Dict[str, Any] = {}
         if "sqlite" in db_url:
             connect_args["check_same_thread"] = False
-            _primary_db_diag = "Configured as SQLite in DATABASE_URL"
+            _primary_db_diag = "SQLite local file active (⚠️ Ephemeral on Render/cloud containers - set DATABASE_URL for permanent storage)"
         elif "mysql" in db_url:
             connect_args["ssl"] = {}
-            _primary_db_diag = f"Configured as MySQL: {db_url.split('@')[-1] if '@' in db_url else 'unknown'}"
+            if "aivencloud" in db_url or "ssl" in db_url.lower():
+                connect_args["ssl"] = {"ssl_mode": "REQUIRED"}
+            _primary_db_diag = f"Configured as Persistent MySQL: {db_url.split('@')[-1] if '@' in db_url else 'unknown'}"
 
         try:
             test_engine = create_engine(
@@ -68,11 +71,12 @@ def get_engine():
             with test_engine.connect() as conn:
                 conn.execute(text("SELECT 1"))
             _engine = test_engine
-            _primary_db_diag = f"Successfully connected to {test_engine.dialect.name} ({db_url.split('@')[-1] if '@' in db_url else 'local'})"
-            logger.info(f"Database engine initialized successfully ({test_engine.dialect.name}).")
+            dialect = test_engine.dialect.name
+            _primary_db_diag = f"Connected to persistent {dialect} ({db_url.split('@')[-1] if '@' in db_url else 'local'})"
+            logger.info(f"Database engine initialized successfully ({dialect}).")
         except Exception as e:
             err_msg = f"{type(e).__name__}: {str(e)}"
-            _primary_db_diag = f"Primary MySQL connection failed: {err_msg}"
+            _primary_db_diag = f"Primary MySQL connection failed ({err_msg}). Using fallback SQLite (⚠️ Ephemeral on cloud)."
             logger.error(f"Primary database connection error on {db_url}: {e}")
             logger.warning("Falling back to local SQLite engine to keep API operational.")
             _engine = create_engine(
@@ -81,7 +85,7 @@ def get_engine():
                 pool_pre_ping=True,
             )
     else:
-        _primary_db_diag = "No valid DATABASE_URL configured, default SQLite active"
+        _primary_db_diag = "No valid DATABASE_URL configured, default SQLite active (⚠️ Ephemeral on cloud)"
         logger.warning(f"No valid database URL parsed from settings. Using SQLite at {fallback_path}.")
         _engine = create_engine(
             f"sqlite:///{fallback_path}",

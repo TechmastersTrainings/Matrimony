@@ -21,9 +21,10 @@ async def health_check():
     storage_service = get_storage_service()
     storage_ok, storage_msg = storage_service.check_health()
 
+    db_url_configured = bool(settings.get_database_url()) if hasattr(settings, "get_database_url") else bool(settings.DATABASE_URL)
     services = {
         "database": ServiceHealth(
-            status="healthy" if db_ok else ("not_configured" if not settings.DATABASE_URL else "degraded"),
+            status="healthy" if db_ok else ("not_configured" if not db_url_configured else "degraded"),
             message=db_msg,
         ),
         "redis": ServiceHealth(
@@ -38,7 +39,7 @@ async def health_check():
 
     # Overall system health: in dev/initial phase, degraded if configured services fail
     is_healthy = True
-    if settings.DATABASE_URL and not db_ok:
+    if db_url_configured and not db_ok:
         is_healthy = False
     if settings.REDIS_URL and not redis_ok:
         is_healthy = False

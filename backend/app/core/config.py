@@ -54,11 +54,26 @@ class Settings(BaseSettings):
         return ["*"]
 
     # Database Configuration (MySQL / Aiven / SQLite dev default)
-    DATABASE_URL: Optional[str] = "sqlite:///./backend/matrimony.db"
+    DATABASE_URL: Optional[str] = None
+    DB_HOST: Optional[str] = None
+    DB_PORT: Optional[int] = 20831
+    DB_USER: Optional[str] = None
+    DB_PASSWORD: Optional[str] = None
+    DB_NAME: Optional[str] = "defaultdb"
     DB_POOL_SIZE: int = 10
     DB_MAX_OVERFLOW: int = 20
     DB_POOL_TIMEOUT: int = 30
     DB_POOL_RECYCLE: int = 1800
+
+    def get_database_url(self) -> str:
+        """Resolves database URL from DATABASE_URL or individual DB_* parameters, falling back to local SQLite."""
+        if self.DATABASE_URL and self.DATABASE_URL.strip():
+            return self.DATABASE_URL.strip()
+        if self.DB_HOST and self.DB_USER and self.DB_PASSWORD:
+            port = self.DB_PORT or 3306
+            db_name = self.DB_NAME or "defaultdb"
+            return f"mysql+pymysql://{self.DB_USER}:{self.DB_PASSWORD}@{self.DB_HOST}:{port}/{db_name}?ssl-mode=REQUIRED"
+        return "sqlite:///./backend/matrimony.db"
 
     # Redis Configuration (Upstash Redis)
     REDIS_URL: Optional[str] = None
