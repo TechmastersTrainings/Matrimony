@@ -13,7 +13,7 @@ export function FeaturedProfiles() {
   useEffect(() => {
     async function loadRealProfiles() {
       try {
-        const res = await apiClient.searchProfiles({ page_size: 4 });
+        const res = await apiClient.searchProfiles({ limit: 8 });
         if (res && Array.isArray(res.profiles)) {
           setProfiles(res.profiles);
         }
@@ -123,7 +123,7 @@ export function FeaturedProfiles() {
                   </div>
 
                   <Link
-                    href={`/discover`}
+                    href={`/profile/${p.id}`}
                     className="w-full text-center py-2.5 rounded-xl bg-slate-800 hover:bg-amber-500 text-slate-200 hover:text-slate-950 border border-slate-700 text-xs font-bold transition-all block"
                   >
                     View Profile

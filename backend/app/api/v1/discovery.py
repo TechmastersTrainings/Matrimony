@@ -32,7 +32,7 @@ async def search_profiles(
     occupation_type: Optional[str] = None,
     skip: int = Query(0, ge=0),
     limit: int = Query(20, ge=1, le=50),
-    current_user: User = Depends(get_current_user),
+    current_user: Optional[User] = Depends(get_optional_current_user),
     db: Session = Depends(get_db),
 ):
     total, results = DiscoveryService.search_profiles(

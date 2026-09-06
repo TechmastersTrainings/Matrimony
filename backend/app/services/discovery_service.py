@@ -80,14 +80,17 @@ class DiscoveryService:
             )
 
         # Gender Filter:
-        # If explicitly filtered by gender (e.g. admin or visitor choosing 'FEMALE' or 'MALE')
-        if gender and gender.strip() and gender.upper() not in ["ALL", "BOTH", "ALL_PROFILES"]:
-            try:
-                query = query.filter(Profile.gender == Gender(gender.upper()))
-            except ValueError:
-                pass
+        if gender and gender.strip():
+            clean_gender = gender.strip().upper()
+            if clean_gender in ["ALL", "BOTH", "ALL_PROFILES"]:
+                pass  # Explicitly allow seeing all profiles (both brides and grooms)
+            else:
+                try:
+                    query = query.filter(Profile.gender == Gender(clean_gender))
+                except ValueError:
+                    pass
         elif not is_admin and current_user:
-            # Automatic opposite-gender discovery matching for regular members
+            # Automatic reciprocal opposite-gender discovery matching for regular members
             my_profile = db.query(Profile).filter(Profile.user_id == current_user.id).first()
             if my_profile and my_profile.gender:
                 opposite_gender = Gender.FEMALE if my_profile.gender == Gender.MALE else Gender.MALE

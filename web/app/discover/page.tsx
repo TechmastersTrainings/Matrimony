@@ -23,6 +23,7 @@ export default function DiscoverPage() {
   // Filter States
   const [searchQuery, setSearchQuery] = useState('');
   const [gender, setGender] = useState('');
+  const [myGender, setMyGender] = useState<'MALE' | 'FEMALE' | null>(null);
   const [denomination, setDenomination] = useState('');
   const [district, setDistrict] = useState('');
   const [ageMin, setAgeMin] = useState('');
@@ -65,7 +66,7 @@ export default function DiscoverPage() {
     }
   };
 
-  // Check user role and active subscription
+  // Check user role, active subscription, and candidate gender
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const urlParams = new URLSearchParams(window.location.search);
@@ -99,6 +100,20 @@ export default function DiscoverPage() {
               if (sub.plan_name) setPlanName(sub.plan_name);
             })
             .catch(() => setIsSubscribed(false));
+
+          // Check user profile gender to automatically show opposite gender (Groom for Bride, Bride for Groom)
+          apiClient
+            .getRegistrationMe()
+            .then((res) => {
+              const g = res.profile?.gender || res.draft?.draft_data?.gender;
+              if (g) {
+                const uGen = String(g).toUpperCase() as 'MALE' | 'FEMALE';
+                setMyGender(uGen);
+                const targetOpposite = uGen === 'FEMALE' ? 'MALE' : 'FEMALE';
+                setGender((prev) => (prev ? prev : targetOpposite));
+              }
+            })
+            .catch(() => {});
         }
       }
     }
@@ -112,7 +127,7 @@ export default function DiscoverPage() {
 
   const handleResetFilters = () => {
     setSearchQuery('');
-    setGender('');
+    setGender(myGender === 'FEMALE' ? 'MALE' : myGender === 'MALE' ? 'FEMALE' : '');
     setDenomination('');
     setDistrict('');
     setAgeMin('');
@@ -314,13 +329,33 @@ export default function DiscoverPage() {
         <div className="bg-slate-900/80 backdrop-blur-xl border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl flex flex-col md:flex-row md:items-center md:justify-between gap-6">
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-900/40 border border-blue-700/50 text-blue-300 text-[11px] font-bold uppercase tracking-wider mb-2">
-              Jeevansathi Style Matrimonial Search
+              {myGender === 'FEMALE'
+                ? 'Groom Matches for Christian Brides'
+                : myGender === 'MALE'
+                ? 'Bride Matches for Christian Grooms'
+                : 'Jeevansathi Style Matrimonial Search'}
             </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-              Discover <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-500">Verified Christian Candidates</span>
+              {myGender === 'FEMALE' ? (
+                <>
+                  Recommended <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-500">Christian Grooms</span>
+                </>
+              ) : myGender === 'MALE' ? (
+                <>
+                  Recommended <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-500">Christian Brides</span>
+                </>
+              ) : (
+                <>
+                  Discover <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-500">Verified Christian Candidates</span>
+                </>
+              )}
             </h1>
             <p className="text-xs sm:text-sm text-slate-400 mt-1">
-              High-density candidate profiles across Methodist, CSI, Catholic, Baptist, Pentecostal &amp; Protestant fellowships.
+              {myGender === 'FEMALE'
+                ? 'Showing verified Christian grooms matching your spiritual fellowship, parish, and family alignment.'
+                : myGender === 'MALE'
+                ? 'Showing verified Christian brides matching your spiritual fellowship, parish, and family alignment.'
+                : 'High-density candidate profiles across Methodist, CSI, Catholic, Baptist, Pentecostal & Protestant fellowships.'}
             </p>
           </div>
 
@@ -457,9 +492,25 @@ export default function DiscoverPage() {
                   onChange={(e) => setGender(e.target.value)}
                   className="w-full text-xs font-medium rounded-xl border border-slate-800 p-3 bg-slate-950 text-white focus:outline-none focus:border-amber-400"
                 >
-                  <option value="">All Profiles (Bride &amp; Groom)</option>
-                  <option value="FEMALE">Female (Bride)</option>
-                  <option value="MALE">Male (Groom)</option>
+                  {myGender === 'FEMALE' ? (
+                    <>
+                      <option value="MALE">Grooms / Male (Recommended for you)</option>
+                      <option value="ALL">All Profiles (Bride &amp; Groom)</option>
+                      <option value="FEMALE">Brides / Female</option>
+                    </>
+                  ) : myGender === 'MALE' ? (
+                    <>
+                      <option value="FEMALE">Brides / Female (Recommended for you)</option>
+                      <option value="ALL">All Profiles (Bride &amp; Groom)</option>
+                      <option value="MALE">Grooms / Male</option>
+                    </>
+                  ) : (
+                    <>
+                      <option value="ALL">All Profiles (Bride &amp; Groom)</option>
+                      <option value="FEMALE">Female (Bride)</option>
+                      <option value="MALE">Male (Groom)</option>
+                    </>
+                  )}
                 </select>
               </div>
 
@@ -538,14 +589,69 @@ export default function DiscoverPage() {
 
           {/* Right Candidate Stream */}
           <div className="lg:col-span-3 space-y-5">
-            {/* Header Controls: Count + Horizontal/Grid Toggle */}
-            <div className="flex items-center justify-between bg-slate-900/60 border border-slate-800/80 px-5 py-3.5 rounded-2xl">
-              <span className="text-xs font-bold text-slate-300 uppercase tracking-wider">
-                Showing <strong className="text-amber-400">{candidates.length}</strong> of {total} Matches
-              </span>
+            {/* Header Controls: Count + Horizontal/Grid Toggle + Gender Tabs */}
+            <div className="flex flex-col md:flex-row md:items-center justify-between bg-slate-900/60 border border-slate-800/80 px-5 py-3.5 rounded-2xl gap-3">
+              <div className="flex flex-wrap items-center gap-3">
+                <span className="text-xs font-bold text-slate-300 uppercase tracking-wider">
+                  Showing <strong className="text-amber-400">{candidates.length}</strong> of {total} Matches
+                </span>
+                {/* Quick Gender Toggle Tabs */}
+                <div className="flex items-center gap-1 bg-slate-950 p-1 rounded-xl border border-slate-800 text-[11px]">
+                  {myGender && (
+                    <button
+                      type="button"
+                      onClick={() => setGender(myGender === 'FEMALE' ? 'MALE' : 'FEMALE')}
+                      className={`px-2.5 py-1 rounded-lg font-bold transition-all ${
+                        (myGender === 'FEMALE' && gender === 'MALE') || (myGender === 'MALE' && gender === 'FEMALE')
+                          ? 'bg-amber-500 text-slate-950 shadow-sm'
+                          : 'text-slate-400 hover:text-white'
+                      }`}
+                    >
+                      ✨ Recommended ({myGender === 'FEMALE' ? 'Grooms' : 'Brides'})
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => setGender('FEMALE')}
+                    className={`px-2.5 py-1 rounded-lg font-bold transition-all ${
+                      gender === 'FEMALE' && (!myGender || myGender !== 'MALE')
+                        ? 'bg-amber-500 text-slate-950 shadow-sm'
+                        : gender === 'FEMALE' && myGender === 'MALE'
+                        ? 'bg-amber-500 text-slate-950 shadow-sm'
+                        : 'text-slate-400 hover:text-white'
+                    }`}
+                  >
+                    Brides
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setGender('MALE')}
+                    className={`px-2.5 py-1 rounded-lg font-bold transition-all ${
+                      gender === 'MALE' && (!myGender || myGender !== 'FEMALE')
+                        ? 'bg-amber-500 text-slate-950 shadow-sm'
+                        : gender === 'MALE' && myGender === 'FEMALE'
+                        ? 'bg-amber-500 text-slate-950 shadow-sm'
+                        : 'text-slate-400 hover:text-white'
+                    }`}
+                  >
+                    Grooms
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setGender('ALL')}
+                    className={`px-2.5 py-1 rounded-lg font-bold transition-all ${
+                      gender === 'ALL' || (!myGender && !gender)
+                        ? 'bg-slate-800 text-white'
+                        : 'text-slate-400 hover:text-white'
+                    }`}
+                  >
+                    All
+                  </button>
+                </div>
+              </div>
 
               {/* View Layout Switcher */}
-              <div className="flex items-center gap-2 bg-slate-950 p-1 rounded-xl border border-slate-800">
+              <div className="flex items-center gap-2 bg-slate-950 p-1 rounded-xl border border-slate-800 shrink-0">
                 <button
                   onClick={() => setViewMode('horizontal')}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
