@@ -16,7 +16,7 @@ def clean_db_url(raw_input: Optional[str]) -> Optional[str]:
     """Sanitizes raw database URL string against quotes, prefixes, and dialect incompatibilities."""
     if not raw_input:
         return None
-    u = str(raw_input).strip().strip("'\x22`\u201c\u201d\u2018\u2019")
+    u = raw_input.strip().strip("'\x22`\u201c\u201d\u2018\u2019")
     if "DATABASE_URL=" in u:
         u = u.split("DATABASE_URL=", 1)[-1].strip().strip("'\x22`\u201c\u201d\u2018\u2019")
     if u.startswith("mysql://"):

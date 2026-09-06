@@ -1,3 +1,15 @@
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.jetbrains.kotlin:kotlin-test:2.2.21")
+        classpath("org.mockito:mockito-core:5.8.0")
+        classpath("io.mockk:mockk:1.13.16")
+    }
+}
+
 allprojects {
     repositories {
         google()

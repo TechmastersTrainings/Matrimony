@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import hashlib
 from typing import Optional, Tuple
 from sqlalchemy.orm import Session
@@ -58,9 +58,11 @@ class AuthService:
         db.add(new_user)
         db.flush()
 
+        new_user_id: int = int(getattr(new_user, "id"))
+
         # 4. Create Initial Profile
         new_profile = Profile(
-            user_id=new_user.id,
+            user_id=new_user_id,
             profile_created_by=payload.profile_created_by,
             first_name=payload.first_name.strip(),
             last_name=payload.last_name.strip(),
@@ -80,7 +82,7 @@ class AuthService:
             "profile_created_by": payload.profile_created_by.value,
         }
         new_draft = ProfileDraft(
-            user_id=new_user.id,
+            user_id=new_user_id,
             current_step=1,
             draft_data=initial_draft_data,
         )
@@ -91,45 +93,56 @@ class AuthService:
         # 6. Send Registration OTP
         otp_service = get_otp_service()
         ok, msg, debug_otp = await otp_service.send_otp(mobile_clean, OtpType.REGISTRATION, db)
-        logger.info(f"User registration initialized: {new_user.id} ({mobile_clean}) - OTP status: {ok}")
+        logger.info(f"User registration initialized: {new_user_id} ({mobile_clean}) - OTP status: {ok}")
 
         return new_user, debug_otp
 
     @staticmethod
     def create_user_tokens(user: User, db: Session) -> TokenResponse:
+        user_id_val: int = int(getattr(user, "id"))
+        role_val: str = str(getattr(user.role, "value", user.role))
+        email_val: str = str(getattr(user, "email", ""))
+        mobile_val: str = str(getattr(user, "mobile_number", ""))
+        account_status_val: str = str(getattr(user.account_status, "value", user.account_status))
+        is_mobile_ver: bool = bool(getattr(user, "is_mobile_verified", False))
+        is_email_ver: bool = bool(getattr(user, "is_email_verified", False))
+
         access_token = create_access_token(
-            subject=user.id,
+            subject=user_id_val,
             extra_claims={
-                "role": user.role.value,
-                "email": user.email,
-                "mobile": user.mobile_number,
-                "account_status": user.account_status.value,
+                "role": role_val,
+                "email": email_val,
+                "mobile": mobile_val,
+                "account_status": account_status_val,
             },
         )
-        raw_refresh = create_refresh_token(subject=user.id)
+        raw_refresh = create_refresh_token(subject=user_id_val)
         refresh_hash = hashlib.sha256(raw_refresh.encode("utf-8")).hexdigest()
 
+        now_utc = datetime.now(timezone.utc)
         refresh_record = RefreshToken(
-            user_id=user.id,
+            user_id=user_id_val,
             token_hash=refresh_hash,
-            expires_at=datetime.utcnow() + timedelta(days=settings.REFRESH_TOKEN_EXPIRE_DAYS),
+            expires_at=now_utc + timedelta(days=settings.REFRESH_TOKEN_EXPIRE_DAYS),
             is_revoked=False,
         )
         db.add(refresh_record)
-        user.last_login_at = datetime.utcnow()
+        setattr(user, "last_login_at", now_utc)
         db.commit()
 
-        profile_status = user.profile.status.value if user.profile else "DRAFT"
+        profile_status = "DRAFT"
+        if getattr(user, "profile", None) and hasattr(user.profile, "status"):
+            profile_status = str(getattr(user.profile.status, "value", user.profile.status))
 
         return TokenResponse(
             access_token=access_token,
             refresh_token=raw_refresh,
             expires_in=settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60,
-            user_id=user.id,
-            role=user.role.value,
-            account_status=user.account_status.value,
-            is_mobile_verified=user.is_mobile_verified,
-            is_email_verified=user.is_email_verified,
+            user_id=user_id_val,
+            role=role_val,
+            account_status=account_status_val,
+            is_mobile_verified=is_mobile_ver,
+            is_email_verified=is_email_ver,
             profile_status=profile_status,
         )
 
@@ -141,7 +154,8 @@ class AuthService:
             (User.email == ident_clean) | (User.mobile_number == ident_clean)
         ).first()
 
-        if not user or not user.password_hash or not verify_password(password, user.password_hash):
+        pwd_hash: str = str(getattr(user, "password_hash", "") or "")
+        if not user or not pwd_hash or not verify_password(password, pwd_hash):
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Invalid credentials. Please check your mobile/email and password.",
@@ -180,13 +194,15 @@ class AuthService:
                 )
 
         # Mark verified and active
-        if target_clean == user.mobile_number.lower():
-            user.is_mobile_verified = True
-        elif target_clean == user.email.lower():
-            user.is_email_verified = True
+        user_mobile = str(getattr(user, "mobile_number", "") or "").lower()
+        user_email = str(getattr(user, "email", "") or "").lower()
+        if target_clean == user_mobile:
+            setattr(user, "is_mobile_verified", True)
+        elif target_clean == user_email:
+            setattr(user, "is_email_verified", True)
 
-        if user.account_status == AccountStatus.PENDING_VERIFICATION:
-            user.account_status = AccountStatus.ACTIVE
+        if getattr(user, "account_status", None) == AccountStatus.PENDING_VERIFICATION:
+            setattr(user, "account_status", AccountStatus.ACTIVE)
 
         db.commit()
         db.refresh(user)
@@ -202,7 +218,11 @@ class AuthService:
                 detail="Invalid token type for refresh.",
             )
 
-        user_id = int(payload.get("sub"))
+        sub = payload.get("sub")
+        if sub is None:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token subject.")
+
+        user_id = int(sub)
         user = db.query(User).filter(User.id == user_id).first()
         if not user:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found.")
