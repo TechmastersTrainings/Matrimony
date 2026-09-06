@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+import hashlib
 from typing import Optional, Tuple
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, status
@@ -106,7 +107,7 @@ class AuthService:
             },
         )
         raw_refresh = create_refresh_token(subject=user.id)
-        refresh_hash = hash_password(raw_refresh[:30])
+        refresh_hash = hashlib.sha256(raw_refresh.encode("utf-8")).hexdigest()
 
         refresh_record = RefreshToken(
             user_id=user.id,

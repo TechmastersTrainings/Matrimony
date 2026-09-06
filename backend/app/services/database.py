@@ -14,7 +14,14 @@ _SessionFactory = None
 def get_engine():
     global _engine, _SessionFactory
     if _engine is None and settings.DATABASE_URL:
-        db_url = settings.DATABASE_URL
+        # Sanitize database URL to tolerate quotes, spaces, or prefixed keys from cloud configs
+        raw_url = settings.DATABASE_URL.strip().strip("'\"`")
+        if raw_url.startswith("DATABASE_URL="):
+            raw_url = raw_url[len("DATABASE_URL="):].strip().strip("'\"`")
+        if raw_url.startswith("mysql://"):
+            raw_url = raw_url.replace("mysql://", "mysql+pymysql://", 1)
+
+        db_url = raw_url
         connect_args: Dict[str, Any] = {}
         if "sqlite" in db_url:
             connect_args["check_same_thread"] = False
