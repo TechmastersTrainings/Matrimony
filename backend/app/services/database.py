@@ -13,12 +13,17 @@ _engine = None
 _SessionFactory = None
 
 def clean_db_url(raw_input: Optional[str]) -> Optional[str]:
-    """Sanitizes raw database URL string against quotes, prefixes, newlines, and dialect incompatibilities."""
+    """Sanitizes raw database URL string against quotes, prefixes (like ServiceURI/Service URI:), newlines, and dialect incompatibilities."""
     if not raw_input:
         return None
     u = raw_input.strip().strip("'\x22`\u201c\u201d\u2018\u2019")
     if "DATABASE_URL=" in u:
         u = u.split("DATABASE_URL=", 1)[-1].strip().strip("'\x22`\u201c\u201d\u2018\u2019")
+    # Strip any prefix like "Service URI:", "ServiceURI", etc. before the dialect scheme
+    for marker in ["mysql+pymysql://", "mysql://", "sqlite:///", "postgresql://", "postgres://"]:
+        if marker in u:
+            u = u[u.find(marker):]
+            break
     # Remove any internal whitespace or newlines that might have been accidentally pasted
     u = re.sub(r"\s+", "", u)
     if u.startswith("mysql://"):
