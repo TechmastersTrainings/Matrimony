@@ -35,8 +35,11 @@ def clean_db_url(raw_input: Optional[str]) -> Optional[str]:
         return None
 
 
+_primary_db_diag = "Uninitialized"
+
+
 def get_engine():
-    global _engine, _SessionFactory
+    global _engine, _SessionFactory, _primary_db_diag
     if _engine is not None:
         return _engine
 
@@ -47,8 +50,10 @@ def get_engine():
         connect_args: Dict[str, Any] = {}
         if "sqlite" in db_url:
             connect_args["check_same_thread"] = False
+            _primary_db_diag = "Configured as SQLite in DATABASE_URL"
         elif "mysql" in db_url:
             connect_args["ssl"] = {}
+            _primary_db_diag = f"Configured as MySQL: {db_url.split('@')[-1] if '@' in db_url else 'unknown'}"
 
         try:
             test_engine = create_engine(
@@ -63,8 +68,11 @@ def get_engine():
             with test_engine.connect() as conn:
                 conn.execute(text("SELECT 1"))
             _engine = test_engine
+            _primary_db_diag = f"Successfully connected to {test_engine.dialect.name} ({db_url.split('@')[-1] if '@' in db_url else 'local'})"
             logger.info(f"Database engine initialized successfully ({test_engine.dialect.name}).")
         except Exception as e:
+            err_msg = f"{type(e).__name__}: {str(e)}"
+            _primary_db_diag = f"Primary MySQL connection failed: {err_msg}"
             logger.error(f"Primary database connection error on {db_url}: {e}")
             logger.warning("Falling back to local SQLite engine to keep API operational.")
             _engine = create_engine(
@@ -73,6 +81,7 @@ def get_engine():
                 pool_pre_ping=True,
             )
     else:
+        _primary_db_diag = "No valid DATABASE_URL configured, default SQLite active"
         logger.warning(f"No valid database URL parsed from settings. Using SQLite at {fallback_path}.")
         _engine = create_engine(
             f"sqlite:///{fallback_path}",
@@ -117,7 +126,7 @@ def check_database_health() -> Tuple[bool, str]:
         with engine.connect() as conn:
             conn.execute(text("SELECT 1"))
         dialect = engine.dialect.name
-        return True, f"Database connected ({dialect})"
+        return True, f"Database connected ({dialect}) [{_primary_db_diag}]"
     except Exception as e:
         logger.error(f"Database health check failed: {e}")
         return False, f"Database connection error: {str(e)}"

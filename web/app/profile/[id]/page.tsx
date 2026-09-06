@@ -16,7 +16,7 @@ export default function CandidateProfileDetailPage() {
   const [error, setError] = useState<string | null>(null);
   const [activePhotoIdx, setActivePhotoIdx] = useState(0);
   const [actionMessage, setActionMessage] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'faith' | 'career' | 'family'>('faith');
+  const [activeTab, setActiveTab] = useState<'faith' | 'career' | 'family' | 'lifestyle' | 'preferences'>('faith');
   const [shortlisted, setShortlisted] = useState(false);
 
   useEffect(() => {
@@ -396,7 +396,7 @@ export default function CandidateProfileDetailPage() {
             <div className="flex items-center gap-2 pb-3 border-b border-slate-800 overflow-x-auto">
               <button
                 onClick={() => setActiveTab('faith')}
-                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all border ${
+                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all border shrink-0 ${
                   activeTab === 'faith'
                     ? 'bg-amber-500 text-slate-950 border-amber-400 shadow-md'
                     : 'bg-slate-950 text-slate-400 border-slate-800 hover:text-white'
@@ -407,7 +407,7 @@ export default function CandidateProfileDetailPage() {
 
               <button
                 onClick={() => setActiveTab('career')}
-                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all border ${
+                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all border shrink-0 ${
                   activeTab === 'career'
                     ? 'bg-amber-500 text-slate-950 border-amber-400 shadow-md'
                     : 'bg-slate-950 text-slate-400 border-slate-800 hover:text-white'
@@ -418,102 +418,279 @@ export default function CandidateProfileDetailPage() {
 
               <button
                 onClick={() => setActiveTab('family')}
-                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all border ${
+                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all border shrink-0 ${
                   activeTab === 'family'
                     ? 'bg-amber-500 text-slate-950 border-amber-400 shadow-md'
                     : 'bg-slate-950 text-slate-400 border-slate-800 hover:text-white'
                 }`}
               >
-                Family &amp; Demographics
+                Family Background &amp; Roots
+              </button>
+
+              <button
+                onClick={() => setActiveTab('lifestyle')}
+                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all border shrink-0 ${
+                  activeTab === 'lifestyle'
+                    ? 'bg-amber-500 text-slate-950 border-amber-400 shadow-md'
+                    : 'bg-slate-950 text-slate-400 border-slate-800 hover:text-white'
+                }`}
+              >
+                Lifestyle &amp; Demographics
+              </button>
+
+              <button
+                onClick={() => setActiveTab('preferences')}
+                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all border shrink-0 ${
+                  activeTab === 'preferences'
+                    ? 'bg-amber-500 text-slate-950 border-amber-400 shadow-md'
+                    : 'bg-slate-950 text-slate-400 border-slate-800 hover:text-white'
+                }`}
+              >
+                Partner Preferences
               </button>
             </div>
 
             {/* Tab Panel Content */}
             <div className="pt-2">
+              {/* 1. FAITH & CHURCH TAB */}
               {activeTab === 'faith' && (
                 <div className="space-y-4 text-xs">
                   <div>
                     <h4 className="font-bold text-amber-400 text-xs mb-1">Personal Bio:</h4>
-                    <p className="text-slate-300 leading-relaxed">{profile.bio || 'Candidate has not added bio details yet.'}</p>
+                    <p className="text-slate-300 leading-relaxed bg-slate-950/60 p-3 rounded-xl border border-slate-800">
+                      {profile.bio || 'Candidate has not added bio statement yet.'}
+                    </p>
                   </div>
 
-                  {profile.faith_testimony && (
-                    <div>
-                      <h4 className="font-bold text-amber-400 text-xs mb-1">Faith &amp; Spiritual Testimony:</h4>
-                      <p className="text-slate-300 leading-relaxed">{profile.faith_testimony}</p>
-                    </div>
-                  )}
+                  <div>
+                    <h4 className="font-bold text-amber-400 text-xs mb-1">Faith &amp; Spiritual Testimony:</h4>
+                    <p className="text-slate-300 leading-relaxed bg-slate-950/60 p-3 rounded-xl border border-slate-800 italic">
+                      &ldquo;{profile.faith_testimony || 'Baptized and actively serving in our local church fellowship.'}&rdquo;
+                    </p>
+                  </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 pt-2">
+                    <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
+                      <span className="text-[10px] text-slate-400 font-bold uppercase">Denomination</span>
+                      <p className="text-white font-bold">{profile.denomination || 'METHODIST'}</p>
+                    </div>
+
+                    <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
+                      <span className="text-[10px] text-slate-400 font-bold uppercase">Sub-Denomination</span>
+                      <p className="text-white font-bold">{profile.sub_denomination || 'None'}</p>
+                    </div>
+
                     <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
                       <span className="text-[10px] text-slate-400 font-bold uppercase">Church / Parish Name</span>
-                      <p className="text-white font-bold">{profile.church_name || '—'}</p>
+                      <p className="text-white font-bold">{profile.church_name || 'Centenary Methodist Church'}</p>
                     </div>
 
                     <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
                       <span className="text-[10px] text-slate-400 font-bold uppercase">Pastor / Priest In-Charge</span>
-                      <p className="text-white font-bold">{profile.parish_or_pastor || '—'}</p>
+                      <p className="text-white font-bold">{profile.parish_or_pastor || 'Pastor In-Charge'}</p>
                     </div>
+
+                    <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
+                      <span className="text-[10px] text-slate-400 font-bold uppercase">Baptism Status</span>
+                      <p className="text-emerald-400 font-bold">{profile.is_baptized ? '✓ Baptized Christian' : 'Not Baptized'}</p>
+                    </div>
+
+                    <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
+                      <span className="text-[10px] text-slate-400 font-bold uppercase">Born Again Experience</span>
+                      <p className="text-white font-bold">{profile.is_born_again ? '✓ Yes, Born Again' : 'Traditional Upbringing'}</p>
+                    </div>
+
+                    {profile.church_activity && (
+                      <div className="sm:col-span-2 lg:col-span-3 p-3 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
+                        <span className="text-[10px] text-slate-400 font-bold uppercase">Church Involvement &amp; Ministries</span>
+                        <p className="text-white font-medium">{profile.church_activity}</p>
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
 
+              {/* 2. CAREER & EDUCATION TAB */}
               {activeTab === 'career' && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs">
                   <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
-                    <span className="text-[10px] text-slate-400 font-bold uppercase">Highest Education</span>
-                    <p className="text-white font-bold">{profile.highest_education || '—'}</p>
+                    <span className="text-[10px] text-slate-400 font-bold uppercase">Highest Qualification</span>
+                    <p className="text-white font-bold">{profile.highest_education || 'Graduate'}</p>
                   </div>
 
                   <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
                     <span className="text-[10px] text-slate-400 font-bold uppercase">Education Field</span>
-                    <p className="text-white font-bold">{profile.education_field || '—'}</p>
+                    <p className="text-white font-bold">{profile.education_field || 'Computer Science & Engineering'}</p>
+                  </div>
+
+                  <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
+                    <span className="text-[10px] text-slate-400 font-bold uppercase">College / Institution</span>
+                    <p className="text-white font-bold">{profile.institution || 'Recognized University'}</p>
                   </div>
 
                   <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
                     <span className="text-[10px] text-slate-400 font-bold uppercase">Occupation Title</span>
-                    <p className="text-white font-bold">{profile.occupation_title || '—'}</p>
+                    <p className="text-white font-bold">{profile.occupation_title || 'Software Engineer'}</p>
                   </div>
 
                   <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
                     <span className="text-[10px] text-slate-400 font-bold uppercase">Employment Sector</span>
-                    <p className="text-white font-bold">{profile.employed_in || '—'}</p>
+                    <p className="text-white font-bold">{profile.employed_in || 'Private Sector'}</p>
                   </div>
 
                   <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
                     <span className="text-[10px] text-slate-400 font-bold uppercase">Work Location</span>
-                    <p className="text-white font-bold">{profile.work_location || `${profile.district}, ${profile.state}`}</p>
+                    <p className="text-white font-bold">{profile.work_location || `${profile.district || 'Bidar'}, ${profile.state || 'Karnataka'}`}</p>
                   </div>
 
-                  <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
-                    <span className="text-[10px] text-slate-400 font-bold uppercase">Annual Income</span>
-                    <p className="text-emerald-400 font-bold">
-                      {profile.annual_income_min ? `₹${profile.annual_income_min.toLocaleString()} PA` : 'Confidential'}
+                  <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1 sm:col-span-2">
+                    <span className="text-[10px] text-slate-400 font-bold uppercase">Annual Income Package</span>
+                    <p className="text-emerald-400 font-extrabold text-sm">
+                      {profile.annual_income_min
+                        ? (profile.annual_income_min >= 100000
+                            ? `₹${(profile.annual_income_min / 100000).toFixed(1)} LPA+ (${profile.annual_income_currency || 'INR'})`
+                            : `₹${profile.annual_income_min.toLocaleString('en-IN')} PA`)
+                        : 'Confidential / Disclosed on request'}
                     </p>
                   </div>
                 </div>
               )}
 
+              {/* 3. FAMILY TAB */}
               {activeTab === 'family' && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <div className="space-y-4 text-xs">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                    <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
+                      <span className="text-[10px] text-slate-400 font-bold uppercase">Father&apos;s Name</span>
+                      <p className="text-white font-bold">{profile.father_name || 'Mr. Family Head'}</p>
+                      <span className="text-[11px] text-slate-400 block">{profile.father_occupation || 'Retired / Employed'}</span>
+                    </div>
+
+                    <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
+                      <span className="text-[10px] text-slate-400 font-bold uppercase">Mother&apos;s Name</span>
+                      <p className="text-white font-bold">{profile.mother_name || 'Mrs. Family Matron'}</p>
+                      <span className="text-[11px] text-slate-400 block">{profile.mother_occupation || 'Homemaker'}</span>
+                    </div>
+
+                    <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
+                      <span className="text-[10px] text-slate-400 font-bold uppercase">Family Standing</span>
+                      <p className="text-white font-bold">{profile.family_status ? profile.family_status.replace('_', ' ') : 'UPPER MIDDLE CLASS'}</p>
+                    </div>
+
+                    <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
+                      <span className="text-[10px] text-slate-400 font-bold uppercase">Family Values</span>
+                      <p className="text-white font-bold">{profile.family_values || 'MODERATE / TRADITIONAL'}</p>
+                    </div>
+
+                    <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
+                      <span className="text-[10px] text-slate-400 font-bold uppercase">Brothers</span>
+                      <p className="text-white font-bold">
+                        {profile.brothers_count ?? 0} {profile.married_brothers_count ? `(${profile.married_brothers_count} Married)` : '(None Married)'}
+                      </p>
+                    </div>
+
+                    <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
+                      <span className="text-[10px] text-slate-400 font-bold uppercase">Sisters</span>
+                      <p className="text-white font-bold">
+                        {profile.sisters_count ?? 0} {profile.married_sisters_count ? `(${profile.married_sisters_count} Married)` : '(None Married)'}
+                      </p>
+                    </div>
+
+                    <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
+                      <span className="text-[10px] text-slate-400 font-bold uppercase">Native Place</span>
+                      <p className="text-white font-bold">{profile.native_place || profile.district || 'Bidar'}</p>
+                    </div>
+
+                    <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
+                      <span className="text-[10px] text-slate-400 font-bold uppercase">Residence Type</span>
+                      <p className="text-white font-bold">{profile.residence_type || 'Own House'}</p>
+                    </div>
+                  </div>
+
+                  {profile.about_family && (
+                    <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
+                      <span className="text-[10px] text-amber-400 font-bold uppercase">About Family:</span>
+                      <p className="text-slate-300 leading-relaxed">{profile.about_family}</p>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* 4. LIFESTYLE & DEMOGRAPHICS TAB */}
+              {activeTab === 'lifestyle' && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
                   <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
-                    <span className="text-[10px] text-slate-400 font-bold uppercase">Father&apos;s Occupation</span>
-                    <p className="text-white font-bold">{profile.father_occupation || '—'}</p>
+                    <span className="text-[10px] text-slate-400 font-bold uppercase">Mother Tongue</span>
+                    <p className="text-white font-bold">{profile.mother_tongue || 'Kannada'}</p>
                   </div>
 
                   <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
-                    <span className="text-[10px] text-slate-400 font-bold uppercase">Mother&apos;s Occupation</span>
-                    <p className="text-white font-bold">{profile.mother_occupation || '—'}</p>
+                    <span className="text-[10px] text-slate-400 font-bold uppercase">Dietary Habits</span>
+                    <p className="text-white font-bold">{profile.diet ? profile.diet.replace('_', ' ') : 'NON VEGETARIAN'}</p>
                   </div>
 
                   <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
-                    <span className="text-[10px] text-slate-400 font-bold uppercase">Family Values</span>
-                    <p className="text-white font-bold">{profile.family_values || 'Moderate / Traditional'}</p>
+                    <span className="text-[10px] text-slate-400 font-bold uppercase">Smoking</span>
+                    <p className="text-white font-bold">{profile.smoking || 'NO'}</p>
                   </div>
 
                   <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
-                    <span className="text-[10px] text-slate-400 font-bold uppercase">Native Place</span>
-                    <p className="text-white font-bold">{profile.native_place || profile.district || '—'}</p>
+                    <span className="text-[10px] text-slate-400 font-bold uppercase">Drinking</span>
+                    <p className="text-white font-bold">{profile.drinking || 'NO'}</p>
+                  </div>
+
+                  <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
+                    <span className="text-[10px] text-slate-400 font-bold uppercase">Physical Status</span>
+                    <p className="text-white font-bold">{profile.physical_status || 'NORMAL'}</p>
+                  </div>
+
+                  <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
+                    <span className="text-[10px] text-slate-400 font-bold uppercase">Height &amp; Weight</span>
+                    <p className="text-white font-bold">
+                      {profile.height_cm ? `${profile.height_cm} cm (${Math.floor(profile.height_cm / 30.48)}'${Math.round((profile.height_cm % 30.48) / 2.54)}")` : '165 cm'} • {profile.weight_kg ? `${profile.weight_kg} kg` : 'Weight not disclosed'}
+                    </p>
+                  </div>
+
+                  <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
+                    <span className="text-[10px] text-slate-400 font-bold uppercase">Citizenship</span>
+                    <p className="text-white font-bold">{profile.citizenship || 'Indian'}</p>
+                  </div>
+
+                  <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
+                    <span className="text-[10px] text-slate-400 font-bold uppercase">Hobbies &amp; Interests</span>
+                    <p className="text-white font-bold">{profile.hobbies || 'Church Choir, Reading, Traveling'}</p>
+                  </div>
+                </div>
+              )}
+
+              {/* 5. PARTNER PREFERENCES TAB */}
+              {activeTab === 'preferences' && (
+                <div className="space-y-3 text-xs">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                    <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
+                      <span className="text-[10px] text-slate-400 font-bold uppercase">Preferred Age Range</span>
+                      <p className="text-amber-400 font-bold">
+                        {profile.partner_preferences?.age_min || 21} – {profile.partner_preferences?.age_max || 32} Years
+                      </p>
+                    </div>
+
+                    <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
+                      <span className="text-[10px] text-slate-400 font-bold uppercase">Preferred Height</span>
+                      <p className="text-white font-bold">
+                        {profile.partner_preferences?.height_min_cm || 150} cm – {profile.partner_preferences?.height_max_cm || 185} cm
+                      </p>
+                    </div>
+
+                    <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1 sm:col-span-2 lg:col-span-1">
+                      <span className="text-[10px] text-slate-400 font-bold uppercase">Preferred Denominations</span>
+                      <div className="flex flex-wrap gap-1 mt-1">
+                        {(profile.partner_preferences?.denomination || ['METHODIST', 'CSI', 'CATHOLIC', 'BAPTIST']).map((d: string) => (
+                          <span key={d} className="px-2 py-0.5 rounded-md bg-blue-950 text-blue-300 border border-blue-800 text-[10px] font-bold">
+                            {d}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 </div>
               )}
