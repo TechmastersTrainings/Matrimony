@@ -13,12 +13,14 @@ _engine = None
 _SessionFactory = None
 
 def clean_db_url(raw_input: Optional[str]) -> Optional[str]:
-    """Sanitizes raw database URL string against quotes, prefixes, and dialect incompatibilities."""
+    """Sanitizes raw database URL string against quotes, prefixes, newlines, and dialect incompatibilities."""
     if not raw_input:
         return None
     u = raw_input.strip().strip("'\x22`\u201c\u201d\u2018\u2019")
     if "DATABASE_URL=" in u:
         u = u.split("DATABASE_URL=", 1)[-1].strip().strip("'\x22`\u201c\u201d\u2018\u2019")
+    # Remove any internal whitespace or newlines that might have been accidentally pasted
+    u = re.sub(r"\s+", "", u)
     if u.startswith("mysql://"):
         u = u.replace("mysql://", "mysql+pymysql://", 1)
     if "://" not in u and ("@" in u or "aivencloud" in u):
@@ -43,7 +45,12 @@ def get_engine():
     if _engine is not None:
         return _engine
 
-    raw_url = settings.get_database_url() if hasattr(settings, "get_database_url") else settings.DATABASE_URL
+    raw_url = (
+        os.environ.get("DATABASE_URL")
+        or os.environ.get("database_url")
+        or (settings.get_database_url() if hasattr(settings, "get_database_url") else None)
+        or getattr(settings, "DATABASE_URL", None)
+    )
     db_url = clean_db_url(raw_url)
     fallback_path = "./backend/matrimony.db" if os.path.isdir("./backend") else "./matrimony.db"
 
@@ -85,7 +92,7 @@ def get_engine():
                 pool_pre_ping=True,
             )
     else:
-        _primary_db_diag = "No valid DATABASE_URL configured, default SQLite active (⚠️ Ephemeral on cloud)"
+        _primary_db_diag = f"No valid DATABASE_URL found (raw_url={'present' if raw_url else 'missing'}). Default SQLite active (⚠️ Ephemeral on cloud)"
         logger.warning(f"No valid database URL parsed from settings. Using SQLite at {fallback_path}.")
         _engine = create_engine(
             f"sqlite:///{fallback_path}",
