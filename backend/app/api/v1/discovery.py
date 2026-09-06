@@ -100,7 +100,7 @@ async def get_candidate_profile(
         ).first()
         is_subscriber = active_sub is not None or current_user.role in [UserRole.ADMIN, UserRole.SUPER_ADMIN] or current_user.id == profile.user_id
 
-    # If unpaid visitor/user, mask protected detail fields
+    # If unpaid visitor/user, mask protected detail fields (Church, Package, Location, Profession)
     if not is_subscriber:
         return {
             "id": profile.id,
@@ -112,11 +112,19 @@ async def get_candidate_profile(
             "age": profile.age,
             "height_cm": profile.height_cm,
             "denomination": profile.denomination.value if profile.denomination else None,
-            "district": profile.district,
-            "state": profile.state,
-            "country": getattr(profile, "citizenship", "India"),
             "highest_education": profile.highest_education,
-            "occupation_title": profile.occupation_title,
+            # Protected fields hidden for unpaid members
+            "church_name": None,
+            "parish_or_pastor": None,
+            "sub_denomination": None,
+            "district": None,
+            "state": None,
+            "city": None,
+            "native_place": None,
+            "occupation_title": None,
+            "employed_in": None,
+            "annual_income_min": None,
+            "annual_income_max": None,
             "photos": [
                 {
                     "id": p.id,
@@ -127,7 +135,7 @@ async def get_candidate_profile(
             ],
             "is_locked": True,
             "requires_subscription": True,
-            "message": "Upgrade to an active subscription plan to unlock full bio, church testimony, family background, and express interest.",
+            "message": "Upgrade to an active subscription plan to unlock full church details, package information, verified location, and express interest.",
         }
 
     # Full details for paid active subscribers or Admins

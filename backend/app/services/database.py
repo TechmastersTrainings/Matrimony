@@ -39,6 +39,10 @@ def get_engine():
             _engine = test_engine
             logger.info("Database engine initialized successfully.")
         except Exception as e:
+            logger.error(f"Primary database connection error: {e}")
+            if settings.ENVIRONMENT == "production":
+                logger.critical("Refusing to silently fall back to ephemeral SQLite in production mode.")
+                raise e
             fallback_path = "./backend/matrimony.db" if os.path.isdir("./backend") else "./matrimony.db"
             _engine = create_engine(
                 f"sqlite:///{fallback_path}",

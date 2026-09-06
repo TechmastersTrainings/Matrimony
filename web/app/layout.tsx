@@ -3,6 +3,7 @@ import './globals.css';
 import { Navbar } from '../components/Navbar';
 import { Footer } from '../components/Footer';
 import { TopLoadingBar } from '../components/TopLoadingBar';
+import { InactivityHandler } from '../components/InactivityHandler';
 
 export const metadata = {
   title: 'Christian Matrimony | Trusted Christian Matrimonial Portal | Bidar & Karnataka',
@@ -28,6 +29,7 @@ export default function RootLayout({
     <html lang="en" className="scroll-smooth">
       <body className="bg-slate-950 text-slate-100 antialiased selection:bg-amber-500/30 selection:text-amber-200">
         <TopLoadingBar />
+        <InactivityHandler />
         <Navbar />
         <main className="min-h-screen pt-20">{children}</main>
         <Footer />

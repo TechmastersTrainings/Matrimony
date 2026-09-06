@@ -236,10 +236,10 @@ export default function DiscoverPage() {
                     {selectedCandidate.first_name} {selectedCandidate.last_name}
                   </h4>
                   <p className="text-[11px] text-amber-400 font-semibold truncate">
-                    {selectedCandidate.denomination || 'Christian'} • {selectedCandidate.district || 'Bidar'}, {selectedCandidate.state || 'Karnataka'}
+                    {selectedCandidate.denomination || 'Christian'} • {!isSubscribed && !isAdmin ? '🔒 Location Locked' : `${selectedCandidate.district || 'Bidar'}, ${selectedCandidate.state || 'Karnataka'}`}
                   </p>
                   <p className="text-[10px] text-slate-400 truncate">
-                    {selectedCandidate.occupation_title || selectedCandidate.highest_education || 'Member'}
+                    🎓 {selectedCandidate.highest_education || 'Graduate'} • {!isSubscribed && !isAdmin ? '🔒 Profession & Package Locked' : (selectedCandidate.occupation_title || 'Professional')}
                   </p>
                 </div>
                 <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-emerald-950 text-emerald-300 border border-emerald-800 shrink-0">
@@ -737,9 +737,14 @@ export default function DiscoverPage() {
 
                           <div className="flex items-center gap-2">
                             <span className="text-slate-400 font-semibold w-24 shrink-0">Church:</span>
-                            <span className="text-white font-medium truncate">
-                              {!isSubscribed && !isAdmin ? '🔒 (Subscribers Only)' : (c.church_name || 'Local Fellowship')}
-                            </span>
+                            {!isSubscribed && !isAdmin ? (
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-amber-500/10 border border-amber-500/30 text-amber-300 font-semibold text-[11px]">
+                                <span>🔒</span>
+                                <span>Church Info Locked</span>
+                              </span>
+                            ) : (
+                              <span className="text-white font-medium truncate">{c.church_name || 'Centenary Methodist Church'}</span>
+                            )}
                           </div>
 
                           <div className="flex items-center gap-2">
@@ -749,19 +754,40 @@ export default function DiscoverPage() {
 
                           <div className="flex items-center gap-2">
                             <span className="text-slate-400 font-semibold w-24 shrink-0">Profession:</span>
-                            <span className="text-white font-medium truncate">{c.occupation_title || 'Employed Professional'}</span>
+                            {!isSubscribed && !isAdmin ? (
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-amber-500/10 border border-amber-500/30 text-amber-300 font-semibold text-[11px]">
+                                <span>🔒</span>
+                                <span>Profession Locked</span>
+                              </span>
+                            ) : (
+                              <span className="text-white font-medium truncate">{c.occupation_title || 'Employed Professional'}</span>
+                            )}
                           </div>
 
                           <div className="flex items-center gap-2">
                             <span className="text-slate-400 font-semibold w-24 shrink-0">Location:</span>
-                            <span className="text-amber-400/90 font-medium truncate">{c.district || 'Bidar'}, {c.state || 'Karnataka'}</span>
+                            {!isSubscribed && !isAdmin ? (
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-amber-500/10 border border-amber-500/30 text-amber-300 font-semibold text-[11px]">
+                                <span>🔒</span>
+                                <span>Location Locked</span>
+                              </span>
+                            ) : (
+                              <span className="text-amber-400/90 font-medium truncate">📍 {c.district || 'Bidar'}, {c.state || 'Karnataka'}</span>
+                            )}
                           </div>
 
                           <div className="flex items-center gap-2">
                             <span className="text-slate-400 font-semibold w-24 shrink-0">Annual Income:</span>
-                            <span className="text-emerald-400 font-medium truncate">
-                              {!isSubscribed && !isAdmin ? '🔒 (Subscribers Only)' : (c.annual_income_min ? `₹${(c.annual_income_min / 100000).toFixed(1)} LPA+` : 'Confidential')}
-                            </span>
+                            {!isSubscribed && !isAdmin ? (
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-amber-500/10 border border-amber-500/30 text-amber-300 font-semibold text-[11px]">
+                                <span>🔒</span>
+                                <span>Package Info Locked</span>
+                              </span>
+                            ) : (
+                              <span className="text-emerald-400 font-medium truncate">
+                                {c.annual_income_min ? (c.annual_income_min >= 100000 ? `₹${(c.annual_income_min / 100000).toFixed(1)} LPA+` : `₹${c.annual_income_min.toLocaleString('en-IN')}`) : 'Confidential'}
+                              </span>
+                            )}
                           </div>
                         </div>
 
@@ -844,12 +870,35 @@ export default function DiscoverPage() {
                             </span>
                           </div>
 
-                          <p className="text-xs text-slate-300 font-medium">
-                            {c.occupation_title || c.highest_education || 'Member'}
+                          {/* Education: Always shown */}
+                          <p className="text-xs text-slate-300 font-medium truncate">
+                            🎓 {c.highest_education || 'Graduate'}
                           </p>
 
-                          <p className="text-[11px] text-amber-400/90 font-semibold">
-                            {c.district || 'Bidar'}, {c.state || 'Karnataka'}
+                          {/* Profession & Package: Locked for unpaid */}
+                          <p className="text-xs font-medium truncate">
+                            {!isSubscribed && !isAdmin ? (
+                              <span className="inline-flex items-center gap-1 text-amber-400/90 text-[11px] font-semibold bg-amber-500/10 px-2 py-0.5 rounded-md border border-amber-500/20">
+                                <span>🔒</span>
+                                <span>Profession &amp; Package Locked</span>
+                              </span>
+                            ) : (
+                              <span className="text-slate-300">
+                                💼 {c.occupation_title || 'Employed Professional'} {c.annual_income_min ? `(₹${(c.annual_income_min / 100000).toFixed(1)} LPA+)` : ''}
+                              </span>
+                            )}
+                          </p>
+
+                          {/* Location: Locked for unpaid */}
+                          <p className="text-[11px] font-semibold truncate">
+                            {!isSubscribed && !isAdmin ? (
+                              <span className="inline-flex items-center gap-1 text-amber-400/90 text-[11px] font-semibold bg-amber-500/10 px-2 py-0.5 rounded-md border border-amber-500/20">
+                                <span>🔒</span>
+                                <span>Location Locked</span>
+                              </span>
+                            ) : (
+                              <span className="text-amber-400/90">📍 {c.district || 'Bidar'}, {c.state || 'Karnataka'}</span>
+                            )}
                           </p>
 
                           {/* Admin Unmasked Contact Strip */}

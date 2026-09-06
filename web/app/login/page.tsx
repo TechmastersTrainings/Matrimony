@@ -1,12 +1,15 @@
 'use client';
 
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useState, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { apiClient } from '../../lib/api-client';
 
-export default function LoginPage() {
+function LoginFormContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const isInactiveLogout = searchParams.get('reason') === 'inactivity';
+
   const [loginType, setLoginType] = useState<'password' | 'otp'>('password');
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
@@ -80,6 +83,17 @@ export default function LoginPage() {
             Sign in to access your matrimony matches and chat
           </p>
         </div>
+
+        {/* Inactivity Notice Banner */}
+        {isInactiveLogout && (
+          <div className="mb-6 p-4 rounded-2xl bg-amber-950/70 border border-amber-500/50 text-amber-200 text-xs font-medium flex items-start gap-3 shadow-xl backdrop-blur-md">
+            <span className="text-lg leading-none">⏰</span>
+            <div>
+              <strong className="block font-bold text-amber-300 mb-0.5">Session Timed Out</strong>
+              <span>For your privacy and security, your account was automatically logged out due to 10 minutes of inactivity. Please sign in again.</span>
+            </div>
+          </div>
+        )}
 
         {/* Login Card */}
         <div className="bg-slate-900/80 backdrop-blur-xl border border-slate-800 rounded-3xl p-8 shadow-2xl shadow-blue-950/30">
@@ -207,5 +221,13 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-slate-950" />}>
+      <LoginFormContent />
+    </Suspense>
   );
 }

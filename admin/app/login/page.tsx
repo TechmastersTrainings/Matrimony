@@ -1,10 +1,13 @@
 'use client';
 
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useState, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 
-export default function AdminLoginPage() {
+function AdminLoginFormContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const isInactiveLogout = searchParams.get('reason') === 'inactivity';
+
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -67,6 +70,17 @@ export default function AdminLoginPage() {
           <p className="text-xs text-slate-400">Christian Matrimony Platform • Moderation &amp; Management</p>
         </div>
 
+        {/* Inactivity Warning Banner */}
+        {isInactiveLogout && (
+          <div className="p-4 rounded-2xl bg-red-950/80 border border-red-500/50 text-red-200 text-xs font-medium flex items-start gap-3 shadow-xl backdrop-blur-md">
+            <span className="text-lg leading-none">⏰</span>
+            <div>
+              <strong className="block font-bold text-red-300 mb-0.5">Session Terminated</strong>
+              <span>For administrative security compliance, your session was automatically logged out due to 10 minutes of inactivity. Please sign in again.</span>
+            </div>
+          </div>
+        )}
+
         {/* Card */}
         <div className="bg-slate-900 border border-slate-800 rounded-3xl p-8 shadow-2xl space-y-5">
           {error && (
@@ -115,5 +129,13 @@ export default function AdminLoginPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function AdminLoginPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-slate-950" />}>
+      <AdminLoginFormContent />
+    </Suspense>
   );
 }

@@ -6,6 +6,7 @@ from backend.app.models.enums import Denomination, Gender, MaritalStatus, Profil
 from backend.app.models.interaction import UserBlock
 from backend.app.models.photo import ProfilePhoto
 from backend.app.models.profile import Profile
+from backend.app.models.subscription import UserSubscription
 from backend.app.models.user import User
 
 
@@ -37,6 +38,17 @@ class DiscoveryService:
             ]
 
         is_admin = current_user is not None and current_user.role in [UserRole.ADMIN, UserRole.SUPER_ADMIN]
+
+        # Check if the requesting user has an active subscription
+        is_subscriber = False
+        if is_admin:
+            is_subscriber = True
+        elif current_user:
+            active_sub = db.query(UserSubscription).filter(
+                UserSubscription.user_id == current_user.id,
+                UserSubscription.status == "ACTIVE"
+            ).first()
+            is_subscriber = active_sub is not None
 
         # Regular members see only APPROVED profiles; Admins see ALL profiles (SUBMITTED, UNDER_REVIEW, APPROVED)
         if not is_admin:
@@ -155,13 +167,14 @@ class DiscoveryService:
                     "gender": p.gender.value if hasattr(p.gender, 'value') else str(p.gender) if p.gender else None,
                     "marital_status": p.marital_status.value if hasattr(p.marital_status, 'value') else str(p.marital_status) if p.marital_status else None,
                     "denomination": p.denomination.value if hasattr(p.denomination, 'value') else str(p.denomination) if p.denomination else None,
-                    "sub_denomination": p.sub_denomination,
-                    "church_name": p.church_name,
-                    "district": p.district,
-                    "state": p.state,
+                    "sub_denomination": p.sub_denomination if (is_subscriber or is_admin) else None,
+                    "church_name": p.church_name if (is_subscriber or is_admin) else None,
+                    "district": p.district if (is_subscriber or is_admin) else None,
+                    "state": p.state if (is_subscriber or is_admin) else None,
                     "highest_education": p.highest_education,
-                    "occupation_title": p.occupation_title,
-                    "annual_income_min": p.annual_income_min,
+                    "occupation_title": p.occupation_title if (is_subscriber or is_admin) else None,
+                    "annual_income_min": p.annual_income_min if (is_subscriber or is_admin) else None,
+                    "is_locked": not (is_subscriber or is_admin),
                     "primary_photo": photo_url,
                     "created_at": p.created_at.isoformat() if p.created_at else None,
                 }

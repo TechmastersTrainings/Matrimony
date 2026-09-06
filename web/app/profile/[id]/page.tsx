@@ -247,7 +247,14 @@ export default function CandidateProfileDetailPage() {
 
                 <div className="flex items-center gap-2">
                   <span className="text-slate-400 font-semibold w-24 shrink-0">Church:</span>
-                  <span className="text-white font-medium truncate">{isLocked ? '🔒 Protected' : (profile.church_name || 'Local Fellowship')}</span>
+                  {isLocked ? (
+                    <span className="inline-flex items-center gap-1 text-amber-400/90 text-[11px] font-semibold bg-amber-500/10 px-2 py-0.5 rounded-md border border-amber-500/20">
+                      <span>🔒</span>
+                      <span>Church Info Locked</span>
+                    </span>
+                  ) : (
+                    <span className="text-white font-medium truncate">{profile.church_name || 'Local Fellowship'}</span>
+                  )}
                 </div>
 
                 <div className="flex items-center gap-2">
@@ -257,19 +264,40 @@ export default function CandidateProfileDetailPage() {
 
                 <div className="flex items-center gap-2">
                   <span className="text-slate-400 font-semibold w-24 shrink-0">Profession:</span>
-                  <span className="text-white font-medium truncate">{profile.occupation_title || 'Professional'}</span>
+                  {isLocked ? (
+                    <span className="inline-flex items-center gap-1 text-amber-400/90 text-[11px] font-semibold bg-amber-500/10 px-2 py-0.5 rounded-md border border-amber-500/20">
+                      <span>🔒</span>
+                      <span>Profession Locked</span>
+                    </span>
+                  ) : (
+                    <span className="text-white font-medium truncate">{profile.occupation_title || 'Professional'}</span>
+                  )}
                 </div>
 
                 <div className="flex items-center gap-2">
                   <span className="text-slate-400 font-semibold w-24 shrink-0">Location:</span>
-                  <span className="text-amber-400/90 font-medium truncate">📍 {profile.district || 'Bidar'}, {profile.state || 'Karnataka'}</span>
+                  {isLocked ? (
+                    <span className="inline-flex items-center gap-1 text-amber-400/90 text-[11px] font-semibold bg-amber-500/10 px-2 py-0.5 rounded-md border border-amber-500/20">
+                      <span>🔒</span>
+                      <span>Location Locked</span>
+                    </span>
+                  ) : (
+                    <span className="text-amber-400/90 font-medium truncate">📍 {profile.district || 'Bidar'}, {profile.state || 'Karnataka'}</span>
+                  )}
                 </div>
 
                 <div className="flex items-center gap-2">
                   <span className="text-slate-400 font-semibold w-24 shrink-0">Annual Income:</span>
-                  <span className="text-emerald-400 font-medium truncate">
-                    {isLocked ? '🔒 Protected' : (profile.annual_income_min ? `₹${(profile.annual_income_min / 100000).toFixed(1)} LPA+` : 'Confidential')}
-                  </span>
+                  {isLocked ? (
+                    <span className="inline-flex items-center gap-1 text-amber-400/90 text-[11px] font-semibold bg-amber-500/10 px-2 py-0.5 rounded-md border border-amber-500/20">
+                      <span>🔒</span>
+                      <span>Package Info Locked</span>
+                    </span>
+                  ) : (
+                    <span className="text-emerald-400 font-medium truncate">
+                      {profile.annual_income_min ? (profile.annual_income_min >= 100000 ? `₹${(profile.annual_income_min / 100000).toFixed(1)} LPA+` : `₹${profile.annual_income_min.toLocaleString('en-IN')}`) : 'Confidential'}
+                    </span>
+                  )}
                 </div>
               </div>
             </div>
