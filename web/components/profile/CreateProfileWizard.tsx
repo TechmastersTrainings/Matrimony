@@ -29,6 +29,109 @@ function formatHeight(cm?: number): string {
   return `${feet} ft ${inches} in`;
 }
 
+// Categorized Higher Education Degrees available and recognized in Karnataka & India
+const KARNATAKA_EDUCATION_DEGREES = [
+  {
+    category: 'Engineering, Technology & Architecture',
+    degrees: [
+      'B.E. / B.Tech (Bachelor of Engineering / Tech)',
+      'M.E. / M.Tech (Master of Engineering / Tech)',
+      'B.Arch (Architecture)',
+      'M.Arch (Architecture)',
+      'Diploma in Engineering / Polytechnic',
+    ],
+  },
+  {
+    category: 'Computers & Information Technology',
+    degrees: [
+      'BCA (Bachelor of Computer Applications)',
+      'MCA (Master of Computer Applications)',
+      'B.Sc (Computer Science / IT)',
+      'M.Sc (Computer Science / IT)',
+      'B.Sc / M.Sc Data Science / AI',
+    ],
+  },
+  {
+    category: 'Medicine, Healthcare & Nursing',
+    degrees: [
+      'MBBS (Medicine & Surgery)',
+      'MD / MS (Doctor of Medicine / Master of Surgery)',
+      'BDS (Dental Surgery)',
+      'MDS (Master of Dental Surgery)',
+      'B.Sc Nursing',
+      'M.Sc Nursing',
+      'GNM (General Nursing & Midwifery)',
+      'B.Pharm (Pharmacy)',
+      'M.Pharm / Pharm.D',
+      'BPT / MPT (Physiotherapy)',
+      'BAMS / BHMS (Ayurveda / Homeopathy)',
+      'Allied Health Sciences / MLT',
+    ],
+  },
+  {
+    category: 'Commerce, Management & Finance',
+    degrees: [
+      'B.Com (Bachelor of Commerce)',
+      'M.Com (Master of Commerce)',
+      'BBA / BBM (Business Administration)',
+      'MBA / PGDM (Business Management)',
+      'CA (Chartered Accountant)',
+      'CS (Company Secretary)',
+      'CMA / ICWA (Cost Accountant)',
+    ],
+  },
+  {
+    category: 'Pure & Applied Sciences',
+    degrees: [
+      'B.Sc (Bachelor of Science)',
+      'M.Sc (Master of Science)',
+      'B.Sc (Agriculture / Horticulture / Forestry)',
+      'M.Sc (Agriculture)',
+    ],
+  },
+  {
+    category: 'Arts, Humanities & Education',
+    degrees: [
+      'B.A. (Bachelor of Arts)',
+      'M.A. (Master of Arts)',
+      'BSW / MSW (Social Work)',
+      'B.Ed (Bachelor of Education)',
+      'M.Ed (Master of Education)',
+      'Journalism & Mass Communication',
+    ],
+  },
+  {
+    category: 'Law & Legal Studies',
+    degrees: [
+      'LLB (Bachelor of Law)',
+      'LLM (Master of Law)',
+      'Integrated BA LLB / BBA LLB',
+    ],
+  },
+  {
+    category: 'Doctorate & Research',
+    degrees: [
+      'Ph.D. / Doctorate',
+      'M.Phil',
+    ],
+  },
+  {
+    category: 'Pre-University & Secondary School',
+    degrees: [
+      'PUC / 12th Standard / +2',
+      'SSLC / 10th Standard',
+    ],
+  },
+  {
+    category: 'Other Qualifications',
+    degrees: [
+      'Other Bachelor Degree',
+      'Other Master Degree',
+      'Other Professional Diploma / Certification',
+    ],
+  },
+];
+
 export function CreateProfileWizard() {
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState(1);
@@ -38,6 +141,8 @@ export function CreateProfileWizard() {
   const [isSaving, setIsSaving] = useState(false);
   const [saveMessage, setSaveMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [isGeneratingBio, setIsGeneratingBio] = useState(false);
+  const [isGeneratingTestimony, setIsGeneratingTestimony] = useState(false);
 
   // Clean initial form state: NO auto/dummy information hardcoded!
   const [formData, setFormData] = useState<ProfileDraftData>({
@@ -81,8 +186,10 @@ export function CreateProfileWizard() {
     // Family
     father_name: '',
     father_occupation: '',
+    father_mobile: '',
     mother_name: '',
     mother_occupation: '',
+    mother_mobile: '',
     family_status: 'MIDDLE_CLASS',
     family_values: 'TRADITIONAL',
     brothers_count: 0,
@@ -158,6 +265,8 @@ export function CreateProfileWizard() {
             }
             if (me.profile.age && !updated.age) updated.age = me.profile.age;
             if (me.profile.denomination) updated.denomination = me.profile.denomination;
+            if (me.profile.father_mobile) updated.father_mobile = me.profile.father_mobile;
+            if (me.profile.mother_mobile) updated.mother_mobile = me.profile.mother_mobile;
           }
 
           // If user had previously saved draft entries, merge them cleanly
@@ -198,6 +307,88 @@ export function CreateProfileWizard() {
       dob: dobValue,
       age: computedAge !== null ? computedAge : prev.age,
     }));
+  };
+
+  // AI-Powered Bio Synthesis based on profile inputs
+  const generateAiBio = async () => {
+    setIsGeneratingBio(true);
+    try {
+      await new Promise((r) => setTimeout(r, 650));
+      const name = formData.first_name ? `${formData.first_name}${formData.last_name ? ' ' + formData.last_name : ''}` : 'I';
+      const edu = formData.highest_education || formData.education_field || 'a graduate degree';
+      const occTitle = formData.occupation_title?.trim();
+      const occType = formData.occupation_type;
+      const occFallback = occType === 'GOVERNMENT'
+        ? 'in the government sector'
+        : occType === 'BUSINESS'
+        ? 'an entrepreneur'
+        : occType === 'DOCTOR_MEDICAL'
+        ? 'in the healthcare & medical field'
+        : occType === 'IT_SOFTWARE'
+        ? 'in the IT & software industry'
+        : 'as a working professional';
+      const occupation = occTitle ? `as ${occTitle}` : occFallback;
+      const workLoc = formData.work_location ? ` in ${formData.work_location}` : '';
+      const location = formData.city ? `${formData.city}, ${formData.district || 'Karnataka'}` : (formData.district || 'Bidar, Karnataka');
+      const denom = formData.denomination
+        ? `${formData.denomination.charAt(0) + formData.denomination.slice(1).toLowerCase()} Christian`
+        : 'Christian';
+      const familyVal = formData.family_values === 'TRADITIONAL'
+        ? 'traditional Christian family values'
+        : formData.family_values === 'LIBERAL'
+        ? 'progressive Christian values'
+        : 'balanced and modern Christian principles';
+      const hobbiesText = formData.hobbies?.trim()
+        ? ` Outside of professional work, I enjoy ${formData.hobbies.trim().toLowerCase()}.`
+        : '';
+
+      const variations = [
+        `Praise the Lord! My name is ${name}. I have completed ${edu} and am currently engaged professionally ${occupation}${workLoc}. Raised in a God-fearing home with ${familyVal}, I strive to walk with integrity, humility, and faith in everyday life.${hobbiesText} I am looking forward to connecting with an understanding, prayerful Christian life partner who honors Biblical values and cherishes family harmony.`,
+        `Warm Christian greetings! I am ${name}, residing in ${location}. By the grace of God, I hold a qualification in ${edu} and work ${occupation}${workLoc}. I believe in living a Christ-centered life rooted in love, mutual respect, and diligence. My family holds ${familyVal}.${hobbiesText} Seeking a devout, caring life partner to journey together in faith, mutual encouragement, and a joyful Christian marriage.`,
+        `Praise Jesus! I am ${name}, a committed ${denom} brought up in a loving and supportive family. Academically, I have completed ${edu} and presently pursue my career ${occupation}${workLoc}. I appreciate simplicity, moral integrity, prayer, and family togetherness.${hobbiesText} My desire is to find a sincere Christian companion who loves God, respects elders, and wishes to build a peaceful, blessed home together.`
+      ];
+
+      const chosen = variations[Math.floor(Math.random() * variations.length)];
+      setFormData((prev) => ({ ...prev, bio: chosen }));
+      setSaveMessage('✨ AI generated a personalized Christian bio! You can edit or refine it.');
+      setTimeout(() => setSaveMessage(null), 4000);
+    } finally {
+      setIsGeneratingBio(false);
+    }
+  };
+
+  // AI-Powered Faith Testimony Synthesis based on denomination, church, and spiritual milestones
+  const generateAiTestimony = async () => {
+    setIsGeneratingTestimony(true);
+    try {
+      await new Promise((r) => setTimeout(r, 650));
+      const denom = formData.denomination
+        ? `${formData.denomination.charAt(0) + formData.denomination.slice(1).toLowerCase()} tradition`
+        : 'Christian faith';
+      const church = formData.church_name?.trim() ? ` at ${formData.church_name.trim()}` : '';
+      const pastor = formData.parish_or_pastor?.trim() ? ` under the spiritual guidance of ${formData.parish_or_pastor.trim()}` : '';
+      const churchAct = formData.church_activity?.trim()
+        ? ` I actively participate in ${formData.church_activity.trim().toLowerCase()}.`
+        : '';
+      const baptismClause = formData.is_baptized
+        ? (formData.is_born_again
+            ? "I have accepted the Lord Jesus Christ as my personal Saviour and have taken believer's baptism."
+            : "I have taken baptism and cherish a personal, devotional walk with our Lord Jesus Christ.")
+        : "I was dedicated to the Lord and raised with regular Sunday school, prayer, and church fellowship.";
+
+      const variations = [
+        `By the grace of God Almighty, I was nurtured in a faithful Christian family rooted in the ${denom}. ${baptismClause} I regularly participate in Sunday worship and fellowship${church}${pastor}.${churchAct} Christ is the true anchor of my life. My prayer is to establish a holy, Christ-centered home based on Biblical values, walking together in prayer, unconditional love, and spiritual unity according to Joshua 24:15 - "As for me and my house, we will serve the Lord."`,
+        `Praise the Lord! Jesus Christ is my personal Lord, Shepherd, and Strength. ${baptismClause} Fellowship with fellow believers and worshiping the Lord${church} brings peace and spiritual nourishment to my life.${churchAct} I hold Christian marriage as a sacred covenant instituted by God, and I look forward to building a prayerful, joy-filled home centered around the Word of God.`,
+        `Giving all honor and glory to God! Growing up in the ${denom}, I have experienced God's unending faithfulness and guidance in every step. ${baptismClause} I remain an active attendee and supporter${church}${pastor}.${churchAct} My earnest prayer is to be united with a spiritually mature, prayerful Christian partner with whom I can grow in faith, serve the church, and radiate Christ's love to our community.`
+      ];
+
+      const chosen = variations[Math.floor(Math.random() * variations.length)];
+      setFormData((prev) => ({ ...prev, faith_testimony: chosen }));
+      setSaveMessage('✨ AI generated a heartfelt Christian faith testimony! You can edit or refine it.');
+      setTimeout(() => setSaveMessage(null), 4000);
+    } finally {
+      setIsGeneratingTestimony(false);
+    }
   };
 
   const handleSaveDraft = async (stepToSave: number, showToast: boolean = true) => {
@@ -435,37 +626,6 @@ export function CreateProfileWizard() {
                 <span>Personal &amp; Physical Details</span>
                 <span className="text-xs font-normal text-slate-400">Step 1 of 6</span>
               </h3>
-
-              {/* Gender Selection Cards */}
-              <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">
-                  Profile Gender <span className="text-amber-400">*</span>
-                </label>
-                <div className="grid grid-cols-2 gap-3">
-                  <button
-                    type="button"
-                    onClick={() => handleChange('gender', 'MALE')}
-                    className={`p-3.5 rounded-2xl border flex items-center justify-center gap-2.5 font-bold text-xs transition-all ${
-                      formData.gender === 'MALE'
-                        ? 'bg-blue-950/70 border-blue-500 text-blue-300 shadow-md shadow-blue-950/40 ring-1 ring-blue-500'
-                        : 'bg-slate-950 border-slate-800 text-slate-400 hover:border-slate-700'
-                    }`}
-                  >
-                    <span>Groom (Male)</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleChange('gender', 'FEMALE')}
-                    className={`p-3.5 rounded-2xl border flex items-center justify-center gap-2.5 font-bold text-xs transition-all ${
-                      formData.gender === 'FEMALE'
-                        ? 'bg-pink-950/70 border-pink-500 text-pink-300 shadow-md shadow-pink-950/40 ring-1 ring-pink-500'
-                        : 'bg-slate-950 border-slate-800 text-slate-400 hover:border-slate-700'
-                    }`}
-                  >
-                    <span>Bride (Female)</span>
-                  </button>
-                </div>
-              </div>
 
               {/* First Name & Last Name */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -787,13 +947,26 @@ export function CreateProfileWizard() {
                   <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">
                     Highest Education Degree <span className="text-rose-400">*</span>
                   </label>
-                  <input
-                    type="text"
+                  <select
                     value={formData.highest_education || ''}
                     onChange={(e) => handleChange('highest_education', e.target.value)}
-                    placeholder="e.g. B.Tech / MBA / MBBS / MSc / B.Com"
-                    className="w-full text-xs font-medium border border-slate-800 rounded-xl p-3 bg-slate-950 text-white focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 transition-all"
-                  />
+                    className="w-full text-xs font-medium border border-slate-800 rounded-xl p-3 bg-slate-950 text-white focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 transition-all cursor-pointer"
+                  >
+                    <option value="">-- Select Highest Education Degree --</option>
+                    {formData.highest_education &&
+                      !KARNATAKA_EDUCATION_DEGREES.some((g) => g.degrees.includes(formData.highest_education!)) && (
+                        <option value={formData.highest_education}>{formData.highest_education}</option>
+                      )}
+                    {KARNATAKA_EDUCATION_DEGREES.map((group) => (
+                      <optgroup key={group.category} label={group.category} className="bg-slate-900 text-amber-300 font-semibold">
+                        {group.degrees.map((deg) => (
+                          <option key={deg} value={deg} className="bg-slate-950 text-white font-normal">
+                            {deg}
+                          </option>
+                        ))}
+                      </optgroup>
+                    ))}
+                  </select>
                 </div>
 
                 <div>
@@ -883,57 +1056,105 @@ export function CreateProfileWizard() {
                 <span className="text-xs font-normal text-slate-400">Step 4 of 6</span>
               </h3>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">
-                    Father&apos;s Name
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.father_name || ''}
-                    onChange={(e) => handleChange('father_name', e.target.value)}
-                    placeholder="Father's full name"
-                    className="w-full text-xs font-medium border border-slate-800 rounded-xl p-3 bg-slate-950 text-white focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 transition-all"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">
-                    Father&apos;s Occupation
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.father_occupation || ''}
-                    onChange={(e) => handleChange('father_occupation', e.target.value)}
-                    placeholder="e.g. Retired Govt Employee / Business"
-                    className="w-full text-xs font-medium border border-slate-800 rounded-xl p-3 bg-slate-950 text-white focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 transition-all"
-                  />
+              {/* Father's Details Card */}
+              <div className="p-4 sm:p-5 rounded-2xl bg-slate-950/60 border border-slate-800/80 space-y-3">
+                <h4 className="text-xs font-bold uppercase tracking-wider text-amber-400 flex items-center gap-2">
+                  <span>Father&apos;s Information</span>
+                </h4>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+                  <div>
+                    <label className="block text-[11px] font-bold text-slate-300 mb-1">
+                      Father&apos;s Name
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.father_name || ''}
+                      onChange={(e) => handleChange('father_name', e.target.value)}
+                      placeholder="Father's full name"
+                      className="w-full text-xs font-medium border border-slate-800 rounded-xl p-3 bg-slate-900 text-white focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 transition-all"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[11px] font-bold text-slate-300 mb-1">
+                      Father&apos;s Occupation
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.father_occupation || ''}
+                      onChange={(e) => handleChange('father_occupation', e.target.value)}
+                      placeholder="e.g. Retired / Employed / Business"
+                      className="w-full text-xs font-medium border border-slate-800 rounded-xl p-3 bg-slate-900 text-white focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 transition-all"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[11px] font-bold text-slate-300 mb-1">
+                      Father&apos;s Mobile Number
+                    </label>
+                    <div className="flex rounded-xl border border-slate-800 bg-slate-900 overflow-hidden focus-within:border-amber-400 transition-colors">
+                      <span className="px-3 py-2.5 text-xs font-bold text-amber-400 bg-slate-950 border-r border-slate-800 flex items-center">
+                        +91
+                      </span>
+                      <input
+                        type="tel"
+                        maxLength={10}
+                        value={formData.father_mobile || ''}
+                        onChange={(e) => handleChange('father_mobile', e.target.value)}
+                        placeholder="98765 43210"
+                        className="w-full text-xs font-medium p-2.5 bg-transparent text-white focus:outline-none placeholder:text-slate-600"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">
-                    Mother&apos;s Name
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.mother_name || ''}
-                    onChange={(e) => handleChange('mother_name', e.target.value)}
-                    placeholder="Mother's full name"
-                    className="w-full text-xs font-medium border border-slate-800 rounded-xl p-3 bg-slate-950 text-white focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 transition-all"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">
-                    Mother&apos;s Occupation
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.mother_occupation || ''}
-                    onChange={(e) => handleChange('mother_occupation', e.target.value)}
-                    placeholder="e.g. Homemaker / Teacher / Nurse"
-                    className="w-full text-xs font-medium border border-slate-800 rounded-xl p-3 bg-slate-950 text-white focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 transition-all"
-                  />
+              {/* Mother's Details Card */}
+              <div className="p-4 sm:p-5 rounded-2xl bg-slate-950/60 border border-slate-800/80 space-y-3">
+                <h4 className="text-xs font-bold uppercase tracking-wider text-amber-400 flex items-center gap-2">
+                  <span>Mother&apos;s Information</span>
+                </h4>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+                  <div>
+                    <label className="block text-[11px] font-bold text-slate-300 mb-1">
+                      Mother&apos;s Name
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.mother_name || ''}
+                      onChange={(e) => handleChange('mother_name', e.target.value)}
+                      placeholder="Mother's full name"
+                      className="w-full text-xs font-medium border border-slate-800 rounded-xl p-3 bg-slate-900 text-white focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 transition-all"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[11px] font-bold text-slate-300 mb-1">
+                      Mother&apos;s Occupation
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.mother_occupation || ''}
+                      onChange={(e) => handleChange('mother_occupation', e.target.value)}
+                      placeholder="e.g. Homemaker / Teacher / Nurse"
+                      className="w-full text-xs font-medium border border-slate-800 rounded-xl p-3 bg-slate-900 text-white focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 transition-all"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[11px] font-bold text-slate-300 mb-1">
+                      Mother&apos;s Mobile Number
+                    </label>
+                    <div className="flex rounded-xl border border-slate-800 bg-slate-900 overflow-hidden focus-within:border-amber-400 transition-colors">
+                      <span className="px-3 py-2.5 text-xs font-bold text-amber-400 bg-slate-950 border-r border-slate-800 flex items-center">
+                        +91
+                      </span>
+                      <input
+                        type="tel"
+                        maxLength={10}
+                        value={formData.mother_mobile || ''}
+                        onChange={(e) => handleChange('mother_mobile', e.target.value)}
+                        placeholder="98765 43210"
+                        className="w-full text-xs font-medium p-2.5 bg-transparent text-white focus:outline-none placeholder:text-slate-600"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -1038,29 +1259,59 @@ export function CreateProfileWizard() {
               </div>
 
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">
-                  About Me (Personal Bio)
-                </label>
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-300">
+                    About Me (Personal Bio)
+                  </label>
+                  <button
+                    type="button"
+                    onClick={generateAiBio}
+                    disabled={isGeneratingBio}
+                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-amber-500/20 via-amber-400/25 to-amber-600/20 border border-amber-500/40 text-amber-300 hover:text-amber-200 text-[11px] font-bold tracking-wide hover:border-amber-400 transition-all hover:scale-105 active:scale-95 disabled:opacity-50 cursor-pointer shadow-sm shadow-amber-950/20"
+                    title="Synthesizes your education, occupation, and family values into an authentic Christian matrimonial bio"
+                  >
+                    <span className="text-xs">✨</span>
+                    <span>{isGeneratingBio ? 'Generating with AI...' : 'Generate with AI'}</span>
+                  </button>
+                </div>
                 <textarea
-                  rows={3}
+                  rows={4}
                   value={formData.bio || ''}
                   onChange={(e) => handleChange('bio', e.target.value)}
-                  placeholder="Write a few words about your personality, character, spiritual priorities, and aspirations..."
+                  placeholder="Click 'Generate with AI' above or write about your personality, character, spiritual priorities, and aspirations..."
                   className="w-full text-xs font-medium border border-slate-800 rounded-xl p-3 bg-slate-950 text-white focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 transition-all"
                 />
+                <p className="text-[11px] text-slate-500 mt-1">
+                  💡 Tip: Click <strong>Generate with AI</strong> to automatically compose a reverent Christian matrimonial bio from your entered details.
+                </p>
               </div>
 
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">
-                  Personal Faith Testimony
-                </label>
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-300">
+                    Personal Faith Testimony
+                  </label>
+                  <button
+                    type="button"
+                    onClick={generateAiTestimony}
+                    disabled={isGeneratingTestimony}
+                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-blue-500/20 via-blue-400/25 to-blue-600/20 border border-blue-500/40 text-blue-300 hover:text-blue-200 text-[11px] font-bold tracking-wide hover:border-blue-400 transition-all hover:scale-105 active:scale-95 disabled:opacity-50 cursor-pointer shadow-sm shadow-blue-950/20"
+                    title="Synthesizes your church, denomination, baptism, and biblical vision into a genuine testimony"
+                  >
+                    <span className="text-xs">✨</span>
+                    <span>{isGeneratingTestimony ? 'Generating with AI...' : 'Generate with AI'}</span>
+                  </button>
+                </div>
                 <textarea
-                  rows={3}
+                  rows={4}
                   value={formData.faith_testimony || ''}
                   onChange={(e) => handleChange('faith_testimony', e.target.value)}
-                  placeholder="Share your spiritual journey, baptism testimony, and active fellowship in your church community..."
+                  placeholder="Click 'Generate with AI' above or share your spiritual journey, baptism testimony, and church fellowship..."
                   className="w-full text-xs font-medium border border-slate-800 rounded-xl p-3 bg-slate-950 text-white focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 transition-all"
                 />
+                <p className="text-[11px] text-slate-500 mt-1">
+                  💡 Tip: Click <strong>Generate with AI</strong> to create a Christ-centered testimony reflecting your church, baptism, and marriage vision.
+                </p>
               </div>
             </div>
           )}

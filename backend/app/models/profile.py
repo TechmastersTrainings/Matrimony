@@ -86,8 +86,10 @@ class Profile(Base):
     # Family Background
     father_name = Column(String(100), nullable=True)
     father_occupation = Column(String(100), nullable=True)
+    father_mobile = Column(String(20), nullable=True)
     mother_name = Column(String(100), nullable=True)
     mother_occupation = Column(String(100), nullable=True)
+    mother_mobile = Column(String(20), nullable=True)
     family_status = Column(SQLEnum(FamilyStatus), default=FamilyStatus.MIDDLE_CLASS, nullable=True)
     family_values = Column(SQLEnum(FamilyValues), default=FamilyValues.TRADITIONAL, nullable=True)
     brothers_count = Column(Integer, default=0, nullable=True)

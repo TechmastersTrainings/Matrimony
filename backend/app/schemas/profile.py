@@ -86,8 +86,10 @@ class ProfileDetailResponse(BaseModel):
     # Family
     father_name: Optional[str] = None
     father_occupation: Optional[str] = None
+    father_mobile: Optional[str] = None
     mother_name: Optional[str] = None
     mother_occupation: Optional[str] = None
+    mother_mobile: Optional[str] = None
     family_status: Optional[FamilyStatus] = None
     family_values: Optional[FamilyValues] = None
     brothers_count: Optional[int] = 0

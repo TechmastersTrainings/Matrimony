@@ -57,8 +57,10 @@ export interface ProfileDraftData {
 
   father_name?: string;
   father_occupation?: string;
+  father_mobile?: string;
   mother_name?: string;
   mother_occupation?: string;
+  mother_mobile?: string;
   family_status?: string;
   family_values?: string;
   brothers_count?: number;

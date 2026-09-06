@@ -54,7 +54,6 @@ function RegisterFormContent() {
   // If looking for a Bride (Female partner) -> Candidate account being created is for Bridegroom (MALE).
   // If looking for a Bridegroom (Male partner) -> Candidate account being created is for Bride (FEMALE).
   const candidateGender: 'MALE' | 'FEMALE' = lookingFor === 'FEMALE' ? 'MALE' : 'FEMALE';
-  const candidateTitle = candidateGender === 'MALE' ? 'Bridegroom' : 'Bride';
   const isSelf = profileCreatedBy === 'SELF';
 
   const handleRegister = async (e: React.FormEvent) => {
@@ -64,7 +63,7 @@ function RegisterFormContent() {
       return;
     }
     if (!firstName.trim() || !lastName.trim()) {
-      setError(`Please provide the ${candidateTitle}'s first and last name.`);
+      setError('Please provide first and last name.');
       return;
     }
     setIsLoading(true);
@@ -146,7 +145,7 @@ function RegisterFormContent() {
                     : 'bg-slate-950/80 text-slate-300 border-slate-800 hover:border-slate-700 hover:text-white'
                     }`}
                 >
-                  Bride (Female)
+                  Bride
                 </button>
 
                 <button
@@ -157,19 +156,8 @@ function RegisterFormContent() {
                     : 'bg-slate-950/80 text-slate-300 border-slate-800 hover:border-slate-700 hover:text-white'
                     }`}
                 >
-                  Bridegroom (Male)
+                  Bridegroom
                 </button>
-              </div>
-
-              {/* Explicit Visual Helper */}
-              <div className="mt-2.5 flex items-center gap-2 text-xs text-amber-300/90 bg-amber-950/40 border border-amber-900/50 rounded-xl px-3.5 py-2">
-                <span className="inline-block w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
-                <span>
-                  Creating account for:{' '}
-                  <strong className="text-white font-semibold">
-                    {candidateTitle} ({candidateGender === 'MALE' ? 'Male' : 'Female'})
-                  </strong>
-                </span>
               </div>
             </div>
 
@@ -183,7 +171,7 @@ function RegisterFormContent() {
                 onChange={(e) => setProfileCreatedBy(e.target.value)}
                 className="w-full text-xs sm:text-sm font-medium border border-slate-800 rounded-2xl p-3.5 bg-slate-950 text-white focus:outline-none focus:border-amber-400 transition-all cursor-pointer"
               >
-                <option value="SELF">Self (I am the {candidateTitle})</option>
+                <option value="SELF">Self</option>
                 <option value="PARENT">Parent (Father / Mother)</option>
                 <option value="SIBLING">Sibling (Brother / Sister)</option>
                 <option value="RELATIVE">Relative / Guardian</option>
@@ -203,13 +191,13 @@ function RegisterFormContent() {
                     required
                     value={managerName}
                     onChange={(e) => setManagerName(e.target.value)}
-                    placeholder="e.g. Mr. Paul Fernandes"
+                    placeholder="e.g. Paul Fernandes"
                     className="w-full text-xs font-medium border border-slate-800 rounded-xl p-3 bg-slate-900 text-white focus:outline-none focus:border-amber-400 placeholder:text-slate-600"
                   />
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-slate-300 mb-1.5">
-                    Your Relationship to {candidateTitle}
+                    Relationship to Candidate
                   </label>
                   <input
                     type="text"
@@ -223,31 +211,31 @@ function RegisterFormContent() {
               </div>
             )}
 
-            {/* 3. Candidate's (Bridegroom's / Bride's) Full Name */}
+            {/* 3. Candidate Full Name */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">
-                  {candidateTitle}&apos;s First Name
+                  First Name
                 </label>
                 <input
                   type="text"
                   required
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
-                  placeholder={`e.g. ${candidateGender === 'MALE' ? 'Joshua' : 'Grace'}`}
+                  placeholder="Enter first name"
                   className="w-full text-xs sm:text-sm font-medium border border-slate-800 rounded-2xl p-3.5 bg-slate-950 text-white focus:outline-none focus:border-amber-400 placeholder:text-slate-600"
                 />
               </div>
               <div>
                 <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">
-                  {candidateTitle}&apos;s Last Name
+                  Last Name
                 </label>
                 <input
                   type="text"
                   required
                   value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
-                  placeholder={candidateGender === 'MALE' ? 'e.g. Joseph / Kumar' : 'e.g. Fernandes / Kumari'}
+                  placeholder="Enter last name"
                   className="w-full text-xs sm:text-sm font-medium border border-slate-800 rounded-2xl p-3.5 bg-slate-950 text-white focus:outline-none focus:border-amber-400 placeholder:text-slate-600"
                 />
               </div>

@@ -189,10 +189,14 @@ class RegistrationService:
             profile.father_name = str(data["father_name"])
         if "father_occupation" in data:
             profile.father_occupation = str(data["father_occupation"])
+        if "father_mobile" in data:
+            profile.father_mobile = str(data["father_mobile"])
         if "mother_name" in data:
             profile.mother_name = str(data["mother_name"])
         if "mother_occupation" in data:
             profile.mother_occupation = str(data["mother_occupation"])
+        if "mother_mobile" in data:
+            profile.mother_mobile = str(data["mother_mobile"])
         if "family_status" in data and data["family_status"]:
             try:
                 profile.family_status = FamilyStatus(data["family_status"].upper())

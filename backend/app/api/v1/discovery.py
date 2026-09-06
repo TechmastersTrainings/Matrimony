@@ -194,8 +194,10 @@ async def get_candidate_profile(
         # Family Background
         "father_name": profile.father_name or "",
         "father_occupation": profile.father_occupation or "Retired / Employed",
+        "father_mobile": profile.father_mobile or "",
         "mother_name": profile.mother_name or "",
         "mother_occupation": profile.mother_occupation or "Homemaker",
+        "mother_mobile": profile.mother_mobile or "",
         "family_status": profile.family_status.value if hasattr(profile.family_status, 'value') else str(profile.family_status) if profile.family_status else "MIDDLE_CLASS",
         "family_values": profile.family_values.value if hasattr(profile.family_values, 'value') else str(profile.family_values) if profile.family_values else "TRADITIONAL",
         "brothers_count": profile.brothers_count or 0,

@@ -219,8 +219,10 @@ async def list_profiles(
             # Family Background
             "father_name": p.father_name or "",
             "father_occupation": p.father_occupation or "Retired / Employed",
+            "father_mobile": p.father_mobile or "",
             "mother_name": p.mother_name or "",
             "mother_occupation": p.mother_occupation or "Homemaker",
+            "mother_mobile": p.mother_mobile or "",
             "family_status": p.family_status.value if hasattr(p.family_status, 'value') else str(p.family_status) if p.family_status else "MIDDLE_CLASS",
             "family_values": p.family_values.value if hasattr(p.family_values, 'value') else str(p.family_values) if p.family_values else "TRADITIONAL",
             "brothers_count": p.brothers_count or 0,
