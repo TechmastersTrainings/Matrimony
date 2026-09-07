@@ -54,8 +54,12 @@ async def send_otp(
     if db is None:
         raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="Database unavailable.")
 
+    target_clean = payload.target.strip().lower()
+    user = AuthService.find_user_by_identifier(payload.target, db)
+    norm_target = user.mobile_number if (user and user.mobile_number and payload.otp_type != OtpType.EMAIL_VERIFICATION) else target_clean
+
     otp_service = get_otp_service()
-    ok, msg, debug_otp = await otp_service.send_otp(payload.target, payload.otp_type, db)
+    ok, msg, debug_otp = await otp_service.send_otp(norm_target, payload.otp_type, db)
     if not ok:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=msg)
 

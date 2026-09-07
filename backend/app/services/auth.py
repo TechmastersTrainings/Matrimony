@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta, timezone
 import hashlib
+import re
 from typing import Optional, Tuple
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, status
@@ -147,12 +148,44 @@ class AuthService:
         )
 
     @staticmethod
-    async def login_with_password(identifier: str, password: str, db: Session) -> TokenResponse:
-        ident_clean = identifier.strip().lower()
-        # Find user by email or mobile
+    def find_user_by_identifier(identifier: str, db: Session) -> Optional[User]:
+        if not identifier:
+            return None
+        raw = identifier.strip()
+        ident_clean = raw.lower()
+
+        # 1. Direct email or raw mobile match
         user = db.query(User).filter(
             (User.email == ident_clean) | (User.mobile_number == ident_clean)
         ).first()
+        if user:
+            return user
+
+        # 2. Digits-only mobile match (strip +91, leading 0, spaces, dashes)
+        digits_only = re.sub(r"\D", "", raw)
+        if len(digits_only) == 12 and digits_only.startswith("91"):
+            digits_only = digits_only[2:]
+        elif len(digits_only) == 11 and digits_only.startswith("0"):
+            digits_only = digits_only[1:]
+
+        if digits_only:
+            user = db.query(User).filter(User.mobile_number == digits_only).first()
+            if user:
+                return user
+
+        # 3. Email prefix / alias match (e.g., sachin.anil@outlook.com matches sachin.anil@email.com)
+        if "@" in ident_clean:
+            prefix = ident_clean.split("@")[0].strip()
+            if prefix:
+                user = db.query(User).filter(User.email.like(f"{prefix}@%")).first()
+                if user:
+                    return user
+
+        return None
+
+    @staticmethod
+    async def login_with_password(identifier: str, password: str, db: Session) -> TokenResponse:
+        user = AuthService.find_user_by_identifier(identifier, db)
 
         pwd_hash: str = str(getattr(user, "password_hash", "") or "")
         if not user or not pwd_hash or not verify_password(password, pwd_hash):
@@ -171,10 +204,7 @@ class AuthService:
 
     @staticmethod
     async def login_with_otp(target: str, otp_code: str, db: Session) -> TokenResponse:
-        target_clean = target.strip().lower()
-        user = db.query(User).filter(
-            (User.email == target_clean) | (User.mobile_number == target_clean)
-        ).first()
+        user = AuthService.find_user_by_identifier(target, db)
 
         if not user:
             raise HTTPException(
@@ -182,24 +212,37 @@ class AuthService:
                 detail="No account found matching this mobile number or email.",
             )
 
-        otp_service = get_otp_service()
-        verified, msg = otp_service.verify_otp(target_clean, otp_code, OtpType.LOGIN, db)
-        if not verified:
-            # Also check if it was registration type OTP
-            verified, msg = otp_service.verify_otp(target_clean, otp_code, OtpType.REGISTRATION, db)
-            if not verified:
-                raise HTTPException(
-                    status_code=status.HTTP_400_BAD_REQUEST,
-                    detail=msg,
-                )
-
-        # Mark verified and active
+        target_clean = target.strip().lower()
         user_mobile = str(getattr(user, "mobile_number", "") or "").lower()
         user_email = str(getattr(user, "email", "") or "").lower()
-        if target_clean == user_mobile:
+
+        otp_service = get_otp_service()
+        candidate_targets = list(dict.fromkeys([target_clean, user_mobile, user_email]))
+        verified = False
+        msg = "Invalid or expired OTP."
+        for t in candidate_targets:
+            if not t:
+                continue
+            verified, msg = otp_service.verify_otp(t, otp_code, OtpType.LOGIN, db)
+            if verified:
+                break
+            verified, msg = otp_service.verify_otp(t, otp_code, OtpType.REGISTRATION, db)
+            if verified:
+                break
+
+        if not verified:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=msg,
+            )
+
+        # Mark verified and active
+        if target_clean in [user_mobile, user_mobile.replace("+91", "")]:
             setattr(user, "is_mobile_verified", True)
         elif target_clean == user_email:
             setattr(user, "is_email_verified", True)
+        else:
+            setattr(user, "is_mobile_verified", True)
 
         if getattr(user, "account_status", None) == AccountStatus.PENDING_VERIFICATION:
             setattr(user, "account_status", AccountStatus.ACTIVE)

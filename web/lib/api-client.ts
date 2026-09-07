@@ -86,6 +86,8 @@ class ApiClient {
       localStorage.setItem('access_token', resData.access_token);
       if (resData.refresh_token) localStorage.setItem('refresh_token', resData.refresh_token);
       if (resData.role) localStorage.setItem('user_role', resData.role);
+      if (resData.profile_status) localStorage.setItem('profile_status', resData.profile_status);
+      if (resData.user_id) localStorage.setItem('user_id', String(resData.user_id));
     }
     return resData;
   }

@@ -56,8 +56,10 @@ function LoginFormContent() {
         login_type: loginType,
       });
 
-      // If candidate has not finished their profile details (education, faith, family), take them to profile builder
-      if (res && res.profile_status === 'DRAFT') {
+      // If super_admin or admin, or candidate has finished profile, take them to discover
+      if (res?.role === 'SUPER_ADMIN' || res?.role === 'ADMIN') {
+        router.push('/discover');
+      } else if (res && res.profile_status === 'DRAFT') {
         router.push('/profile/create');
       } else {
         router.push('/discover');
