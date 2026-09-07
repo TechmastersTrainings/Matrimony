@@ -20,7 +20,7 @@ def clean_db_url(raw_input: Optional[str]) -> Optional[str]:
     if "DATABASE_URL=" in u:
         u = u.split("DATABASE_URL=", 1)[-1].strip().strip("'\x22`\u201c\u201d\u2018\u2019")
     # Strip any prefix like "Service URI:", "ServiceURI", etc. before the dialect scheme
-    for marker in ["mysql+pymysql://", "mysql://", "sqlite:///", "postgresql://", "postgres://"]:
+    for marker in ["mysql+pymysql://", "mysql://", "postgresql://", "postgres://"]:
         if marker in u:
             u = u[u.find(marker):]
             break
@@ -57,53 +57,34 @@ def get_engine():
         or getattr(settings, "DATABASE_URL", None)
     )
     db_url = clean_db_url(raw_url)
-    fallback_path = "./backend/matrimony.db" if os.path.isdir("./backend") else "./matrimony.db"
+    if not db_url:
+        _primary_db_diag = "DATABASE_URL is not set. Please configure DATABASE_URL for Aiven MySQL."
+        logger.error(_primary_db_diag)
+        raise RuntimeError("DATABASE_URL is required to connect to Aiven MySQL.")
 
-    if db_url:
-        connect_args: Dict[str, Any] = {}
-        if "sqlite" in db_url:
-            connect_args["check_same_thread"] = False
-            _primary_db_diag = "SQLite local file active (⚠️ Ephemeral on Render/cloud containers - set DATABASE_URL for permanent storage)"
-        elif "mysql" in db_url:
-            connect_args["ssl"] = {}
-            if "aivencloud" in db_url or "ssl" in db_url.lower():
-                connect_args["ssl"] = {"ssl_mode": "REQUIRED"}
-            _primary_db_diag = f"Configured as Persistent MySQL: {db_url.split('@')[-1] if '@' in db_url else 'unknown'}"
+    connect_args: Dict[str, Any] = {"ssl": {"ssl_mode": "REQUIRED"}}
+    _primary_db_diag = f"Configured as Persistent Aiven MySQL: {db_url.split('@')[-1] if '@' in db_url else 'aivencloud'}"
 
-        try:
-            test_engine = create_engine(
-                db_url,
-                pool_pre_ping=True,
-                pool_size=settings.DB_POOL_SIZE if "sqlite" not in db_url else 5,
-                max_overflow=settings.DB_MAX_OVERFLOW if "sqlite" not in db_url else 10,
-                pool_timeout=10,
-                pool_recycle=settings.DB_POOL_RECYCLE,
-                connect_args=connect_args,
-            )
-            with test_engine.connect() as conn:
-                conn.execute(text("SELECT 1"))
-            _engine = test_engine
-            dialect = test_engine.dialect.name
-            _primary_db_diag = f"Connected to persistent {dialect} ({db_url.split('@')[-1] if '@' in db_url else 'local'})"
-            logger.info(f"Database engine initialized successfully ({dialect}).")
-        except Exception as e:
-            err_msg = f"{type(e).__name__}: {str(e)}"
-            _primary_db_diag = f"Primary MySQL connection failed ({err_msg}). Using fallback SQLite (⚠️ Ephemeral on cloud)."
-            logger.error(f"Primary database connection error on {db_url}: {e}")
-            logger.warning("Falling back to local SQLite engine to keep API operational.")
-            _engine = create_engine(
-                f"sqlite:///{fallback_path}",
-                connect_args={"check_same_thread": False},
-                pool_pre_ping=True,
-            )
-    else:
-        _primary_db_diag = f"No valid DATABASE_URL found (raw_url={'present' if raw_url else 'missing'}). Default SQLite active (⚠️ Ephemeral on cloud)"
-        logger.warning(f"No valid database URL parsed from settings. Using SQLite at {fallback_path}.")
+    try:
         _engine = create_engine(
-            f"sqlite:///{fallback_path}",
-            connect_args={"check_same_thread": False},
+            db_url,
             pool_pre_ping=True,
+            pool_size=settings.DB_POOL_SIZE,
+            max_overflow=settings.DB_MAX_OVERFLOW,
+            pool_timeout=settings.DB_POOL_TIMEOUT,
+            pool_recycle=settings.DB_POOL_RECYCLE,
+            connect_args=connect_args,
         )
+        with _engine.connect() as conn:
+            conn.execute(text("SELECT 1"))
+        dialect = _engine.dialect.name
+        _primary_db_diag = f"Connected to persistent {dialect} ({db_url.split('@')[-1] if '@' in db_url else 'aivencloud'})"
+        logger.info(f"Database engine initialized successfully ({dialect}) connected to Aiven Cloud MySQL.")
+    except Exception as e:
+        err_msg = f"{type(e).__name__}: {str(e)}"
+        _primary_db_diag = f"Aiven MySQL connection failed ({err_msg})."
+        logger.error(f"Critical database connection error on {db_url}: {e}")
+        raise RuntimeError(f"Could not connect to Aiven MySQL database: {e}")
 
     _SessionFactory = sessionmaker(autocommit=False, autoflush=False, bind=_engine)
     return _engine
