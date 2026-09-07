@@ -242,7 +242,7 @@ export default function CandidateProfileDetailPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 text-xs pt-3">
                 <div className="flex items-center gap-2">
                   <span className="text-slate-400 font-semibold w-24 shrink-0">Denomination:</span>
-                  <span className="text-white font-medium truncate">{profile.denomination || 'Christian'}</span>
+                  <span className="text-white font-medium truncate">{profile.denomination || '—'}</span>
                 </div>
 
                 <div className="flex items-center gap-2">
@@ -253,13 +253,13 @@ export default function CandidateProfileDetailPage() {
                       <span>Church Info Locked</span>
                     </span>
                   ) : (
-                    <span className="text-white font-medium truncate">{profile.church_name || 'Local Fellowship'}</span>
+                    <span className="text-white font-medium truncate">{profile.church_name || '—'}</span>
                   )}
                 </div>
 
                 <div className="flex items-center gap-2">
                   <span className="text-slate-400 font-semibold w-24 shrink-0">Education:</span>
-                  <span className="text-white font-medium truncate">{profile.highest_education || 'Graduate'}</span>
+                  <span className="text-white font-medium truncate">{profile.highest_education || '—'}</span>
                 </div>
 
                 <div className="flex items-center gap-2">
@@ -270,7 +270,7 @@ export default function CandidateProfileDetailPage() {
                       <span>Profession Locked</span>
                     </span>
                   ) : (
-                    <span className="text-white font-medium truncate">{profile.occupation_title || 'Professional'}</span>
+                    <span className="text-white font-medium truncate">{profile.occupation_title || '—'}</span>
                   )}
                 </div>
 
@@ -282,7 +282,7 @@ export default function CandidateProfileDetailPage() {
                       <span>Location Locked</span>
                     </span>
                   ) : (
-                    <span className="text-amber-400/90 font-medium truncate">📍 {profile.district || 'Bidar'}, {profile.state || 'Karnataka'}</span>
+                    <span className="text-amber-400/90 font-medium truncate">📍 {profile.district || '—'}{profile.state ? `, ${profile.state}` : ''}</span>
                   )}
                 </div>
 
@@ -465,29 +465,29 @@ export default function CandidateProfileDetailPage() {
                   <div>
                     <h4 className="font-bold text-amber-400 text-xs mb-1">Faith &amp; Spiritual Testimony:</h4>
                     <p className="text-slate-300 leading-relaxed bg-slate-950/60 p-3 rounded-xl border border-slate-800 italic">
-                      &ldquo;{profile.faith_testimony || 'Baptized and actively serving in our local church fellowship.'}&rdquo;
+                      {profile.faith_testimony ? `“${profile.faith_testimony}”` : 'No faith testimony added yet.'}
                     </p>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 pt-2">
                     <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
                       <span className="text-[10px] text-slate-400 font-bold uppercase">Denomination</span>
-                      <p className="text-white font-bold">{profile.denomination || 'METHODIST'}</p>
+                      <p className="text-white font-bold">{profile.denomination || '—'}</p>
                     </div>
 
                     <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
                       <span className="text-[10px] text-slate-400 font-bold uppercase">Sub-Denomination</span>
-                      <p className="text-white font-bold">{profile.sub_denomination || 'None'}</p>
+                      <p className="text-white font-bold">{profile.sub_denomination || '—'}</p>
                     </div>
 
                     <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
                       <span className="text-[10px] text-slate-400 font-bold uppercase">Church / Parish Name</span>
-                      <p className="text-white font-bold">{profile.church_name || 'Centenary Methodist Church'}</p>
+                      <p className="text-white font-bold">{profile.church_name || '—'}</p>
                     </div>
 
                     <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
                       <span className="text-[10px] text-slate-400 font-bold uppercase">Pastor / Priest In-Charge</span>
-                      <p className="text-white font-bold">{profile.parish_or_pastor || 'Pastor In-Charge'}</p>
+                      <p className="text-white font-bold">{profile.parish_or_pastor || '—'}</p>
                     </div>
 
                     <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
@@ -515,32 +515,32 @@ export default function CandidateProfileDetailPage() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs">
                   <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
                     <span className="text-[10px] text-slate-400 font-bold uppercase">Highest Qualification</span>
-                    <p className="text-white font-bold">{profile.highest_education || 'Graduate'}</p>
+                    <p className="text-white font-bold">{profile.highest_education || '—'}</p>
                   </div>
 
                   <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
                     <span className="text-[10px] text-slate-400 font-bold uppercase">Education Field</span>
-                    <p className="text-white font-bold">{profile.education_field || 'Computer Science & Engineering'}</p>
+                    <p className="text-white font-bold">{profile.education_field || '—'}</p>
                   </div>
 
                   <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
                     <span className="text-[10px] text-slate-400 font-bold uppercase">College / Institution</span>
-                    <p className="text-white font-bold">{profile.institution || 'Recognized University'}</p>
+                    <p className="text-white font-bold">{profile.institution || '—'}</p>
                   </div>
 
                   <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
                     <span className="text-[10px] text-slate-400 font-bold uppercase">Occupation Title</span>
-                    <p className="text-white font-bold">{profile.occupation_title || 'Software Engineer'}</p>
+                    <p className="text-white font-bold">{profile.occupation_title || '—'}</p>
                   </div>
 
                   <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
                     <span className="text-[10px] text-slate-400 font-bold uppercase">Employment Sector</span>
-                    <p className="text-white font-bold">{profile.employed_in || 'Private Sector'}</p>
+                    <p className="text-white font-bold">{profile.employed_in || '—'}</p>
                   </div>
 
                   <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
                     <span className="text-[10px] text-slate-400 font-bold uppercase">Work Location</span>
-                    <p className="text-white font-bold">{profile.work_location || `${profile.district || 'Bidar'}, ${profile.state || 'Karnataka'}`}</p>
+                    <p className="text-white font-bold">{profile.work_location || (profile.district ? `${profile.district}${profile.state ? `, ${profile.state}` : ''}` : '—')}</p>
                   </div>
 
                   <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1 sm:col-span-2">
@@ -562,24 +562,24 @@ export default function CandidateProfileDetailPage() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                     <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
                       <span className="text-[10px] text-slate-400 font-bold uppercase">Father&apos;s Name</span>
-                      <p className="text-white font-bold">{profile.father_name || 'Mr. Family Head'}</p>
-                      <span className="text-[11px] text-slate-400 block">{profile.father_occupation || 'Retired / Employed'}</span>
+                      <p className="text-white font-bold">{profile.father_name || '—'}</p>
+                      {profile.father_occupation && <span className="text-[11px] text-slate-400 block">{profile.father_occupation}</span>}
                     </div>
 
                     <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
                       <span className="text-[10px] text-slate-400 font-bold uppercase">Mother&apos;s Name</span>
-                      <p className="text-white font-bold">{profile.mother_name || 'Mrs. Family Matron'}</p>
-                      <span className="text-[11px] text-slate-400 block">{profile.mother_occupation || 'Homemaker'}</span>
+                      <p className="text-white font-bold">{profile.mother_name || '—'}</p>
+                      {profile.mother_occupation && <span className="text-[11px] text-slate-400 block">{profile.mother_occupation}</span>}
                     </div>
 
                     <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
                       <span className="text-[10px] text-slate-400 font-bold uppercase">Family Standing</span>
-                      <p className="text-white font-bold">{profile.family_status ? profile.family_status.replace('_', ' ') : 'UPPER MIDDLE CLASS'}</p>
+                      <p className="text-white font-bold">{profile.family_status ? profile.family_status.replace('_', ' ') : '—'}</p>
                     </div>
 
                     <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
                       <span className="text-[10px] text-slate-400 font-bold uppercase">Family Values</span>
-                      <p className="text-white font-bold">{profile.family_values || 'MODERATE / TRADITIONAL'}</p>
+                      <p className="text-white font-bold">{profile.family_values || '—'}</p>
                     </div>
 
                     <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
@@ -598,12 +598,12 @@ export default function CandidateProfileDetailPage() {
 
                     <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
                       <span className="text-[10px] text-slate-400 font-bold uppercase">Native Place</span>
-                      <p className="text-white font-bold">{profile.native_place || profile.district || 'Bidar'}</p>
+                      <p className="text-white font-bold">{profile.native_place || profile.district || '—'}</p>
                     </div>
 
                     <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
                       <span className="text-[10px] text-slate-400 font-bold uppercase">Residence Type</span>
-                      <p className="text-white font-bold">{profile.residence_type || 'Own House'}</p>
+                      <p className="text-white font-bold">{profile.residence_type || '—'}</p>
                     </div>
                   </div>
 
@@ -621,44 +621,44 @@ export default function CandidateProfileDetailPage() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
                   <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
                     <span className="text-[10px] text-slate-400 font-bold uppercase">Mother Tongue</span>
-                    <p className="text-white font-bold">{profile.mother_tongue || 'Kannada'}</p>
+                    <p className="text-white font-bold">{profile.mother_tongue || '—'}</p>
                   </div>
 
                   <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
                     <span className="text-[10px] text-slate-400 font-bold uppercase">Dietary Habits</span>
-                    <p className="text-white font-bold">{profile.diet ? profile.diet.replace('_', ' ') : 'NON VEGETARIAN'}</p>
+                    <p className="text-white font-bold">{profile.diet ? profile.diet.replace('_', ' ') : '—'}</p>
                   </div>
 
                   <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
                     <span className="text-[10px] text-slate-400 font-bold uppercase">Smoking</span>
-                    <p className="text-white font-bold">{profile.smoking || 'NO'}</p>
+                    <p className="text-white font-bold">{profile.smoking || '—'}</p>
                   </div>
 
                   <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
                     <span className="text-[10px] text-slate-400 font-bold uppercase">Drinking</span>
-                    <p className="text-white font-bold">{profile.drinking || 'NO'}</p>
+                    <p className="text-white font-bold">{profile.drinking || '—'}</p>
                   </div>
 
                   <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
                     <span className="text-[10px] text-slate-400 font-bold uppercase">Physical Status</span>
-                    <p className="text-white font-bold">{profile.physical_status || 'NORMAL'}</p>
+                    <p className="text-white font-bold">{profile.physical_status || '—'}</p>
                   </div>
 
                   <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
                     <span className="text-[10px] text-slate-400 font-bold uppercase">Height &amp; Weight</span>
                     <p className="text-white font-bold">
-                      {profile.height_cm ? `${profile.height_cm} cm (${Math.floor(profile.height_cm / 30.48)}'${Math.round((profile.height_cm % 30.48) / 2.54)}")` : '165 cm'} • {profile.weight_kg ? `${profile.weight_kg} kg` : 'Weight not disclosed'}
+                      {profile.height_cm ? `${profile.height_cm} cm (${Math.floor(profile.height_cm / 30.48)}'${Math.round((profile.height_cm % 30.48) / 2.54)}")` : '—'} {profile.weight_kg ? `• ${profile.weight_kg} kg` : ''}
                     </p>
                   </div>
 
                   <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
                     <span className="text-[10px] text-slate-400 font-bold uppercase">Citizenship</span>
-                    <p className="text-white font-bold">{profile.citizenship || 'Indian'}</p>
+                    <p className="text-white font-bold">{profile.citizenship || '—'}</p>
                   </div>
 
                   <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
                     <span className="text-[10px] text-slate-400 font-bold uppercase">Hobbies &amp; Interests</span>
-                    <p className="text-white font-bold">{profile.hobbies || 'Church Choir, Reading, Traveling'}</p>
+                    <p className="text-white font-bold">{profile.hobbies || '—'}</p>
                   </div>
                 </div>
               )}
