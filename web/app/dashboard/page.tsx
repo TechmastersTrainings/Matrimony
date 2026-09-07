@@ -61,67 +61,75 @@ export default function UserDashboardPage() {
     );
   }
 
-  // Extract Profile and Draft fallback data
+  // Extract Profile and Draft real data (ZERO dummy / mock fallbacks)
   const profile = userData?.profile;
   const draftData = userData?.draft?.draft_data || {};
   const isSubscriber = userData?.is_active_subscriber;
   const profileStatus = userData?.profile_status || profile?.status || 'DRAFT';
-  const completionPercentage = userData?.completion_percentage || profile?.completion_percentage || 15;
+  const completionPercentage = userData?.completion_percentage || profile?.completion_percentage || (profile ? 100 : 15);
+
+  const hasProfile = Boolean(profile || (draftData && (draftData.first_name || draftData.highest_education || draftData.church_name)));
 
   const rawPrimaryUrl = photos.find((p) => p.is_primary)?.r2_url || photos[0]?.r2_url || profile?.primary_photo;
   const primaryPhoto = getPhotoUrl(rawPrimaryUrl);
 
-  // Field helpers combining profile model & draft inputs
-  const firstName = profile?.first_name || draftData?.first_name || 'Member';
+  // Field helpers combining profile model & draft inputs without mock fallbacks
+  const firstName = profile?.first_name || draftData?.first_name || (userData?.email ? userData.email.split('@')[0] : 'Member');
   const lastName = profile?.last_name || draftData?.last_name || '';
   const fullName = `${firstName} ${lastName}`.trim();
-  const gender = profile?.gender || draftData?.gender || 'MALE';
-  const age = profile?.age || draftData?.age || '34';
-  const dob = profile?.dob || draftData?.dob || '1993-10-25';
-  const heightCm = profile?.height_cm || draftData?.height_cm || 165;
-  const motherTongue = profile?.mother_tongue || draftData?.mother_tongue || 'Kannada';
-  const maritalStatus = (profile?.marital_status || draftData?.marital_status || 'NEVER_MARRIED').replace(/_/g, ' ');
-  const physicalStatus = (profile?.physical_status || draftData?.physical_status || 'NORMAL').replace(/_/g, ' ');
+  const gender = profile?.gender ? profile.gender.replace(/_/g, ' ') : draftData?.gender ? draftData.gender.replace(/_/g, ' ') : 'Not specified';
+  const age = profile?.age || draftData?.age || null;
+  const dob = profile?.dob || draftData?.dob || null;
+  const heightCm = profile?.height_cm || draftData?.height_cm || null;
+  const motherTongue = profile?.mother_tongue || draftData?.mother_tongue || 'Not specified';
+  const maritalStatus = profile?.marital_status ? profile.marital_status.replace(/_/g, ' ') : draftData?.marital_status ? draftData.marital_status.replace(/_/g, ' ') : 'Not specified';
+  const physicalStatus = profile?.physical_status ? profile.physical_status.replace(/_/g, ' ') : draftData?.physical_status ? draftData.physical_status.replace(/_/g, ' ') : 'Normal';
 
   // Faith
-  const denomination = (profile?.denomination || draftData?.denomination || 'METHODIST').replace(/_/g, ' ');
-  const churchName = profile?.church_name || draftData?.church_name || 'Elrohi';
-  const pastor = profile?.parish_or_pastor || draftData?.parish_or_pastor || 'Rev. Philip Babu';
-  const isBaptized = profile?.is_baptized ?? draftData?.is_baptized ?? true;
-  const faithTestimony = profile?.faith_testimony || draftData?.faith_testimony || 'Baptized and raised in faith, actively serving in our local church community.';
+  const denomination = profile?.denomination ? profile.denomination.replace(/_/g, ' ') : draftData?.denomination ? draftData.denomination.replace(/_/g, ' ') : 'Not specified';
+  const churchName = profile?.church_name || draftData?.church_name || 'Not specified';
+  const pastor = profile?.parish_or_pastor || draftData?.parish_or_pastor || 'Not specified';
+  const isBaptized = profile?.is_baptized ?? draftData?.is_baptized ?? null;
+  const faithTestimony = profile?.faith_testimony || draftData?.faith_testimony || '';
 
   // Career & Education
-  const education = profile?.highest_education || draftData?.highest_education || 'B.Tech Computer Science';
-  const occupation = profile?.occupation_title || draftData?.occupation_title || 'Software Engineer';
-  const employedIn = profile?.employed_in || draftData?.employed_in || 'Private Sector';
-  const workLocation = profile?.work_location || draftData?.work_location || 'Hyderabad';
-  const income = profile?.annual_income_min ? `₹${profile.annual_income_min.toLocaleString('en-IN')}` : '₹21,00,000';
+  const education = profile?.highest_education || draftData?.highest_education || 'Not specified';
+  const occupation = profile?.occupation_title || draftData?.occupation_title || 'Not specified';
+  const employedIn = profile?.employed_in || draftData?.employed_in || 'Not specified';
+  const workLocation = profile?.work_location || draftData?.work_location || 'Not specified';
+  const income = profile?.annual_income_min
+    ? `₹${profile.annual_income_min.toLocaleString('en-IN')}`
+    : draftData?.annual_income_min
+    ? `₹${draftData.annual_income_min.toLocaleString('en-IN')}`
+    : 'Not specified';
 
   // Location & Contact
-  const mobileNumber = userData?.mobile_number || draftData?.mobile_number || '9880768222';
-  const email = userData?.email || draftData?.email || 'sachin.anil@email.com';
-  const district = profile?.district || draftData?.district || 'Bidar';
+  const mobileNumber = userData?.mobile_number || '—';
+  const email = userData?.email || '—';
+  const district = profile?.district || draftData?.district || 'Not specified';
   const state = profile?.state || draftData?.state || 'Karnataka';
-  const nativePlace = profile?.native_place || draftData?.native_place || 'Bidar';
-  const pincode = profile?.pincode || draftData?.pincode || '585401';
+  const nativePlace = profile?.native_place || draftData?.native_place || 'Not specified';
+  const pincode = profile?.pincode || draftData?.pincode || '';
 
   // Family
-  const fatherName = profile?.father_name || draftData?.father_name || 'Anilraj Themgyale';
-  const fatherOccupation = profile?.father_occupation || draftData?.father_occupation || 'Retired Govt Official';
-  const motherName = profile?.mother_name || draftData?.mother_name || 'Mangala devi Themgyale';
-  const motherOccupation = profile?.mother_occupation || draftData?.mother_occupation || 'Retired Govt Official';
-  const familyStatus = (profile?.family_status || draftData?.family_status || 'UPPER_MIDDLE_CLASS').replace(/_/g, ' ');
-  const familyValues = (profile?.family_values || draftData?.family_values || 'MODERATE').replace(/_/g, ' ');
+  const fatherName = profile?.father_name || draftData?.father_name || 'Not specified';
+  const fatherOccupation = profile?.father_occupation || draftData?.father_occupation || 'Not specified';
+  const fatherMobile = profile?.father_mobile || draftData?.father_mobile || '—';
+  const motherName = profile?.mother_name || draftData?.mother_name || 'Not specified';
+  const motherOccupation = profile?.mother_occupation || draftData?.mother_occupation || 'Not specified';
+  const motherMobile = profile?.mother_mobile || draftData?.mother_mobile || '—';
+  const familyStatus = profile?.family_status ? profile.family_status.replace(/_/g, ' ') : draftData?.family_status ? draftData.family_status.replace(/_/g, ' ') : 'Not specified';
+  const familyValues = profile?.family_values ? profile.family_values.replace(/_/g, ' ') : draftData?.family_values ? draftData.family_values.replace(/_/g, ' ') : 'Not specified';
+
+  // Lifestyle & Habits
+  const diet = profile?.diet || draftData?.diet ? (profile?.diet || draftData?.diet).replace(/_/g, ' ') : 'Not specified';
+  const smoking = profile?.smoking || draftData?.smoking ? (profile?.smoking || draftData?.smoking).replace(/_/g, ' ') : '';
+  const drinking = profile?.drinking || draftData?.drinking ? (profile?.drinking || draftData?.drinking).replace(/_/g, ' ') : '';
+  const habitsDisplay = [diet, smoking ? `Smoking: ${smoking}` : '', drinking ? `Drinking: ${drinking}` : ''].filter(Boolean).join(' • ') || 'Not specified';
 
   // Bio & Preferences
-  const bio = profile?.bio || draftData?.bio || 'I am a committed Christian looking for a life partner with strong faith values.';
-  const partnerPreferences = profile?.partner_preferences || draftData?.partner_preferences || {
-    age_min: 22,
-    age_max: 30,
-    height_min_cm: 155,
-    height_max_cm: 185,
-    denomination: ['METHODIST', 'CSI', 'CATHOLIC', 'BAPTIST'],
-  };
+  const bio = profile?.bio || draftData?.bio || '';
+  const partnerPreferences = profile?.partner_preferences || draftData?.partner_preferences || null;
 
   return (
     <div className="relative min-h-[calc(100vh-80px)] py-10 px-4 sm:px-6 lg:px-8 bg-slate-950 text-white font-sans overflow-hidden">
@@ -178,6 +186,28 @@ export default function UserDashboardPage() {
           </Link>
         </div>
 
+        {/* Empty Profile Notice Banner if Candidate Profile Not Created */}
+        {!hasProfile && (
+          <div className="bg-slate-900/90 backdrop-blur-2xl border border-amber-500/40 rounded-3xl p-6 sm:p-8 text-center space-y-4 shadow-2xl">
+            <div className="w-14 h-14 rounded-2xl bg-amber-500/10 text-amber-400 flex items-center justify-center mx-auto text-2xl font-bold">
+              ✍️
+            </div>
+            <h2 className="text-xl sm:text-2xl font-extrabold text-white">Your Candidate Profile is Empty</h2>
+            <p className="text-xs sm:text-sm text-slate-300 max-w-lg mx-auto leading-relaxed">
+              You have not entered your candidate profile details yet. Complete your profile (faith, education, family background, and photos) to start receiving matches.
+            </p>
+            <div>
+              <Link
+                href="/profile/create"
+                className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 px-6 py-3 rounded-xl font-extrabold text-xs shadow-xl transition-all hover:scale-105"
+              >
+                <span>Create / Complete Your Profile Now</span>
+                <span>→</span>
+              </Link>
+            </div>
+          </div>
+        )}
+
         {/* 1. Header Profile Banner Card */}
         <div className="bg-slate-900/90 backdrop-blur-2xl border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
@@ -195,7 +225,7 @@ export default function UserDashboardPage() {
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center font-extrabold text-2xl text-amber-400 bg-slate-900">
-                    {firstName[0]}
+                    {firstName[0]?.toUpperCase() || 'M'}
                   </div>
                 )}
               </div>
@@ -204,7 +234,7 @@ export default function UserDashboardPage() {
               <div className="space-y-1.5">
                 <div className="flex flex-wrap items-center gap-3">
                   <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-                    {fullName}
+                    {fullName || 'Candidate Profile'}
                   </h1>
                   <span
                     className={`text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider border ${
@@ -226,7 +256,7 @@ export default function UserDashboardPage() {
                 </div>
 
                 <p className="text-xs sm:text-sm text-amber-300 font-semibold">
-                  {gender} • {age} yrs • {denomination} • {district}
+                  {gender !== 'Not specified' ? gender : 'Gender Not Specified'} {age ? `• ${age} yrs` : ''} {denomination !== 'Not specified' ? `• ${denomination}` : ''} {district !== 'Not specified' ? `• ${district}` : ''}
                 </p>
 
                 <p className="text-xs text-slate-400 flex flex-wrap items-center gap-3 pt-0.5">
@@ -427,11 +457,11 @@ export default function UserDashboardPage() {
               </div>
               <div>
                 <span className="text-slate-400 block mb-0.5">Date of Birth</span>
-                <strong className="text-white font-bold">{dob} ({age} yrs)</strong>
+                <strong className="text-white font-bold">{dob ? `${dob} ${age ? `(${age} yrs)` : ''}` : 'Not specified'}</strong>
               </div>
               <div>
                 <span className="text-slate-400 block mb-0.5">Height</span>
-                <strong className="text-white font-bold">{heightCm} cm (~5&apos;5&quot;)</strong>
+                <strong className="text-white font-bold">{heightCm ? `${heightCm} cm` : 'Not specified'}</strong>
               </div>
               <div>
                 <span className="text-slate-400 block mb-0.5">Physical Status</span>
@@ -443,18 +473,16 @@ export default function UserDashboardPage() {
               </div>
               <div>
                 <span className="text-slate-400 block mb-0.5">Diet &amp; Habits</span>
-                <strong className="text-white font-bold">Non-Vegetarian • Non-Smoker</strong>
+                <strong className="text-white font-bold">{habitsDisplay}</strong>
               </div>
             </div>
 
-            {bio && (
-              <div className="pt-3 border-t border-slate-800/80">
-                <span className="text-slate-400 text-xs block mb-1">About Me (Bio)</span>
-                <p className="text-xs text-slate-300 bg-slate-950/60 p-3 rounded-xl border border-slate-800/80 leading-relaxed">
-                  {bio}
-                </p>
-              </div>
-            )}
+            <div className="pt-3 border-t border-slate-800/80">
+              <span className="text-slate-400 text-xs block mb-1">About Me (Bio)</span>
+              <p className="text-xs text-slate-300 bg-slate-950/60 p-3 rounded-xl border border-slate-800/80 leading-relaxed italic">
+                {bio ? `“${bio}”` : 'No bio written yet.'}
+              </p>
+            </div>
           </div>
 
           {/* Section D: Family Background & Location */}
@@ -474,6 +502,14 @@ export default function UserDashboardPage() {
               <div>
                 <span className="text-slate-400 block mb-0.5">Father&apos;s Occupation</span>
                 <strong className="text-white font-bold">{fatherOccupation}</strong>
+              </div>
+              <div>
+                <span className="text-slate-400 block mb-0.5">Father&apos;s Mobile</span>
+                <strong className="text-white font-mono">{fatherMobile}</strong>
+              </div>
+              <div>
+                <span className="text-slate-400 block mb-0.5">Mother&apos;s Mobile</span>
+                <strong className="text-white font-mono">{motherMobile}</strong>
               </div>
               <div>
                 <span className="text-slate-400 block mb-0.5">Mother&apos;s Name</span>
@@ -497,7 +533,7 @@ export default function UserDashboardPage() {
               </div>
               <div>
                 <span className="text-slate-400 block mb-0.5">District &amp; State</span>
-                <strong className="text-white font-bold">{district}, {state} ({pincode})</strong>
+                <strong className="text-white font-bold">{district !== 'Not specified' ? `${district}, ${state} ${pincode ? `(${pincode})` : ''}` : 'Not specified'}</strong>
               </div>
             </div>
           </div>
@@ -517,30 +553,39 @@ export default function UserDashboardPage() {
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
-            <div className="p-3 bg-slate-950/60 rounded-xl border border-slate-800/80">
-              <span className="text-slate-400 block mb-1">Age Preference</span>
-              <strong className="text-white font-bold text-sm">
-                {partnerPreferences.age_min || 22} to {partnerPreferences.age_max || 30} years
-              </strong>
-            </div>
+          {partnerPreferences && (partnerPreferences.age_min || partnerPreferences.denomination) ? (
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+              <div className="p-3 bg-slate-950/60 rounded-xl border border-slate-800/80">
+                <span className="text-slate-400 block mb-1">Age Preference</span>
+                <strong className="text-white font-bold text-sm">
+                  {partnerPreferences.age_min ? `${partnerPreferences.age_min} to ${partnerPreferences.age_max || 35} years` : 'Open'}
+                </strong>
+              </div>
 
-            <div className="p-3 bg-slate-950/60 rounded-xl border border-slate-800/80">
-              <span className="text-slate-400 block mb-1">Height Preference</span>
-              <strong className="text-white font-bold text-sm">
-                {partnerPreferences.height_min_cm || 155} cm to {partnerPreferences.height_max_cm || 185} cm
-              </strong>
-            </div>
+              <div className="p-3 bg-slate-950/60 rounded-xl border border-slate-800/80">
+                <span className="text-slate-400 block mb-1">Height Preference</span>
+                <strong className="text-white font-bold text-sm">
+                  {partnerPreferences.height_min_cm ? `${partnerPreferences.height_min_cm} cm to ${partnerPreferences.height_max_cm || 185} cm` : 'Open'}
+                </strong>
+              </div>
 
-            <div className="p-3 bg-slate-950/60 rounded-xl border border-slate-800/80">
-              <span className="text-slate-400 block mb-1">Preferred Denominations</span>
-              <strong className="text-amber-400 font-bold text-sm">
-                {Array.isArray(partnerPreferences.denomination)
-                  ? partnerPreferences.denomination.join(', ')
-                  : 'Methodist, CSI, Catholic, Baptist'}
-              </strong>
+              <div className="p-3 bg-slate-950/60 rounded-xl border border-slate-800/80">
+                <span className="text-slate-400 block mb-1">Preferred Denominations</span>
+                <strong className="text-amber-400 font-bold text-sm">
+                  {Array.isArray(partnerPreferences.denomination) && partnerPreferences.denomination.length > 0
+                    ? partnerPreferences.denomination.join(', ')
+                    : 'Open to All'}
+                </strong>
+              </div>
             </div>
-          </div>
+          ) : (
+            <div className="p-6 rounded-2xl bg-slate-950/60 border border-slate-800 text-center space-y-2">
+              <p className="text-xs text-slate-400">No partner preferences configured yet.</p>
+              <Link href="/profile/create" className="inline-block text-xs font-bold text-amber-400 hover:underline">
+                Set partner preferences now →
+              </Link>
+            </div>
+          )}
         </div>
       </div>
     </div>
