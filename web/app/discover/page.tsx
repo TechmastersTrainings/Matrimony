@@ -22,7 +22,7 @@ export default function DiscoverPage() {
 
   // Filter States
   const [searchQuery, setSearchQuery] = useState('');
-  const [gender, setGender] = useState('');
+  const [gender, setGender] = useState<'FEMALE' | 'MALE' | string>('FEMALE');
   const [myGender, setMyGender] = useState<'MALE' | 'FEMALE' | null>(null);
   const [denomination, setDenomination] = useState('');
   const [district, setDistrict] = useState('');
@@ -43,9 +43,18 @@ export default function DiscoverPage() {
     setLoading(true);
     setError(null);
     try {
+      // Strict matrimonial matching: Brides strictly see Grooms, Grooms strictly see Brides
+      const activeGender = isAdmin
+        ? (gender || undefined)
+        : myGender === 'FEMALE'
+        ? 'MALE'
+        : myGender === 'MALE'
+        ? 'FEMALE'
+        : (gender || 'FEMALE');
+
       const data = await apiClient.searchProfiles({
         q: searchQuery || undefined,
-        gender: gender || undefined,
+        gender: activeGender,
         denominations: denomination ? [denomination] : undefined,
         district: district === 'ALL' || !district ? undefined : district,
         age_min: ageMin ? parseInt(ageMin) : undefined,
@@ -110,7 +119,7 @@ export default function DiscoverPage() {
                 const uGen = String(g).toUpperCase() as 'MALE' | 'FEMALE';
                 setMyGender(uGen);
                 const targetOpposite = uGen === 'FEMALE' ? 'MALE' : 'FEMALE';
-                setGender((prev) => (prev ? prev : targetOpposite));
+                setGender(targetOpposite);
               }
             })
             .catch(() => {});
@@ -126,14 +135,15 @@ export default function DiscoverPage() {
   };
 
   const handleResetFilters = () => {
+    const targetGender = myGender === 'FEMALE' ? 'MALE' : 'FEMALE';
     setSearchQuery('');
-    setGender(myGender === 'FEMALE' ? 'MALE' : myGender === 'MALE' ? 'FEMALE' : '');
+    setGender(targetGender);
     setDenomination('');
     setDistrict('');
     setAgeMin('');
     setAgeMax('');
     apiClient
-      .searchProfiles({})
+      .searchProfiles({ gender: targetGender })
       .then((data) => {
         setCandidates(data.profiles || []);
         setTotal(data.total || 0);
@@ -405,29 +415,31 @@ export default function DiscoverPage() {
 
         {/* Free Member Informational Notice Banner (Shown when not subscribed and not admin) */}
         {!isSubscribed && !isAdmin && (
-          <div className="p-5 rounded-2xl bg-gradient-to-r from-rose-50 via-amber-50/50 to-rose-50 border border-burgundy-200 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div className="flex items-start sm:items-center gap-3.5">
-              <div className="w-10 h-10 rounded-xl bg-rose-100 border border-burgundy-200 text-burgundy-800 font-bold flex items-center justify-center shrink-0 text-base shadow-xs">
+          <div className="p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-[#fff9f5] via-[#fef4ea] to-[#fff1f2] border-2 border-burgundy-300 shadow-md flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div className="flex items-start sm:items-center gap-5">
+              <div className="w-14 h-14 rounded-2xl bg-burgundy-100 border border-burgundy-300 text-burgundy-800 font-bold flex items-center justify-center shrink-0 text-2xl shadow-xs">
                 🔒
               </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <h3 className="text-sm font-extrabold text-slate-900">Free Member Preview Mode</h3>
-                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase bg-rose-100 text-burgundy-800 border border-burgundy-200">
+              <div className="space-y-1.5">
+                <div className="flex flex-wrap items-center gap-3">
+                  <h3 className="text-xl sm:text-2xl font-serif font-extrabold text-charcoal-900">
+                    Free Member Preview Mode
+                  </h3>
+                  <span className="px-3.5 py-1 rounded-full text-xs sm:text-sm font-black uppercase bg-burgundy-700 text-white shadow-xs tracking-wider">
                     Active Plan Needed
                   </span>
                 </div>
-                <p className="text-xs text-slate-600 mt-0.5 leading-relaxed">
-                  You are viewing candidate summaries. An active subscription plan is required to express matrimonial interest and unlock full verified profiles (pastoral testimony, family background, and verified contact reveals).
+                <p className="text-sm sm:text-base text-charcoal-800 leading-relaxed font-medium max-w-3xl">
+                  You are viewing candidate summaries. <strong className="text-burgundy-900 font-bold">An active subscription plan is required</strong> to express matrimonial interest and unlock full verified profiles (pastoral testimony, family background, and verified contact reveals).
                 </p>
               </div>
             </div>
             <Link
               href="/subscriptions"
-              className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-burgundy-700 to-burgundy-800 hover:from-burgundy-600 hover:to-burgundy-700 text-white font-extrabold text-xs text-center shadow-md shadow-burgundy-950/20 transition-all shrink-0 flex items-center justify-center gap-1.5"
+              className="px-6 py-3.5 sm:px-8 sm:py-4 rounded-2xl bg-gradient-to-r from-burgundy-700 to-burgundy-800 hover:from-burgundy-600 hover:to-burgundy-700 text-white font-extrabold text-sm sm:text-base text-center shadow-lg shadow-burgundy-950/20 transition-all shrink-0 flex items-center justify-center gap-2 hover:scale-[1.02]"
             >
-              <span>Explore Subscription Plans</span>
-              <span>→</span>
+              <span>View Subscription Plans &amp; Activate</span>
+              <span className="text-lg leading-none">→</span>
             </Link>
           </div>
         )}
@@ -446,24 +458,27 @@ export default function DiscoverPage() {
           </div>
         )}
 
-        {/* Free Text Search Bar */}
-        <form onSubmit={handleSearchSubmit} className="flex flex-col sm:flex-row gap-3">
-          <div className="relative flex-1">
+        {/* Compact Search Bar */}
+        <div className="flex items-center justify-start">
+          <form onSubmit={handleSearchSubmit} className="relative w-full max-w-md">
             <input
               type="text"
-              placeholder="Search candidate name, church, occupation, education, or district..."
+              placeholder="Search candidate name, church or city..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full text-xs font-medium rounded-2xl border border-[#ece2d1] p-4 bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:border-burgundy-600 shadow-xs"
+              className="w-full text-xs font-medium rounded-xl border border-[#ded0ba] pl-10 pr-24 py-3 bg-white text-charcoal-900 placeholder:text-charcoal-400 focus:outline-none focus:border-burgundy-600 focus:ring-2 focus:ring-burgundy-600/10 shadow-xs transition-all"
             />
-          </div>
-          <button
-            type="submit"
-            className="px-8 py-4 rounded-2xl bg-gradient-to-r from-burgundy-700 to-burgundy-800 hover:from-burgundy-600 hover:to-burgundy-700 text-white font-extrabold text-xs shadow-md shadow-burgundy-950/20 transition-all"
-          >
-            Search Candidates
-          </button>
-        </form>
+            <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-charcoal-400 text-sm">
+              🔍
+            </span>
+            <button
+              type="submit"
+              className="absolute right-1.5 top-1/2 -translate-y-1/2 px-4 py-1.5 rounded-lg bg-gradient-to-r from-burgundy-700 to-burgundy-800 hover:from-burgundy-600 hover:to-burgundy-700 text-white font-extrabold text-xs shadow-xs transition-all"
+            >
+              Search
+            </button>
+          </form>
+        </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Left Filter Sidebar */}
@@ -490,28 +505,27 @@ export default function DiscoverPage() {
                 <select
                   value={gender}
                   onChange={(e) => setGender(e.target.value)}
-                  className="w-full text-xs font-medium rounded-xl border border-[#ded0ba] p-3 bg-white text-slate-900 focus:outline-none focus:border-burgundy-600 shadow-xs"
+                  disabled={!!myGender}
+                  className={`w-full text-xs font-medium rounded-xl border border-[#ded0ba] p-3 bg-white text-slate-900 focus:outline-none focus:border-burgundy-600 shadow-xs ${
+                    myGender ? 'cursor-not-allowed bg-[#faf6ee]' : ''
+                  }`}
                 >
                   {myGender === 'FEMALE' ? (
-                    <>
-                      <option value="MALE">Grooms / Male (Recommended for you)</option>
-                      <option value="ALL">All Profiles (Bride &amp; Groom)</option>
-                      <option value="FEMALE">Brides / Female</option>
-                    </>
+                    <option value="MALE">Grooms / Male (Strict Matrimonial Match)</option>
                   ) : myGender === 'MALE' ? (
-                    <>
-                      <option value="FEMALE">Brides / Female (Recommended for you)</option>
-                      <option value="ALL">All Profiles (Bride &amp; Groom)</option>
-                      <option value="MALE">Grooms / Male</option>
-                    </>
+                    <option value="FEMALE">Brides / Female (Strict Matrimonial Match)</option>
                   ) : (
                     <>
-                      <option value="ALL">All Profiles (Bride &amp; Groom)</option>
-                      <option value="FEMALE">Female (Bride)</option>
-                      <option value="MALE">Male (Groom)</option>
+                      <option value="FEMALE">Brides (Female)</option>
+                      <option value="MALE">Grooms (Male)</option>
                     </>
                   )}
                 </select>
+                {myGender && (
+                  <p className="text-[10px] text-charcoal-500 mt-1 font-medium">
+                    Strict matrimonial matching: showing {myGender === 'FEMALE' ? 'Grooms' : 'Brides'} only.
+                  </p>
+                )}
               </div>
 
               {/* Denomination */}
@@ -597,56 +611,40 @@ export default function DiscoverPage() {
                 </span>
                 {/* Quick Gender Toggle Tabs */}
                 <div className="flex items-center gap-1 bg-[#faf6ee] p-1 rounded-xl border border-[#ece2d1] text-[11px]">
-                  {myGender && (
-                    <button
-                      type="button"
-                      onClick={() => setGender(myGender === 'FEMALE' ? 'MALE' : 'FEMALE')}
-                      className={`px-2.5 py-1 rounded-lg font-bold transition-all ${
-                        (myGender === 'FEMALE' && gender === 'MALE') || (myGender === 'MALE' && gender === 'FEMALE')
-                          ? 'bg-burgundy-700 text-white shadow-xs'
-                          : 'text-slate-600 hover:text-burgundy-800'
-                      }`}
-                    >
-                      ✨ Recommended ({myGender === 'FEMALE' ? 'Grooms' : 'Brides'})
-                    </button>
+                  {myGender === 'FEMALE' ? (
+                    <span className="px-3 py-1.5 rounded-lg font-extrabold bg-burgundy-700 text-white shadow-xs">
+                      Grooms
+                    </span>
+                  ) : myGender === 'MALE' ? (
+                    <span className="px-3 py-1.5 rounded-lg font-extrabold bg-burgundy-700 text-white shadow-xs">
+                      Brides
+                    </span>
+                  ) : (
+                    <>
+                      <button
+                        type="button"
+                        onClick={() => setGender('FEMALE')}
+                        className={`px-3 py-1.5 rounded-lg font-bold transition-all ${
+                          gender === 'FEMALE' || !gender
+                            ? 'bg-burgundy-700 text-white shadow-xs'
+                            : 'text-charcoal-600 hover:text-burgundy-800'
+                        }`}
+                      >
+                        Brides
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setGender('MALE')}
+                        className={`px-3 py-1.5 rounded-lg font-bold transition-all ${
+                          gender === 'MALE'
+                            ? 'bg-burgundy-700 text-white shadow-xs'
+                            : 'text-charcoal-600 hover:text-burgundy-800'
+                        }`}
+                      >
+                        Grooms
+                      </button>
+                    </>
                   )}
-                  <button
-                    type="button"
-                    onClick={() => setGender('FEMALE')}
-                    className={`px-2.5 py-1 rounded-lg font-bold transition-all ${
-                      gender === 'FEMALE' && (!myGender || myGender !== 'MALE')
-                        ? 'bg-burgundy-700 text-white shadow-xs'
-                        : gender === 'FEMALE' && myGender === 'MALE'
-                        ? 'bg-burgundy-700 text-white shadow-xs'
-                        : 'text-slate-600 hover:text-burgundy-800'
-                    }`}
-                  >
-                    Brides
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setGender('MALE')}
-                    className={`px-2.5 py-1 rounded-lg font-bold transition-all ${
-                      gender === 'MALE' && (!myGender || myGender !== 'FEMALE')
-                        ? 'bg-burgundy-700 text-white shadow-xs'
-                        : gender === 'MALE' && myGender === 'FEMALE'
-                        ? 'bg-burgundy-700 text-white shadow-xs'
-                        : 'text-slate-600 hover:text-burgundy-800'
-                    }`}
-                  >
-                    Grooms
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setGender('ALL')}
-                    className={`px-2.5 py-1 rounded-lg font-bold transition-all ${
-                      gender === 'ALL' || (!myGender && !gender)
-                        ? 'bg-white text-slate-900 shadow-xs border border-[#ded0ba]'
-                        : 'text-slate-600 hover:text-burgundy-800'
-                    }`}
-                  >
-                    All
-                  </button>
                 </div>
               </div>
 
