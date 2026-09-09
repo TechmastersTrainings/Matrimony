@@ -9,7 +9,7 @@ import { MatrimonyInvitationBanner } from '../components/homepage/MatrimonyInvit
 
 export default function HomePage() {
   return (
-    <div className="flex flex-col min-h-screen bg-slate-950 font-sans">
+    <div className="flex flex-col min-h-screen bg-[#fdfbf7] font-sans">
       {/* 1. Cinematic Sunset Matrimony Hero Section featuring uploaded bride & groom image */}
       <MatrimonyHeroSection />
 

@@ -30,8 +30,8 @@ export function Logo({
         <div className="absolute inset-0 rounded-2xl bg-gradient-to-tr from-amber-500/40 via-amber-400/20 to-amber-600/40 blur-md transition-all group-hover:blur-lg" />
         
         {/* Badge Container */}
-        <div className="relative w-full h-full rounded-2xl bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900 p-0.5 border border-amber-400/50 shadow-xl shadow-amber-950/40 group-hover:border-amber-300 group-hover:scale-105 transition-all duration-300">
-          <div className="w-full h-full rounded-[14px] bg-gradient-to-tr from-amber-600 via-amber-500 to-amber-400 flex items-center justify-center relative overflow-hidden">
+        <div className="relative w-full h-full rounded-2xl bg-gradient-to-br from-burgundy-900 via-burgundy-950 to-burgundy-900 p-0.5 border border-gold-400/60 shadow-md group-hover:border-gold-300 group-hover:scale-105 transition-all duration-300">
+          <div className="w-full h-full rounded-[14px] bg-gradient-to-tr from-gold-600 via-gold-500 to-gold-400 flex items-center justify-center relative overflow-hidden">
             {/* Shimmer overlay */}
             <div className="absolute -inset-x-full inset-y-0 bg-gradient-to-r from-transparent via-white/35 to-transparent skew-x-12 group-hover:animate-shimmer" />
 
@@ -40,7 +40,7 @@ export function Logo({
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
-              className="w-3/5 h-3/5 text-slate-950 drop-shadow-md"
+              className="w-3/5 h-3/5 text-burgundy-950 drop-shadow-xs"
               strokeWidth="2.4"
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -59,22 +59,22 @@ export function Logo({
       {/* Brand Text */}
       <div className="flex flex-col">
         <div className="flex items-center leading-none">
-          <span className={`font-brand font-extrabold tracking-tight ${lightText ? 'text-white' : 'text-slate-900'} ${sizeClasses.text}`}>
-            Christian<span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-amber-400 to-amber-500 drop-shadow-sm">Matrimony</span>
+          <span className={`font-serif font-extrabold tracking-tight ${lightText ? 'text-white' : 'text-charcoal-900'} ${sizeClasses.text}`}>
+            Christian<span className="text-burgundy-700">Matrimony</span>
           </span>
         </div>
         
         <div className="flex flex-wrap items-center gap-2 mt-1">
-          <span className={`font-heading font-black tracking-[0.2em] uppercase text-amber-400 ${sizeClasses.sub}`}>
+          <span className={`font-sans font-black tracking-[0.2em] uppercase text-gold-700 ${sizeClasses.sub}`}>
             BIDAR • KARNATAKA
           </span>
 
           {showTechmastersTag && (
             <>
-              <span className="text-slate-600 font-bold hidden sm:inline">•</span>
-              <span className={`font-heading font-semibold tracking-wider text-slate-300 flex items-center gap-1.5 bg-slate-900/90 border border-amber-500/30 px-2 py-0.5 rounded-full ${sizeClasses.tag}`}>
-                <span className="inline-block w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
-                Techmasters Innovations Product
+              <span className="text-[#c7b9a2] font-bold hidden sm:inline">•</span>
+              <span className={`font-sans font-semibold tracking-wider text-charcoal-800 flex items-center gap-1.5 bg-[#faf6ee] border border-[#ded0ba] px-2 py-0.5 rounded-full ${sizeClasses.tag}`}>
+                <span className="inline-block w-1.5 h-1.5 rounded-full bg-burgundy-600 animate-pulse" />
+                Techmasters Innovations
               </span>
             </>
           )}

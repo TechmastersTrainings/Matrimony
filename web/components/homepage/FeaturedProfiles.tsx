@@ -27,18 +27,18 @@ export function FeaturedProfiles() {
   }, []);
 
   return (
-    <section className="py-20 bg-slate-950 border-t border-slate-800 text-white">
+    <section className="py-20 bg-[#fdfbf7] border-t border-[#ece2d1] text-[#1e1b18]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-14">
           <div>
-            <span className="text-xs font-bold uppercase tracking-widest text-amber-400">
+            <span className="text-xs font-extrabold uppercase tracking-widest text-burgundy-800 block mb-1">
               Verified User Profiles
             </span>
-            <h2 className="font-brand text-3xl sm:text-4xl font-bold text-white mt-2 tracking-tight">
+            <h2 className="font-brand text-3xl sm:text-4xl font-bold text-slate-900 mt-1 tracking-tight">
               Meet People Who Share Your Values
             </h2>
-            <p className="text-sm text-slate-400 mt-2">
+            <p className="text-sm text-slate-600 mt-2">
               Browse genuine, registered Christian brides and grooms with spiritual and family alignment.
             </p>
           </div>
@@ -46,7 +46,7 @@ export function FeaturedProfiles() {
           <div className="mt-6 md:mt-0">
             <Link
               href="/discover"
-              className="inline-flex items-center gap-2 text-xs font-bold text-slate-200 hover:text-amber-400 group bg-slate-900 border border-slate-800 px-5 py-2.5 rounded-full hover:bg-slate-800 transition-all"
+              className="inline-flex items-center gap-2 text-xs font-bold text-burgundy-900 hover:text-burgundy-700 group bg-white border border-[#ded0ba] px-5 py-2.5 rounded-full hover:bg-rose-50 transition-all shadow-xs"
             >
               <span>Search All Profiles</span>
               <span className="group-hover:translate-x-1 transition-transform">→</span>
@@ -56,7 +56,7 @@ export function FeaturedProfiles() {
 
         {/* Profile Cards Grid */}
         {loading ? (
-          <div className="py-12 text-center text-slate-500 text-sm">
+          <div className="py-12 text-center text-slate-400 text-sm font-medium">
             Loading real candidate profiles...
           </div>
         ) : profiles.length > 0 ? (
@@ -71,23 +71,23 @@ export function FeaturedProfiles() {
               return (
                 <div
                   key={p.id}
-                  className="bg-slate-900/90 backdrop-blur-xl border border-slate-800 hover:border-amber-500/50 rounded-3xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300 flex flex-col justify-between group hover:-translate-y-1.5"
+                  className="bg-white border border-[#ece2d1] hover:border-burgundy-300 rounded-3xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group hover:-translate-y-1"
                 >
                   {/* Top Badges Row (Dedicated Non-Overlapping Header) */}
                   <div className="flex items-center justify-between gap-2 pb-1">
-                    <span className="bg-amber-500/10 text-amber-300 border border-amber-500/30 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider truncate max-w-[130px]">
+                    <span className="bg-rose-50 text-burgundy-800 border border-burgundy-200 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider truncate max-w-[130px]">
                       {p.denomination || 'Christian'}
                     </span>
 
-                    <span className="bg-emerald-950/80 text-emerald-300 border border-emerald-800/80 text-[10px] font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1 shrink-0">
+                    <span className="bg-emerald-50 text-emerald-800 border border-emerald-300 text-[10px] font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1 shrink-0">
                       <span>✓</span>
                       <span>Verified</span>
                     </span>
                   </div>
 
-                  {/* Centered Circular Profile Photo (Circle View) */}
+                  {/* Centered Circular Profile Photo (Circle View with Gold Ring) */}
                   <div className="my-5 flex justify-center">
-                    <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full ring-4 ring-amber-400/20 group-hover:ring-amber-400/60 shadow-xl overflow-hidden bg-slate-950 transition-all duration-300 relative flex items-center justify-center shrink-0">
+                    <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full ring-4 ring-gold-400/40 group-hover:ring-gold-500 shadow-md overflow-hidden bg-rose-50/40 transition-all duration-300 relative flex items-center justify-center shrink-0">
                       {photoUrl ? (
                         <img
                           src={photoUrl}
@@ -98,9 +98,9 @@ export function FeaturedProfiles() {
                           }}
                         />
                       ) : (
-                        <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-b from-slate-800 to-slate-950 text-slate-400 p-2">
+                        <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-b from-rose-50 to-[#faf6ee] text-slate-500 p-2">
                           <span className="text-3xl">👤</span>
-                          <span className="text-[10px] font-semibold text-slate-400 mt-1 text-center leading-tight">
+                          <span className="text-[10px] font-semibold text-slate-600 mt-1 text-center leading-tight">
                             Photo<br />Confidential
                           </span>
                         </div>
@@ -108,22 +108,22 @@ export function FeaturedProfiles() {
                     </div>
                   </div>
 
-                  {/* Candidate Details (Never Overlaps, Natural Vertical Hierarchy) */}
+                  {/* Candidate Details */}
                   <div className="text-center space-y-1.5 flex-1 flex flex-col justify-center">
-                    <h3 className="font-brand text-lg font-bold text-white group-hover:text-amber-300 transition-colors truncate">
+                    <h3 className="font-brand text-lg font-bold text-slate-900 group-hover:text-burgundy-800 transition-colors truncate">
                       {p.first_name} {p.last_name?.charAt(0) ? `${p.last_name.charAt(0)}.` : ''}
                     </h3>
 
-                    <p className="text-xs text-amber-400/90 font-medium flex items-center justify-center gap-1">
+                    <p className="text-xs text-gold-800 font-semibold flex items-center justify-center gap-1">
                       <span>📍</span>
                       <span className="truncate">{p.district || 'Bidar'}, {p.state || 'Karnataka'}</span>
                     </p>
 
-                    <div className="pt-3 border-t border-slate-800/80 space-y-1 text-xs">
-                      <p className="font-medium text-slate-200 truncate" title={p.highest_education || 'Christian Graduate'}>
+                    <div className="pt-3 border-t border-[#ece2d1] space-y-1 text-xs">
+                      <p className="font-medium text-slate-800 truncate" title={p.highest_education || 'Christian Graduate'}>
                         🎓 {p.highest_education || 'Christian Graduate'}
                       </p>
-                      <p className="text-[11px] text-slate-400 truncate" title={p.occupation_title || p.church_name || 'Verified Member'}>
+                      <p className="text-[11px] text-slate-500 truncate" title={p.occupation_title || p.church_name || 'Verified Member'}>
                         💼 {p.occupation_title || p.church_name || 'Verified Member'}
                       </p>
                     </div>
@@ -133,7 +133,7 @@ export function FeaturedProfiles() {
                   <div className="mt-5 pt-2">
                     <Link
                       href={`/profile/${p.id}`}
-                      className="w-full py-2.5 px-4 rounded-xl bg-slate-800/90 hover:bg-gradient-to-r hover:from-amber-500 hover:to-amber-600 text-slate-200 hover:text-slate-950 border border-slate-700 hover:border-amber-400 text-xs font-bold transition-all duration-200 flex items-center justify-center gap-1.5 shadow-md group-hover:shadow-amber-950/40"
+                      className="w-full py-2.5 px-4 rounded-xl bg-rose-50/80 hover:bg-gradient-to-r hover:from-burgundy-700 hover:to-burgundy-800 text-burgundy-900 hover:text-white border border-burgundy-200 hover:border-burgundy-700 text-xs font-bold transition-all duration-200 flex items-center justify-center gap-1.5 shadow-xs"
                     >
                       <span>View Profile</span>
                       <span className="transition-transform group-hover:translate-x-0.5">→</span>
@@ -144,17 +144,17 @@ export function FeaturedProfiles() {
             })}
           </div>
         ) : (
-          <div className="py-12 px-6 rounded-3xl bg-slate-900/80 border border-slate-800 text-center max-w-2xl mx-auto space-y-4">
-            <div className="w-12 h-12 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center mx-auto text-xl font-bold">
+          <div className="py-12 px-6 rounded-3xl bg-white border border-[#ece2d1] text-center max-w-2xl mx-auto space-y-4 shadow-sm">
+            <div className="w-12 h-12 rounded-2xl bg-rose-50 text-burgundy-800 border border-rose-200 flex items-center justify-center mx-auto text-xl font-bold shadow-xs">
               ✝️
             </div>
-            <h3 className="font-brand text-xl font-bold text-white">No Profiles Registered Yet</h3>
-            <p className="text-xs text-slate-400 leading-relaxed">
+            <h3 className="font-brand text-xl font-bold text-slate-900">No Profiles Registered Yet</h3>
+            <p className="text-xs text-slate-600 leading-relaxed">
               We maintain a 100% genuine database created solely by real users. Be among the first Christian candidates in Bidar and surrounding regions to create your verified profile.
             </p>
             <Link
               href="/register"
-              className="inline-block bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 px-6 py-2.5 rounded-xl font-extrabold text-xs shadow-lg"
+              className="inline-block bg-gradient-to-r from-burgundy-700 to-burgundy-800 hover:from-burgundy-600 hover:to-burgundy-700 text-white px-6 py-2.5 rounded-xl font-extrabold text-xs shadow-md shadow-burgundy-950/20 transition-all transform hover:-translate-y-0.5"
             >
               Register Your Profile Free
             </Link>

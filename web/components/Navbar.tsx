@@ -46,14 +46,14 @@ export function Navbar() {
       <div
         className={`w-full transition-all duration-300 ${
           scrolled
-            ? 'bg-slate-950/95 backdrop-blur-md shadow-xl border-b border-slate-800 py-3'
-            : 'bg-slate-950/90 backdrop-blur-md border-b border-slate-800/80 py-3.5 text-white'
+            ? 'bg-[#fdfbf7]/95 backdrop-blur-md shadow-md border-b border-[#ece2d1] py-3'
+            : 'bg-[#fdfbf7]/90 backdrop-blur-md border-b border-[#ece2d1]/80 py-3.5'
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
           {/* Brand Logo & Name */}
           <Link href="/" className="group">
-            <Logo size="md" showTechmastersTag={true} />
+            <Logo size="md" showTechmastersTag={true} lightText={false} />
           </Link>
 
           {/* Center Navigation Links */}
@@ -61,7 +61,7 @@ export function Navbar() {
             <Link
               href="/"
               className={`font-bold text-xs tracking-wide transition-colors ${
-                pathname === '/' ? 'text-amber-400' : 'text-slate-300 hover:text-white'
+                pathname === '/' ? 'text-burgundy-800 font-extrabold border-b-2 border-burgundy-700 pb-0.5' : 'text-slate-700 hover:text-burgundy-700'
               }`}
             >
               Home
@@ -70,7 +70,7 @@ export function Navbar() {
             <Link
               href="/discover"
               className={`font-bold text-xs tracking-wide transition-colors ${
-                pathname === '/discover' ? 'text-amber-400' : 'text-slate-300 hover:text-white'
+                pathname === '/discover' ? 'text-burgundy-800 font-extrabold border-b-2 border-burgundy-700 pb-0.5' : 'text-slate-700 hover:text-burgundy-700'
               }`}
             >
               Search Profiles
@@ -79,7 +79,7 @@ export function Navbar() {
             <Link
               href="/subscriptions"
               className={`font-bold text-xs tracking-wide transition-colors ${
-                pathname === '/subscriptions' ? 'text-amber-400' : 'text-slate-300 hover:text-white'
+                pathname === '/subscriptions' ? 'text-burgundy-800 font-extrabold border-b-2 border-burgundy-700 pb-0.5' : 'text-slate-700 hover:text-burgundy-700'
               }`}
             >
               Subscription Plans
@@ -89,7 +89,7 @@ export function Navbar() {
               <Link
                 href="/interests"
                 className={`font-bold text-xs tracking-wide transition-colors ${
-                  pathname === '/interests' ? 'text-amber-400' : 'text-slate-300 hover:text-white'
+                  pathname === '/interests' ? 'text-burgundy-800 font-extrabold border-b-2 border-burgundy-700 pb-0.5' : 'text-slate-700 hover:text-burgundy-700'
                 }`}
               >
                 Interests &amp; Matches
@@ -105,15 +105,15 @@ export function Navbar() {
                   href="/dashboard"
                   className={`text-xs font-extrabold px-4 py-2 rounded-xl transition-all border ${
                     pathname === '/dashboard'
-                      ? 'bg-amber-500 text-slate-950 border-amber-400 shadow-md'
-                      : 'bg-slate-900 border-slate-800 text-amber-400 hover:border-amber-400'
+                      ? 'bg-burgundy-700 text-white border-burgundy-800 shadow-md'
+                      : 'bg-white border-[#ece2d1] text-burgundy-800 hover:border-burgundy-600 shadow-xs'
                   }`}
                 >
                   My Dashboard
                 </Link>
                 <button
                   onClick={handleLogout}
-                  className="text-xs font-bold text-slate-400 hover:text-red-400 px-3 py-2 transition-colors"
+                  className="text-xs font-bold text-slate-500 hover:text-rose-700 px-3 py-2 transition-colors"
                 >
                   Logout
                 </button>
@@ -122,13 +122,13 @@ export function Navbar() {
               <>
                 <Link
                   href="/login"
-                  className="font-bold text-xs text-slate-300 hover:text-white px-3 py-2 transition-colors"
+                  className="font-bold text-xs text-slate-700 hover:text-burgundy-800 px-3 py-2 transition-colors"
                 >
                   Login
                 </Link>
                 <Link
                   href="/register"
-                  className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 px-5 py-2.5 rounded-xl font-extrabold text-xs tracking-wider shadow-lg shadow-amber-950/40 transition-all transform hover:-translate-y-0.5"
+                  className="bg-gradient-to-r from-burgundy-700 to-burgundy-800 hover:from-burgundy-600 hover:to-burgundy-700 text-white px-5 py-2.5 rounded-xl font-extrabold text-xs tracking-wider shadow-md shadow-burgundy-950/20 transition-all transform hover:-translate-y-0.5 border border-burgundy-600/30"
                 >
                   Register Free
                 </Link>
@@ -141,7 +141,7 @@ export function Navbar() {
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-label="Toggle navigation menu"
-              className="p-2 rounded-xl text-white hover:text-amber-400"
+              className="p-2 rounded-xl text-slate-800 hover:text-burgundy-700"
             >
               {mobileMenuOpen ? (
                 <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -159,40 +159,40 @@ export function Navbar() {
 
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="lg:hidden bg-slate-900 border-b border-slate-800 px-6 py-6 space-y-4 shadow-2xl text-white">
+        <div className="lg:hidden bg-[#fdfbf7] border-b border-[#ece2d1] px-6 py-6 space-y-4 shadow-xl text-slate-800">
           <nav className="flex flex-col space-y-3 text-sm font-bold">
-            <Link href="/" onClick={() => setMobileMenuOpen(false)} className="py-1 hover:text-amber-400">
+            <Link href="/" onClick={() => setMobileMenuOpen(false)} className="py-1 text-slate-800 hover:text-burgundy-700">
               Home
             </Link>
-            <Link href="/discover" onClick={() => setMobileMenuOpen(false)} className="py-1 hover:text-amber-400">
+            <Link href="/discover" onClick={() => setMobileMenuOpen(false)} className="py-1 text-slate-800 hover:text-burgundy-700">
               Search Profiles
             </Link>
-            <Link href="/subscriptions" onClick={() => setMobileMenuOpen(false)} className="py-1 hover:text-amber-400">
+            <Link href="/subscriptions" onClick={() => setMobileMenuOpen(false)} className="py-1 text-slate-800 hover:text-burgundy-700">
               Subscription Plans
             </Link>
             {isAuthenticated && (
               <>
-                <Link href="/dashboard" onClick={() => setMobileMenuOpen(false)} className="py-1 hover:text-amber-400">
+                <Link href="/dashboard" onClick={() => setMobileMenuOpen(false)} className="py-1 text-slate-800 hover:text-burgundy-700">
                   My Dashboard
                 </Link>
-                <Link href="/interests" onClick={() => setMobileMenuOpen(false)} className="py-1 hover:text-amber-400">
+                <Link href="/interests" onClick={() => setMobileMenuOpen(false)} className="py-1 text-slate-800 hover:text-burgundy-700">
                   Interests &amp; Matches
                 </Link>
-                <Link href="/profile/photos" onClick={() => setMobileMenuOpen(false)} className="py-1 hover:text-amber-400">
+                <Link href="/profile/photos" onClick={() => setMobileMenuOpen(false)} className="py-1 text-slate-800 hover:text-burgundy-700">
                   Manage Photos (5+)
                 </Link>
               </>
             )}
           </nav>
 
-          <div className="pt-4 border-t border-slate-800 flex flex-col gap-2.5">
+          <div className="pt-4 border-t border-[#ece2d1] flex flex-col gap-2.5">
             {isAuthenticated ? (
               <button
                 onClick={() => {
                   handleLogout();
                   setMobileMenuOpen(false);
                 }}
-                className="w-full text-center text-xs font-bold py-2.5 rounded-xl text-red-400 bg-red-950/40"
+                className="w-full text-center text-xs font-bold py-2.5 rounded-xl text-rose-700 bg-rose-50 border border-rose-200"
               >
                 Logout
               </button>
@@ -201,14 +201,14 @@ export function Navbar() {
                 <Link
                   href="/login"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="w-full text-center text-xs font-bold py-2.5 rounded-xl border border-slate-700 text-slate-200"
+                  className="w-full text-center text-xs font-bold py-2.5 rounded-xl border border-[#ded0ba] text-slate-800 bg-white"
                 >
                   Login
                 </Link>
                 <Link
                   href="/register"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="w-full text-center text-xs font-bold py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 shadow-md"
+                  className="w-full text-center text-xs font-bold py-2.5 rounded-xl bg-gradient-to-r from-burgundy-700 to-burgundy-800 text-white shadow-md"
                 >
                   Register Free
                 </Link>

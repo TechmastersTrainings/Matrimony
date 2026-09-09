@@ -35,22 +35,18 @@ export function MatrimonyCovenantSection() {
   ];
 
   return (
-    <section className="py-20 bg-slate-950 text-white relative overflow-hidden border-t border-slate-900">
-      {/* Subtle Ambient Glow */}
-      <div className="absolute top-1/2 left-0 w-96 h-96 bg-amber-600/5 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 right-0 w-96 h-96 bg-blue-600/5 rounded-full blur-3xl pointer-events-none" />
-
+    <section className="py-20 bg-gradient-to-b from-[#fdfbf7] via-[#faf6ee] to-[#fdfbf7] text-[#1e1b18] relative overflow-hidden border-t border-[#ece2d1]">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-950/40 border border-amber-800/60 text-amber-300 text-xs font-semibold uppercase tracking-wider">
-            <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-rose-50 border border-burgundy-200 text-burgundy-800 text-xs font-semibold uppercase tracking-wider shadow-xs">
+            <span className="w-1.5 h-1.5 rounded-full bg-burgundy-700" />
             <span>Sacred Pillars of Holy Matrimony</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight font-brand">
             Walking Together in Grace, Devotion &amp; Faith
           </h2>
-          <p className="text-slate-400 text-sm sm:text-base leading-relaxed">
+          <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
             Christian marriage is more than a ceremony; it is a sacred covenant instituted by God to reflect His everlasting love.
           </p>
         </div>
@@ -60,22 +56,20 @@ export function MatrimonyCovenantSection() {
           {pillars.map((pillar, idx) => (
             <div
               key={idx}
-              className="p-8 rounded-3xl bg-gradient-to-b from-slate-900/90 to-slate-900/40 border border-slate-800 hover:border-amber-500/40 transition-all duration-300 shadow-xl group"
+              className="p-8 rounded-3xl bg-white border border-[#ece2d1] hover:border-burgundy-300 transition-all duration-300 shadow-sm hover:shadow-md group"
             >
               <div className="flex items-center justify-between mb-4">
-                <div className="w-10 h-10 rounded-xl bg-amber-950/50 border border-amber-800/60 flex items-center justify-center font-mono text-sm font-bold text-amber-400 group-hover:scale-105 transition-transform">
+                <div className="w-10 h-10 rounded-xl bg-rose-50 border border-rose-200 flex items-center justify-center font-mono text-sm font-bold text-burgundy-800 group-hover:scale-105 transition-transform">
                   {pillar.num}
                 </div>
-                <span className="text-xs font-serif italic text-amber-400/80 bg-amber-950/30 border border-amber-900/40 px-3 py-1 rounded-full">
+                <span className="text-xs font-serif italic text-gold-800 bg-gold-50 border border-gold-200 px-3 py-1 rounded-full font-bold">
                   {pillar.verse}
                 </span>
               </div>
-
-              <h3 className="text-lg sm:text-xl font-bold text-white mb-2 group-hover:text-amber-300 transition-colors">
+              <h3 className="text-lg sm:text-xl font-bold text-slate-900 mb-2 group-hover:text-burgundy-800 transition-colors font-brand">
                 {pillar.title}
               </h3>
-
-              <p className="text-xs sm:text-sm text-slate-300/90 leading-relaxed">
+              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
                 {pillar.description}
               </p>
             </div>

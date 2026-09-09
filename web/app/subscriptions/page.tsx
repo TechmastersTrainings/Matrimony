@@ -73,7 +73,7 @@ export default function SubscriptionsPage() {
             contact: '9999999999',
           },
           theme: {
-            color: '#f59e0b',
+            color: '#8c1936',
           },
           modal: {
             ondismiss: function () {
@@ -107,7 +107,7 @@ export default function SubscriptionsPage() {
   };
 
   return (
-    <div className="relative min-h-[calc(100vh-80px)] py-12 bg-slate-950 text-white font-sans overflow-hidden">
+    <div className="relative min-h-[calc(100vh-80px)] py-12 bg-[#fdfbf7] text-charcoal-900 font-sans overflow-hidden">
       {/* Razorpay Standard Web Checkout Script */}
       <Script
         src="https://checkout.razorpay.com/v1/checkout.js"
@@ -115,27 +115,27 @@ export default function SubscriptionsPage() {
       />
 
       {/* Ambient Background Glows */}
-      <div className="absolute top-10 left-1/4 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-10 right-1/4 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-10 left-1/4 w-96 h-96 bg-gold-400/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-10 right-1/4 w-96 h-96 bg-burgundy-600/5 rounded-full blur-3xl pointer-events-none" />
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-10">
         {/* Header */}
         <div className="text-center max-w-2xl mx-auto space-y-2">
-          <span className="text-xs font-extrabold uppercase tracking-wider text-amber-400 block">
-            Transparent Pricing
+          <span className="text-xs font-bold uppercase tracking-widest text-burgundy-700 block">
+            Transparent Sacred Membership
           </span>
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+          <h1 className="text-3xl sm:text-4xl font-serif font-extrabold text-charcoal-900 tracking-tight">
             Matrimonial Membership Plans
           </h1>
-          <p className="text-xs sm:text-sm text-slate-400 mt-2 leading-relaxed">
-            Choose a plan that fits your search requirements. All plans include church-verified profiles and confidential contact reveals.
+          <p className="text-xs sm:text-sm text-charcoal-600 mt-2 leading-relaxed">
+            Choose a blessed membership tier that suits your family’s search. All plans include verified church backgrounds and protected contact reveals.
           </p>
         </div>
 
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="bg-slate-900 border border-slate-800 rounded-3xl h-[520px] animate-pulse" />
+              <div key={i} className="bg-white border border-[#ece2d1] rounded-3xl h-[520px] animate-pulse" />
             ))}
           </div>
         ) : (
@@ -145,40 +145,40 @@ export default function SubscriptionsPage() {
               return (
                 <div
                   key={p.id}
-                  className={`bg-slate-900/90 backdrop-blur-xl border rounded-3xl p-7 shadow-2xl transition-all duration-300 flex flex-col justify-between relative group ${
+                  className={`border rounded-3xl p-7 shadow-sm transition-all duration-300 flex flex-col justify-between relative group ${
                     isPopular
-                      ? 'border-amber-500 ring-2 ring-amber-500/20 bg-gradient-to-b from-amber-950/20 via-slate-900 to-slate-900'
-                      : 'border-slate-800 hover:border-slate-700'
+                      ? 'border-gold-500 ring-2 ring-gold-400/30 bg-gradient-to-b from-[#faf6ee] to-white shadow-xl hover:-translate-y-1'
+                      : 'border-[#ece2d1] bg-white hover:border-gold-300 hover:shadow-md'
                   }`}
                 >
                   <div>
                     {/* Header */}
                     <div className="flex items-center justify-between mb-4">
-                      <h3 className="text-lg font-extrabold text-white">{p.name}</h3>
+                      <h3 className="text-lg font-serif font-extrabold text-charcoal-900">{p.name}</h3>
                       {isPopular && (
-                        <span className="text-[10px] font-extrabold uppercase bg-amber-500 text-slate-950 px-2.5 py-1 rounded-lg shadow-md">
+                        <span className="text-[10px] font-extrabold uppercase bg-gradient-to-r from-gold-500 to-gold-600 text-charcoal-950 px-2.5 py-1 rounded-lg shadow-xs">
                           Most Popular
                         </span>
                       )}
                     </div>
 
                     {/* Price */}
-                    <div className="mb-6 pb-6 border-b border-slate-800">
+                    <div className="mb-6 pb-6 border-b border-[#ece2d1]">
                       <div className="flex items-baseline gap-1">
-                        <span className="text-3xl sm:text-4xl font-black text-white">
+                        <span className="text-3xl sm:text-4xl font-extrabold text-burgundy-900 font-serif">
                           ₹ {p.price_inr.toLocaleString()}
                         </span>
                       </div>
-                      <span className="text-xs text-amber-400 font-semibold block mt-1">
+                      <span className="text-xs text-gold-800 font-bold block mt-1">
                         Valid for {p.duration_days} days
                       </span>
                     </div>
 
                     {/* Features Bullet List */}
-                    <div className="space-y-3 mb-8 text-xs text-slate-300">
+                    <div className="space-y-3 mb-8 text-xs text-charcoal-700 font-medium">
                       {p.features && p.features.map((f, idx) => (
                         <div key={idx} className="flex items-start gap-2.5">
-                          <span className="text-amber-400 font-bold text-sm leading-none">•</span>
+                          <span className="text-burgundy-600 font-bold text-sm leading-none">•</span>
                           <span className="leading-snug">{f}</span>
                         </div>
                       ))}
@@ -189,10 +189,10 @@ export default function SubscriptionsPage() {
                   <button
                     onClick={() => handleSubscribe(p)}
                     disabled={processing}
-                    className={`w-full py-3.5 rounded-2xl text-xs font-extrabold transition-all shadow-lg ${
+                    className={`w-full py-3.5 rounded-2xl text-xs font-extrabold transition-all shadow-sm ${
                       isPopular
-                        ? 'bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 shadow-amber-950/40'
-                        : 'bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700'
+                        ? 'bg-gradient-to-r from-burgundy-700 to-burgundy-800 hover:from-burgundy-600 hover:to-burgundy-700 text-white shadow-md'
+                        : 'bg-[#faf6ee] hover:bg-gold-50 text-charcoal-800 border border-[#ded0ba] hover:border-gold-400'
                     }`}
                   >
                     {processing && selectedPlan?.id === p.id ? 'Opening Razorpay Checkout...' : `Choose ${p.name}`}

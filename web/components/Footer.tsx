@@ -50,27 +50,27 @@ export function Footer() {
         <div className="space-y-2.5 py-0.5">
           {/* 1. Denominations (Inline) */}
           <div className="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-3 text-xs">
-            <span className="font-extrabold text-amber-900 uppercase text-[11px] tracking-wider shrink-0 min-w-[130px]">
+            <span className="font-extrabold text-burgundy-900 uppercase text-[11px] tracking-wider shrink-0 min-w-[130px]">
               Denominations:
             </span>
-            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-slate-700 font-medium">
-              <Link href="/discover?denomination=METHODIST" className="hover:text-amber-900 hover:underline transition-colors">
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-charcoal-700 font-medium">
+              <Link href="/discover?denomination=METHODIST" className="hover:text-burgundy-800 hover:underline transition-colors">
                 Methodist Matrimony (MCI)
               </Link>
               <span className="text-[#c7b9a2]">•</span>
-              <Link href="/discover?denomination=CSI" className="hover:text-amber-900 hover:underline transition-colors">
+              <Link href="/discover?denomination=CSI" className="hover:text-burgundy-800 hover:underline transition-colors">
                 CSI Christian Matrimony
               </Link>
               <span className="text-[#c7b9a2]">•</span>
-              <Link href="/discover?denomination=CATHOLIC" className="hover:text-amber-900 hover:underline transition-colors">
+              <Link href="/discover?denomination=CATHOLIC" className="hover:text-burgundy-800 hover:underline transition-colors">
                 Roman Catholic Matrimony
               </Link>
               <span className="text-[#c7b9a2]">•</span>
-              <Link href="/discover?denomination=BAPTIST" className="hover:text-amber-900 hover:underline transition-colors">
+              <Link href="/discover?denomination=BAPTIST" className="hover:text-burgundy-800 hover:underline transition-colors">
                 Baptist Matrimony
               </Link>
               <span className="text-[#c7b9a2]">•</span>
-              <Link href="/discover?denomination=PENTECOSTAL" className="hover:text-amber-900 hover:underline transition-colors">
+              <Link href="/discover?denomination=PENTECOSTAL" className="hover:text-burgundy-800 hover:underline transition-colors">
                 Pentecostal Matrimony
               </Link>
             </div>
@@ -78,27 +78,27 @@ export function Footer() {
 
           {/* 2. Navigation (Inline) */}
           <div className="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-3 text-xs">
-            <span className="font-extrabold text-blue-950 uppercase text-[11px] tracking-wider shrink-0 min-w-[130px]">
+            <span className="font-extrabold text-burgundy-900 uppercase text-[11px] tracking-wider shrink-0 min-w-[130px]">
               Navigation:
             </span>
-            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-slate-700 font-medium">
-              <Link href="/about" className="hover:text-blue-900 hover:underline transition-colors font-bold text-slate-900">
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-charcoal-700 font-medium">
+              <Link href="/about" className="hover:text-burgundy-800 hover:underline transition-colors font-bold text-charcoal-900">
                 About Us
               </Link>
               <span className="text-[#c7b9a2]">•</span>
-              <Link href="/discover" className="hover:text-blue-900 hover:underline transition-colors">
+              <Link href="/discover" className="hover:text-burgundy-800 hover:underline transition-colors">
                 Search Profiles
               </Link>
               <span className="text-[#c7b9a2]">•</span>
-              <Link href="/register" className="hover:text-blue-900 hover:underline transition-colors">
+              <Link href="/register" className="hover:text-burgundy-800 hover:underline transition-colors">
                 Register Free
               </Link>
               <span className="text-[#c7b9a2]">•</span>
-              <Link href="/subscriptions" className="hover:text-blue-900 hover:underline transition-colors">
+              <Link href="/subscriptions" className="hover:text-burgundy-800 hover:underline transition-colors">
                 Membership Plans
               </Link>
               <span className="text-[#c7b9a2]">•</span>
-              <Link href="/verification-status" className="hover:text-blue-900 hover:underline transition-colors">
+              <Link href="/verification-status" className="hover:text-burgundy-800 hover:underline transition-colors">
                 Verification Status
               </Link>
             </div>
@@ -106,23 +106,23 @@ export function Footer() {
 
           {/* 3. Privacy & Support (Inline) */}
           <div className="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-3 text-xs">
-            <span className="font-extrabold text-emerald-950 uppercase text-[11px] tracking-wider shrink-0 min-w-[130px]">
+            <span className="font-extrabold text-burgundy-900 uppercase text-[11px] tracking-wider shrink-0 min-w-[130px]">
               Privacy &amp; Trust:
             </span>
-            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-slate-700 font-medium">
-              <Link href="/subscriptions" className="hover:text-emerald-900 hover:underline transition-colors">
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-charcoal-700 font-medium">
+              <Link href="/subscriptions" className="hover:text-burgundy-800 hover:underline transition-colors">
                 Controlled Contact Reveal Policy
               </Link>
               <span className="text-[#c7b9a2]">•</span>
-              <Link href="/profile/photos" className="hover:text-emerald-900 hover:underline transition-colors">
+              <Link href="/profile/photos" className="hover:text-burgundy-800 hover:underline transition-colors">
                 Photo Privacy Guidelines
               </Link>
               <span className="text-[#c7b9a2]">•</span>
-              <span className="hover:text-emerald-900 hover:underline cursor-pointer transition-colors">
+              <span className="hover:text-burgundy-800 hover:underline cursor-pointer transition-colors">
                 Terms of Service
               </span>
               <span className="text-[#c7b9a2]">•</span>
-              <span className="hover:text-emerald-900 hover:underline cursor-pointer transition-colors">
+              <span className="hover:text-burgundy-800 hover:underline cursor-pointer transition-colors">
                 Privacy Policy
               </span>
             </div>

@@ -130,10 +130,10 @@ export function InactivityHandler() {
   if (!showWarning) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-200">
-      <div className="relative w-full max-w-md bg-slate-900 border border-amber-500/40 rounded-3xl p-6 sm:p-7 shadow-2xl shadow-amber-950/40 text-center">
-        {/* Animated Warning Icon */}
-        <div className="mx-auto w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 mb-4 shadow-inner">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-charcoal-950/60 backdrop-blur-md animate-in fade-in duration-200">
+      <div className="relative w-full max-w-md bg-white border border-[#ece2d1] rounded-3xl p-6 sm:p-7 shadow-2xl text-center">
+        {/* Warning Icon */}
+        <div className="mx-auto w-14 h-14 rounded-2xl bg-gold-50 border border-gold-300 flex items-center justify-center text-gold-800 mb-4 shadow-xs">
           <svg
             className="w-7 h-7 animate-pulse"
             fill="none"
@@ -149,16 +149,16 @@ export function InactivityHandler() {
           </svg>
         </div>
 
-        <h3 className="text-lg sm:text-xl font-extrabold text-white tracking-tight mb-2">
+        <h3 className="text-lg sm:text-xl font-serif font-extrabold text-charcoal-900 tracking-tight mb-2">
           Session Expiring Soon
         </h3>
 
-        <p className="text-xs sm:text-sm text-slate-300 leading-relaxed mb-5">
+        <p className="text-xs sm:text-sm text-charcoal-600 leading-relaxed mb-5">
           You have been inactive. For your privacy and account security, you will be automatically logged out in:
         </p>
 
         {/* Circular Countdown Badge */}
-        <div className="inline-flex items-center justify-center px-4 py-2 rounded-2xl bg-amber-500/15 border border-amber-500/40 text-amber-300 font-mono font-extrabold text-2xl tracking-wider mb-6 shadow-md">
+        <div className="inline-flex items-center justify-center px-4 py-2 rounded-2xl bg-gold-50 border border-gold-300 text-gold-900 font-mono font-extrabold text-2xl tracking-wider mb-6 shadow-xs">
           {secondsRemaining}s
         </div>
 
@@ -167,14 +167,14 @@ export function InactivityHandler() {
           <button
             type="button"
             onClick={recordActivity}
-            className="flex-1 py-3 px-4 rounded-xl bg-gradient-to-r from-amber-500 via-amber-400 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-extrabold text-xs shadow-lg shadow-amber-950/40 transition-all transform hover:-translate-y-0.5 cursor-pointer"
+            className="flex-1 py-3.5 px-4 rounded-xl bg-gradient-to-r from-burgundy-700 to-burgundy-800 hover:from-burgundy-600 hover:to-burgundy-700 text-white font-extrabold text-xs shadow-md transition-all transform hover:-translate-y-0.5 cursor-pointer"
           >
             Stay Signed In
           </button>
           <button
             type="button"
             onClick={handleLogout}
-            className="py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white font-bold text-xs border border-slate-700 transition-colors cursor-pointer"
+            className="py-3.5 px-4 rounded-xl bg-[#faf6ee] hover:bg-[#ece2d1] text-charcoal-700 font-bold text-xs border border-[#ded0ba] transition-colors cursor-pointer"
           >
             Log Out Now
           </button>

@@ -9,29 +9,29 @@ export const metadata = {
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-slate-950 text-white font-sans">
+    <div className="min-h-screen bg-[#fdfbf7] text-charcoal-900 font-sans">
       <AboutTechmastersSection />
 
       {/* Additional Mission & Community Context */}
-      <section className="py-16 bg-slate-900/50 border-t border-slate-900">
+      <section className="py-16 bg-[#faf6ee] border-t border-[#ece2d1]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 text-center">
-          <h2 className="text-2xl sm:text-3xl font-bold text-white">
+          <h2 className="text-2xl sm:text-3xl font-serif font-extrabold text-charcoal-900">
             Serving the Christian Community with Trust &amp; Integrity
           </h2>
-          <p className="text-sm text-slate-300 leading-relaxed max-w-2xl mx-auto">
+          <p className="text-sm text-charcoal-600 leading-relaxed max-w-2xl mx-auto">
             Our mission is to help Christian souls build holy, God-honoring families through transparent matchmaking, family honor, and absolute data protection.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
             <Link
               href="/register"
-              className="px-8 py-3.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs shadow-lg transition-all"
+              className="px-8 py-3.5 rounded-xl bg-gradient-to-r from-burgundy-700 to-burgundy-800 hover:from-burgundy-600 hover:to-burgundy-700 text-white font-extrabold text-xs shadow-md transition-all"
             >
               Register Free Profile →
             </Link>
             <Link
               href="/discover"
-              className="px-8 py-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs border border-slate-700 transition-all"
+              className="px-8 py-3.5 rounded-xl bg-white hover:bg-[#faf6ee] text-charcoal-800 font-bold text-xs border border-[#ded0ba] transition-all shadow-xs"
             >
               Explore Member Portal
             </Link>
