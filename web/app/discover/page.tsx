@@ -338,25 +338,36 @@ export default function DiscoverPage() {
         {/* Top Header Card */}
         <div className="bg-white border border-[#ece2d1] rounded-3xl p-6 sm:p-8 shadow-sm flex flex-col md:flex-row md:items-center md:justify-between gap-6">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-50 border border-burgundy-200 text-burgundy-800 text-[11px] font-bold uppercase tracking-wider mb-2">
-              {myGender === 'FEMALE'
-                ? 'Groom Matches for Christian Brides'
-                : myGender === 'MALE'
-                ? 'Bride Matches for Christian Grooms'
-                : 'Verified Matrimonial Search'}
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-wider mb-2 shadow-2xs border">
+              {myGender === 'FEMALE' ? (
+                <span className="bg-cyan-50 border-cyan-200 text-cyan-800 flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-cyan-500" />
+                  Groom Matches for Christian Brides
+                </span>
+              ) : myGender === 'MALE' ? (
+                <span className="bg-orange-50 border-orange-200 text-orange-800 flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-orange-500" />
+                  Bride Matches for Christian Grooms
+                </span>
+              ) : (
+                <span className="bg-emerald-50 border-emerald-200 text-emerald-800 flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                  Verified Matrimonial Search
+                </span>
+              )}
             </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight font-brand">
               {myGender === 'FEMALE' ? (
                 <>
-                  Recommended <span className="text-transparent bg-clip-text bg-gradient-to-r from-burgundy-800 to-rose-700">Christian Grooms</span>
+                  Recommended <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-700 via-teal-600 to-burgundy-800">Christian Grooms</span>
                 </>
               ) : myGender === 'MALE' ? (
                 <>
-                  Recommended <span className="text-transparent bg-clip-text bg-gradient-to-r from-burgundy-800 to-rose-700">Christian Brides</span>
+                  Recommended <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-600 via-rose-600 to-burgundy-800">Christian Brides</span>
                 </>
               ) : (
                 <>
-                  Discover <span className="text-transparent bg-clip-text bg-gradient-to-r from-burgundy-800 to-rose-700">Verified Christian Candidates</span>
+                  Discover <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-700 via-orange-600 to-burgundy-800">Verified Christian Candidates</span>
                 </>
               )}
             </h1>
@@ -372,15 +383,17 @@ export default function DiscoverPage() {
           <div className="flex items-center gap-3">
             <Link
               href="/interests"
-              className="bg-white hover:bg-rose-50 text-burgundy-900 text-xs font-bold px-5 py-3 rounded-xl border border-[#ded0ba] transition-all shadow-xs"
+              className="bg-emerald-50 hover:bg-emerald-100 text-emerald-900 text-xs font-bold px-5 py-3 rounded-xl border border-emerald-300 transition-all shadow-xs flex items-center gap-1.5"
             >
-              My Interests &amp; Matches
+              <span>🌱</span>
+              <span>My Interests &amp; Matches</span>
             </Link>
             <Link
               href="/chat"
-              className="bg-gradient-to-r from-burgundy-700 to-burgundy-800 hover:from-burgundy-600 hover:to-burgundy-700 text-white text-xs font-bold px-5 py-3 rounded-xl shadow-md shadow-burgundy-950/20 border border-burgundy-600 transition-all transform hover:-translate-y-0.5"
+              className="bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-500 hover:to-teal-500 text-white text-xs font-extrabold px-5 py-3 rounded-xl shadow-md transition-all transform hover:-translate-y-0.5 flex items-center gap-1.5"
             >
-              Messages
+              <span>💬</span>
+              <span>Messages</span>
             </Link>
           </div>
         </div>
@@ -466,14 +479,14 @@ export default function DiscoverPage() {
               placeholder="Search candidate name, church or city..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full text-xs font-medium rounded-xl border border-[#ded0ba] pl-10 pr-24 py-3 bg-white text-charcoal-900 placeholder:text-charcoal-400 focus:outline-none focus:border-burgundy-600 focus:ring-2 focus:ring-burgundy-600/10 shadow-xs transition-all"
+              className="w-full text-xs font-medium rounded-xl border border-[#ded0ba] pl-10 pr-24 py-3 bg-white text-charcoal-900 placeholder:text-charcoal-400 focus:outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/15 shadow-xs transition-all"
             />
             <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-charcoal-400 text-sm">
               🔍
             </span>
             <button
               type="submit"
-              className="absolute right-1.5 top-1/2 -translate-y-1/2 px-4 py-1.5 rounded-lg bg-gradient-to-r from-burgundy-700 to-burgundy-800 hover:from-burgundy-600 hover:to-burgundy-700 text-white font-extrabold text-xs shadow-xs transition-all"
+              className="absolute right-1.5 top-1/2 -translate-y-1/2 px-4 py-1.5 rounded-lg bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-500 hover:to-teal-500 text-white font-extrabold text-xs shadow-xs transition-all"
             >
               Search
             </button>
@@ -610,38 +623,42 @@ export default function DiscoverPage() {
                   Showing <strong className="text-burgundy-800 font-extrabold">{candidates.length}</strong> of {total} Matches
                 </span>
                 {/* Quick Gender Toggle Tabs */}
-                <div className="flex items-center gap-1 bg-[#faf6ee] p-1 rounded-xl border border-[#ece2d1] text-[11px]">
+                <div className="flex items-center gap-1.5 bg-[#faf6ee] p-1 rounded-xl border border-[#ece2d1] text-[11px]">
                   {myGender === 'FEMALE' ? (
-                    <span className="px-3 py-1.5 rounded-lg font-extrabold bg-burgundy-700 text-white shadow-xs">
-                      Grooms
+                    <span className="px-3.5 py-1.5 rounded-lg font-black bg-gradient-to-r from-cyan-600 to-teal-600 text-white shadow-xs flex items-center gap-1.5">
+                      <span>🤵</span>
+                      <span>Grooms (Seeking Brides)</span>
                     </span>
                   ) : myGender === 'MALE' ? (
-                    <span className="px-3 py-1.5 rounded-lg font-extrabold bg-burgundy-700 text-white shadow-xs">
-                      Brides
+                    <span className="px-3.5 py-1.5 rounded-lg font-black bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-xs flex items-center gap-1.5">
+                      <span>👰</span>
+                      <span>Brides (Seeking Grooms)</span>
                     </span>
                   ) : (
                     <>
                       <button
                         type="button"
                         onClick={() => setGender('FEMALE')}
-                        className={`px-3 py-1.5 rounded-lg font-bold transition-all ${
+                        className={`px-3 py-1.5 rounded-lg font-extrabold transition-all flex items-center gap-1 ${
                           gender === 'FEMALE' || !gender
-                            ? 'bg-burgundy-700 text-white shadow-xs'
-                            : 'text-charcoal-600 hover:text-burgundy-800'
+                            ? 'bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-xs'
+                            : 'text-charcoal-600 hover:text-orange-700'
                         }`}
                       >
-                        Brides
+                        <span>👰</span>
+                        <span>Brides</span>
                       </button>
                       <button
                         type="button"
                         onClick={() => setGender('MALE')}
-                        className={`px-3 py-1.5 rounded-lg font-bold transition-all ${
+                        className={`px-3 py-1.5 rounded-lg font-extrabold transition-all flex items-center gap-1 ${
                           gender === 'MALE'
-                            ? 'bg-burgundy-700 text-white shadow-xs'
-                            : 'text-charcoal-600 hover:text-burgundy-800'
+                            ? 'bg-gradient-to-r from-cyan-600 to-teal-600 text-white shadow-xs'
+                            : 'text-charcoal-600 hover:text-cyan-700'
                         }`}
                       >
-                        Grooms
+                        <span>🤵</span>
+                        <span>Grooms</span>
                       </button>
                     </>
                   )}
@@ -836,13 +853,15 @@ export default function DiscoverPage() {
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2.5 text-xs">
                           <div className="flex items-center gap-2">
                             <span className="text-charcoal-500 font-semibold w-24 shrink-0">Denomination:</span>
-                            <span className="text-charcoal-900 font-medium truncate">{c.denomination || 'Christian'}</span>
+                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-md bg-cyan-50 border border-cyan-200 text-cyan-900 font-semibold text-[11px] truncate">
+                              {c.denomination || 'Christian'}
+                            </span>
                           </div>
 
                           <div className="flex items-center gap-2">
                             <span className="text-charcoal-500 font-semibold w-24 shrink-0">Church:</span>
                             {!isSubscribed && !isAdmin ? (
-                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-gold-50 border border-gold-200 text-gold-800 font-semibold text-[11px]">
+                              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-orange-50 border border-orange-200 text-orange-900 font-semibold text-[11px]">
                                 <span>🔒</span>
                                 <span>Church Info Locked</span>
                               </span>
@@ -853,13 +872,13 @@ export default function DiscoverPage() {
 
                           <div className="flex items-center gap-2">
                             <span className="text-charcoal-500 font-semibold w-24 shrink-0">Education:</span>
-                            <span className="text-charcoal-900 font-medium truncate">{c.highest_education || '—'}</span>
+                            <span className="text-charcoal-900 font-medium truncate">🎓 {c.highest_education || '—'}</span>
                           </div>
 
                           <div className="flex items-center gap-2">
                             <span className="text-charcoal-500 font-semibold w-24 shrink-0">Profession:</span>
                             {!isSubscribed && !isAdmin ? (
-                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-gold-50 border border-gold-200 text-gold-800 font-semibold text-[11px]">
+                              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-orange-50 border border-orange-200 text-orange-900 font-semibold text-[11px]">
                                 <span>🔒</span>
                                 <span>Profession Locked</span>
                               </span>
@@ -871,24 +890,26 @@ export default function DiscoverPage() {
                           <div className="flex items-center gap-2">
                             <span className="text-charcoal-500 font-semibold w-24 shrink-0">Location:</span>
                             {!isSubscribed && !isAdmin ? (
-                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-gold-50 border border-gold-200 text-gold-800 font-semibold text-[11px]">
+                              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-emerald-50 border border-emerald-200 text-emerald-900 font-semibold text-[11px]">
                                 <span>🔒</span>
                                 <span>Location Locked</span>
                               </span>
                             ) : (
-                              <span className="text-charcoal-800 font-medium truncate">📍 {c.district || 'Bidar'}, {c.state || 'Karnataka'}</span>
+                              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-emerald-50 border border-emerald-200 text-emerald-900 font-semibold text-[11px] truncate">
+                                📍 {c.district || 'Bidar'}, {c.state || 'Karnataka'}
+                              </span>
                             )}
                           </div>
 
                           <div className="flex items-center gap-2">
                             <span className="text-charcoal-500 font-semibold w-24 shrink-0">Annual Income:</span>
                             {!isSubscribed && !isAdmin ? (
-                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-gold-50 border border-gold-200 text-gold-800 font-semibold text-[11px]">
+                              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-orange-50 border border-orange-200 text-orange-900 font-semibold text-[11px]">
                                 <span>🔒</span>
                                 <span>Package Info Locked</span>
                               </span>
                             ) : (
-                              <span className="text-emerald-700 font-medium truncate">
+                              <span className="text-emerald-700 font-bold truncate">
                                 {c.annual_income_min ? (c.annual_income_min >= 100000 ? `₹${(c.annual_income_min / 100000).toFixed(1)} LPA+` : `₹${c.annual_income_min.toLocaleString('en-IN')}`) : 'Confidential'}
                               </span>
                             )}
@@ -896,14 +917,14 @@ export default function DiscoverPage() {
                         </div>
 
                         {/* 3. Faith & Pastoral Verification Footer Banner */}
-                        <div className="p-3 rounded-xl bg-[#faf6ee] border border-[#ece2d1] text-[11px] text-charcoal-700 flex flex-wrap items-center gap-3">
-                          <span className="text-emerald-700 font-extrabold flex items-center gap-1">
-                            Pastoral Verified
+                        <div className="p-3 rounded-xl bg-gradient-to-r from-emerald-50 via-teal-50 to-cyan-50 border border-emerald-200 text-[11px] text-emerald-950 flex flex-wrap items-center gap-3 shadow-2xs">
+                          <span className="text-emerald-800 font-extrabold flex items-center gap-1 bg-emerald-100/90 px-2 py-0.5 rounded-md border border-emerald-300">
+                            ✓ Pastoral Verified
                           </span>
-                          <span className="text-charcoal-300">•</span>
-                          <span className="font-semibold text-charcoal-700">Church Membership Active</span>
-                          <span className="text-charcoal-300">•</span>
-                          <span className="font-semibold text-charcoal-700">Controlled Contact Reveal</span>
+                          <span className="text-emerald-300">•</span>
+                          <span className="font-semibold text-emerald-900">Church Membership Active</span>
+                          <span className="text-emerald-300">•</span>
+                          <span className="font-semibold text-cyan-900">Controlled Contact Reveal</span>
                         </div>
 
                         {/* 4. Action Buttons Bar DIRECTLY BELOW Pastoral Banner */}
@@ -911,7 +932,7 @@ export default function DiscoverPage() {
                           <button
                             type="button"
                             onClick={() => handleExpressInterestClick(c)}
-                            className="w-full sm:flex-1 py-3 px-6 rounded-xl bg-gradient-to-r from-burgundy-700 to-burgundy-800 hover:from-burgundy-600 hover:to-burgundy-700 text-white font-extrabold text-xs text-center transition-all shadow-md shadow-burgundy-900/10 flex items-center justify-center gap-2"
+                            className="w-full sm:flex-1 py-3 px-6 rounded-xl bg-gradient-to-r from-burgundy-700 via-rose-600 to-orange-600 hover:from-burgundy-600 hover:to-orange-500 text-white font-extrabold text-xs text-center transition-all shadow-md shadow-orange-950/10 flex items-center justify-center gap-2"
                           >
                             <span>Express Interest</span>
                             <span>→</span>
@@ -920,10 +941,10 @@ export default function DiscoverPage() {
                           <button
                             type="button"
                             onClick={(e) => handleViewProfileClick(e, c)}
-                            className="w-full sm:flex-1 py-3 px-6 rounded-xl bg-white hover:bg-[#faf6ee] text-charcoal-800 text-xs font-bold text-center border border-[#ece2d1] transition-all flex items-center justify-center gap-1.5"
+                            className="w-full sm:flex-1 py-3 px-6 rounded-xl bg-white hover:bg-cyan-50/70 text-charcoal-800 hover:text-cyan-950 text-xs font-bold text-center border border-cyan-200 hover:border-cyan-300 transition-all flex items-center justify-center gap-1.5 shadow-2xs"
                           >
                             <span>View Full Profile</span>
-                            {!isSubscribed && !isAdmin && <span className="text-[10px] text-gold-700">🔒</span>}
+                            {!isSubscribed && !isAdmin && <span className="text-[10px] text-orange-600">🔒</span>}
                             <span>→</span>
                           </button>
                         </div>
@@ -940,16 +961,16 @@ export default function DiscoverPage() {
                   return (
                     <div
                       key={c.id}
-                      className="bg-white border border-[#ece2d1] hover:border-burgundy-300 rounded-3xl p-6 shadow-sm hover:shadow-xl group transition-all duration-300 flex flex-col justify-between"
+                      className="bg-white border border-charcoal-200/70 hover:border-cyan-400 rounded-3xl p-6 shadow-sm hover:shadow-xl group transition-all duration-300 flex flex-col justify-between"
                     >
                       <div>
                         {/* Top Badges Row */}
                         <div className="flex items-center justify-between gap-2 pb-1">
-                          <span className="bg-burgundy-50 text-burgundy-800 border border-burgundy-200 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider truncate max-w-[130px]">
+                          <span className="bg-cyan-50 text-cyan-900 border border-cyan-200 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider truncate max-w-[130px]">
                             {c.denomination || 'Christian'}
                           </span>
 
-                          <span className="bg-emerald-50 text-emerald-800 border border-emerald-200 text-[10px] font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1 shrink-0">
+                          <span className="bg-emerald-50 text-emerald-800 border border-emerald-300 text-[10px] font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1 shrink-0">
                             <span>✓</span>
                             <span>Verified</span>
                           </span>
@@ -957,7 +978,7 @@ export default function DiscoverPage() {
 
                         {/* Circular Photo Header */}
                         <div className="my-5 flex justify-center">
-                          <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full ring-4 ring-gold-400/30 group-hover:ring-gold-500/60 shadow-md overflow-hidden bg-[#faf6ee] transition-all duration-300 relative flex items-center justify-center shrink-0">
+                          <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full ring-4 ring-cyan-400/30 group-hover:ring-orange-400/60 shadow-md overflow-hidden bg-gradient-to-tr from-cyan-50 to-orange-50 transition-all duration-300 relative flex items-center justify-center shrink-0">
                             <img
                               src={photoSrc}
                               alt={c.first_name}
@@ -970,12 +991,12 @@ export default function DiscoverPage() {
                         </div>
 
                         {/* Content Info */}
-                        <div className="space-y-2 pt-2 border-t border-[#ece2d1]">
+                        <div className="space-y-2 pt-2 border-t border-charcoal-100">
                           <div className="flex items-center justify-between">
-                            <h3 className="font-serif font-extrabold text-base text-charcoal-900 group-hover:text-burgundy-700 transition-colors">
+                            <h3 className="font-serif font-extrabold text-base text-charcoal-900 group-hover:text-cyan-800 transition-colors">
                               {c.first_name} {c.last_name}
                             </h3>
-                            <span className="text-xs text-charcoal-500 font-medium">
+                            <span className="text-xs text-charcoal-600 font-semibold bg-charcoal-100/60 px-2 py-0.5 rounded-md">
                               {c.age || '—'} Yrs
                             </span>
                           </div>
@@ -988,7 +1009,7 @@ export default function DiscoverPage() {
                           {/* Profession & Package: Locked for unpaid */}
                           <p className="text-xs font-medium truncate">
                             {!isSubscribed && !isAdmin ? (
-                              <span className="inline-flex items-center gap-1 text-gold-800 text-[11px] font-semibold bg-gold-50 px-2 py-0.5 rounded-md border border-gold-200">
+                              <span className="inline-flex items-center gap-1 text-orange-900 text-[11px] font-semibold bg-orange-50 px-2.5 py-0.5 rounded-md border border-orange-200">
                                 <span>🔒</span>
                                 <span>Profession &amp; Package Locked</span>
                               </span>
@@ -1002,18 +1023,18 @@ export default function DiscoverPage() {
                           {/* Location: Locked for unpaid */}
                           <p className="text-[11px] font-semibold truncate">
                             {!isSubscribed && !isAdmin ? (
-                              <span className="inline-flex items-center gap-1 text-gold-800 text-[11px] font-semibold bg-gold-50 px-2 py-0.5 rounded-md border border-gold-200">
+                              <span className="inline-flex items-center gap-1 text-orange-900 text-[11px] font-semibold bg-orange-50 px-2.5 py-0.5 rounded-md border border-orange-200">
                                 <span>🔒</span>
                                 <span>Location Locked</span>
                               </span>
                             ) : (
-                              <span className="text-charcoal-800">📍 {c.district || 'Bidar'}, {c.state || 'Karnataka'}</span>
+                              <span className="inline-flex items-center gap-1 text-emerald-900 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-md">📍 {c.district || 'Bidar'}, {c.state || 'Karnataka'}</span>
                             )}
                           </p>
 
                           {/* Admin Unmasked Contact Strip */}
                           {isAdmin && (c.mobile_number || c.email) && (
-                            <div className="pt-2 border-t border-[#ece2d1] text-[11px] text-burgundy-900 font-mono space-y-0.5">
+                            <div className="pt-2 border-t border-charcoal-200/60 text-[11px] text-cyan-900 font-mono space-y-0.5">
                               {c.mobile_number && <div>Phone: +91 {c.mobile_number}</div>}
                               {c.email && <div className="truncate text-charcoal-700">Email: {c.email}</div>}
                             </div>
@@ -1026,15 +1047,15 @@ export default function DiscoverPage() {
                         <button
                           type="button"
                           onClick={(e) => handleViewProfileClick(e, c)}
-                          className="w-full py-2.5 rounded-xl bg-white hover:bg-[#faf6ee] text-charcoal-800 text-xs font-bold text-center border border-[#ece2d1] transition-all flex items-center justify-center gap-1"
+                          className="w-full py-2.5 rounded-xl bg-white hover:bg-cyan-50/80 text-charcoal-800 hover:text-cyan-950 text-xs font-bold text-center border border-cyan-200 hover:border-cyan-300 transition-all flex items-center justify-center gap-1 shadow-2xs"
                         >
                           <span>View Bio</span>
-                          {!isSubscribed && !isAdmin && <span className="text-[10px] text-gold-700">🔒</span>}
+                          {!isSubscribed && !isAdmin && <span className="text-[10px] text-orange-600">🔒</span>}
                         </button>
                         <button
                           type="button"
                           onClick={() => handleExpressInterestClick(c)}
-                          className="w-full py-2.5 rounded-xl bg-gradient-to-r from-burgundy-700 to-burgundy-800 hover:from-burgundy-600 hover:to-burgundy-700 text-white text-xs font-extrabold text-center transition-all shadow-sm"
+                          className="w-full py-2.5 rounded-xl bg-gradient-to-r from-burgundy-700 via-rose-600 to-orange-600 hover:from-burgundy-600 hover:to-orange-500 text-white text-xs font-extrabold text-center transition-all shadow-md shadow-orange-950/10"
                         >
                           Express Interest
                         </button>

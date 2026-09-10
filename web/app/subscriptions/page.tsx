@@ -121,7 +121,7 @@ export default function SubscriptionsPage() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-10">
         {/* Header */}
         <div className="text-center max-w-2xl mx-auto space-y-2">
-          <span className="text-xs font-bold uppercase tracking-widest text-burgundy-700 block">
+          <span className="text-xs font-bold uppercase tracking-widest text-cyan-800 block">
             Transparent Sacred Membership
           </span>
           <h1 className="text-3xl sm:text-4xl font-serif font-extrabold text-charcoal-900 tracking-tight">
@@ -135,50 +135,72 @@ export default function SubscriptionsPage() {
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="bg-white border border-[#ece2d1] rounded-3xl h-[520px] animate-pulse" />
+              <div key={i} className="bg-white border border-charcoal-200 rounded-3xl h-[520px] animate-pulse" />
             ))}
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
-            {plans.map((p) => {
+            {plans.map((p, idx) => {
               const isPopular = p.plan_code === 'PREMIUM';
+              // Determine card theme based on tier/index: 0: Cyan, 1: Light Orange (Popular), 2: Light Green
+              const tierThemes = [
+                {
+                  card: 'border-cyan-200 bg-gradient-to-b from-cyan-50/60 to-white hover:border-cyan-400 hover:shadow-lg',
+                  price: 'text-cyan-950',
+                  badge: 'text-cyan-800 bg-cyan-100/70 border-cyan-200',
+                  bullet: 'text-cyan-600',
+                  btn: 'bg-white hover:bg-cyan-50 text-cyan-950 border border-cyan-300 shadow-xs',
+                },
+                {
+                  card: 'border-orange-300 ring-2 ring-orange-400/40 bg-gradient-to-b from-orange-50/70 via-amber-50/30 to-white shadow-xl hover:-translate-y-1',
+                  price: 'text-orange-950',
+                  badge: 'text-orange-900 bg-orange-100/80 border-orange-300',
+                  bullet: 'text-orange-600',
+                  btn: 'bg-gradient-to-r from-burgundy-700 via-rose-600 to-orange-600 hover:from-burgundy-600 hover:to-orange-500 text-white shadow-md shadow-orange-950/20',
+                },
+                {
+                  card: 'border-emerald-200 bg-gradient-to-b from-emerald-50/60 to-white hover:border-emerald-400 hover:shadow-lg',
+                  price: 'text-emerald-950',
+                  badge: 'text-emerald-800 bg-emerald-100/70 border-emerald-200',
+                  bullet: 'text-emerald-600',
+                  btn: 'bg-white hover:bg-emerald-50 text-emerald-950 border border-emerald-300 shadow-xs',
+                },
+              ];
+              const theme = isPopular ? tierThemes[1] : tierThemes[idx % 3];
+
               return (
                 <div
                   key={p.id}
-                  className={`border rounded-3xl p-7 shadow-sm transition-all duration-300 flex flex-col justify-between relative group ${
-                    isPopular
-                      ? 'border-gold-500 ring-2 ring-gold-400/30 bg-gradient-to-b from-[#faf6ee] to-white shadow-xl hover:-translate-y-1'
-                      : 'border-[#ece2d1] bg-white hover:border-gold-300 hover:shadow-md'
-                  }`}
+                  className={`border rounded-3xl p-7 shadow-sm transition-all duration-300 flex flex-col justify-between relative group ${theme.card}`}
                 >
                   <div>
                     {/* Header */}
                     <div className="flex items-center justify-between mb-4">
                       <h3 className="text-lg font-serif font-extrabold text-charcoal-900">{p.name}</h3>
                       {isPopular && (
-                        <span className="text-[10px] font-extrabold uppercase bg-gradient-to-r from-gold-500 to-gold-600 text-charcoal-950 px-2.5 py-1 rounded-lg shadow-xs">
+                        <span className="text-[10px] font-extrabold uppercase bg-gradient-to-r from-orange-500 to-amber-500 text-white px-2.5 py-1 rounded-lg shadow-xs tracking-wider">
                           Most Popular
                         </span>
                       )}
                     </div>
 
                     {/* Price */}
-                    <div className="mb-6 pb-6 border-b border-[#ece2d1]">
+                    <div className="mb-6 pb-6 border-b border-charcoal-100">
                       <div className="flex items-baseline gap-1">
-                        <span className="text-3xl sm:text-4xl font-extrabold text-burgundy-900 font-serif">
+                        <span className={`text-3xl sm:text-4xl font-extrabold font-serif ${theme.price}`}>
                           ₹ {p.price_inr.toLocaleString()}
                         </span>
                       </div>
-                      <span className="text-xs text-gold-800 font-bold block mt-1">
+                      <span className={`text-xs font-bold inline-block mt-1 px-2 py-0.5 rounded-md border ${theme.badge}`}>
                         Valid for {p.duration_days} days
                       </span>
                     </div>
 
                     {/* Features Bullet List */}
                     <div className="space-y-3 mb-8 text-xs text-charcoal-700 font-medium">
-                      {p.features && p.features.map((f, idx) => (
-                        <div key={idx} className="flex items-start gap-2.5">
-                          <span className="text-burgundy-600 font-bold text-sm leading-none">•</span>
+                      {p.features && p.features.map((f, fIdx) => (
+                        <div key={fIdx} className="flex items-start gap-2.5">
+                          <span className={`${theme.bullet} font-bold text-sm leading-none`}>✓</span>
                           <span className="leading-snug">{f}</span>
                         </div>
                       ))}
@@ -189,11 +211,7 @@ export default function SubscriptionsPage() {
                   <button
                     onClick={() => handleSubscribe(p)}
                     disabled={processing}
-                    className={`w-full py-3.5 rounded-2xl text-xs font-extrabold transition-all shadow-sm ${
-                      isPopular
-                        ? 'bg-gradient-to-r from-burgundy-700 to-burgundy-800 hover:from-burgundy-600 hover:to-burgundy-700 text-white shadow-md'
-                        : 'bg-[#faf6ee] hover:bg-gold-50 text-charcoal-800 border border-[#ded0ba] hover:border-gold-400'
-                    }`}
+                    className={`w-full py-3.5 rounded-2xl text-xs font-extrabold transition-all ${theme.btn}`}
                   >
                     {processing && selectedPlan?.id === p.id ? 'Opening Razorpay Checkout...' : `Choose ${p.name}`}
                   </button>

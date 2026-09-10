@@ -61,7 +61,7 @@ export function Navbar() {
             <Link
               href="/"
               className={`font-bold text-xs tracking-wide transition-colors ${
-                pathname === '/' ? 'text-burgundy-800 font-extrabold border-b-2 border-burgundy-700 pb-0.5' : 'text-slate-700 hover:text-burgundy-700'
+                pathname === '/' ? 'text-cyan-800 font-extrabold border-b-2 border-cyan-600 pb-0.5' : 'text-slate-700 hover:text-cyan-700'
               }`}
             >
               Home
@@ -70,7 +70,7 @@ export function Navbar() {
             <Link
               href="/discover"
               className={`font-bold text-xs tracking-wide transition-colors ${
-                pathname === '/discover' ? 'text-burgundy-800 font-extrabold border-b-2 border-burgundy-700 pb-0.5' : 'text-slate-700 hover:text-burgundy-700'
+                pathname === '/discover' ? 'text-cyan-800 font-extrabold border-b-2 border-cyan-600 pb-0.5' : 'text-slate-700 hover:text-cyan-700'
               }`}
             >
               Search Profiles
@@ -79,7 +79,7 @@ export function Navbar() {
             <Link
               href="/subscriptions"
               className={`font-bold text-xs tracking-wide transition-colors ${
-                pathname === '/subscriptions' ? 'text-burgundy-800 font-extrabold border-b-2 border-burgundy-700 pb-0.5' : 'text-slate-700 hover:text-burgundy-700'
+                pathname === '/subscriptions' ? 'text-cyan-800 font-extrabold border-b-2 border-cyan-600 pb-0.5' : 'text-slate-700 hover:text-cyan-700'
               }`}
             >
               Subscription Plans
@@ -89,7 +89,7 @@ export function Navbar() {
               <Link
                 href="/interests"
                 className={`font-bold text-xs tracking-wide transition-colors ${
-                  pathname === '/interests' ? 'text-burgundy-800 font-extrabold border-b-2 border-burgundy-700 pb-0.5' : 'text-slate-700 hover:text-burgundy-700'
+                  pathname === '/interests' ? 'text-cyan-800 font-extrabold border-b-2 border-cyan-600 pb-0.5' : 'text-slate-700 hover:text-cyan-700'
                 }`}
               >
                 Interests &amp; Matches
@@ -105,8 +105,8 @@ export function Navbar() {
                   href="/dashboard"
                   className={`text-xs font-extrabold px-4 py-2 rounded-xl transition-all border ${
                     pathname === '/dashboard'
-                      ? 'bg-burgundy-700 text-white border-burgundy-800 shadow-md'
-                      : 'bg-white border-[#ece2d1] text-burgundy-800 hover:border-burgundy-600 shadow-xs'
+                      ? 'bg-gradient-to-r from-cyan-600 to-teal-600 text-white border-cyan-700 shadow-md'
+                      : 'bg-cyan-50/70 border-cyan-200 text-cyan-950 hover:bg-cyan-100 shadow-2xs'
                   }`}
                 >
                   My Dashboard
@@ -122,13 +122,13 @@ export function Navbar() {
               <>
                 <Link
                   href="/login"
-                  className="font-bold text-xs text-slate-700 hover:text-burgundy-800 px-3 py-2 transition-colors"
+                  className="font-bold text-xs text-slate-700 hover:text-cyan-800 px-3 py-2 transition-colors"
                 >
                   Login
                 </Link>
                 <Link
                   href="/register"
-                  className="bg-gradient-to-r from-burgundy-700 to-burgundy-800 hover:from-burgundy-600 hover:to-burgundy-700 text-white px-5 py-2.5 rounded-xl font-extrabold text-xs tracking-wider shadow-md shadow-burgundy-950/20 transition-all transform hover:-translate-y-0.5 border border-burgundy-600/30"
+                  className="bg-gradient-to-r from-burgundy-700 via-rose-600 to-orange-600 hover:from-burgundy-600 hover:to-orange-500 text-white px-5 py-2.5 rounded-xl font-extrabold text-xs tracking-wider shadow-md shadow-orange-950/15 transition-all transform hover:-translate-y-0.5 border border-orange-400/30"
                 >
                   Register Free
                 </Link>
@@ -208,7 +208,7 @@ export function Navbar() {
                 <Link
                   href="/register"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="w-full text-center text-xs font-bold py-2.5 rounded-xl bg-gradient-to-r from-burgundy-700 to-burgundy-800 text-white shadow-md"
+                  className="w-full text-center text-xs font-bold py-2.5 rounded-xl bg-gradient-to-r from-burgundy-700 via-rose-600 to-orange-600 text-white shadow-md"
                 >
                   Register Free
                 </Link>

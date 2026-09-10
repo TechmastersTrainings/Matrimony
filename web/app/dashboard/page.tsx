@@ -142,45 +142,45 @@ export default function UserDashboardPage() {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
           <Link
             href="/interests?tab=received"
-            className="bg-white border border-[#ece2d1] hover:border-burgundy-300 rounded-3xl p-5 sm:p-6 shadow-sm hover:shadow-md space-y-2 group transition-all"
+            className="bg-gradient-to-br from-orange-50/90 to-white border border-orange-200 hover:border-orange-400 rounded-3xl p-5 sm:p-6 shadow-sm hover:shadow-md space-y-2 group transition-all"
           >
-            <span className="text-[11px] font-bold uppercase tracking-wider text-charcoal-500">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-orange-950">
               Received Interests
             </span>
-            <div className="text-3xl font-extrabold text-burgundy-700 group-hover:translate-x-1 transition-transform">
+            <div className="text-3xl font-extrabold text-orange-600 group-hover:translate-x-1 transition-transform">
               {interestsCount.received}
             </div>
-            <span className="text-xs text-charcoal-500 block group-hover:text-burgundy-800 transition-colors">
+            <span className="text-xs text-orange-900/80 block group-hover:text-orange-950 transition-colors">
               {isSubscriber ? 'View candidates who liked you →' : '🔒 Upgrade to view member details →'}
             </span>
           </Link>
 
           <Link
             href="/interests?tab=sent"
-            className="bg-white border border-[#ece2d1] hover:border-burgundy-300 rounded-3xl p-5 sm:p-6 shadow-sm hover:shadow-md space-y-2 group transition-all"
+            className="bg-gradient-to-br from-cyan-50/90 to-white border border-cyan-200 hover:border-cyan-400 rounded-3xl p-5 sm:p-6 shadow-sm hover:shadow-md space-y-2 group transition-all"
           >
-            <span className="text-[11px] font-bold uppercase tracking-wider text-charcoal-500">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-cyan-950">
               Sent Interests
             </span>
-            <div className="text-3xl font-extrabold text-charcoal-900 group-hover:translate-x-1 transition-transform">
+            <div className="text-3xl font-extrabold text-cyan-700 group-hover:translate-x-1 transition-transform">
               {interestsCount.sent}
             </div>
-            <span className="text-xs text-charcoal-500 block group-hover:text-burgundy-800 transition-colors">
+            <span className="text-xs text-cyan-900/80 block group-hover:text-cyan-950 transition-colors">
               Check pending responses →
             </span>
           </Link>
 
           <Link
             href="/interests?tab=matches"
-            className="bg-white border border-[#ece2d1] hover:border-emerald-300 rounded-3xl p-5 sm:p-6 shadow-sm hover:shadow-md space-y-2 group transition-all"
+            className="bg-gradient-to-br from-emerald-50/90 to-white border border-emerald-200 hover:border-emerald-400 rounded-3xl p-5 sm:p-6 shadow-sm hover:shadow-md space-y-2 group transition-all"
           >
-            <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-700">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-950">
               Mutual Matches
             </span>
-            <div className="text-3xl font-extrabold text-emerald-700 group-hover:translate-x-1 transition-transform">
+            <div className="text-3xl font-extrabold text-emerald-600 group-hover:translate-x-1 transition-transform">
               {interestsCount.matches}
             </div>
-            <span className="text-xs text-charcoal-500 block group-hover:text-emerald-800 transition-colors">
+            <span className="text-xs text-emerald-900/80 block group-hover:text-emerald-950 transition-colors">
               Open In-App Chat →
             </span>
           </Link>
@@ -188,8 +188,8 @@ export default function UserDashboardPage() {
 
         {/* Empty Profile Notice Banner if Candidate Profile Not Created */}
         {!hasProfile && (
-          <div className="bg-white border border-gold-300 rounded-3xl p-6 sm:p-8 text-center space-y-4 shadow-sm">
-            <div className="w-14 h-14 rounded-2xl bg-gold-50 text-gold-700 flex items-center justify-center mx-auto text-2xl font-bold">
+          <div className="bg-gradient-to-br from-white via-orange-50/20 to-cyan-50/20 border border-orange-300 rounded-3xl p-6 sm:p-8 text-center space-y-4 shadow-sm">
+            <div className="w-14 h-14 rounded-2xl bg-orange-100/70 text-orange-700 flex items-center justify-center mx-auto text-2xl font-bold shadow-2xs">
               ✍️
             </div>
             <h2 className="text-xl sm:text-2xl font-serif font-extrabold text-charcoal-900">Your Candidate Profile is Empty</h2>
@@ -199,7 +199,7 @@ export default function UserDashboardPage() {
             <div>
               <Link
                 href="/profile/create"
-                className="inline-flex items-center gap-2 bg-gradient-to-r from-burgundy-700 to-burgundy-800 hover:from-burgundy-600 hover:to-burgundy-700 text-white px-6 py-3 rounded-xl font-extrabold text-xs shadow-md transition-all hover:scale-105"
+                className="inline-flex items-center gap-2 bg-gradient-to-r from-burgundy-700 via-rose-600 to-orange-600 hover:from-burgundy-600 hover:to-orange-500 text-white px-6 py-3 rounded-xl font-extrabold text-xs shadow-md transition-all hover:scale-105"
               >
                 <span>Create / Complete Your Profile Now</span>
                 <span>→</span>
@@ -209,11 +209,11 @@ export default function UserDashboardPage() {
         )}
 
         {/* 1. Header Profile Banner Card */}
-        <div className="bg-white border border-[#ece2d1] rounded-3xl p-6 sm:p-8 shadow-sm">
+        <div className="bg-white border border-charcoal-200/70 rounded-3xl p-6 sm:p-8 shadow-sm">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
             <div className="flex items-center gap-5">
               {/* Avatar / Primary Photo */}
-              <div className="relative w-24 h-24 rounded-2xl overflow-hidden bg-[#faf6ee] border-2 border-gold-400/60 shrink-0 shadow-sm">
+              <div className="relative w-24 h-24 rounded-2xl overflow-hidden bg-gradient-to-tr from-cyan-50 to-orange-50 border-2 border-cyan-400/60 shrink-0 shadow-sm">
                 {primaryPhoto ? (
                   <img
                     src={primaryPhoto}
@@ -224,7 +224,7 @@ export default function UserDashboardPage() {
                     }}
                   />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center font-serif font-extrabold text-2xl text-burgundy-800 bg-[#faf6ee]">
+                  <div className="w-full h-full flex items-center justify-center font-serif font-extrabold text-2xl text-cyan-800 bg-cyan-50">
                     {firstName[0]?.toUpperCase() || 'M'}
                   </div>
                 )}
@@ -239,12 +239,12 @@ export default function UserDashboardPage() {
                   <span
                     className={`text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider border ${
                       profileStatus === 'APPROVED'
-                        ? 'bg-emerald-50 text-emerald-800 border-emerald-200 shadow-xs'
+                        ? 'bg-emerald-50 text-emerald-800 border-emerald-300 shadow-xs'
                         : profileStatus === 'SUBMITTED'
-                        ? 'bg-blue-50 text-blue-800 border-blue-200 shadow-xs'
+                        ? 'bg-cyan-50 text-cyan-800 border-cyan-300 shadow-xs'
                         : profileStatus === 'CHANGES_REQUIRED'
-                        ? 'bg-gold-50 text-gold-800 border-gold-200 shadow-xs'
-                        : 'bg-slate-100 text-charcoal-700 border-[#ece2d1]'
+                        ? 'bg-orange-50 text-orange-800 border-orange-300 shadow-xs'
+                        : 'bg-slate-100 text-charcoal-700 border-charcoal-200'
                     }`}
                   >
                     {profileStatus === 'APPROVED'
@@ -255,7 +255,7 @@ export default function UserDashboardPage() {
                   </span>
                 </div>
 
-                <p className="text-xs sm:text-sm text-burgundy-800 font-semibold">
+                <p className="text-xs sm:text-sm text-cyan-900 font-semibold">
                   {gender !== 'Not specified' ? gender : 'Gender Not Specified'} {age ? `• ${age} yrs` : ''} {denomination !== 'Not specified' ? `• ${denomination}` : ''} {district !== 'Not specified' ? `• ${district}` : ''}
                 </p>
 
@@ -269,9 +269,9 @@ export default function UserDashboardPage() {
 
             {/* Plan Status & Actions */}
             <div className="flex flex-col sm:items-end gap-2.5">
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-[#faf6ee] border border-[#ece2d1] shadow-xs">
-                <span className={`w-2.5 h-2.5 rounded-full ${isSubscriber ? 'bg-emerald-500 animate-pulse' : 'bg-gold-500'}`} />
-                <span className="text-xs font-bold text-charcoal-900">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-cyan-50/70 border border-cyan-200 shadow-xs">
+                <span className={`w-2.5 h-2.5 rounded-full ${isSubscriber ? 'bg-emerald-500 animate-pulse' : 'bg-orange-500'}`} />
+                <span className="text-xs font-bold text-cyan-950">
                   {isSubscriber ? `Active: ${userData?.active_plan_name || 'VIP Membership'}` : 'Basic Registration Account'}
                 </span>
               </div>
@@ -279,13 +279,13 @@ export default function UserDashboardPage() {
               <div className="flex items-center gap-2">
                 <Link
                   href="/profile/photos"
-                  className="px-4 py-2 rounded-xl bg-white hover:bg-[#faf6ee] border border-[#ece2d1] text-xs font-bold text-charcoal-800 transition-all"
+                  className="px-4 py-2 rounded-xl bg-white hover:bg-cyan-50 border border-cyan-200 text-xs font-bold text-cyan-950 transition-all shadow-2xs"
                 >
                   📸 Photos ({photos.length})
                 </Link>
                 <Link
                   href="/profile/create"
-                  className="px-4 py-2 rounded-xl bg-gradient-to-r from-burgundy-700 to-burgundy-800 hover:from-burgundy-600 hover:to-burgundy-700 text-white font-extrabold text-xs shadow-md shadow-burgundy-900/10 transition-all transform hover:-translate-y-0.5"
+                  className="px-4 py-2 rounded-xl bg-gradient-to-r from-burgundy-700 via-rose-600 to-orange-600 hover:from-burgundy-600 hover:to-orange-500 text-white font-extrabold text-xs shadow-md shadow-orange-950/15 transition-all transform hover:-translate-y-0.5"
                 >
                   Edit Profile ✍️
                 </Link>
@@ -294,16 +294,16 @@ export default function UserDashboardPage() {
           </div>
 
           {/* Verification / Progress Indicator */}
-          <div className="mt-8 pt-6 border-t border-[#ece2d1] space-y-2">
+          <div className="mt-8 pt-6 border-t border-charcoal-100 space-y-2">
             <div className="flex items-center justify-between text-xs font-bold">
               <span className="text-charcoal-500 uppercase tracking-wider text-[11px]">
                 Profile Integrity &amp; Verification Progress
               </span>
-              <span className="text-burgundy-700 font-mono">{completionPercentage}% Completed</span>
+              <span className="text-emerald-700 font-mono">{completionPercentage}% Completed</span>
             </div>
-            <div className="w-full h-2.5 bg-[#faf6ee] rounded-full overflow-hidden border border-[#ece2d1]">
+            <div className="w-full h-2.5 bg-charcoal-100 rounded-full overflow-hidden border border-charcoal-200/60">
               <div
-                className="h-full bg-gradient-to-r from-burgundy-700 via-gold-500 to-emerald-600 transition-all duration-500"
+                className="h-full bg-gradient-to-r from-orange-500 via-cyan-500 to-emerald-500 transition-all duration-500"
                 style={{ width: `${completionPercentage}%` }}
               />
             </div>
