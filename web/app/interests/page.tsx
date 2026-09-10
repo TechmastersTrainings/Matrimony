@@ -45,8 +45,8 @@ export default function InterestsPage() {
         {/* Header */}
         <div className="bg-white rounded-3xl p-6 sm:p-8 border border-[#ece2d1] shadow-sm mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <span className="text-[11px] font-bold uppercase tracking-widest text-burgundy-700 block mb-1">
-              Christian Matrimony Connections
+            <span className="text-[11px] font-bold uppercase tracking-widest text-cyan-800 block mb-1">
+              CovenantNest Connections
             </span>
             <h1 className="text-2xl sm:text-3xl font-serif font-extrabold text-charcoal-900">
               Interests &amp; Mutual Matches
@@ -57,7 +57,7 @@ export default function InterestsPage() {
           </div>
           <Link
             href="/chat"
-            className="bg-gradient-to-r from-burgundy-700 to-burgundy-800 hover:from-burgundy-600 hover:to-burgundy-700 text-white text-xs font-extrabold px-5 py-3 rounded-xl shadow-md self-start sm:self-auto transition-all"
+            className="bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-500 hover:to-teal-500 text-white text-xs font-extrabold px-5 py-3 rounded-xl shadow-md self-start sm:self-auto transition-all"
           >
             Open Messages 💬
           </Link>

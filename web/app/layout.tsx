@@ -6,10 +6,12 @@ import { TopLoadingBar } from '../components/TopLoadingBar';
 import { InactivityHandler } from '../components/InactivityHandler';
 
 export const metadata = {
-  title: 'Christian Matrimony | Trusted Christian Matrimonial Portal | Bidar & Karnataka',
+  title: 'CovenantNest | Blessed Christian Matrimony | Bidar, Karnataka & Pan-India',
   description:
-    'Dedicated Christian matrimonial portal connecting brides, grooms and families in Bidar, Bengaluru, Kalaburagi, Hyderabad and across India.',
+    'CovenantNest is a reverent Christian matrimonial sanctuary where holy covenants build blessed homes. Connecting brides, bridegrooms, and prayerful families across Bidar, Karnataka, and India.',
   keywords: [
+    'CovenantNest',
+    'Covenant Nest',
     'Christian Matrimony',
     'Bidar Christian Matrimony',
     'Karnataka Christian Brides',

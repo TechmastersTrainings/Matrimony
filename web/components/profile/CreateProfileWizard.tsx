@@ -239,7 +239,7 @@ export function CreateProfileWizard() {
     if (age < 18) {
       return { age, isValid: false, message: 'Must be at least 18 years old for matrimony' };
     }
-    return { age, isValid: true, message: 'Eligible for Christian Matrimony' };
+    return { age, isValid: true, message: 'Eligible for CovenantNest Matrimony' };
   }, [formData.dob]);
 
   // Load existing draft or registered candidate details
@@ -1406,8 +1406,8 @@ export function CreateProfileWizard() {
 
               {/* Review summary box */}
               <div className="p-5 rounded-2xl bg-[#faf6ee] border border-[#ece2d1] space-y-2 text-xs">
-                <h4 className="font-serif font-bold text-burgundy-800 uppercase text-[11px] tracking-wider">
-                  Christian Matrimony Declaration
+                <h4 className="font-serif font-bold text-cyan-900 uppercase text-[11px] tracking-wider">
+                  CovenantNest Matrimony Declaration
                 </h4>
                 <p className="text-charcoal-700 leading-relaxed">
                   I solemnly declare that all personal, spiritual, denomination, and career credentials provided in this profile are genuine and accurate.

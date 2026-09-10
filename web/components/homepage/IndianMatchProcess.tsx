@@ -33,7 +33,7 @@ export function IndianMatchProcess() {
             Simple 3-Step Process
           </span>
           <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
-            How Christian Matrimony Works
+            How CovenantNest Works
           </h2>
           <p className="text-xs sm:text-sm text-slate-500 mt-1">
             An intuitive and transparent workflow for candidates, parents, and families.
@@ -78,7 +78,7 @@ export function IndianMatchProcess() {
               Begin Your Matrimonial Search Today
             </h3>
             <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-              Join Christian Matrimony for verified matrimonial matchmaking across Bidar, Karnataka, and India.
+              Join CovenantNest for verified matrimonial matchmaking across Bidar, Karnataka, and India.
             </p>
             <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
               <Link

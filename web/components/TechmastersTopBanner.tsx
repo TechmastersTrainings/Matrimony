@@ -16,7 +16,7 @@ export function TechmastersTopBanner() {
           </span>
           <span className="hidden md:inline text-cyan-300/40">•</span>
           <span className="hidden md:inline text-cyan-100/90 text-xs font-medium">
-            Empowering Blessed Christian Marriages
+            <strong className="text-white font-bold">CovenantNest</strong> — Empowering Blessed Christian Marriages
           </span>
         </div>
 

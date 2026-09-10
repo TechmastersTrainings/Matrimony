@@ -239,7 +239,7 @@ export default function DiscoverPage() {
               <p className="text-xs sm:text-sm text-charcoal-600 max-w-sm mx-auto leading-relaxed">
                 {modalActionType === 'interest'
                   ? 'To express matrimonial interest and connect directly with verified candidates, an active membership plan is required.'
-                  : 'Detailed family background, parish endorsements, and direct phone reveals are reserved for active Christian Matrimony members.'}
+                  : 'Detailed family background, parish endorsements, and direct phone reveals are reserved for active CovenantNest members.'}
               </p>
             </div>
 
@@ -780,11 +780,11 @@ export default function DiscoverPage() {
                         </div>
 
                         <div className="absolute top-3 right-3 bg-white/95 backdrop-blur-md text-charcoal-700 text-[10px] font-bold px-2.5 py-1 rounded-lg border border-[#ece2d1] shadow-sm">
-                          CM-{c.id}
+                          CN-{c.id}
                         </div>
 
-                        <div className="absolute bottom-3 left-3 right-3 bg-white/95 backdrop-blur-md text-charcoal-600 text-[10px] font-semibold px-2 py-1 rounded-lg border border-[#ece2d1] text-center shadow-sm">
-                          Christian Matrimony Profile
+                        <div className="absolute bottom-3 left-3 right-3 bg-white/95 backdrop-blur-md text-cyan-950 text-[10px] font-bold px-2 py-1 rounded-lg border border-cyan-200 text-center shadow-sm">
+                          CovenantNest Profile
                         </div>
                       </div>
 

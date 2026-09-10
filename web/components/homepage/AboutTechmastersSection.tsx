@@ -33,7 +33,7 @@ export function AboutTechmastersSection() {
                 Dignified, Faith-Centered Marriages for the Christian Community
               </h3>
               <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                Christian Matrimony was conceived to provide Christian brides, bridegrooms, and prayerful families with a safe, confidential, and honorable environment to seek God&apos;s ordained life partner.
+                CovenantNest was conceived to provide Christian brides, bridegrooms, and prayerful families with a safe, confidential, and honorable environment to seek God&apos;s ordained life partner.
               </p>
               <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
                 Unlike generic matrimonial sites that expose personal profiles to the public internet, our platform operates with complete privacy. Profiles, contact numbers, and family backgrounds are safeguarded behind strict member verification, fostering solemn conversations between families across Methodist (MCI), CSI, Roman Catholic, Baptist, Pentecostal, and Christian evangelical fellowships.

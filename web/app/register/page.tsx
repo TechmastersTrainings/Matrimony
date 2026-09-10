@@ -107,10 +107,13 @@ function RegisterFormContent() {
       <div className="relative z-10 w-full max-w-xl">
         {/* Warm Header Branding */}
         <div className="text-center mb-8 space-y-2">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-burgundy-50 border border-burgundy-200 text-burgundy-800 text-xs font-semibold tracking-wide">
-            <span>Blessed Christian Matrimony</span>
-            <span>•</span>
-            <span>Bidar &amp; Karnataka</span>
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-50 border border-cyan-200 text-cyan-950 text-xs font-semibold tracking-wide shadow-2xs">
+            <span className="w-2 h-2 rounded-full bg-cyan-500 animate-pulse" />
+            <span className="font-extrabold">CovenantNest</span>
+            <span className="text-orange-400">•</span>
+            <span>Christian Matrimony</span>
+            <span className="text-emerald-500">•</span>
+            <span className="text-emerald-800 font-medium text-[11px]">Bidar &amp; Pan-India</span>
           </div>
 
           <h1 className="text-3xl sm:text-4xl font-serif font-extrabold text-charcoal-900 tracking-tight">
@@ -325,8 +328,8 @@ function RegisterFormContent() {
           {/* Footer Note */}
           <div className="mt-8 pt-6 border-t border-[#ece2d1] text-center">
             <p className="text-xs text-charcoal-600">
-              Already registered on Christian Matrimony?{' '}
-              <Link href="/login" className="font-bold text-burgundy-700 hover:text-burgundy-800 transition-colors">
+              Already registered on CovenantNest?{' '}
+              <Link href="/login" className="font-bold text-cyan-800 hover:text-cyan-900 transition-colors underline">
                 Sign In to Your Account
               </Link>
             </p>

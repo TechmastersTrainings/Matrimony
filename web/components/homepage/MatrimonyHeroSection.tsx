@@ -17,16 +17,16 @@ export function MatrimonyHeroSection() {
         {/* Sacred Matrimony Badge with Fresh Colors */}
         <div className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full bg-gradient-to-r from-cyan-50 via-orange-50 to-emerald-50 border border-cyan-200/80 text-charcoal-900 text-xs sm:text-sm font-semibold backdrop-blur-md shadow-xs mb-8 animate-fade-in">
           <span className="w-2.5 h-2.5 rounded-full bg-cyan-500 animate-pulse" />
-          <span className="tracking-wide font-extrabold text-cyan-950">Holy Christian Matrimony</span>
+          <span className="tracking-wide font-extrabold text-cyan-950">CovenantNest • Christian Matrimony</span>
           <span className="text-orange-400 font-bold">•</span>
-          <span className="text-emerald-800 font-bold bg-emerald-100/70 px-2 py-0.5 rounded-md text-[11px]">Bidar &amp; Karnataka</span>
+          <span className="text-emerald-800 font-bold bg-emerald-100/70 px-2 py-0.5 rounded-md text-[11px]">Bidar, Karnataka &amp; Pan-India</span>
         </div>
 
         {/* Majestic Matrimonial Headline */}
         <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.14] max-w-4xl text-slate-900 font-brand">
-          Where Two Faithful Souls Begin Their{' '}
+          Where Holy Covenants Build{' '}
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-600 via-rose-600 to-cyan-700">
-            Sacred Covenant
+            Blessed Homes
           </span>
         </h1>
 
@@ -42,7 +42,7 @@ export function MatrimonyHeroSection() {
 
         {/* Matrimony Emotion & Theme Narrative */}
         <p className="text-sm sm:text-base md:text-lg text-slate-600 max-w-3xl mx-auto leading-relaxed font-normal mb-8">
-          A reverent matrimonial sanctuary bringing together Christian brides, bridegrooms, and prayerful families across Methodist, CSI, Roman Catholic, Baptist, Pentecostal, and Protestant fellowships in lifelong faith and love.
+          A reverent Christian matrimonial sanctuary where faithful brides, bridegrooms, and prayerful families across Methodist, CSI, Roman Catholic, Baptist, Pentecostal, and Protestant fellowships build blessed, lifelong homes in Christ.
         </p>
 
         {/* Emotion-driven Matrimony Action CTAs */}

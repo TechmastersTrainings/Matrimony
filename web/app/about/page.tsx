@@ -3,8 +3,8 @@ import Link from 'next/link';
 import { AboutTechmastersSection } from '../../components/homepage/AboutTechmastersSection';
 
 export const metadata = {
-  title: 'About Us | Techmasters Innovations Private Limited | Christian Matrimony',
-  description: 'About Christian Matrimony and Techmasters Innovations Private Limited. Dedicated, secure, and confidential Christian matrimonial portal based in Bidar, Karnataka.',
+  title: 'About Us | CovenantNest — Christian Matrimony | Techmasters Innovations',
+  description: 'About CovenantNest and Techmasters Innovations Private Limited. Dedicated, secure, and confidential Christian matrimonial sanctuary based in Bidar, Karnataka.',
 };
 
 export default function AboutPage() {

@@ -132,7 +132,7 @@ export function Footer() {
         {/* Bottom Bar: Copyright & Regional Reach */}
         <div className="pt-3.5 border-t border-[#ded3be] flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] text-slate-600">
           <p>
-            © 2026 Christian Matrimony • <span className="text-slate-900 font-bold">Techmasters Innovations Private Limited</span>. All rights reserved.
+            © 2026 CovenantNest • <span className="text-slate-900 font-bold">Techmasters Innovations Private Limited</span>. All rights reserved.
           </p>
           <p className="text-slate-700 font-medium">
             Corporate Office: Mailoor Road, Bidar, Karnataka - 585403

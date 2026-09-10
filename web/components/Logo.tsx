@@ -35,45 +35,47 @@ export function Logo({
             {/* Shimmer overlay */}
             <div className="absolute -inset-x-full inset-y-0 bg-gradient-to-r from-transparent via-white/35 to-transparent skew-x-12 group-hover:animate-shimmer" />
 
-            {/* Emblem SVG: Grace Cross + Intertwined Union Hearts */}
+            {/* Emblem SVG: Grace Cross + Intertwined Covenant Rings in Nest Arch */}
             <svg
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
               className="w-3/5 h-3/5 text-burgundy-950 drop-shadow-xs"
-              strokeWidth="2.4"
+              strokeWidth="2.2"
               strokeLinecap="round"
               strokeLinejoin="round"
             >
               {/* Central Grace Cross */}
-              <path d="M12 2v14" />
-              <path d="M7 6h10" />
+              <path d="M12 3v12" />
+              <path d="M7.5 7h9" />
               
-              {/* Intertwined Heart Rings */}
-              <path d="M8.5 13.5C7 12 5 13.5 5 15.5c0 2 3.5 4.5 7 6.5 3.5-2 7-4.5 7-6.5 0-2-2-3.5-3.5-2C14 15 13 16 12 16.5c-1-.5-2-1.5-3.5-3z" fill="currentColor" fillOpacity="0.25" />
+              {/* Sacred Nest Base Arch & Covenant Rings */}
+              <path d="M4 14.5c2.5 5 13.5 5 16 0" strokeWidth="2.4" />
+              <circle cx="10" cy="13.5" r="2.6" strokeWidth="1.8" />
+              <circle cx="14" cy="13.5" r="2.6" strokeWidth="1.8" />
             </svg>
           </div>
         </div>
       </div>
 
-      {/* Brand Text */}
+      {/* Brand Text: CovenantNest */}
       <div className="flex flex-col">
         <div className="flex items-center leading-none">
           <span className={`font-serif font-extrabold tracking-tight ${lightText ? 'text-white' : 'text-charcoal-900'} ${sizeClasses.text}`}>
-            Christian<span className="text-burgundy-700">Matrimony</span>
+            Covenant<span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-600 via-rose-600 to-cyan-600">Nest</span>
           </span>
         </div>
         
         <div className="flex flex-wrap items-center gap-2 mt-1">
-          <span className={`font-sans font-black tracking-[0.2em] uppercase text-gold-700 ${sizeClasses.sub}`}>
-            BIDAR • KARNATAKA
+          <span className={`font-sans font-black tracking-[0.16em] uppercase text-cyan-800 ${sizeClasses.sub}`}>
+            CHRISTIAN MATRIMONY • BIDAR &amp; PAN INDIA
           </span>
 
           {showTechmastersTag && (
             <>
-              <span className="text-[#c7b9a2] font-bold hidden sm:inline">•</span>
-              <span className={`font-sans font-semibold tracking-wider text-charcoal-800 flex items-center gap-1.5 bg-[#faf6ee] border border-[#ded0ba] px-2 py-0.5 rounded-full ${sizeClasses.tag}`}>
-                <span className="inline-block w-1.5 h-1.5 rounded-full bg-burgundy-600 animate-pulse" />
+              <span className="text-charcoal-300 font-bold hidden sm:inline">•</span>
+              <span className={`font-sans font-semibold tracking-wider text-charcoal-800 flex items-center gap-1.5 bg-cyan-50/80 border border-cyan-200 px-2 py-0.5 rounded-full ${sizeClasses.tag}`}>
+                <span className="inline-block w-1.5 h-1.5 rounded-full bg-cyan-600 animate-pulse" />
                 Techmasters Innovations
               </span>
             </>
