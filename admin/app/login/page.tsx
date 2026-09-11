@@ -2,6 +2,7 @@
 
 import React, { useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { Logo } from '../../components/Logo';
 
 function AdminLoginFormContent() {
   const router = useRouter();
@@ -59,39 +60,42 @@ function AdminLoginFormContent() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center py-12 px-4 bg-slate-950 text-white font-sans">
+    <div className="min-h-screen flex items-center justify-center py-12 px-4 bg-[#fdfbf7] text-[#1e1b18] font-sans">
       <div className="w-full max-w-md space-y-6">
-        {/* Header */}
-        <div className="text-center space-y-2">
-          <div className="w-14 h-14 rounded-2xl bg-amber-500/20 border border-amber-500/40 text-amber-400 font-extrabold text-xl flex items-center justify-center mx-auto shadow-xl shadow-amber-950/40">
-            CM
+        {/* Header with CovenantNest Logo */}
+        <div className="text-center space-y-3 flex flex-col items-center">
+          <Logo size="lg" showTechmastersTag={false} lightText={false} />
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-50 border border-cyan-200 text-cyan-950 text-xs font-bold uppercase tracking-wider shadow-2xs mt-2">
+            <span className="w-2 h-2 rounded-full bg-cyan-500 animate-pulse" />
+            <span>Administrative Command Center</span>
           </div>
-          <h1 className="text-2xl font-bold text-white tracking-tight">Admin Console Login</h1>
-          <p className="text-xs text-slate-400">Christian Matrimony Platform • Moderation &amp; Management</p>
+          <p className="text-xs text-slate-500 max-w-xs">
+            Authorized church moderators &amp; platform administrators only
+          </p>
         </div>
 
         {/* Inactivity Warning Banner */}
         {isInactiveLogout && (
-          <div className="p-4 rounded-2xl bg-red-950/80 border border-red-500/50 text-red-200 text-xs font-medium flex items-start gap-3 shadow-xl backdrop-blur-md">
+          <div className="p-4 rounded-2xl bg-amber-50 border border-amber-300 text-amber-950 text-xs font-medium flex items-start gap-3 shadow-xs">
             <span className="text-lg leading-none">⏰</span>
             <div>
-              <strong className="block font-bold text-red-300 mb-0.5">Session Terminated</strong>
+              <strong className="block font-bold text-amber-900 mb-0.5">Session Terminated</strong>
               <span>For administrative security compliance, your session was automatically logged out due to 10 minutes of inactivity. Please sign in again.</span>
             </div>
           </div>
         )}
 
-        {/* Card */}
-        <div className="bg-slate-900 border border-slate-800 rounded-3xl p-8 shadow-2xl space-y-5">
+        {/* Login Card */}
+        <div className="bg-white border border-[#ece2d1] rounded-3xl p-8 shadow-sm space-y-5">
           {error && (
-            <div className="p-3.5 rounded-xl bg-red-950/70 border border-red-800 text-red-200 text-xs font-medium">
+            <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs font-medium">
               {error}
             </div>
           )}
 
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
                 Admin Email / Mobile
               </label>
               <input
@@ -99,13 +103,13 @@ function AdminLoginFormContent() {
                 required
                 value={identifier}
                 onChange={(e) => setIdentifier(e.target.value)}
-                placeholder="Enter admin email address"
-                className="w-full text-xs font-medium border border-slate-800 rounded-xl p-3.5 bg-slate-950 text-white focus:outline-none focus:border-amber-400"
+                placeholder="admin@techmasters.space"
+                className="w-full text-sm px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-cyan-600 focus:bg-white text-slate-900 transition-all"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
                 Password
               </label>
               <input
@@ -113,19 +117,23 @@ function AdminLoginFormContent() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter password"
-                className="w-full text-xs font-medium border border-slate-800 rounded-xl p-3.5 bg-slate-950 text-white focus:outline-none focus:border-amber-400"
+                placeholder="••••••••"
+                className="w-full text-sm px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-cyan-600 focus:bg-white text-slate-900 transition-all"
               />
             </div>
 
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full py-3.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-xs shadow-lg shadow-amber-950/40 transition-all transform hover:-translate-y-0.5"
+              className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-cyan-700 to-teal-700 hover:from-cyan-600 hover:to-teal-600 text-white font-extrabold text-sm shadow-md transition-all disabled:opacity-60"
             >
-              {isLoading ? 'Authenticating Admin...' : 'Sign In as Administrator →'}
+              {isLoading ? 'Authenticating...' : 'Sign In to Command Center →'}
             </button>
           </form>
+
+          <div className="pt-2 text-center text-[11px] text-slate-400">
+            A Techmasters Innovations Product • Confidential Access
+          </div>
         </div>
       </div>
     </div>
@@ -134,7 +142,13 @@ function AdminLoginFormContent() {
 
 export default function AdminLoginPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-slate-950" />}>
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center bg-[#fdfbf7] text-slate-800">
+          Loading Command Center...
+        </div>
+      }
+    >
       <AdminLoginFormContent />
     </Suspense>
   );

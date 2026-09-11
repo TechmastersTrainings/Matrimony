@@ -66,13 +66,12 @@ function AdminProfilesContent() {
   }, [statusFilter]);
 
   const handleApprove = async (profileId: number) => {
-    if (!confirm(`Approve Profile #${profileId}? This candidate will immediately become searchable on Discovery search.`)) return;
+    if (!confirm(`Approve Profile CN-${profileId}? This candidate will immediately become searchable on Discovery search.`)) return;
     setActionLoading(true);
     try {
-      const res = await adminApiClient.approveProfile(profileId);
-      showToast(`✓ Profile #${profileId} approved successfully and published to Discovery.`);
+      await adminApiClient.approveProfile(profileId);
+      showToast(`✓ Profile CN-${profileId} approved successfully and published.`);
 
-      // Optimistically update list
       setProfiles((prev) =>
         prev.map((p) =>
           p.id === profileId
@@ -81,7 +80,6 @@ function AdminProfilesContent() {
         )
       );
 
-      // Optimistically update selected profile status in state
       if (selectedProfile && selectedProfile.id === profileId) {
         setSelectedProfile({
           ...selectedProfile,
@@ -104,11 +102,10 @@ function AdminProfilesContent() {
     setActionLoading(true);
     try {
       await adminApiClient.rejectProfile(pId, rejectReason.trim());
-      showToast(`Profile #${pId} rejected.`);
+      showToast(`Profile CN-${pId} rejected.`);
       setActionType(null);
       setRejectReason('');
 
-      // Update state
       setSelectedProfile({
         ...selectedProfile,
         status: 'REJECTED',
@@ -130,11 +127,10 @@ function AdminProfilesContent() {
     setActionLoading(true);
     try {
       await adminApiClient.requestChanges(pId, changesNotes.trim());
-      showToast(`✓ Changes requested from candidate for Profile #${pId}.`);
+      showToast(`✓ Changes requested from candidate for Profile CN-${pId}.`);
       setActionType(null);
       setChangesNotes('');
 
-      // Update state
       setSelectedProfile({
         ...selectedProfile,
         status: 'CHANGES_REQUIRED',
@@ -157,7 +153,7 @@ function AdminProfilesContent() {
     setActionLoading(true);
     try {
       await adminApiClient.deleteProfile(pId, deleteReason.trim());
-      showToast(`✓ Profile #${pId} (${pName}) permanently purged from server.`);
+      showToast(`✓ Profile CN-${pId} (${pName}) permanently purged.`);
       setActionType(null);
       setDeleteReason('Candidate found match / requested decommission');
       setSelectedProfile(null);
@@ -169,35 +165,45 @@ function AdminProfilesContent() {
     }
   };
 
+  const webUrl = (process.env.NEXT_PUBLIC_WEB_URL || 'https://covenantnest.techmaster.space').replace(/\/+$/, '');
+
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8 text-white font-sans">
-      {/* Persistent Toast Banner */}
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 text-[#1e1b18] font-sans">
+      {/* Toast Banner */}
       {toastMessage && (
-        <div className="fixed top-6 right-6 z-50 p-4 rounded-2xl bg-emerald-500 text-slate-950 font-extrabold text-xs shadow-2xl border border-emerald-400 flex items-center gap-3">
+        <div className="fixed top-6 right-6 z-50 p-4 rounded-2xl bg-emerald-600 text-white font-bold text-xs shadow-2xl border border-emerald-400 flex items-center gap-3">
           <span>{toastMessage}</span>
           <a
-            href={`${(process.env.NEXT_PUBLIC_WEB_URL || 'https://matrimony-psi-wheat.vercel.app').replace(/\/+$/, '')}/discover`}
+            href={`${webUrl}/discover`}
             target="_blank"
             rel="noreferrer"
-            className="px-3 py-1 bg-slate-950 text-white rounded-lg text-[10px] font-mono hover:bg-slate-900"
+            className="px-3 py-1 bg-white text-emerald-900 rounded-lg text-[10px] font-bold hover:bg-emerald-50"
           >
-            Check Discovery Search ↗
+            Check Discovery ↗
           </a>
-          <button onClick={() => setToastMessage(null)} className="ml-2 text-slate-950 hover:text-white font-bold">
+          <button onClick={() => setToastMessage(null)} className="ml-2 text-white/80 hover:text-white font-bold">
             ✕
           </button>
         </div>
       )}
 
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8 pb-6 border-b border-slate-800">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8 pb-6 border-b border-charcoal-200/80">
         <div>
-          <h1 className="text-2xl font-extrabold text-white tracking-tight">Profile Moderation Queue</h1>
-          <p className="text-xs text-slate-400 mt-1">Review Christian faith credentials, church details, photos, and approve profiles for Discovery.</p>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-50 border border-cyan-200 text-cyan-950 text-xs font-bold uppercase tracking-wider shadow-2xs mb-2">
+            <span className="w-2 h-2 rounded-full bg-cyan-500 animate-pulse" />
+            <span>CovenantNest Moderation Suite</span>
+          </div>
+          <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight font-brand">
+            Candidate Moderation Queue
+          </h1>
+          <p className="text-xs sm:text-sm text-slate-500 mt-1">
+            Review Christian faith credentials, church details, unmasked contacts, and approve profiles for Discovery search.
+          </p>
         </div>
 
         {/* Status Filters */}
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-1.5">
           {['ALL', 'SUBMITTED', 'UNDER_REVIEW', 'CHANGES_REQUIRED', 'APPROVED', 'REJECTED'].map((st) => (
             <button
               key={st}
@@ -209,11 +215,11 @@ function AdminProfilesContent() {
               }}
               className={`text-xs font-bold px-3 py-1.5 rounded-xl transition-all border ${
                 statusFilter === st
-                  ? 'bg-amber-500 text-slate-950 border-amber-400 shadow-md'
-                  : 'bg-slate-900 text-slate-400 border-slate-800 hover:text-white'
+                  ? 'bg-slate-900 text-white border-slate-900 shadow-sm'
+                  : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
               }`}
             >
-              {st === 'ALL' ? 'All Profiles' : st.replace('_', ' ')}
+              {st === 'ALL' ? 'All Profiles' : st.replace(/_/g, ' ')}
             </button>
           ))}
         </div>
@@ -221,59 +227,89 @@ function AdminProfilesContent() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Left Profiles List */}
-        <div className="bg-slate-900 border border-slate-800 rounded-3xl p-4 shadow-xl h-[700px] overflow-y-auto space-y-3">
-          <div className="flex items-center justify-between px-2 pb-2 border-b border-slate-800 text-xs font-bold text-slate-400 uppercase">
+        <div className="bg-white border border-[#ece2d1] rounded-3xl p-4 shadow-sm h-[750px] overflow-y-auto space-y-3">
+          <div className="flex items-center justify-between px-2 pb-2 border-b border-[#ece2d1] text-xs font-bold text-slate-500 uppercase">
             <span>Profiles ({profiles.length})</span>
-            <button onClick={() => loadProfiles()} className="text-amber-400 hover:underline">
-              Refresh List
+            <button onClick={() => loadProfiles()} className="text-cyan-700 hover:underline">
+              🔄 Refresh List
             </button>
           </div>
 
           {loading ? (
-            <div className="p-8 text-center text-xs text-slate-500 animate-pulse">Loading candidate profiles...</div>
+            <div className="p-8 text-center text-xs text-slate-400 animate-pulse">Loading candidate profiles...</div>
           ) : profiles.length === 0 ? (
             <div className="p-12 text-center text-xs text-slate-500">No profiles found under filter &quot;{statusFilter}&quot;.</div>
           ) : (
             profiles.map((p) => {
               const isSelected = selectedProfile?.id === p.id;
+              const photoUrl = getPhotoUrl(
+                p.photos?.find((ph: any) => ph.is_primary)?.url || p.photos?.[0]?.url
+              );
+              const candidateCode = `CN-${p.id}`;
+
               return (
                 <div
                   key={p.id}
                   onClick={() => setSelectedProfile(p)}
-                  className={`p-4 rounded-2xl cursor-pointer border transition-all ${
+                  className={`p-3.5 rounded-2xl cursor-pointer border transition-all ${
                     isSelected
-                      ? 'bg-slate-800 border-amber-500 shadow-lg ring-1 ring-amber-500/20'
-                      : 'bg-slate-950/60 border-slate-800/80 hover:border-slate-700'
+                      ? 'bg-cyan-50/70 border-cyan-500 shadow-sm ring-1 ring-cyan-500/20'
+                      : 'bg-white border-slate-200/80 hover:border-cyan-300'
                   }`}
                 >
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <h3 className="font-extrabold text-sm text-white">{p.name}</h3>
-                      <p className="text-xs text-slate-400 mt-0.5">
-                        {p.gender || 'Member'} • {p.age ? `${p.age} yrs` : 'Age pending'}
+                  <div className="flex items-start gap-3">
+                    {/* Circular Avatar with bottom Verified Badge */}
+                    <div className="relative shrink-0 flex flex-col items-center">
+                      <div className="w-14 h-14 rounded-full ring-2 ring-cyan-400/30 shadow-xs overflow-hidden bg-gradient-to-tr from-[#0f172a] to-[#1e293b] relative flex items-center justify-center">
+                        {photoUrl ? (
+                          <img
+                            src={photoUrl}
+                            alt={p.name}
+                            className="w-full h-full object-cover object-top"
+                          />
+                        ) : (
+                          <span className="font-mono font-black text-xs text-amber-400">
+                            {candidateCode}
+                          </span>
+                        )}
+                      </div>
+                      <div className="absolute -bottom-1 inset-x-0 flex justify-center pointer-events-none">
+                        <span className="bg-emerald-600 text-white text-[9px] font-black px-1.5 rounded-full shadow-2xs">
+                          ✓
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between gap-1">
+                        <h3 className="font-bold text-sm text-slate-900 truncate">{p.name}</h3>
+                        <span
+                          className={`text-[9px] font-extrabold px-2 py-0.5 rounded-md uppercase border shrink-0 ${
+                            p.status === 'APPROVED'
+                              ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
+                              : p.status === 'REJECTED'
+                              ? 'bg-rose-50 text-rose-800 border-rose-200'
+                              : p.status === 'CHANGES_REQUIRED'
+                              ? 'bg-amber-50 text-amber-800 border-amber-200'
+                              : 'bg-cyan-50 text-cyan-800 border-cyan-200'
+                          }`}
+                        >
+                          {p.status}
+                        </span>
+                      </div>
+
+                      <p className="text-xs text-slate-500 mt-0.5">
+                        {p.gender === 'FEMALE' ? 'Bride' : 'Groom'} • {p.age ? `${p.age} yrs` : 'Age N/A'}
                       </p>
-                      <p className="text-[11px] text-amber-400 font-medium mt-1">
-                        {p.denomination || 'Christian'} • {p.church_name || 'Church not set'}
+                      <p className="text-[11px] text-cyan-900 font-semibold truncate mt-0.5">
+                        {p.denomination || 'Christian'} • {p.church_name || 'Church pending'}
                       </p>
                     </div>
-                    <span
-                      className={`text-[9px] font-extrabold px-2 py-0.5 rounded-md uppercase border ${
-                        p.status === 'APPROVED'
-                          ? 'bg-emerald-950 text-emerald-300 border-emerald-800'
-                          : p.status === 'REJECTED'
-                          ? 'bg-red-950 text-red-300 border-red-800'
-                          : p.status === 'CHANGES_REQUIRED'
-                          ? 'bg-amber-950 text-amber-300 border-amber-800'
-                          : 'bg-blue-950 text-blue-300 border-blue-800'
-                      }`}
-                    >
-                      {p.status}
-                    </span>
                   </div>
 
-                  <div className="mt-3 pt-2 border-t border-slate-800/80 flex items-center justify-between text-[10px] text-slate-500">
+                  <div className="mt-2.5 pt-2 border-t border-slate-100 flex items-center justify-between text-[10px] text-slate-400">
                     <span>{p.photos_count || 0} Photos</span>
-                    <span>{p.submitted_at ? new Date(p.submitted_at).toLocaleDateString() : 'Draft'}</span>
+                    <span>{candidateCode}</span>
                   </div>
                 </div>
               );
@@ -284,44 +320,44 @@ function AdminProfilesContent() {
         {/* Right Detail & Action Inspector */}
         <div className="lg:col-span-2">
           {selectedProfile ? (
-            <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl space-y-6">
+            <div className="bg-white border border-[#ece2d1] rounded-3xl p-6 sm:p-8 shadow-sm space-y-6">
               {/* Header Banner */}
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6 border-b border-slate-800">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6 border-b border-[#ece2d1]">
                 <div>
                   <div className="flex items-center gap-3">
-                    <h2 className="text-xl font-extrabold text-white">{selectedProfile.name}</h2>
+                    <h2 className="text-2xl font-extrabold text-slate-900 font-brand">{selectedProfile.name}</h2>
                     <span
                       className={`text-[10px] font-extrabold px-2.5 py-0.5 rounded-md uppercase border ${
                         selectedProfile.status === 'APPROVED'
-                          ? 'bg-emerald-950 text-emerald-300 border-emerald-800'
+                          ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
                           : selectedProfile.status === 'REJECTED'
-                          ? 'bg-red-950 text-red-300 border-red-800'
+                          ? 'bg-rose-50 text-rose-800 border-rose-200'
                           : selectedProfile.status === 'CHANGES_REQUIRED'
-                          ? 'bg-amber-950 text-amber-300 border-amber-800'
-                          : 'bg-blue-950 text-blue-300 border-blue-800'
+                          ? 'bg-amber-50 text-amber-800 border-amber-200'
+                          : 'bg-cyan-50 text-cyan-800 border-cyan-200'
                       }`}
                     >
                       {selectedProfile.status}
                     </span>
                   </div>
-                  <p className="text-xs text-slate-400 mt-1">
-                    Profile ID: CM-{selectedProfile.id} • User ID: {selectedProfile.user_id}
+                  <p className="text-xs text-slate-500 mt-1 font-mono">
+                    Candidate Code: CN-{selectedProfile.id} • User ID: #{selectedProfile.user_id}
                   </p>
                 </div>
 
                 {/* Moderation Actions */}
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2">
                   {selectedProfile.status !== 'APPROVED' ? (
                     <button
                       disabled={actionLoading}
                       onClick={() => handleApprove(selectedProfile.id)}
-                      className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-400 hover:to-emerald-500 text-slate-950 font-extrabold text-xs shadow-lg transition-all flex items-center gap-1.5"
+                      className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-extrabold text-xs shadow-xs transition-all flex items-center gap-1.5"
                     >
                       {actionLoading ? 'Approving...' : '✓ Approve & Publish'}
                     </button>
                   ) : (
-                    <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-emerald-950/80 border border-emerald-500/60 text-emerald-300 font-extrabold text-xs shadow-inner">
-                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                    <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-emerald-50 border border-emerald-300 text-emerald-900 font-extrabold text-xs">
+                      <span className="w-2 h-2 rounded-full bg-emerald-500" />
                       <span>✓ Approved &amp; Published</span>
                     </div>
                   )}
@@ -329,7 +365,7 @@ function AdminProfilesContent() {
                   <button
                     disabled={actionLoading}
                     onClick={() => setActionType('CHANGES')}
-                    className="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-400 font-bold text-xs border border-slate-700 transition-all"
+                    className="px-4 py-2.5 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-950 font-bold text-xs border border-amber-200 transition-all"
                   >
                     Request Changes
                   </button>
@@ -337,7 +373,7 @@ function AdminProfilesContent() {
                   <button
                     disabled={actionLoading}
                     onClick={() => setActionType('REJECT')}
-                    className="px-4 py-2.5 rounded-xl bg-red-950/60 hover:bg-red-900 text-red-300 font-bold text-xs border border-red-800 transition-all"
+                    className="px-4 py-2.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-950 font-bold text-xs border border-rose-200 transition-all"
                   >
                     Reject
                   </button>
@@ -348,64 +384,60 @@ function AdminProfilesContent() {
                       setDeleteReason('Candidate found match / requested decommission');
                       setActionType('DELETE');
                     }}
-                    className="px-4 py-2.5 rounded-xl bg-rose-950/60 hover:bg-rose-900 text-rose-300 font-bold text-xs border border-rose-800 transition-all flex items-center gap-1.5"
-                    title="Permanently remove candidate from server (Match found / Account closed)"
+                    className="px-3.5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs border border-slate-300 transition-all flex items-center gap-1.5"
+                    title="Permanently remove candidate from server"
                   >
                     <span>🗑️</span>
-                    <span>Delete Profile</span>
                   </button>
                 </div>
               </div>
 
               {/* Status Banner */}
               {selectedProfile.status === 'APPROVED' && (
-                <div className="p-3.5 px-4 rounded-2xl bg-emerald-950/50 border border-emerald-800/80 text-emerald-200 text-xs font-medium flex flex-wrap items-center justify-between gap-3">
+                <div className="p-3.5 px-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-950 text-xs font-medium flex flex-wrap items-center justify-between gap-3">
                   <span className="flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                    <span>Active &amp; Publicly Searchable on Discovery Search</span>
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                    <span>Active &amp; Publicly Searchable on CovenantNest Discovery</span>
                   </span>
                   <a
-                    href={`${(process.env.NEXT_PUBLIC_WEB_URL || 'https://matrimony-psi-wheat.vercel.app').replace(/\/+$/, '')}/profile/${selectedProfile.id}`}
+                    href={`${webUrl}/profile/${selectedProfile.id}`}
                     target="_blank"
                     rel="noreferrer"
-                    className="px-3.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs shadow-md transition-all shrink-0 flex items-center gap-1.5"
+                    className="px-3.5 py-1.5 rounded-xl bg-cyan-700 hover:bg-cyan-600 text-white font-bold text-xs shadow-xs transition-all shrink-0 flex items-center gap-1.5"
                   >
-                    <span>View Public Profile CM-{selectedProfile.id} ↗</span>
+                    <span>View Public Profile CN-{selectedProfile.id} ↗</span>
                   </a>
                 </div>
               )}
 
               {selectedProfile.rejection_reason && (
-                <div className="p-4 rounded-2xl bg-red-950/70 border border-red-800 text-red-200 text-xs">
+                <div className="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-900 text-xs">
                   <strong>Rejection Reason:</strong> {selectedProfile.rejection_reason}
                 </div>
               )}
 
               {selectedProfile.changes_requested_notes && (
-                <div className="p-4 rounded-2xl bg-amber-950/70 border border-amber-800 text-amber-200 text-xs">
+                <div className="p-4 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 text-xs">
                   <strong>Changes Requested:</strong> {selectedProfile.changes_requested_notes}
                 </div>
               )}
 
               {/* Photos Gallery */}
               <div>
-                <h4 className="text-xs font-bold text-amber-400 uppercase tracking-wider mb-3">
+                <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider mb-3">
                   Uploaded Photos ({selectedProfile.photos?.length || 0})
                 </h4>
                 {selectedProfile.photos && selectedProfile.photos.length > 0 ? (
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                     {selectedProfile.photos.map((ph) => (
-                      <div key={ph.id} className="relative aspect-square rounded-2xl overflow-hidden bg-slate-950 border border-slate-800">
+                      <div key={ph.id} className="relative aspect-square rounded-2xl overflow-hidden bg-slate-100 border border-slate-200">
                         <img
                           src={getPhotoUrl(ph.url)}
                           alt="Candidate Photo"
                           className="w-full h-full object-cover"
-                          onError={(e) => {
-                            e.currentTarget.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25' viewBox='0 0 100 100'%3E%3Crect width='100%25' height='100%25' fill='%230f172a'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23f59e0b' font-family='sans-serif' font-weight='bold' font-size='16'%3ECM%3C/text%3E%3C/svg%3E";
-                          }}
                         />
                         {ph.is_primary && (
-                          <span className="absolute top-2 left-2 px-2 py-0.5 rounded-md bg-amber-500 text-slate-950 text-[10px] font-extrabold shadow-md">
+                          <span className="absolute top-2 left-2 px-2 py-0.5 rounded-md bg-cyan-700 text-white text-[10px] font-extrabold shadow-xs">
                             Primary DP
                           </span>
                         )}
@@ -413,7 +445,7 @@ function AdminProfilesContent() {
                     ))}
                   </div>
                 ) : (
-                  <div className="p-6 rounded-2xl bg-slate-950 text-center text-xs text-slate-500 border border-slate-800">
+                  <div className="p-6 rounded-2xl bg-slate-50 text-center text-xs text-slate-500 border border-slate-200">
                     No photos uploaded yet for this draft.
                   </div>
                 )}
@@ -422,372 +454,148 @@ function AdminProfilesContent() {
               {/* Comprehensive Details Section */}
               <div className="space-y-4">
                 {/* 1. Contact & Trust Verification (Confidential Admin View) */}
-                <div className="p-5 rounded-2xl bg-slate-950 border-2 border-amber-500/40 shadow-lg space-y-3">
-                  <div className="flex items-center justify-between pb-2 border-b border-slate-800">
+                <div className="p-5 rounded-2xl bg-cyan-50/60 border border-cyan-200 shadow-2xs space-y-3">
+                  <div className="flex items-center justify-between pb-2 border-b border-cyan-200">
                     <div className="flex items-center gap-2">
                       <span className="text-base">🔐</span>
-                      <span className="text-xs font-extrabold uppercase tracking-wider text-amber-400">
+                      <span className="text-xs font-extrabold uppercase tracking-wider text-cyan-950">
                         Direct Contact &amp; Candidate Trust Verification
                       </span>
                     </div>
-                    <span className="text-[10px] bg-amber-500/10 text-amber-300 font-bold px-2 py-0.5 rounded-md border border-amber-500/20">
-                      Confidential Admin Access
+                    <span className="text-[10px] bg-cyan-100 text-cyan-900 font-bold px-2 py-0.5 rounded-md border border-cyan-300">
+                      Unmasked Moderator View
                     </span>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-xs">
                     <div>
-                      <span className="text-slate-400 block mb-1">Registered Mobile Number</span>
+                      <span className="text-slate-500 block mb-1">Registered Mobile Number</span>
                       <a
                         href={`tel:${selectedProfile.mobile_number}`}
-                        className="text-white font-mono font-bold text-sm hover:text-amber-400 flex items-center gap-1.5 transition-colors"
+                        className="text-cyan-950 font-mono font-bold text-sm hover:underline flex items-center gap-1.5 transition-colors"
                       >
-                        <span>📱 +91 {selectedProfile.mobile_number || 'Not provided'}</span>
+                        <span>📞 +91 {selectedProfile.mobile_number || 'Not provided'}</span>
                       </a>
                     </div>
 
                     <div>
-                      <span className="text-slate-400 block mb-1">Registered Email Address</span>
+                      <span className="text-slate-500 block mb-1">Registered Email Address</span>
                       <a
                         href={`mailto:${selectedProfile.email}`}
-                        className="text-white font-bold text-sm hover:text-amber-400 flex items-center gap-1.5 transition-colors"
+                        className="text-cyan-950 font-mono font-bold text-sm hover:underline flex items-center gap-1.5 transition-colors truncate"
                       >
                         <span>✉️ {selectedProfile.email || 'Not provided'}</span>
                       </a>
                     </div>
 
                     <div>
-                      <span className="text-slate-400 block mb-1">Submission Date &amp; Time</span>
-                      <span className="text-slate-300 font-mono text-xs">
-                        {selectedProfile.submitted_at
-                          ? new Date(selectedProfile.submitted_at).toLocaleString()
-                          : 'In Draft Mode'}
+                      <span className="text-slate-500 block mb-1">Profile Created By</span>
+                      <span className="font-bold text-slate-800">
+                        {selectedProfile.profile_created_by || 'SELF'}
                       </span>
                     </div>
                   </div>
                 </div>
 
-                {/* 2. Christian Faith & Church Endorsement */}
-                <div className="p-5 rounded-2xl bg-slate-950 border border-slate-800 space-y-3">
-                  <div className="flex items-center gap-2 pb-2 border-b border-slate-800">
-                    <span className="text-base">✝️</span>
-                    <span className="text-xs font-extrabold uppercase tracking-wider text-white">
-                      Christian Faith &amp; Church Credentials
-                    </span>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
+                {/* 2. Faith & Church Credentials */}
+                <div className="p-5 rounded-2xl bg-white border border-[#ece2d1] space-y-3">
+                  <h4 className="text-xs font-extrabold uppercase tracking-wider text-slate-800 pb-2 border-b border-slate-100 flex items-center gap-2">
+                    <span>⛪</span>
+                    <span>Church &amp; Spiritual Background</span>
+                  </h4>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
                     <div>
-                      <span className="text-slate-400 block mb-0.5">Denomination</span>
-                      <strong className="text-white font-bold">{selectedProfile.denomination || 'N/A'}</strong>
+                      <span className="text-slate-500 block">Denomination</span>
+                      <span className="font-bold text-slate-900">{selectedProfile.denomination || '—'}</span>
                     </div>
-
                     <div>
-                      <span className="text-slate-400 block mb-0.5">Sub-Denomination</span>
-                      <strong className="text-white font-bold">{selectedProfile.sub_denomination || 'None'}</strong>
+                      <span className="text-slate-500 block">Sub-Denomination</span>
+                      <span className="font-bold text-slate-900">{selectedProfile.sub_denomination || '—'}</span>
                     </div>
-
                     <div>
-                      <span className="text-slate-400 block mb-0.5">Church / Parish Name</span>
-                      <strong className="text-white font-bold">{selectedProfile.church_name || 'N/A'}</strong>
+                      <span className="text-slate-500 block">Church / Parish Name</span>
+                      <span className="font-bold text-slate-900">{selectedProfile.church_name || '—'}</span>
                     </div>
-
                     <div>
-                      <span className="text-slate-400 block mb-0.5">Pastor / Presbyter</span>
-                      <strong className="text-white font-bold">{selectedProfile.parish_or_pastor || 'N/A'}</strong>
+                      <span className="text-slate-500 block">Pastor / Parish Priest</span>
+                      <span className="font-bold text-slate-900">{selectedProfile.parish_or_pastor || '—'}</span>
                     </div>
-
                     <div>
-                      <span className="text-slate-400 block mb-0.5">Baptism Status</span>
-                      <strong className="text-emerald-400 font-bold">
-                        {selectedProfile.is_baptized ? '✓ Baptized' : 'Not Baptized'}
-                      </strong>
+                      <span className="text-slate-500 block">Water Baptism</span>
+                      <span className="font-bold text-slate-900">{selectedProfile.is_baptized ? 'Yes' : 'No'}</span>
                     </div>
-
-                    <div className="sm:col-span-3">
-                      <span className="text-slate-400 block mb-0.5">Faith Testimony &amp; Church Involvement</span>
-                      <p className="text-slate-300 text-xs italic bg-slate-900 p-2.5 rounded-xl border border-slate-800">
-                        &ldquo;{selectedProfile.faith_testimony || 'No testimony statement provided.'}&rdquo;
-                      </p>
+                    <div>
+                      <span className="text-slate-500 block">Born Again Experience</span>
+                      <span className="font-bold text-slate-900">{selectedProfile.is_born_again ? 'Yes' : 'No'}</span>
                     </div>
                   </div>
                 </div>
 
-                {/* 3. Education & Professional Career */}
-                <div className="p-5 rounded-2xl bg-slate-950 border border-slate-800 space-y-3">
-                  <div className="flex items-center gap-2 pb-2 border-b border-slate-800">
-                    <span className="text-base">💼</span>
-                    <span className="text-xs font-extrabold uppercase tracking-wider text-white">
-                      Education, Career &amp; Income
-                    </span>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
+                {/* 3. Education & Profession */}
+                <div className="p-5 rounded-2xl bg-white border border-[#ece2d1] space-y-3">
+                  <h4 className="text-xs font-extrabold uppercase tracking-wider text-slate-800 pb-2 border-b border-slate-100 flex items-center gap-2">
+                    <span>🎓</span>
+                    <span>Education &amp; Profession</span>
+                  </h4>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
                     <div>
-                      <span className="text-slate-400 block mb-0.5">Highest Qualification</span>
-                      <strong className="text-white font-bold">{selectedProfile.highest_education || 'N/A'}</strong>
+                      <span className="text-slate-500 block">Highest Degree</span>
+                      <span className="font-bold text-slate-900">{selectedProfile.highest_education || '—'}</span>
                     </div>
-
                     <div>
-                      <span className="text-slate-400 block mb-0.5">Occupation Title</span>
-                      <strong className="text-white font-bold">{selectedProfile.occupation_title || 'N/A'}</strong>
+                      <span className="text-slate-500 block">Occupation Title</span>
+                      <span className="font-bold text-slate-900">{selectedProfile.occupation_title || '—'}</span>
                     </div>
-
                     <div>
-                      <span className="text-slate-400 block mb-0.5">Employment Sector</span>
-                      <strong className="text-white font-bold">{selectedProfile.employed_in || 'N/A'}</strong>
+                      <span className="text-slate-500 block">Employed In</span>
+                      <span className="font-bold text-slate-900">{selectedProfile.employed_in || '—'}</span>
                     </div>
-
                     <div>
-                      <span className="text-slate-400 block mb-0.5">Work Location</span>
-                      <strong className="text-white font-bold">{selectedProfile.work_location || 'N/A'}</strong>
+                      <span className="text-slate-500 block">Work Location</span>
+                      <span className="font-bold text-slate-900">{selectedProfile.work_location || '—'}</span>
                     </div>
-
-                    <div className="sm:col-span-2">
-                      <span className="text-slate-400 block mb-0.5">Annual Income (INR)</span>
-                      <strong className="text-amber-400 font-extrabold text-sm">
+                    <div>
+                      <span className="text-slate-500 block">Annual Income</span>
+                      <span className="font-bold text-slate-900">
                         {selectedProfile.annual_income_min
-                          ? `₹${selectedProfile.annual_income_min.toLocaleString('en-IN')} / year`
+                          ? `₹${selectedProfile.annual_income_min.toLocaleString()}/yr`
                           : 'Not disclosed'}
-                      </strong>
-                    </div>
-                  </div>
-                </div>
-
-                {/* 4. Demographics & Family Background */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {/* Demographics */}
-                  <div className="p-5 rounded-2xl bg-slate-950 border border-slate-800 space-y-3">
-                    <div className="flex items-center gap-2 pb-2 border-b border-slate-800">
-                      <span className="text-base">👤</span>
-                      <span className="text-xs font-extrabold uppercase tracking-wider text-white">
-                        Demographics &amp; Habits
                       </span>
                     </div>
-
-                    <div className="grid grid-cols-2 gap-3 text-xs">
-                      <div>
-                        <span className="text-slate-400 block mb-0.5">Gender</span>
-                        <strong className="text-white font-bold">{selectedProfile.gender || 'N/A'}</strong>
-                      </div>
-                      <div>
-                        <span className="text-slate-400 block mb-0.5">Age &amp; DOB</span>
-                        <strong className="text-white font-bold">
-                          {selectedProfile.age || '—'} Yrs ({selectedProfile.dob || 'DOB N/A'})
-                        </strong>
-                      </div>
-                      <div>
-                        <span className="text-slate-400 block mb-0.5">Marital Status</span>
-                        <strong className="text-white font-bold">{selectedProfile.marital_status || 'NEVER_MARRIED'}</strong>
-                      </div>
-                      <div>
-                        <span className="text-slate-400 block mb-0.5">Height</span>
-                        <strong className="text-white font-bold">{selectedProfile.height_cm ? `${selectedProfile.height_cm} cm` : 'N/A'}</strong>
-                      </div>
-                      <div>
-                        <span className="text-slate-400 block mb-0.5">Mother Tongue</span>
-                        <strong className="text-white font-bold">{selectedProfile.mother_tongue || 'N/A'}</strong>
-                      </div>
-                      <div>
-                        <span className="text-slate-400 block mb-0.5">Physical Status</span>
-                        <strong className="text-white font-bold">{selectedProfile.physical_status || 'NORMAL'}</strong>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Family Roots */}
-                  <div className="p-5 rounded-2xl bg-slate-950 border border-slate-800 space-y-3">
-                    <div className="flex items-center gap-2 pb-2 border-b border-slate-800">
-                      <span className="text-base">🏡</span>
-                      <span className="text-xs font-extrabold uppercase tracking-wider text-white">
-                        Family Roots &amp; Location
-                      </span>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-3 text-xs">
-                      <div>
-                        <span className="text-slate-400 block mb-0.5">Father&apos;s Details</span>
-                        <strong className="text-white font-bold block">{selectedProfile.father_name || 'N/A'}</strong>
-                        <span className="text-[11px] text-slate-400">{selectedProfile.father_occupation || ''}</span>
-                      </div>
-                      <div>
-                        <span className="text-slate-400 block mb-0.5">Mother&apos;s Details</span>
-                        <strong className="text-white font-bold block">{selectedProfile.mother_name || 'N/A'}</strong>
-                        <span className="text-[11px] text-slate-400">{selectedProfile.mother_occupation || ''}</span>
-                      </div>
-                      <div>
-                        <span className="text-slate-400 block mb-0.5">Family Standing</span>
-                        <strong className="text-white font-bold">{selectedProfile.family_status || 'UPPER_MIDDLE_CLASS'}</strong>
-                      </div>
-                      <div>
-                        <span className="text-slate-400 block mb-0.5">Family Values</span>
-                        <strong className="text-white font-bold">{selectedProfile.family_values || 'MODERATE'}</strong>
-                      </div>
-                      <div className="col-span-2">
-                        <span className="text-slate-400 block mb-0.5">Native Place &amp; Address</span>
-                        <strong className="text-white font-bold">
-                          {selectedProfile.native_place || 'N/A'}, {selectedProfile.district || 'Bidar'}, {selectedProfile.state || 'Karnataka'} ({selectedProfile.pincode || '585401'})
-                        </strong>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* 5. Bio & Partner Preferences */}
-                <div className="p-5 rounded-2xl bg-slate-950 border border-slate-800 space-y-3">
-                  <div className="flex items-center gap-2 pb-2 border-b border-slate-800">
-                    <span className="text-base">💍</span>
-                    <span className="text-xs font-extrabold uppercase tracking-wider text-white">
-                      Candidate Bio &amp; Partner Preferences
-                    </span>
-                  </div>
-
-                  <div className="space-y-3 text-xs">
                     <div>
-                      <span className="text-slate-400 block mb-1 font-semibold">About Candidate (Personal Bio):</span>
-                      <p className="text-slate-300 bg-slate-900 p-3 rounded-xl border border-slate-800 leading-relaxed">
-                        {selectedProfile.bio || 'No personal bio submitted.'}
-                      </p>
+                      <span className="text-slate-500 block">Location</span>
+                      <span className="font-bold text-slate-900">
+                        {selectedProfile.district || 'Bidar'}, {selectedProfile.state || 'Karnataka'}
+                      </span>
                     </div>
-
-                    {selectedProfile.partner_preferences && (
-                      <div>
-                        <span className="text-slate-400 block mb-1 font-semibold">Expected Partner Preferences:</span>
-                        <div className="p-3 bg-slate-900 rounded-xl border border-slate-800 flex flex-wrap gap-4">
-                          <span>Age: <strong className="text-white">{selectedProfile.partner_preferences.age_min || 20} - {selectedProfile.partner_preferences.age_max || 35} yrs</strong></span>
-                          <span>•</span>
-                          <span>Height: <strong className="text-white">{selectedProfile.partner_preferences.height_min_cm || 150} - {selectedProfile.partner_preferences.height_max_cm || 190} cm</strong></span>
-                          <span>•</span>
-                          <span>Denominations: <strong className="text-amber-400">{Array.isArray(selectedProfile.partner_preferences.denomination) ? selectedProfile.partner_preferences.denomination.join(', ') : 'Any'}</strong></span>
-                        </div>
-                      </div>
-                    )}
                   </div>
                 </div>
               </div>
             </div>
           ) : (
-            <div className="bg-slate-900 border border-slate-800 rounded-3xl p-12 text-center text-xs text-slate-500">
-              Select a candidate profile from the left moderation queue to inspect credentials and moderate.
+            <div className="bg-white border border-[#ece2d1] rounded-3xl p-12 text-center text-slate-500 space-y-3">
+              <div className="text-3xl">👈</div>
+              <h3 className="font-bold text-base text-slate-800">Select a candidate to inspect details</h3>
+              <p className="text-xs text-slate-500">
+                Choose any candidate profile from the queue on the left to verify credentials.
+              </p>
             </div>
           )}
         </div>
       </div>
-
-      {/* Reject Modal */}
-      {actionType === 'REJECT' && selectedProfile && (
-        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 max-w-md w-full space-y-4 shadow-2xl">
-            <h3 className="text-lg font-extrabold text-white">Reject Profile #{selectedProfile.id}</h3>
-            <textarea
-              rows={3}
-              placeholder="State clear rejection reasons..."
-              value={rejectReason}
-              onChange={(e) => setRejectReason(e.target.value)}
-              className="w-full text-xs font-medium rounded-xl border border-slate-800 p-3 bg-slate-950 text-white focus:outline-none focus:border-red-500"
-            />
-            <div className="flex items-center justify-end gap-3">
-              <button
-                onClick={() => setActionType(null)}
-                className="px-4 py-2 text-xs font-bold text-slate-400 hover:text-white"
-              >
-                Cancel
-              </button>
-              <button
-                disabled={actionLoading || !rejectReason.trim()}
-                onClick={handleReject}
-                className="px-5 py-2 rounded-xl bg-red-600 hover:bg-red-500 text-white text-xs font-bold"
-              >
-                Confirm Rejection
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Request Changes Modal */}
-      {actionType === 'CHANGES' && selectedProfile && (
-        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 max-w-md w-full space-y-4 shadow-2xl">
-            <h3 className="text-lg font-extrabold text-white">Request Changes for Profile #{selectedProfile.id}</h3>
-            <textarea
-              rows={3}
-              placeholder="Detail required updates (e.g. upload 5 clear photos, update pastor name)..."
-              value={changesNotes}
-              onChange={(e) => setChangesNotes(e.target.value)}
-              className="w-full text-xs font-medium rounded-xl border border-slate-800 p-3 bg-slate-950 text-white focus:outline-none focus:border-amber-400"
-            />
-            <div className="flex items-center justify-end gap-3">
-              <button
-                onClick={() => setActionType(null)}
-                className="px-4 py-2 text-xs font-bold text-slate-400 hover:text-white"
-              >
-                Cancel
-              </button>
-              <button
-                disabled={actionLoading || !changesNotes.trim()}
-                onClick={handleRequestChanges}
-                className="px-5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold"
-              >
-                Send Change Request
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Delete Confirmation Modal */}
-      {actionType === 'DELETE' && selectedProfile && (
-        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-rose-800/70 rounded-3xl p-6 max-w-md w-full space-y-4 shadow-2xl">
-            <div className="flex items-center gap-3 text-rose-400">
-              <span className="text-2xl">⚠️</span>
-              <h3 className="text-lg font-extrabold text-white">Permanently Delete Profile #{selectedProfile.id}</h3>
-            </div>
-
-            <p className="text-xs text-slate-300 leading-relaxed">
-              Are you sure you want to permanently purge <strong className="text-white">{selectedProfile.name}</strong> from the database? This removes photos, verification data, and candidate records to keep servers lean.
-            </p>
-
-            <div>
-              <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">
-                Reason for Permanent Deletion:
-              </label>
-              <input
-                type="text"
-                value={deleteReason}
-                onChange={(e) => setDeleteReason(e.target.value)}
-                placeholder="e.g. Candidate found match / decommissioned"
-                className="w-full text-xs font-medium rounded-xl border border-slate-800 p-3 bg-slate-950 text-white focus:outline-none focus:border-rose-500"
-              />
-            </div>
-
-            <div className="flex items-center justify-end gap-3 pt-2">
-              <button
-                onClick={() => setActionType(null)}
-                className="px-4 py-2 text-xs font-bold text-slate-400 hover:text-white"
-              >
-                Cancel
-              </button>
-              <button
-                disabled={actionLoading}
-                onClick={handleDeleteProfile}
-                className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-rose-600 to-red-700 hover:from-rose-500 hover:to-red-600 text-white text-xs font-extrabold shadow-lg transition-all flex items-center gap-1.5"
-              >
-                <span>🗑️</span>
-                <span>{actionLoading ? 'Purging...' : 'Confirm Permanent Deletion'}</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
 
 export default function AdminProfilesPage() {
   return (
-    <Suspense fallback={<div className="min-h-[60vh] flex items-center justify-center text-slate-400 font-sans text-xs">Loading Profile Moderation Queue...</div>}>
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center bg-[#fdfbf7] text-slate-800">
+          Loading Candidate Queue...
+        </div>
+      }
+    >
       <AdminProfilesContent />
     </Suspense>
   );
