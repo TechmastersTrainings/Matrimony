@@ -99,12 +99,6 @@ export function FeaturedProfiles() {
                       )}
                     </div>
 
-                    {/* Top Identifier Badge on the Image (CN-1) */}
-                    <div className="absolute -top-1.5 right-1/2 translate-x-12 sm:translate-x-14 pointer-events-none">
-                      <span className="bg-slate-900/95 text-amber-300 border border-amber-400/60 text-xs font-mono font-black px-2 py-0.5 rounded-full shadow-sm">
-                        {candidateCode}
-                      </span>
-                    </div>
 
                     {/* Verified Badge ON the Image (Centered on bottom curve) */}
                     <div className="absolute -bottom-2 inset-x-0 flex justify-center pointer-events-none">
