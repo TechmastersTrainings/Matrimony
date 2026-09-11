@@ -42,50 +42,50 @@ export function MatrimonyCovenantSection() {
   return (
     <section className="py-8 sm:py-10 bg-gradient-to-b from-[#fdfbf7] via-[#faf6ee] to-[#fdfbf7] text-[#1e1b18] border-t border-charcoal-100/80">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Compact Header */}
-        <div className="text-center max-w-2xl mx-auto mb-6 sm:mb-7 space-y-1.5">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-cyan-50 via-orange-50 to-emerald-50 border border-cyan-200 text-charcoal-900 text-[11px] font-bold uppercase tracking-wider shadow-2xs">
-            <span className="w-1.5 h-1.5 rounded-full bg-cyan-500 animate-pulse" />
+        {/* Compact Header with Generous Fonts */}
+        <div className="text-center max-w-2xl mx-auto mb-6 sm:mb-8 space-y-2">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-cyan-50 via-orange-50 to-emerald-50 border border-cyan-200 text-charcoal-900 text-xs sm:text-sm font-bold uppercase tracking-wider shadow-2xs">
+            <span className="w-2 h-2 rounded-full bg-cyan-500 animate-pulse" />
             <span>Sacred Covenant &amp; Discretion</span>
           </div>
 
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight font-brand">
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight font-brand">
             Built on Faith, Protected by Reverence
           </h2>
 
-          {/* Integrated Scripture Ribbon (No bloated standalone section) */}
-          <div className="pt-1">
-            <blockquote className="text-xs sm:text-sm font-serif italic text-charcoal-700 max-w-xl mx-auto leading-relaxed bg-white/80 border border-orange-200/80 py-2 px-4 rounded-xl shadow-2xs">
+          {/* Integrated Scripture Ribbon */}
+          <div className="pt-1.5">
+            <blockquote className="text-sm sm:text-base font-serif italic text-charcoal-800 max-w-xl mx-auto leading-relaxed bg-white/90 border border-orange-200 py-3 px-5 rounded-2xl shadow-2xs">
               &ldquo;Love is patient, love is kind... It always protects, always trusts, always hopes, always perseveres. Love never fails.&rdquo;
-              <span className="block not-italic font-sans text-[10px] font-bold text-orange-800 uppercase tracking-widest mt-0.5">
+              <span className="block not-italic font-sans text-xs font-bold text-orange-800 uppercase tracking-widest mt-1">
                 — 1 Corinthians 13:4, 7–8
               </span>
             </blockquote>
           </div>
         </div>
 
-        {/* 3 Pillars Grid - Single Compact Row */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5 sm:gap-4">
+        {/* 3 Pillars Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5">
           {pillars.map((p, idx) => (
             <div
               key={idx}
-              className={`p-4 sm:p-5 rounded-2xl ${p.bg} border ${p.border} transition-all duration-200 shadow-2xs hover:shadow-xs flex flex-col justify-between`}
+              className={`p-5 sm:p-6 rounded-2xl ${p.bg} border ${p.border} transition-all duration-200 shadow-2xs hover:shadow-xs flex flex-col justify-between`}
             >
               <div>
-                <div className="flex items-center justify-between mb-2.5">
-                  <span className={`w-7 h-7 rounded-lg ${p.numBadge} border flex items-center justify-center font-mono text-xs font-black shadow-2xs`}>
+                <div className="flex items-center justify-between mb-3">
+                  <span className={`w-8 h-8 rounded-lg ${p.numBadge} border flex items-center justify-center font-mono text-sm font-black shadow-2xs`}>
                     {p.num}
                   </span>
-                  <span className="text-[9px] font-extrabold uppercase tracking-wider text-slate-600 bg-white/90 border border-slate-200/80 px-2 py-0.5 rounded-md">
+                  <span className="text-[10px] sm:text-xs font-extrabold uppercase tracking-wider text-slate-700 bg-white/95 border border-slate-200 px-2.5 py-1 rounded-md">
                     {p.badge}
                   </span>
                 </div>
 
-                <h3 className={`text-sm sm:text-base font-bold ${p.titleColor} font-brand mb-1.5`}>
+                <h3 className={`text-base sm:text-lg font-bold ${p.titleColor} font-brand mb-2`}>
                   {p.title}
                 </h3>
 
-                <p className="text-[11px] sm:text-xs text-slate-600 leading-relaxed">
+                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
                   {p.description}
                 </p>
               </div>

@@ -16,24 +16,24 @@ export function MatrimonyInvitationBanner() {
       </div>
 
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center space-y-4 sm:space-y-5">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/15 border border-cyan-300/40 text-cyan-100 text-[11px] font-semibold uppercase tracking-wider mx-auto backdrop-blur-sm shadow-2xs">
-          <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/15 border border-cyan-300/40 text-cyan-100 text-xs sm:text-sm font-semibold uppercase tracking-wider mx-auto backdrop-blur-sm shadow-2xs">
+          <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
           <span>CovenantNest • Holy Matrimony</span>
         </div>
 
-        <div className="space-y-1.5">
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight font-brand">
+        <div className="space-y-2">
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight font-brand">
             Your Story of Faith &amp; Love Begins Here
           </h2>
-          <p className="text-xs sm:text-sm text-cyan-50/90 max-w-xl mx-auto leading-relaxed">
+          <p className="text-sm sm:text-base text-cyan-50/95 max-w-xl mx-auto leading-relaxed">
             Take the first step in prayer and faith. Join Christian brides, grooms, and prayerful families seeking God&apos;s ordained blessing in holy matrimony.
           </p>
         </div>
 
-        <div className="flex flex-col sm:flex-row gap-3 justify-center items-center pt-1">
+        <div className="flex flex-col sm:flex-row gap-3.5 justify-center items-center pt-1">
           <Link
             href="/register"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-gradient-to-r from-orange-400 to-amber-400 hover:from-orange-300 hover:to-amber-300 text-orange-950 px-6 py-2.5 rounded-xl font-black text-xs sm:text-sm shadow-md border border-orange-300 transition-all transform hover:-translate-y-0.5"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-gradient-to-r from-orange-400 to-amber-400 hover:from-orange-300 hover:to-amber-300 text-orange-950 px-7 py-3 rounded-xl font-black text-sm sm:text-base shadow-md border border-orange-300 transition-all transform hover:-translate-y-0.5"
           >
             <span>Register Your Profile Free</span>
             <span>→</span>
@@ -41,14 +41,14 @@ export function MatrimonyInvitationBanner() {
 
           <Link
             href="/login"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 text-white px-6 py-2.5 rounded-xl font-bold text-xs sm:text-sm border border-white/25 backdrop-blur-md transition-all transform hover:-translate-y-0.5"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 text-white px-7 py-3 rounded-xl font-bold text-sm sm:text-base border border-white/25 backdrop-blur-md transition-all transform hover:-translate-y-0.5"
           >
             <span>Sign In to Member Portal</span>
             <span>→</span>
           </Link>
         </div>
 
-        <p className="text-[10px] text-cyan-200/80 pt-1">
+        <p className="text-xs sm:text-sm text-cyan-200/90 pt-1">
           Serving Christian families across Bidar, Bengaluru, Kalaburagi, Hyderabad &amp; Pan-India.
         </p>
       </div>
