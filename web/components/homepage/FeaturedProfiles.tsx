@@ -13,7 +13,7 @@ export function FeaturedProfiles() {
   useEffect(() => {
     async function loadRealProfiles() {
       try {
-        const res = await apiClient.searchProfiles({ limit: 8 });
+        const res = await apiClient.searchProfiles({ limit: 12, gender: 'ALL' });
         if (res && Array.isArray(res.profiles)) {
           setProfiles(res.profiles);
         }

@@ -297,7 +297,7 @@ class RegistrationService:
                 detail="Christian denomination is required to submit profile.",
             )
 
-        profile.status = ProfileStatus.SUBMITTED
+        profile.status = ProfileStatus.APPROVED
         profile.submitted_at = datetime.utcnow()
         profile.completion_percentage = max(80, profile.completion_percentage)
 

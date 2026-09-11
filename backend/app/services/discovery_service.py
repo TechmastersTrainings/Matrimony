@@ -50,12 +50,13 @@ class DiscoveryService:
             ).first()
             is_subscriber = active_sub is not None
 
-        # Regular members see only APPROVED profiles; Admins see ALL profiles (SUBMITTED, UNDER_REVIEW, APPROVED)
+        # Allow APPROVED, SUBMITTED, and UNDER_REVIEW profiles so all genuine registered users are immediately discoverable
+        valid_statuses = [ProfileStatus.APPROVED, ProfileStatus.SUBMITTED, ProfileStatus.UNDER_REVIEW]
         if not is_admin:
             query = db.query(Profile).filter(
-                Profile.status == ProfileStatus.APPROVED,
+                Profile.status.in_(valid_statuses),
             )
-            if current_user:
+            if current_user and not (gender and gender.strip().upper() in ["ALL", "BOTH", "ALL_PROFILES"]):
                 query = query.filter(Profile.user_id != current_user.id)
         else:
             query = db.query(Profile)
@@ -182,5 +183,4 @@ class DiscoveryService:
                     "created_at": p.created_at.isoformat() if p.created_at else None,
                 }
             )
-
         return total, results

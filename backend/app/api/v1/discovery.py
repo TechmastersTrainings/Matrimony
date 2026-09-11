@@ -83,7 +83,8 @@ async def get_candidate_profile(
     is_admin = current_user is not None and current_user.role in [UserRole.ADMIN, UserRole.SUPER_ADMIN]
     is_owner = current_user is not None and profile and current_user.id == profile.user_id
 
-    if not profile or (profile.status != ProfileStatus.APPROVED and not is_admin and not is_owner):
+    valid_statuses = [ProfileStatus.APPROVED, ProfileStatus.SUBMITTED, ProfileStatus.UNDER_REVIEW]
+    if not profile or (profile.status not in valid_statuses and not is_admin and not is_owner):
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Candidate profile is not available or is currently under moderation review.",
