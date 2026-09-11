@@ -414,15 +414,13 @@ export default function DiscoverPage() {
                 </p>
               </div>
             </div>
-            <a
-              href={`${(process.env.NEXT_PUBLIC_ADMIN_URL || 'http://localhost:3001').replace(/\/+$/, '')}/profiles`}
-              target="_blank"
-              rel="noreferrer"
-              className="px-4 py-2 rounded-xl bg-gradient-to-r from-burgundy-700 to-burgundy-800 hover:from-burgundy-600 hover:to-burgundy-700 text-white font-extrabold text-xs text-center shadow-xs transition-all shrink-0 flex items-center gap-1.5"
+            <Link
+              href="/admin"
+              className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-cyan-700 to-teal-700 hover:from-cyan-600 hover:to-teal-600 text-white font-extrabold text-xs text-center shadow-xs transition-all shrink-0 flex items-center gap-1.5"
             >
-              <span>Open Admin Review Console</span>
+              <span>Open CovenantNest Admin Command Center</span>
               <span>→</span>
-            </a>
+            </Link>
           </div>
         )}
 
@@ -764,27 +762,43 @@ export default function DiscoverPage() {
                       className="bg-white border border-[#ece2d1] hover:border-burgundy-300 rounded-3xl p-5 md:p-6 shadow-sm hover:shadow-xl transition-all duration-300 group flex flex-col md:flex-row items-stretch gap-6"
                     >
                       {/* Left: Photo & Badges Container */}
-                      <div className="w-full md:w-56 h-64 md:h-auto rounded-2xl relative overflow-hidden shrink-0 bg-[#faf6ee] border border-[#ece2d1]">
-                        <img
-                          src={photoSrc}
-                          alt={c.first_name}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                          onError={(e) => {
-                            e.currentTarget.src = DEFAULT_AVATAR_SVG;
-                          }}
-                        />
+                      <div className="w-full md:w-56 flex flex-col items-center justify-center p-4 bg-gradient-to-b from-cyan-50/40 to-orange-50/30 rounded-2xl border border-[#ece2d1] shrink-0">
+                        <div className="relative flex flex-col items-center">
+                          <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full ring-4 ring-cyan-400/30 shadow-md overflow-hidden bg-gradient-to-tr from-[#0f172a] to-[#1e293b] relative flex items-center justify-center">
+                            {photoSrc && photoSrc !== DEFAULT_AVATAR_SVG ? (
+                              <img
+                                src={photoSrc}
+                                alt={c.first_name}
+                                className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
+                                onError={(e) => {
+                                  e.currentTarget.src = DEFAULT_AVATAR_SVG;
+                                }}
+                              />
+                            ) : (
+                              <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-b from-[#0f172a] to-[#1e293b] text-amber-400 p-2 select-none">
+                                <span className="font-mono font-black text-base tracking-wider text-amber-400">
+                                  CN-{c.id}
+                                </span>
+                                <span className="text-[10px] font-bold text-slate-300 uppercase tracking-widest mt-0.5">
+                                  Profile
+                                </span>
+                              </div>
+                            )}
+                          </div>
 
-                        {/* Top Overlay Badges */}
-                        <div className="absolute top-3 left-3 bg-emerald-50/95 backdrop-blur-md text-emerald-800 text-[10px] font-extrabold px-2.5 py-1 rounded-lg border border-emerald-200 shadow-sm">
-                          Verified
+                          {/* Verified Badge ON the Image (Centered on bottom curve) */}
+                          <div className="absolute -bottom-2 inset-x-0 flex justify-center pointer-events-none">
+                            <span className="bg-emerald-600 text-white border-2 border-white text-xs font-extrabold px-3 py-0.5 rounded-full shadow-md flex items-center gap-1">
+                              <span className="text-white font-black">✓</span>
+                              <span>Verified</span>
+                            </span>
+                          </div>
                         </div>
 
-                        <div className="absolute top-3 right-3 bg-white/95 backdrop-blur-md text-charcoal-700 text-[10px] font-bold px-2.5 py-1 rounded-lg border border-[#ece2d1] shadow-sm">
-                          CN-{c.id}
-                        </div>
-
-                        <div className="absolute bottom-3 left-3 right-3 bg-white/95 backdrop-blur-md text-cyan-950 text-[10px] font-bold px-2 py-1 rounded-lg border border-cyan-200 text-center shadow-sm">
-                          CovenantNest Profile
+                        <div className="mt-4 text-center">
+                          <span className="font-mono font-black text-xs text-amber-900 bg-amber-50 border border-amber-200 px-3 py-0.5 rounded-full">
+                            CN-{c.id}
+                          </span>
                         </div>
                       </div>
 
@@ -966,27 +980,47 @@ export default function DiscoverPage() {
                       <div>
                         {/* Top Badges Row */}
                         <div className="flex items-center justify-between gap-2 pb-1">
-                          <span className="bg-cyan-50 text-cyan-900 border border-cyan-200 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider truncate max-w-[130px]">
+                          <span className="bg-cyan-50 text-cyan-900 border border-cyan-200 text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wider truncate max-w-[130px]">
                             {c.denomination || 'Christian'}
                           </span>
 
-                          <span className="bg-emerald-50 text-emerald-800 border border-emerald-300 text-[10px] font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1 shrink-0">
-                            <span>✓</span>
-                            <span>Verified</span>
+                          <span className="font-mono font-black text-xs text-amber-900 bg-amber-50 border border-amber-200 px-2.5 py-0.5 rounded-full">
+                            CN-{c.id}
                           </span>
                         </div>
 
-                        {/* Circular Photo Header */}
+                        {/* Circular Photo Header with Bottom Verified Badge */}
                         <div className="my-5 flex justify-center">
-                          <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full ring-4 ring-cyan-400/30 group-hover:ring-orange-400/60 shadow-md overflow-hidden bg-gradient-to-tr from-cyan-50 to-orange-50 transition-all duration-300 relative flex items-center justify-center shrink-0">
-                            <img
-                              src={photoSrc}
-                              alt={c.first_name}
-                              className="w-full h-full object-cover object-top group-hover:scale-110 transition-transform duration-500"
-                              onError={(e) => {
-                                e.currentTarget.src = DEFAULT_AVATAR_SVG;
-                              }}
-                            />
+                          <div className="relative flex flex-col items-center">
+                            <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full ring-4 ring-cyan-400/30 group-hover:ring-orange-400/60 shadow-md overflow-hidden bg-gradient-to-tr from-[#0f172a] to-[#1e293b] transition-all duration-300 relative flex items-center justify-center shrink-0">
+                              {photoSrc && photoSrc !== DEFAULT_AVATAR_SVG ? (
+                                <img
+                                  src={photoSrc}
+                                  alt={c.first_name}
+                                  className="w-full h-full object-cover object-top group-hover:scale-110 transition-transform duration-500"
+                                  onError={(e) => {
+                                    e.currentTarget.src = DEFAULT_AVATAR_SVG;
+                                  }}
+                                />
+                              ) : (
+                                <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-b from-[#0f172a] to-[#1e293b] text-amber-400 p-2 select-none">
+                                  <span className="font-mono font-black text-base tracking-wider text-amber-400">
+                                    CN-{c.id}
+                                  </span>
+                                  <span className="text-[10px] font-bold text-slate-300 uppercase tracking-widest mt-0.5">
+                                    Profile
+                                  </span>
+                                </div>
+                              )}
+                            </div>
+
+                            {/* Verified Badge ON the Image (Centered on bottom curve) */}
+                            <div className="absolute -bottom-2 inset-x-0 flex justify-center pointer-events-none">
+                              <span className="bg-emerald-600 text-white border-2 border-white text-xs font-extrabold px-3 py-0.5 rounded-full shadow-md flex items-center gap-1">
+                                <span className="text-white font-black">✓</span>
+                                <span>Verified</span>
+                              </span>
+                            </div>
                           </div>
                         </div>
 

@@ -56,9 +56,9 @@ function LoginFormContent() {
         login_type: loginType,
       });
 
-      // If super_admin or admin, or candidate has finished profile, take them to discover
+      // If super_admin or admin, direct to admin command center
       if (res?.role === 'SUPER_ADMIN' || res?.role === 'ADMIN') {
-        router.push('/discover');
+        router.push('/admin');
       } else if (res && res.profile_status === 'DRAFT') {
         router.push('/profile/create');
       } else {

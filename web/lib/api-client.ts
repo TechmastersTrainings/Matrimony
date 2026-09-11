@@ -363,6 +363,77 @@ class ApiClient {
     if (!res.ok) throw new Error(data.error?.message || 'Contact reveal not completed or paid');
     return data;
   }
+
+  // ------------------ ADMIN PLATFORM MANAGEMENT ------------------
+  async getAdminMetrics(): Promise<any> {
+    const res = await fetch(`${API_BASE_URL}/admin/dashboard-metrics`, {
+      headers: this.getHeaders(),
+    });
+    if (!res.ok) throw new Error('Failed to fetch admin dashboard metrics');
+    return res.json();
+  }
+
+  async getAdminProfiles(statusFilter: string = 'ALL'): Promise<{ total: number; profiles: any[] }> {
+    const res = await fetch(`${API_BASE_URL}/admin/profiles?status_filter=${encodeURIComponent(statusFilter)}&limit=100`, {
+      headers: this.getHeaders(),
+    });
+    if (!res.ok) throw new Error('Failed to fetch admin profiles');
+    return res.json();
+  }
+
+  async getAdminUsers(search?: string, statusFilter?: string): Promise<{ total: number; users: any[] }> {
+    const params = new URLSearchParams();
+    if (search) params.append('search', search);
+    if (statusFilter) params.append('status_filter', statusFilter);
+    const res = await fetch(`${API_BASE_URL}/admin/users?${params.toString()}`, {
+      headers: this.getHeaders(),
+    });
+    if (!res.ok) throw new Error('Failed to fetch users list');
+    return res.json();
+  }
+
+  async approveProfile(profileId: number): Promise<any> {
+    const res = await fetch(`${API_BASE_URL}/admin/profiles/${profileId}/approve`, {
+      method: 'POST',
+      headers: this.getHeaders(),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.detail || 'Failed to approve profile');
+    return data;
+  }
+
+  async rejectProfile(profileId: number, reason: string): Promise<any> {
+    const res = await fetch(`${API_BASE_URL}/admin/profiles/${profileId}/reject`, {
+      method: 'POST',
+      headers: this.getHeaders(),
+      body: JSON.stringify({ reason }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.detail || 'Failed to reject profile');
+    return data;
+  }
+
+  async requestProfileChanges(profileId: number, notes: string): Promise<any> {
+    const res = await fetch(`${API_BASE_URL}/admin/profiles/${profileId}/request-changes`, {
+      method: 'POST',
+      headers: this.getHeaders(),
+      body: JSON.stringify({ notes }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.detail || 'Failed to request changes');
+    return data;
+  }
+
+  async updateAdminUserStatus(userId: number, status: string): Promise<any> {
+    const res = await fetch(`${API_BASE_URL}/admin/users/${userId}/status`, {
+      method: 'PUT',
+      headers: this.getHeaders(),
+      body: JSON.stringify({ status }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.detail || 'Failed to update user status');
+    return data;
+  }
 }
 
 export const apiClient = new ApiClient();

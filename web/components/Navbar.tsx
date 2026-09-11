@@ -10,6 +10,7 @@ export function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -17,6 +18,8 @@ export function Navbar() {
     if (typeof window !== 'undefined') {
       const token = localStorage.getItem('access_token');
       setIsAuthenticated(!!token);
+      const role = localStorage.getItem('user_role');
+      setIsAdmin(role === 'SUPER_ADMIN' || role === 'ADMIN');
     }
   }, [pathname]);
 
@@ -95,10 +98,37 @@ export function Navbar() {
                 Interests &amp; Matches
               </Link>
             )}
+
+            {isAdmin && (
+              <Link
+                href="/admin"
+                className={`font-extrabold text-xs tracking-wide transition-all px-2.5 py-1 rounded-lg flex items-center gap-1.5 ${
+                  pathname === '/admin'
+                    ? 'bg-cyan-800 text-amber-300 shadow-xs'
+                    : 'text-cyan-900 bg-cyan-100/70 hover:bg-cyan-200/80 border border-cyan-300/80'
+                }`}
+              >
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span>Admin Portal</span>
+              </Link>
+            )}
           </nav>
 
           {/* Right CTAs */}
           <div className="hidden sm:flex items-center gap-3">
+            {isAdmin && (
+              <Link
+                href="/admin"
+                className={`text-xs font-black px-3.5 py-2 rounded-xl transition-all border flex items-center gap-1.5 ${
+                  pathname === '/admin'
+                    ? 'bg-slate-900 text-amber-300 border-slate-800 shadow-sm'
+                    : 'bg-gradient-to-r from-amber-50 to-orange-50 border-amber-300 text-amber-950 hover:bg-amber-100 shadow-2xs'
+                }`}
+              >
+                <span>🛡️</span>
+                <span>Admin Console</span>
+              </Link>
+            )}
             {isAuthenticated ? (
               <>
                 <Link
@@ -181,6 +211,16 @@ export function Navbar() {
                 <Link href="/profile/photos" onClick={() => setMobileMenuOpen(false)} className="py-1 text-slate-800 hover:text-burgundy-700">
                   Manage Photos (5+)
                 </Link>
+                {isAdmin && (
+                  <Link
+                    href="/admin"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="py-1.5 px-3 rounded-lg bg-cyan-100 text-cyan-950 font-extrabold flex items-center gap-2 border border-cyan-300"
+                  >
+                    <span>🛡️</span>
+                    <span>Admin Portal</span>
+                  </Link>
+                )}
               </>
             )}
           </nav>
