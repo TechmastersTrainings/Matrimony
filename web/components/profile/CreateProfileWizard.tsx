@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState, useMemo } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { apiClient } from '../../lib/api-client';
 import { ProfileDraftData } from '../../types';
@@ -134,9 +134,14 @@ const KARNATAKA_EDUCATION_DEGREES = [
 
 export function CreateProfileWizard() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const stepQuery = searchParams?.get('step');
+  const isEditRequested = searchParams?.get('edit') === 'true' || searchParams?.get('mode') === 'edit';
+
   const [currentStep, setCurrentStep] = useState(1);
   const [completionPercentage, setCompletionPercentage] = useState(15);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [hasExistingProfile, setHasExistingProfile] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [saveMessage, setSaveMessage] = useState<string | null>(null);
@@ -247,29 +252,98 @@ export function CreateProfileWizard() {
     async function loadData() {
       try {
         const me = await apiClient.getRegistrationMe();
-        if (me.profile_status === 'SUBMITTED' || me.profile_status === 'APPROVED') {
+        const profileExists = Boolean(
+          me.profile || (me.draft?.draft_data && (me.draft.draft_data.first_name || me.draft.draft_data.highest_education))
+        );
+        setHasExistingProfile(profileExists);
+
+        // Only lock into isSubmitted screen if user visited /profile/create without edit intent AND status is submitted/approved
+        if (!isEditRequested && !stepQuery && (me.profile_status === 'SUBMITTED' || me.profile_status === 'APPROVED')) {
           setIsSubmitted(true);
+        } else {
+          setIsSubmitted(false);
         }
 
         setFormData((prev) => {
           const updated: ProfileDraftData = { ...prev };
-          // Prefill ONLY actual authenticated user data from backend
+          // Prefill ALL authenticated user data from backend profile
           if (me.profile) {
-            if (me.profile.first_name) updated.first_name = me.profile.first_name;
-            if (me.profile.last_name) updated.last_name = me.profile.last_name;
-            if (me.profile.gender) updated.gender = me.profile.gender;
-            if (me.profile.dob) {
-              updated.dob = me.profile.dob;
-              const autoAge = calculateAge(me.profile.dob);
+            const p = me.profile;
+            if (p.first_name) updated.first_name = p.first_name;
+            if (p.last_name) updated.last_name = p.last_name;
+            if (p.gender) updated.gender = p.gender;
+            if (p.dob) {
+              updated.dob = p.dob;
+              const autoAge = calculateAge(p.dob);
               if (autoAge !== null) updated.age = autoAge;
             }
-            if (me.profile.age && !updated.age) updated.age = me.profile.age;
-            if (me.profile.denomination) updated.denomination = me.profile.denomination;
-            if (me.profile.father_mobile) updated.father_mobile = me.profile.father_mobile;
-            if (me.profile.mother_mobile) updated.mother_mobile = me.profile.mother_mobile;
+            if (p.age && !updated.age) updated.age = p.age;
+            if (p.marital_status) updated.marital_status = p.marital_status;
+            if (p.height_cm) updated.height_cm = p.height_cm;
+            if (p.weight_kg) updated.weight_kg = p.weight_kg;
+            if (p.physical_status) updated.physical_status = p.physical_status;
+            if (p.mother_tongue) updated.mother_tongue = p.mother_tongue;
+
+            // Faith
+            if (p.denomination) updated.denomination = p.denomination;
+            if (p.sub_denomination) updated.sub_denomination = p.sub_denomination;
+            if (p.church_name) updated.church_name = p.church_name;
+            if (p.parish_or_pastor) updated.parish_or_pastor = p.parish_or_pastor;
+            if (typeof p.is_baptized === 'boolean') updated.is_baptized = p.is_baptized;
+            if (typeof p.is_born_again === 'boolean') updated.is_born_again = p.is_born_again;
+            if (p.church_activity) updated.church_activity = p.church_activity;
+
+            // Location
+            if (p.state) updated.state = p.state;
+            if (p.district) updated.district = p.district;
+            if (p.city) updated.city = p.city;
+            if (p.pincode) updated.pincode = p.pincode;
+            if (p.native_place) updated.native_place = p.native_place;
+
+            // Career
+            if (p.highest_education) updated.highest_education = p.highest_education;
+            if (p.education_field) updated.education_field = p.education_field;
+            if (p.institution) updated.institution = p.institution;
+            if (p.occupation_type) updated.occupation_type = p.occupation_type;
+            if (p.occupation_title) updated.occupation_title = p.occupation_title;
+            if (p.employed_in) updated.employed_in = p.employed_in;
+            if (p.annual_income_min) updated.annual_income_min = p.annual_income_min;
+            if (p.annual_income_max) updated.annual_income_max = p.annual_income_max;
+            if (p.work_location) updated.work_location = p.work_location;
+
+            // Family
+            if (p.father_name) updated.father_name = p.father_name;
+            if (p.father_occupation) updated.father_occupation = p.father_occupation;
+            if (p.father_mobile) updated.father_mobile = p.father_mobile;
+            if (p.mother_name) updated.mother_name = p.mother_name;
+            if (p.mother_occupation) updated.mother_occupation = p.mother_occupation;
+            if (p.mother_mobile) updated.mother_mobile = p.mother_mobile;
+            if (p.family_status) updated.family_status = p.family_status;
+            if (p.family_values) updated.family_values = p.family_values;
+            if (typeof p.brothers_count === 'number') updated.brothers_count = p.brothers_count;
+            if (typeof p.married_brothers_count === 'number') updated.married_brothers_count = p.married_brothers_count;
+            if (typeof p.sisters_count === 'number') updated.sisters_count = p.sisters_count;
+            if (typeof p.married_sisters_count === 'number') updated.married_sisters_count = p.married_sisters_count;
+            if (p.about_family) updated.about_family = p.about_family;
+
+            // Lifestyle & Bio
+            if (p.diet) updated.diet = p.diet;
+            if (p.smoking) updated.smoking = p.smoking;
+            if (p.drinking) updated.drinking = p.drinking;
+            if (p.hobbies) updated.hobbies = p.hobbies;
+            if (p.bio) updated.bio = p.bio;
+            if (p.faith_testimony) updated.faith_testimony = p.faith_testimony;
+
+            // Partner Preferences
+            if (p.partner_preferences && typeof p.partner_preferences === 'object') {
+              updated.partner_preferences = {
+                ...updated.partner_preferences,
+                ...p.partner_preferences,
+              };
+            }
           }
 
-          // If user had previously saved draft entries, merge them cleanly
+          // If user had previously saved draft entries, merge them cleanly on top
           if (me.draft && me.draft.draft_data) {
             Object.assign(updated, me.draft.draft_data);
             // Recalculate age if draft has DOB
@@ -281,9 +355,18 @@ export function CreateProfileWizard() {
           return updated;
         });
 
-        if (me.draft?.current_step) {
+        // Set target step: query param has highest priority, then draft's step, default 1
+        if (stepQuery) {
+          const parsedStep = parseInt(stepQuery, 10);
+          if (parsedStep >= 1 && parsedStep <= 6) {
+            setCurrentStep(parsedStep);
+          } else if (me.draft?.current_step) {
+            setCurrentStep(me.draft.current_step);
+          }
+        } else if (me.draft?.current_step && !isEditRequested) {
           setCurrentStep(me.draft.current_step);
         }
+
         setCompletionPercentage(me.completion_percentage || 15);
       } catch (err) {
         console.warn('User not logged in, redirecting to login...');
@@ -293,7 +376,7 @@ export function CreateProfileWizard() {
       }
     }
     loadData();
-  }, [router]);
+  }, [router, searchParams, stepQuery, isEditRequested]);
 
   const handleChange = (name: string, value: any) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -442,6 +525,44 @@ export function CreateProfileWizard() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const handleSaveAndReturn = async () => {
+    // Validate required fields on Step 1 if on Step 1
+    if (currentStep === 1) {
+      if (!formData.first_name?.trim()) {
+        setError('Please enter your First Name.');
+        return;
+      }
+      if (!formData.last_name?.trim()) {
+        setError('Please enter your Last Name.');
+        return;
+      }
+      if (!formData.dob) {
+        setError('Please select your Date of Birth.');
+        return;
+      }
+      if (calculatedAgeInfo.age !== null && calculatedAgeInfo.age < 18) {
+        setError('Candidate must be at least 18 years of age.');
+        return;
+      }
+    }
+
+    setIsSaving(true);
+    setError(null);
+
+    try {
+      await apiClient.saveDraft(currentStep, formData);
+      try {
+        await apiClient.submitRegistration(true);
+      } catch {
+        // Ignored if basic fields not yet met
+      }
+      router.push('/dashboard?updated=true');
+    } catch (err: any) {
+      setError(err.message || 'Failed to save changes.');
+      setIsSaving(false);
+    }
+  };
+
   const handleSubmitProfile = async () => {
     setIsSaving(true);
     setError(null);
@@ -449,10 +570,9 @@ export function CreateProfileWizard() {
     try {
       await apiClient.saveDraft(6, formData);
       await apiClient.submitRegistration(true);
-      setIsSubmitted(true);
+      router.push('/dashboard?updated=true');
     } catch (err: any) {
       setError(err.message || 'Failed to submit profile.');
-    } finally {
       setIsSaving(false);
     }
   };
@@ -508,25 +628,25 @@ export function CreateProfileWizard() {
             </ul>
           </div>
 
-          <div className="pt-2 flex flex-col sm:flex-row gap-3 justify-center">
+          <div className="pt-2 flex flex-wrap gap-3 justify-center">
             <button
               type="button"
               onClick={() => setIsSubmitted(false)}
-              className="px-6 py-3 rounded-xl bg-white hover:bg-[#faf6ee] text-charcoal-700 font-bold text-xs border border-[#ece2d1] transition-all"
+              className="px-6 py-3 rounded-xl bg-white hover:bg-[#faf6ee] text-charcoal-700 font-bold text-xs border border-[#ece2d1] transition-all shadow-2xs"
             >
               Review / Edit Bio Details ✎
             </button>
             <Link
-              href="/profile/photos"
-              className="px-6 py-3 rounded-xl bg-gradient-to-r from-burgundy-700 to-burgundy-800 hover:from-burgundy-600 hover:to-burgundy-700 text-white font-extrabold text-xs shadow-md transition-all transform hover:-translate-y-0.5"
+              href="/dashboard"
+              className="px-6 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-extrabold text-xs shadow-md transition-all"
             >
-              Upload Authentic Photos →
+              Go to Dashboard →
             </Link>
             <Link
-              href="/verification-status"
-              className="px-6 py-3 rounded-xl bg-white hover:bg-[#faf6ee] text-charcoal-700 font-bold text-xs border border-[#ece2d1] transition-all"
+              href="/profile/photos"
+              className="px-6 py-3 rounded-xl bg-white hover:bg-slate-50 text-charcoal-700 font-bold text-xs border border-[#ece2d1] transition-all shadow-2xs"
             >
-              Check Pipeline Status
+              Upload Photos 📸
             </Link>
           </div>
         </div>
@@ -549,7 +669,42 @@ export function CreateProfileWizard() {
       <div className="absolute top-10 right-1/4 w-96 h-96 bg-gold-400/10 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-10 left-1/4 w-96 h-96 bg-burgundy-600/10 rounded-full blur-3xl pointer-events-none" />
 
-      <div className="max-w-4xl mx-auto relative z-10 space-y-8">
+      <div className="max-w-4xl mx-auto relative z-10 space-y-6">
+        {/* Edit Mode Notification Banner */}
+        {(isEditRequested || hasExistingProfile) && (
+          <div className="bg-gradient-to-r from-cyan-50 via-teal-50 to-emerald-50 border border-cyan-300 rounded-3xl p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xs">
+            <div className="flex items-center gap-3.5">
+              <div className="w-10 h-10 rounded-2xl bg-cyan-600 text-white font-black flex items-center justify-center text-lg shadow-xs shrink-0">
+                ✎
+              </div>
+              <div>
+                <h3 className="text-sm font-serif font-extrabold text-cyan-950">
+                  Profile Edit &amp; Update Mode
+                </h3>
+                <p className="text-xs text-cyan-900/80">
+                  Update any section details below. You can jump directly between steps anytime, or click &quot;Save &amp; Return to Dashboard&quot; when done.
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              <Link
+                href="/dashboard"
+                className="px-4 py-2 rounded-xl bg-white hover:bg-slate-50 text-charcoal-700 border border-[#ece2d1] text-xs font-bold transition-all shadow-2xs"
+              >
+                Cancel
+              </Link>
+              <button
+                type="button"
+                onClick={handleSaveAndReturn}
+                disabled={isSaving}
+                className="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-extrabold shadow-sm transition-all flex items-center gap-1.5"
+              >
+                <span>{isSaving ? 'Saving...' : 'Save & Return to Dashboard 💾'}</span>
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Top Header Card with Stepper */}
         <div className="bg-white border border-[#ece2d1] rounded-3xl p-6 sm:p-8 shadow-sm space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -562,14 +717,25 @@ export function CreateProfileWizard() {
               </h1>
             </div>
 
-            <button
-              type="button"
-              onClick={() => handleSaveDraft(currentStep, true)}
-              disabled={isSaving}
-              className="self-start sm:self-auto px-4 py-2 rounded-xl bg-white hover:bg-[#faf6ee] text-charcoal-700 border border-[#ece2d1] text-xs font-bold transition-all flex items-center gap-2"
-            >
-              <span>{isSaving ? 'Saving...' : 'Save Draft'}</span>
-            </button>
+            <div className="flex flex-wrap items-center gap-2 self-start sm:self-auto">
+              <button
+                type="button"
+                onClick={() => handleSaveDraft(currentStep, true)}
+                disabled={isSaving}
+                className="px-3.5 py-2 rounded-xl bg-white hover:bg-[#faf6ee] text-charcoal-700 border border-[#ece2d1] text-xs font-bold transition-all flex items-center gap-2 shadow-2xs"
+              >
+                <span>{isSaving ? 'Saving...' : 'Save Draft'}</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={handleSaveAndReturn}
+                disabled={isSaving}
+                className="px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-extrabold text-xs shadow-sm transition-all flex items-center gap-1.5"
+              >
+                <span>{isSaving ? 'Saving...' : 'Save & Return 💾'}</span>
+              </button>
+            </div>
           </div>
 
           {/* Stepper Timeline */}
@@ -1417,7 +1583,7 @@ export function CreateProfileWizard() {
           )}
 
           {/* Action Navigation Bar */}
-          <div className="mt-10 pt-6 border-t border-[#ece2d1] flex items-center justify-between">
+          <div className="mt-10 pt-6 border-t border-[#ece2d1] flex flex-wrap items-center justify-between gap-3">
             {currentStep > 1 ? (
               <button
                 type="button"
@@ -1427,27 +1593,43 @@ export function CreateProfileWizard() {
                 ← Previous Step
               </button>
             ) : (
-              <div />
+              <Link
+                href="/dashboard"
+                className="px-6 py-3 rounded-xl bg-white hover:bg-[#faf6ee] text-charcoal-700 text-xs font-bold transition-all border border-[#ece2d1]"
+              >
+                ← Back to Dashboard
+              </Link>
             )}
 
-            {currentStep < 6 ? (
+            <div className="flex flex-wrap items-center gap-2">
               <button
                 type="button"
-                onClick={handleNext}
-                className="px-8 py-3.5 rounded-xl bg-gradient-to-r from-burgundy-700 to-burgundy-800 hover:from-burgundy-600 hover:to-burgundy-700 text-white font-extrabold text-xs shadow-md border border-burgundy-600/50 transition-all transform hover:-translate-y-0.5"
-              >
-                Continue to Step {currentStep + 1} →
-              </button>
-            ) : (
-              <button
-                type="button"
-                onClick={handleSubmitProfile}
+                onClick={handleSaveAndReturn}
                 disabled={isSaving}
-                className="px-8 py-3.5 rounded-xl bg-gradient-to-r from-burgundy-700 to-burgundy-800 hover:from-burgundy-600 hover:to-burgundy-700 text-white font-extrabold text-xs shadow-md transition-all transform hover:-translate-y-0.5"
+                className="px-5 py-3 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-900 border border-emerald-300 text-xs font-extrabold transition-all flex items-center gap-1.5 shadow-2xs"
               >
-                {isSaving ? 'Submitting...' : 'Submit Profile for Verification →'}
+                <span>{isSaving ? 'Saving...' : 'Save & Return to Dashboard 💾'}</span>
               </button>
-            )}
+
+              {currentStep < 6 ? (
+                <button
+                  type="button"
+                  onClick={handleNext}
+                  className="px-7 py-3.5 rounded-xl bg-gradient-to-r from-burgundy-700 to-burgundy-800 hover:from-burgundy-600 hover:to-burgundy-700 text-white font-extrabold text-xs shadow-md border border-burgundy-600/50 transition-all transform hover:-translate-y-0.5"
+                >
+                  Continue to Step {currentStep + 1} →
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleSubmitProfile}
+                  disabled={isSaving}
+                  className="px-7 py-3.5 rounded-xl bg-gradient-to-r from-burgundy-700 via-rose-600 to-orange-600 hover:from-burgundy-600 hover:to-orange-500 text-white font-extrabold text-xs shadow-md transition-all transform hover:-translate-y-0.5"
+                >
+                  {isSaving ? 'Saving...' : 'Save & Update Profile 💾'}
+                </button>
+              )}
+            </div>
           </div>
         </div>
       </div>

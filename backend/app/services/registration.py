@@ -130,6 +130,16 @@ class RegistrationService:
         if "height_cm" in data and data["height_cm"]:
             try:
                 profile.height_cm = int(data["height_cm"])
+            except (ValueError, TypeError):
+                pass
+        if "weight_kg" in data and data["weight_kg"]:
+            try:
+                profile.weight_kg = int(data["weight_kg"])
+            except (ValueError, TypeError):
+                pass
+        if "physical_status" in data and data["physical_status"]:
+            try:
+                profile.physical_status = PhysicalStatus(str(data["physical_status"]).upper())
             except ValueError:
                 pass
         if "mother_tongue" in data:
@@ -151,6 +161,8 @@ class RegistrationService:
             profile.is_baptized = bool(data["is_baptized"])
         if "is_born_again" in data:
             profile.is_born_again = bool(data["is_born_again"])
+        if "church_activity" in data:
+            profile.church_activity = str(data["church_activity"])
 
         # Location
         if "state" in data:
@@ -167,6 +179,10 @@ class RegistrationService:
         # Career
         if "highest_education" in data:
             profile.highest_education = str(data["highest_education"])
+        if "education_field" in data:
+            profile.education_field = str(data["education_field"])
+        if "institution" in data:
+            profile.institution = str(data["institution"])
         if "occupation_type" in data and data["occupation_type"]:
             try:
                 profile.occupation_type = OccupationType(data["occupation_type"].upper())
@@ -179,8 +195,15 @@ class RegistrationService:
         if "annual_income_min" in data and data["annual_income_min"]:
             try:
                 profile.annual_income_min = int(data["annual_income_min"])
-            except ValueError:
+            except (ValueError, TypeError):
                 pass
+        if "annual_income_max" in data and data["annual_income_max"]:
+            try:
+                profile.annual_income_max = int(data["annual_income_max"])
+            except (ValueError, TypeError):
+                pass
+        if "annual_income_currency" in data and data["annual_income_currency"]:
+            profile.annual_income_currency = str(data["annual_income_currency"])
         if "work_location" in data:
             profile.work_location = str(data["work_location"])
 
@@ -207,6 +230,28 @@ class RegistrationService:
                 profile.family_values = FamilyValues(data["family_values"].upper())
             except ValueError:
                 pass
+        if "brothers_count" in data:
+            try:
+                profile.brothers_count = int(data["brothers_count"])
+            except (ValueError, TypeError):
+                pass
+        if "married_brothers_count" in data:
+            try:
+                profile.married_brothers_count = int(data["married_brothers_count"])
+            except (ValueError, TypeError):
+                pass
+        if "sisters_count" in data:
+            try:
+                profile.sisters_count = int(data["sisters_count"])
+            except (ValueError, TypeError):
+                pass
+        if "married_sisters_count" in data:
+            try:
+                profile.married_sisters_count = int(data["married_sisters_count"])
+            except (ValueError, TypeError):
+                pass
+        if "about_family" in data:
+            profile.about_family = str(data["about_family"])
 
         # Lifestyle & Bio
         if "diet" in data and data["diet"]:
@@ -214,6 +259,18 @@ class RegistrationService:
                 profile.diet = Diet(data["diet"].upper())
             except ValueError:
                 pass
+        if "smoking" in data and data["smoking"]:
+            try:
+                profile.smoking = HabitStatus(str(data["smoking"]).upper())
+            except ValueError:
+                pass
+        if "drinking" in data and data["drinking"]:
+            try:
+                profile.drinking = HabitStatus(str(data["drinking"]).upper())
+            except ValueError:
+                pass
+        if "hobbies" in data:
+            profile.hobbies = str(data["hobbies"])
         if "bio" in data:
             profile.bio = str(data["bio"])
         if "faith_testimony" in data:

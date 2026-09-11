@@ -1,17 +1,25 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { apiClient } from '../../lib/api-client';
 import { getPhotoUrl, DEFAULT_AVATAR_SVG } from '../../lib/utils';
 
-export default function UserDashboardPage() {
+function DashboardContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [userData, setUserData] = useState<any>(null);
   const [photos, setPhotos] = useState<any[]>([]);
   const [interestsCount, setInterestsCount] = useState({ received: 0, sent: 0, matches: 0 });
   const [loading, setLoading] = useState(true);
+  const [showUpdatedBanner, setShowUpdatedBanner] = useState(false);
+
+  useEffect(() => {
+    if (searchParams?.get('updated') === 'true') {
+      setShowUpdatedBanner(true);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     async function loadDashboard() {
@@ -138,6 +146,32 @@ export default function UserDashboardPage() {
       <div className="absolute bottom-10 right-1/4 w-96 h-96 bg-burgundy-600/10 rounded-full blur-3xl pointer-events-none" />
 
       <div className="max-w-6xl mx-auto relative z-10 space-y-8">
+        {/* Profile Updated Success Banner */}
+        {showUpdatedBanner && (
+          <div className="bg-gradient-to-r from-emerald-50 via-teal-50 to-cyan-50 border border-emerald-300 rounded-3xl p-5 shadow-xs flex items-center justify-between gap-4 animate-fadeIn">
+            <div className="flex items-center gap-3.5">
+              <div className="w-10 h-10 rounded-2xl bg-emerald-600 text-white font-black flex items-center justify-center text-lg shadow-xs shrink-0">
+                ✓
+              </div>
+              <div>
+                <h3 className="text-sm font-serif font-extrabold text-emerald-950">
+                  Profile Details Updated Successfully!
+                </h3>
+                <p className="text-xs text-emerald-900/80">
+                  Your updated personal, faith, career, and family information has been synchronized and saved to your CovenantNest account.
+                </p>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => setShowUpdatedBanner(false)}
+              className="text-emerald-700 hover:text-emerald-950 p-2 text-xs font-bold transition-colors"
+            >
+              ✕
+            </button>
+          </div>
+        )}
+
         {/* Top: Received Interests, Sent Interests, Mutual Matches Activity Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
           <Link
@@ -284,10 +318,10 @@ export default function UserDashboardPage() {
                   📸 Photos ({photos.length})
                 </Link>
                 <Link
-                  href="/profile/create"
+                  href="/profile/edit?edit=true"
                   className="px-4 py-2 rounded-xl bg-gradient-to-r from-burgundy-700 via-rose-600 to-orange-600 hover:from-burgundy-600 hover:to-orange-500 text-white font-extrabold text-xs shadow-md shadow-orange-950/15 transition-all transform hover:-translate-y-0.5"
                 >
-                  Edit Profile ✍️
+                  Edit Entire Profile ✍️
                 </Link>
               </div>
             </div>
@@ -372,11 +406,20 @@ export default function UserDashboardPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Section A: Faith & Christian Fellowship */}
           <div className="bg-white border border-[#ece2d1] rounded-3xl p-6 shadow-sm space-y-4">
-            <div className="flex items-center gap-2 pb-3 border-b border-[#ece2d1]">
-              <span className="text-lg">✝️</span>
-              <h3 className="text-base font-serif font-extrabold text-charcoal-900">
-                Christian Faith &amp; Church
-              </h3>
+            <div className="flex items-center justify-between pb-3 border-b border-[#ece2d1]">
+              <div className="flex items-center gap-2">
+                <span className="text-lg">✝️</span>
+                <h3 className="text-base font-serif font-extrabold text-charcoal-900">
+                  Christian Faith &amp; Church
+                </h3>
+              </div>
+              <Link
+                href="/profile/edit?step=2&edit=true"
+                className="inline-flex items-center gap-1 text-[11px] font-extrabold text-cyan-800 bg-cyan-50 hover:bg-cyan-100 border border-cyan-200 px-3 py-1.5 rounded-xl transition-all shadow-2xs hover:scale-105"
+              >
+                <span>Edit Faith</span>
+                <span>✎</span>
+              </Link>
             </div>
 
             <div className="grid grid-cols-2 gap-4 text-xs">
@@ -399,8 +442,16 @@ export default function UserDashboardPage() {
             </div>
 
             {faithTestimony && (
-              <div className="pt-3 border-t border-[#ece2d1]">
-                <span className="text-charcoal-500 text-xs block mb-1">Faith Testimony &amp; Service</span>
+              <div className="pt-3 border-t border-[#ece2d1] space-y-1">
+                <div className="flex items-center justify-between">
+                  <span className="text-charcoal-500 text-xs block">Faith Testimony &amp; Service</span>
+                  <Link
+                    href="/profile/edit?step=5&edit=true"
+                    className="text-[10px] font-bold text-cyan-700 hover:text-cyan-900"
+                  >
+                    Edit Testimony ✎
+                  </Link>
+                </div>
                 <p className="text-xs text-charcoal-700 italic bg-[#faf6ee] p-3 rounded-xl border border-[#ece2d1]">
                   &ldquo;{faithTestimony}&rdquo;
                 </p>
@@ -410,11 +461,20 @@ export default function UserDashboardPage() {
 
           {/* Section B: Education & Professional Career */}
           <div className="bg-white border border-[#ece2d1] rounded-3xl p-6 shadow-sm space-y-4">
-            <div className="flex items-center gap-2 pb-3 border-b border-[#ece2d1]">
-              <span className="text-lg">💼</span>
-              <h3 className="text-base font-serif font-extrabold text-charcoal-900">
-                Education &amp; Occupation
-              </h3>
+            <div className="flex items-center justify-between pb-3 border-b border-[#ece2d1]">
+              <div className="flex items-center gap-2">
+                <span className="text-lg">💼</span>
+                <h3 className="text-base font-serif font-extrabold text-charcoal-900">
+                  Education &amp; Occupation
+                </h3>
+              </div>
+              <Link
+                href="/profile/edit?step=3&edit=true"
+                className="inline-flex items-center gap-1 text-[11px] font-extrabold text-orange-800 bg-orange-50 hover:bg-orange-100 border border-orange-200 px-3 py-1.5 rounded-xl transition-all shadow-2xs hover:scale-105"
+              >
+                <span>Edit Career</span>
+                <span>✎</span>
+              </Link>
             </div>
 
             <div className="grid grid-cols-2 gap-4 text-xs">
@@ -443,11 +503,20 @@ export default function UserDashboardPage() {
 
           {/* Section C: Personal Lifestyle & Attributes */}
           <div className="bg-white border border-[#ece2d1] rounded-3xl p-6 shadow-sm space-y-4">
-            <div className="flex items-center gap-2 pb-3 border-b border-[#ece2d1]">
-              <span className="text-lg">👤</span>
-              <h3 className="text-base font-serif font-extrabold text-charcoal-900">
-                Personal Identity &amp; Habits
-              </h3>
+            <div className="flex items-center justify-between pb-3 border-b border-[#ece2d1]">
+              <div className="flex items-center gap-2">
+                <span className="text-lg">👤</span>
+                <h3 className="text-base font-serif font-extrabold text-charcoal-900">
+                  Personal Identity &amp; Habits
+                </h3>
+              </div>
+              <Link
+                href="/profile/edit?step=1&edit=true"
+                className="inline-flex items-center gap-1 text-[11px] font-extrabold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 px-3 py-1.5 rounded-xl transition-all shadow-2xs hover:scale-105"
+              >
+                <span>Edit Personal</span>
+                <span>✎</span>
+              </Link>
             </div>
 
             <div className="grid grid-cols-2 gap-4 text-xs">
@@ -477,8 +546,16 @@ export default function UserDashboardPage() {
               </div>
             </div>
 
-            <div className="pt-3 border-t border-[#ece2d1]">
-              <span className="text-charcoal-500 text-xs block mb-1">About Me (Bio)</span>
+            <div className="pt-3 border-t border-[#ece2d1] space-y-1">
+              <div className="flex items-center justify-between">
+                <span className="text-charcoal-500 text-xs block">About Me (Bio)</span>
+                <Link
+                  href="/profile/edit?step=5&edit=true"
+                  className="text-[10px] font-bold text-emerald-700 hover:text-emerald-900"
+                >
+                  Edit Bio ✎
+                </Link>
+              </div>
               <p className="text-xs text-charcoal-700 bg-[#faf6ee] p-3 rounded-xl border border-[#ece2d1] leading-relaxed italic">
                 {bio ? `“${bio}”` : 'No bio written yet.'}
               </p>
@@ -487,11 +564,20 @@ export default function UserDashboardPage() {
 
           {/* Section D: Family Background & Location */}
           <div className="bg-white border border-[#ece2d1] rounded-3xl p-6 shadow-sm space-y-4">
-            <div className="flex items-center gap-2 pb-3 border-b border-[#ece2d1]">
-              <span className="text-lg">🏡</span>
-              <h3 className="text-base font-serif font-extrabold text-charcoal-900">
-                Family Background &amp; Location
-              </h3>
+            <div className="flex items-center justify-between pb-3 border-b border-[#ece2d1]">
+              <div className="flex items-center gap-2">
+                <span className="text-lg">🏡</span>
+                <h3 className="text-base font-serif font-extrabold text-charcoal-900">
+                  Family Background &amp; Location
+                </h3>
+              </div>
+              <Link
+                href="/profile/edit?step=4&edit=true"
+                className="inline-flex items-center gap-1 text-[11px] font-extrabold text-cyan-800 bg-cyan-50 hover:bg-cyan-100 border border-cyan-200 px-3 py-1.5 rounded-xl transition-all shadow-2xs hover:scale-105"
+              >
+                <span>Edit Family</span>
+                <span>✎</span>
+              </Link>
             </div>
 
             <div className="grid grid-cols-2 gap-4 text-xs">
@@ -548,8 +634,12 @@ export default function UserDashboardPage() {
                 Expected Partner Preferences
               </h3>
             </div>
-            <Link href="/profile/create" className="text-xs font-bold text-burgundy-700 hover:underline">
-              Edit Preferences →
+            <Link
+              href="/profile/edit?step=6&edit=true"
+              className="inline-flex items-center gap-1 text-[11px] font-extrabold text-burgundy-800 bg-rose-50 hover:bg-rose-100 border border-rose-200 px-3 py-1.5 rounded-xl transition-all shadow-2xs hover:scale-105"
+            >
+              <span>Edit Preferences</span>
+              <span>✎</span>
             </Link>
           </div>
 
@@ -581,7 +671,10 @@ export default function UserDashboardPage() {
           ) : (
             <div className="p-6 rounded-2xl bg-[#faf6ee] border border-[#ece2d1] text-center space-y-2">
               <p className="text-xs text-charcoal-500">No partner preferences configured yet.</p>
-              <Link href="/profile/create" className="inline-block text-xs font-bold text-burgundy-700 hover:underline">
+              <Link
+                href="/profile/edit?step=6&edit=true"
+                className="inline-block text-xs font-bold text-burgundy-700 hover:underline"
+              >
                 Set partner preferences now →
               </Link>
             </div>
@@ -589,5 +682,22 @@ export default function UserDashboardPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function UserDashboardPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-[calc(100vh-80px)] flex flex-col items-center justify-center bg-[#fdfbf7] text-charcoal-900 font-sans">
+          <div className="w-12 h-12 rounded-2xl bg-burgundy-700 text-gold-300 font-black flex items-center justify-center animate-pulse mb-3 shadow-md">
+            CM
+          </div>
+          <p className="text-xs text-charcoal-600 font-bold">Loading Your Matrimonial Dashboard...</p>
+        </div>
+      }
+    >
+      <DashboardContent />
+    </Suspense>
   );
 }
