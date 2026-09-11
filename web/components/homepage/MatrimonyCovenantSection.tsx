@@ -6,108 +6,91 @@ export function MatrimonyCovenantSection() {
   const pillars = [
     {
       num: '01',
-      title: 'Prayer & Divine Timing',
-      verse: 'Ecclesiastes 3:11',
+      badge: 'FAITH & COVENANT',
+      title: 'Rooted in Christ & Prayer',
       description:
-        'We believe that God makes all things beautiful in His time. A Christian marriage begins when two hearts seek God first in prayer, trusting His divine providence and guidance.',
+        'Christian marriage is a solemn, lifelong covenant. We connect prayerful brides, grooms, and families across Methodist, CSI, Roman Catholic, Baptist, and Pentecostal fellowships.',
+      bg: 'bg-gradient-to-br from-cyan-50/90 to-cyan-100/30',
+      border: 'border-cyan-200 hover:border-cyan-400',
+      numBadge: 'bg-cyan-100 text-cyan-900 border-cyan-300',
+      titleColor: 'text-cyan-950',
     },
     {
       num: '02',
-      title: 'Built Upon the Rock of Christ',
-      verse: 'Matthew 7:24',
+      badge: 'STRICT PRIVACY',
+      title: 'Protected Family Discretion',
       description:
-        'A blessed home is established on shared faith, mutual respect, and Christian values. When husband and wife walk together with Christ, their bond stands firm through every season.',
+        'Your sacred dignity is guarded. Full candidate profiles, family backgrounds, and direct phone contacts are unlocked only through mutual consent—never leaked to the public internet.',
+      bg: 'bg-gradient-to-br from-emerald-50/90 to-emerald-100/30',
+      border: 'border-emerald-200 hover:border-emerald-400',
+      numBadge: 'bg-emerald-100 text-emerald-900 border-emerald-300',
+      titleColor: 'text-emerald-950',
     },
     {
       num: '03',
-      title: 'Family Honor & Parental Blessings',
-      verse: 'Exodus 20:12',
+      badge: 'HOLY MATRIMONY ONLY',
+      title: 'Honoring Families & Pastors',
       description:
-        'In Christian tradition, marriage unites two families in grace. We honor the prayers of mothers, fathers, and church pastors, creating a joyful, transparent atmosphere for families.',
-    },
-    {
-      num: '04',
-      title: 'The Sacred Altar Vow',
-      verse: 'Colossians 3:14',
-      description:
-        'Above all, put on love, which binds everything together in perfect harmony. Marriage is a solemn, lifelong covenant of unconditional forgiveness, kindness, and devotion.',
-    },
-  ];
-
-  const colorThemes = [
-    {
-      cardBg: 'bg-gradient-to-br from-cyan-50/80 to-white hover:border-cyan-400',
-      border: 'border-cyan-200',
-      numBg: 'bg-cyan-100/80 text-cyan-900 border-cyan-300',
-      verseBadge: 'text-cyan-900 bg-cyan-100/60 border-cyan-200',
-      hoverTitle: 'group-hover:text-cyan-800',
-    },
-    {
-      cardBg: 'bg-gradient-to-br from-orange-50/80 to-white hover:border-orange-400',
-      border: 'border-orange-200',
-      numBg: 'bg-orange-100/80 text-orange-900 border-orange-300',
-      verseBadge: 'text-orange-900 bg-orange-100/60 border-orange-200',
-      hoverTitle: 'group-hover:text-orange-800',
-    },
-    {
-      cardBg: 'bg-gradient-to-br from-emerald-50/80 to-white hover:border-emerald-400',
-      border: 'border-emerald-200',
-      numBg: 'bg-emerald-100/80 text-emerald-900 border-emerald-300',
-      verseBadge: 'text-emerald-900 bg-emerald-100/60 border-emerald-200',
-      hoverTitle: 'group-hover:text-emerald-800',
-    },
-    {
-      cardBg: 'bg-gradient-to-br from-rose-50/80 to-white hover:border-rose-400',
-      border: 'border-rose-200',
-      numBg: 'bg-rose-100/80 text-rose-900 border-rose-300',
-      verseBadge: 'text-rose-900 bg-rose-100/60 border-rose-200',
-      hoverTitle: 'group-hover:text-rose-800',
+        'Solely designed for holy matrimony—zero casual dating. We encourage parental guidance and church endorsements, fostering transparent, reverent conversations between families.',
+      bg: 'bg-gradient-to-br from-orange-50/90 to-amber-100/30',
+      border: 'border-orange-200 hover:border-orange-400',
+      numBadge: 'bg-orange-100 text-orange-900 border-orange-300',
+      titleColor: 'text-orange-950',
     },
   ];
 
   return (
-    <section className="py-20 bg-gradient-to-b from-[#fdfbf7] via-[#faf6ee] to-[#fdfbf7] text-[#1e1b18] relative overflow-hidden border-t border-charcoal-100">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-cyan-50 via-orange-50 to-emerald-50 border border-cyan-200 text-charcoal-900 text-xs font-bold uppercase tracking-wider shadow-xs">
-            <span className="w-2 h-2 rounded-full bg-cyan-500 animate-pulse" />
-            <span>Sacred Pillars of Holy Matrimony</span>
+    <section className="py-8 sm:py-10 bg-gradient-to-b from-[#fdfbf7] via-[#faf6ee] to-[#fdfbf7] text-[#1e1b18] border-t border-charcoal-100/80">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Compact Header */}
+        <div className="text-center max-w-2xl mx-auto mb-6 sm:mb-7 space-y-1.5">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-cyan-50 via-orange-50 to-emerald-50 border border-cyan-200 text-charcoal-900 text-[11px] font-bold uppercase tracking-wider shadow-2xs">
+            <span className="w-1.5 h-1.5 rounded-full bg-cyan-500 animate-pulse" />
+            <span>Sacred Covenant &amp; Discretion</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight font-brand">
-            Walking Together in Grace, Devotion &amp; Faith
+
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight font-brand">
+            Built on Faith, Protected by Reverence
           </h2>
-          <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
-            Christian marriage is more than a ceremony; it is a sacred covenant instituted by God to reflect His everlasting love.
-          </p>
+
+          {/* Integrated Scripture Ribbon (No bloated standalone section) */}
+          <div className="pt-1">
+            <blockquote className="text-xs sm:text-sm font-serif italic text-charcoal-700 max-w-xl mx-auto leading-relaxed bg-white/80 border border-orange-200/80 py-2 px-4 rounded-xl shadow-2xs">
+              &ldquo;Love is patient, love is kind... It always protects, always trusts, always hopes, always perseveres. Love never fails.&rdquo;
+              <span className="block not-italic font-sans text-[10px] font-bold text-orange-800 uppercase tracking-widest mt-0.5">
+                — 1 Corinthians 13:4, 7–8
+              </span>
+            </blockquote>
+          </div>
         </div>
 
-        {/* 4 Marriage Pillars Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
-          {pillars.map((pillar, idx) => {
-            const theme = colorThemes[idx % colorThemes.length];
-            return (
-              <div
-                key={idx}
-                className={`p-8 rounded-3xl ${theme.cardBg} border ${theme.border} transition-all duration-300 shadow-sm hover:shadow-md group`}
-              >
-                <div className="flex items-center justify-between mb-4">
-                  <div className={`w-10 h-10 rounded-xl ${theme.numBg} border flex items-center justify-center font-mono text-sm font-extrabold group-hover:scale-105 transition-transform shadow-2xs`}>
-                    {pillar.num}
-                  </div>
-                  <span className={`text-xs font-serif italic ${theme.verseBadge} border px-3 py-1 rounded-full font-bold shadow-2xs`}>
-                    {pillar.verse}
+        {/* 3 Pillars Grid - Single Compact Row */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5 sm:gap-4">
+          {pillars.map((p, idx) => (
+            <div
+              key={idx}
+              className={`p-4 sm:p-5 rounded-2xl ${p.bg} border ${p.border} transition-all duration-200 shadow-2xs hover:shadow-xs flex flex-col justify-between`}
+            >
+              <div>
+                <div className="flex items-center justify-between mb-2.5">
+                  <span className={`w-7 h-7 rounded-lg ${p.numBadge} border flex items-center justify-center font-mono text-xs font-black shadow-2xs`}>
+                    {p.num}
+                  </span>
+                  <span className="text-[9px] font-extrabold uppercase tracking-wider text-slate-600 bg-white/90 border border-slate-200/80 px-2 py-0.5 rounded-md">
+                    {p.badge}
                   </span>
                 </div>
-                <h3 className={`text-lg sm:text-xl font-bold text-slate-900 mb-2 ${theme.hoverTitle} transition-colors font-brand`}>
-                  {pillar.title}
+
+                <h3 className={`text-sm sm:text-base font-bold ${p.titleColor} font-brand mb-1.5`}>
+                  {p.title}
                 </h3>
-                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                  {pillar.description}
+
+                <p className="text-[11px] sm:text-xs text-slate-600 leading-relaxed">
+                  {p.description}
                 </p>
               </div>
-            );
-          })}
+            </div>
+          ))}
         </div>
       </div>
     </section>
