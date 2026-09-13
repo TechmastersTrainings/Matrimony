@@ -13,42 +13,6 @@ export function Footer() {
       {/* Warm Ambient Radial Aura */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[850px] h-[220px] bg-gradient-to-b from-amber-500/10 via-rose-500/5 to-transparent rounded-full blur-3xl pointer-events-none" />
 
-      {/* 1. Pre-Footer Assurance & Concept Strip (Differentiates Footer Clearly) */}
-      <div className="border-b border-slate-800/80 bg-white/[0.02] relative z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-5">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4 text-center sm:text-left">
-            <div className="flex items-center gap-3 p-2.5 rounded-xl bg-slate-900/60 border border-slate-800/80">
-              <span className="w-8 h-8 rounded-lg bg-amber-500/15 border border-amber-500/30 text-amber-400 flex items-center justify-center font-bold text-sm shrink-0">
-                ⛪
-              </span>
-              <div>
-                <h5 className="font-bold text-slate-200 text-xs">All Fellowships Welcome</h5>
-                <p className="text-[11px] text-slate-400 leading-tight">Methodist, CSI, Catholic, Baptist &amp; Pentecostal</p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3 p-2.5 rounded-xl bg-slate-900/60 border border-slate-800/80">
-              <span className="w-8 h-8 rounded-lg bg-cyan-500/15 border border-cyan-500/30 text-cyan-400 flex items-center justify-center font-bold text-sm shrink-0">
-                🔒
-              </span>
-              <div>
-                <h5 className="font-bold text-slate-200 text-xs">Zero Unsolicited Contact</h5>
-                <p className="text-[11px] text-slate-400 leading-tight">Strict mutual consent &amp; protected candidate privacy</p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3 p-2.5 rounded-xl bg-slate-900/60 border border-slate-800/80">
-              <span className="w-8 h-8 rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 flex items-center justify-center font-bold text-sm shrink-0">
-                🏛️
-              </span>
-              <div>
-                <h5 className="font-bold text-slate-200 text-xs">Headquartered in Bidar</h5>
-                <p className="text-[11px] text-slate-400 leading-tight">Techmasters Innovations Campus • Pan-India</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
 
       {/* 2. Main Multi-Column Structured Directory */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-14 relative z-10">
@@ -62,14 +26,6 @@ export function Footer() {
             <p className="text-xs sm:text-sm text-slate-300/85 leading-relaxed max-w-sm">
               A reverent Christian matrimonial sanctuary where holy covenants build blessed homes. Safeguarding candidate dignity, pastoral honor, and family privacy at every step.
             </p>
-
-            {/* Sacred Matrimony Trust Badge */}
-            <div className="pt-1">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900/90 border border-amber-400/30 text-amber-300 text-xs font-semibold backdrop-blur-md shadow-inner">
-                <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
-                <span>✝ Holy Christian Matrimony • Verified &amp; Protected</span>
-              </div>
-            </div>
 
             <p className="text-[11px] text-slate-400 pt-1">
               Corporate Office: Mailoor Road, Bidar, Karnataka - 585403.
