@@ -7,57 +7,10 @@ import { Logo } from './Logo';
 export function Footer() {
   return (
     <footer className="bg-gradient-to-b from-[#faf6ee] via-[#f7f2e7] to-[#ede4d3] text-slate-700 border-t border-[#ded3be] text-xs font-sans">
-      {/* 1. Top Community & Faith Trust Strip */}
-      <div className="border-b border-[#e2d5c0]/80 bg-[#fdfbf7]/70">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-            <div className="flex items-center gap-2.5 p-2 rounded-xl bg-white/70 border border-[#e8ddcb] shadow-2xs">
-              <span className="w-8 h-8 rounded-lg bg-emerald-100/70 border border-emerald-300 text-emerald-800 flex items-center justify-center font-bold text-sm shrink-0">
-                ✓
-              </span>
-              <div>
-                <h4 className="font-bold text-slate-900 text-xs">100% Church Verified</h4>
-                <p className="text-[10px] text-slate-500 leading-tight">Parish &amp; pastor credentials</p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2.5 p-2 rounded-xl bg-white/70 border border-[#e8ddcb] shadow-2xs">
-              <span className="w-8 h-8 rounded-lg bg-cyan-100/70 border border-cyan-300 text-cyan-900 flex items-center justify-center text-sm shrink-0">
-                🔒
-              </span>
-              <div>
-                <h4 className="font-bold text-slate-900 text-xs">Zero Unsolicited Reveals</h4>
-                <p className="text-[10px] text-slate-500 leading-tight">Mutual consent protected</p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2.5 p-2 rounded-xl bg-white/70 border border-[#e8ddcb] shadow-2xs">
-              <span className="w-8 h-8 rounded-lg bg-orange-100/70 border border-orange-300 text-orange-900 flex items-center justify-center text-sm shrink-0">
-                ⛪
-              </span>
-              <div>
-                <h4 className="font-bold text-slate-900 text-xs">All Fellowships Welcome</h4>
-                <p className="text-[10px] text-slate-500 leading-tight">MCI, CSI, Catholic, Baptist</p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2.5 p-2 rounded-xl bg-white/70 border border-[#e8ddcb] shadow-2xs">
-              <span className="w-8 h-8 rounded-lg bg-amber-100/70 border border-amber-300 text-amber-900 flex items-center justify-center text-sm shrink-0">
-                🏛️
-              </span>
-              <div>
-                <h4 className="font-bold text-slate-900 text-xs">Headquartered in Bidar</h4>
-                <p className="text-[10px] text-slate-500 leading-tight">Techmasters Innovations Campus</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* 2. Main Multi-Column Structured Content */}
+      {/* 1. Main Multi-Column Structured Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-8">
-          {/* Column 1: Brand, Purpose & Corporate Identity (5 cols on lg) */}
+          {/* Column 1: Brand, Purpose & Corporate Identity (4 cols on lg) */}
           <div className="lg:col-span-4 space-y-4">
             <Link href="/" className="inline-block group">
               <Logo size="md" lightText={false} showTechmastersTag={true} />
@@ -237,7 +190,7 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Column 4: Privacy, Safety & Trust (3 cols on lg) */}
+          {/* Column 4: Privacy, Trust & Legal (3 cols on lg) */}
           <div className="lg:col-span-3 space-y-3">
             <h4 className="font-brand text-sm font-bold text-slate-900 uppercase tracking-wider border-b border-[#e2d5c0] pb-2">
               Privacy, Trust &amp; Legal
@@ -280,22 +233,11 @@ export function Footer() {
                 </Link>
               </li>
             </ul>
-
-            {/* Razorpay Trust Box */}
-            <div className="mt-4 p-3 rounded-xl bg-white/70 border border-[#e2d5c0] space-y-1">
-              <div className="flex items-center gap-1.5 text-xs font-bold text-slate-900">
-                <span>🛡️</span>
-                <span>100% Certified Safe &amp; Secure</span>
-              </div>
-              <p className="text-[10px] text-slate-500 leading-snug">
-                Bank-Grade 128-bit SSL Encryption. Direct UPI, Debit/Credit Card &amp; NetBanking processing via Razorpay.
-              </p>
-            </div>
           </div>
         </div>
       </div>
 
-      {/* 3. Bottom Legal, Copyright & Regional Reach */}
+      {/* 2. Bottom Legal, Copyright & Regional Reach */}
       <div className="border-t border-[#ded3be] bg-[#f2e9db]/90 py-4">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-2.5 text-[11px] text-slate-600 text-center sm:text-left">
           <p>

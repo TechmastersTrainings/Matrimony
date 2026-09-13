@@ -53,15 +53,9 @@ export function MatrimonyCovenantSection() {
             Built on Faith, Protected by Reverence
           </h2>
 
-          {/* Integrated Scripture Ribbon */}
-          <div className="pt-1.5">
-            <blockquote className="text-sm sm:text-base font-serif italic text-charcoal-800 max-w-xl mx-auto leading-relaxed bg-white/90 border border-orange-200 py-3 px-5 rounded-2xl shadow-2xs">
-              &ldquo;Love is patient, love is kind... It always protects, always trusts, always hopes, always perseveres. Love never fails.&rdquo;
-              <span className="block not-italic font-sans text-xs font-bold text-orange-800 uppercase tracking-widest mt-1">
-                — 1 Corinthians 13:4, 7–8
-              </span>
-            </blockquote>
-          </div>
+          <p className="text-sm sm:text-base text-slate-600 max-w-xl mx-auto leading-relaxed font-normal">
+            Christian marriage is more than a ceremony; it is a sacred covenant instituted by God to reflect His everlasting love, grace, and faithfulness.
+          </p>
         </div>
 
         {/* 3 Pillars Grid */}
