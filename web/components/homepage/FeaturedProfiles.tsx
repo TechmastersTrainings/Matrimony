@@ -131,81 +131,35 @@ export function FeaturedProfiles() {
                 const candidateCode = `CN-${p.id || 1}`;
 
                 return (
-                  <div
+                  <Link
                     key={p.id}
-                    className="w-[230px] sm:w-[250px] md:w-[265px] shrink-0 snap-start bg-white border border-[#ece2d1] hover:border-cyan-400 rounded-2xl p-4 sm:p-5 shadow-xs hover:shadow-md transition-all duration-300 flex flex-col justify-between group hover:-translate-y-0.5"
+                    href={`/profile/${p.id}`}
+                    title={`View Profile of ${p.first_name}`}
+                    className="w-[145px] sm:w-[160px] md:w-[175px] aspect-square shrink-0 snap-start bg-white border border-[#ece2d1] hover:border-cyan-400 rounded-2xl p-3 sm:p-3.5 shadow-xs hover:shadow-md transition-all duration-300 flex items-center justify-center group hover:-translate-y-1"
                   >
-                    <div>
-                      {/* Centered Profile Image Container with Verified Badge */}
-                      <div className="relative my-2 sm:my-2.5 flex justify-center">
-                        {/* Avatar Circle */}
-                        <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full ring-3 ring-cyan-400/30 group-hover:ring-orange-400/60 shadow-md overflow-hidden bg-gradient-to-tr from-[#0f172a] to-[#1e293b] transition-all duration-300 relative flex items-center justify-center shrink-0">
-                          {photoUrl ? (
-                            <img
-                              src={photoUrl}
-                              alt={`${p.first_name} ${p.last_name || ''}`}
-                              className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
-                              onError={(e) => {
-                                e.currentTarget.src = getDefaultAvatarSvg(candidateCode);
-                              }}
-                            />
-                          ) : (
-                            <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-b from-[#0f172a] to-[#1e293b] text-amber-400 p-2 select-none">
-                              <span className="font-mono font-black text-sm sm:text-base tracking-wider text-amber-400">
-                                {candidateCode}
-                              </span>
-                              <span className="text-[10px] font-bold text-slate-300 uppercase tracking-widest mt-0.5">
-                                Profile
-                              </span>
-                            </div>
-                          )}
-                        </div>
-
-                        {/* Verified Badge ON the Image (Centered on bottom curve) */}
-                        <div className="absolute -bottom-1.5 inset-x-0 flex justify-center pointer-events-none">
-                          <span className="bg-emerald-600 text-white border-2 border-white text-[11px] font-black px-2.5 py-0.5 rounded-full shadow-xs flex items-center gap-1">
-                            <span>✓</span>
-                            <span>Verified</span>
+                    {/* Centered Profile Picture Circle */}
+                    <div className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 rounded-full ring-3 ring-cyan-400/30 group-hover:ring-orange-400/60 shadow-md overflow-hidden bg-gradient-to-tr from-[#0f172a] to-[#1e293b] transition-all duration-300 relative flex items-center justify-center shrink-0 group-hover:scale-105">
+                      {photoUrl ? (
+                        <img
+                          src={photoUrl}
+                          alt={`${p.first_name} ${p.last_name || ''}`}
+                          className="w-full h-full object-cover object-top"
+                          onError={(e) => {
+                            e.currentTarget.src = getDefaultAvatarSvg(candidateCode);
+                          }}
+                        />
+                      ) : (
+                        <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-b from-[#0f172a] to-[#1e293b] text-amber-400 p-2 select-none">
+                          <span className="font-mono font-black text-sm sm:text-base tracking-wider text-amber-400">
+                            {candidateCode}
+                          </span>
+                          <span className="text-[10px] font-bold text-slate-300 uppercase tracking-widest mt-0.5">
+                            Profile
                           </span>
                         </div>
-                      </div>
-
-                      {/* Candidate Details */}
-                      <div className="text-center space-y-1.5 pt-2">
-                        <h3 className="font-brand text-base sm:text-lg font-bold text-slate-900 group-hover:text-cyan-800 transition-colors truncate">
-                          {p.first_name} {p.last_name?.charAt(0) ? `${p.last_name.charAt(0)}.` : ''}
-                        </h3>
-
-                        {/* Location Hidden & Protected */}
-                        <div className="flex justify-center">
-                          <span className="text-xs text-slate-500 font-semibold inline-flex items-center gap-1 bg-slate-100/90 border border-slate-200/80 px-2.5 py-0.5 rounded-full">
-                            <span>🔒</span>
-                            <span>Location Protected</span>
-                          </span>
-                        </div>
-
-                        <div className="pt-2 border-t border-charcoal-100 space-y-1 text-xs sm:text-sm">
-                          <p className="font-medium text-slate-800 truncate" title={p.highest_education || 'Christian Graduate'}>
-                            🎓 {p.highest_education || 'Christian Graduate'}
-                          </p>
-                          <p className="text-slate-500 truncate" title={p.occupation_title || p.church_name || 'Verified Member'}>
-                            💼 {p.occupation_title || p.church_name || 'Verified Member'}
-                          </p>
-                        </div>
-                      </div>
+                      )}
                     </div>
-
-                    {/* Action Button */}
-                    <div className="mt-3.5 pt-1">
-                      <Link
-                        href={`/profile/${p.id}`}
-                        className="w-full py-2 px-4 rounded-xl bg-cyan-50/80 hover:bg-gradient-to-r hover:from-cyan-600 hover:to-teal-600 text-cyan-950 hover:text-white border border-cyan-200 hover:border-cyan-600 text-xs sm:text-sm font-bold transition-all duration-200 flex items-center justify-center gap-1.5 shadow-2xs"
-                      >
-                        <span>View Profile</span>
-                        <span className="transition-transform group-hover:translate-x-0.5">→</span>
-                      </Link>
-                    </div>
-                  </div>
+                  </Link>
                 );
               })}
             </div>
