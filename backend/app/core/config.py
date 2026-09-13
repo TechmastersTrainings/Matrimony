@@ -84,7 +84,7 @@ class Settings(BaseSettings):
     R2_ACCESS_KEY_ID: Optional[str] = None
     R2_SECRET_ACCESS_KEY: Optional[str] = None
     R2_BUCKET_NAME: Optional[str] = "christian-matrimony-media"
-    R2_PUBLIC_URL: Optional[str] = "https://media.christianmatrimony.app"
+    R2_PUBLIC_URL: Optional[str] = None
 
     # Monitoring & Error Reporting
     SENTRY_DSN: Optional[str] = None

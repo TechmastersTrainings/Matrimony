@@ -20,6 +20,12 @@ export function getPhotoUrl(url?: string | null): string {
     return raw.replace(/^https?:\/\/localhost:8000/, backendBase);
   }
 
+  // If pointing to unconfigured media.christianmatrimony.app domain, rewrite to backend proxy
+  if (raw.includes('media.christianmatrimony.app')) {
+    const cleanPath = raw.replace(/^https?:\/\/media\.christianmatrimony\.app\/?/, '');
+    return `${backendBase}/media/${cleanPath}`;
+  }
+
   if (raw.startsWith('https://')) {
     return raw;
   }

@@ -36,7 +36,13 @@ export function getPhotoUrl(url?: string | null): string {
     return raw.replace(/^https?:\/\/localhost:8000/, backendBase);
   }
 
-  // If already a valid HTTPS URL (e.g. Cloudflare R2 public URL or Render URL)
+  // If pointing to unconfigured media.christianmatrimony.app domain, rewrite to backend proxy
+  if (raw.includes('media.christianmatrimony.app')) {
+    const cleanPath = raw.replace(/^https?:\/\/media\.christianmatrimony\.app\/?/, '');
+    return `${backendBase}/media/${cleanPath}`;
+  }
+
+  // If already a valid HTTPS URL
   if (raw.startsWith('https://')) {
     return raw;
   }

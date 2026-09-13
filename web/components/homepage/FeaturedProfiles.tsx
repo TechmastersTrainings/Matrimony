@@ -4,7 +4,107 @@ import React, { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
 import { apiClient } from '../../lib/api-client';
 import { CandidateCard } from '../../types';
-import { getPhotoUrl, getDefaultAvatarSvg } from '../../lib/utils';
+import { getPhotoUrl } from '../../lib/utils';
+
+function ProfileCardItem({ profile: p }: { profile: CandidateCard }) {
+  const [imageError, setImageError] = useState(false);
+  const photoUrl = getPhotoUrl(
+    typeof p.primary_photo === 'string'
+      ? p.primary_photo
+      : (p.primary_photo as any)?.photo_url
+  );
+  const candidateCode = `CN-${p.id || 1}`;
+  const hasPhoto = !!photoUrl && !imageError;
+
+  return (
+    <div className="w-[240px] sm:w-[260px] md:w-[275px] shrink-0 snap-start bg-white border border-[#ece2d1] hover:border-cyan-500/80 rounded-2xl p-3 sm:p-3.5 shadow-xs hover:shadow-lg transition-all duration-300 flex flex-col justify-between group hover:-translate-y-1">
+      <div>
+        {/* Generous Portrait Photo Container (NOT a circle!) */}
+        <div className="relative w-full aspect-[3/4] rounded-xl overflow-hidden bg-slate-900 shadow-xs mb-3">
+          {hasPhoto ? (
+            <img
+              src={photoUrl}
+              alt={`${p.first_name} ${p.last_name || ''}`}
+              className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
+              onError={() => setImageError(true)}
+            />
+          ) : (
+            <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-b from-[#0f172a] via-[#1e293b] to-[#0f172a] text-slate-300 p-4 select-none">
+              <div className="w-14 h-14 rounded-2xl bg-slate-800/90 border border-slate-700 flex items-center justify-center text-2xl mb-2 text-slate-400 shadow-inner">
+                👤
+              </div>
+              <span className="font-mono font-black text-sm tracking-wider text-amber-400">
+                {candidateCode}
+              </span>
+              <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mt-1">
+                Photo on Request
+              </span>
+            </div>
+          )}
+
+          {/* Verified Badge on Photo */}
+          <div className="absolute top-2.5 left-2.5 z-10 pointer-events-none">
+            <span className="bg-emerald-600/95 backdrop-blur-md text-white border border-white/30 text-[11px] font-black px-2.5 py-0.5 rounded-full shadow-md flex items-center gap-1">
+              <span>✓</span>
+              <span>Verified</span>
+            </span>
+          </div>
+
+          {/* Candidate ID Tag */}
+          <div className="absolute top-2.5 right-2.5 z-10 pointer-events-none">
+            <span className="bg-slate-950/75 backdrop-blur-md text-amber-300 font-mono font-black text-[10px] px-2 py-0.5 rounded-md border border-amber-400/30 shadow-xs">
+              {candidateCode}
+            </span>
+          </div>
+        </div>
+
+        {/* Candidate Details */}
+        <div className="space-y-2 px-1">
+          <div className="flex items-center justify-between gap-2">
+            <h3 className="font-brand text-base sm:text-lg font-bold text-slate-900 group-hover:text-cyan-800 transition-colors truncate">
+              {p.first_name} {p.last_name?.charAt(0) ? `${p.last_name.charAt(0)}.` : ''}
+            </h3>
+
+            {p.age && (
+              <span className="text-xs font-bold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-md shrink-0">
+                {p.age} yrs
+              </span>
+            )}
+          </div>
+
+          {/* Location Protected Badge */}
+          <div>
+            <span className="text-[11px] text-slate-600 font-semibold inline-flex items-center gap-1 bg-slate-100/90 border border-slate-200/80 px-2.5 py-0.5 rounded-full">
+              <span>🔒</span>
+              <span>Location Protected</span>
+            </span>
+          </div>
+
+          {/* Education & Occupation */}
+          <div className="pt-2 border-t border-slate-100 space-y-1 text-xs">
+            <p className="font-medium text-slate-800 truncate" title={p.highest_education || 'Christian Graduate'}>
+              🎓 {p.highest_education || 'Christian Graduate'}
+            </p>
+            <p className="text-slate-500 truncate" title={p.occupation_title || p.church_name || 'Verified Member'}>
+              💼 {p.occupation_title || p.church_name || 'Verified Member'}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Action Button */}
+      <div className="mt-3.5 pt-1 px-1">
+        <Link
+          href={`/profile/${p.id}`}
+          className="w-full py-2 px-4 rounded-xl bg-cyan-50/90 hover:bg-gradient-to-r hover:from-cyan-700 hover:to-teal-700 text-cyan-950 hover:text-white border border-cyan-200 hover:border-cyan-700 text-xs sm:text-sm font-bold transition-all duration-200 flex items-center justify-center gap-1.5 shadow-2xs group/btn"
+        >
+          <span>View Profile</span>
+          <span className="transition-transform group-hover/btn:translate-x-0.5">→</span>
+        </Link>
+      </div>
+    </div>
+  );
+}
 
 export function FeaturedProfiles() {
   const [profiles, setProfiles] = useState<CandidateCard[]>([]);
@@ -104,7 +204,7 @@ export function FeaturedProfiles() {
           </div>
         </div>
 
-        {/* Profile Cards Carousel (Left-to-Right Horizontal Scrolling) */}
+        {/* Profile Cards Carousel */}
         {loading ? (
           <div className="py-10 text-center text-slate-400 text-sm font-medium">
             Loading real candidate profiles...
@@ -122,46 +222,9 @@ export function FeaturedProfiles() {
               onScroll={checkScroll}
               className="flex items-stretch gap-4 sm:gap-5 overflow-x-auto scrollbar-none scroll-smooth pb-4 pt-1 px-1 snap-x snap-mandatory"
             >
-              {profiles.map((p) => {
-                const photoUrl = getPhotoUrl(
-                  typeof p.primary_photo === 'string'
-                    ? p.primary_photo
-                    : (p.primary_photo as any)?.photo_url
-                );
-                const candidateCode = `CN-${p.id || 1}`;
-
-                return (
-                  <Link
-                    key={p.id}
-                    href={`/profile/${p.id}`}
-                    title={`View Profile of ${p.first_name}`}
-                    className="w-[145px] sm:w-[160px] md:w-[175px] aspect-square shrink-0 snap-start bg-white border border-[#ece2d1] hover:border-cyan-400 rounded-2xl p-3 sm:p-3.5 shadow-xs hover:shadow-md transition-all duration-300 flex items-center justify-center group hover:-translate-y-1"
-                  >
-                    {/* Centered Profile Picture Circle */}
-                    <div className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 rounded-full ring-3 ring-cyan-400/30 group-hover:ring-orange-400/60 shadow-md overflow-hidden bg-gradient-to-tr from-[#0f172a] to-[#1e293b] transition-all duration-300 relative flex items-center justify-center shrink-0 group-hover:scale-105">
-                      {photoUrl ? (
-                        <img
-                          src={photoUrl}
-                          alt={`${p.first_name} ${p.last_name || ''}`}
-                          className="w-full h-full object-cover object-top"
-                          onError={(e) => {
-                            e.currentTarget.src = getDefaultAvatarSvg(candidateCode);
-                          }}
-                        />
-                      ) : (
-                        <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-b from-[#0f172a] to-[#1e293b] text-amber-400 p-2 select-none">
-                          <span className="font-mono font-black text-sm sm:text-base tracking-wider text-amber-400">
-                            {candidateCode}
-                          </span>
-                          <span className="text-[10px] font-bold text-slate-300 uppercase tracking-widest mt-0.5">
-                            Profile
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                  </Link>
-                );
-              })}
+              {profiles.map((p) => (
+                <ProfileCardItem key={p.id} profile={p} />
+              ))}
             </div>
 
             {/* Right Edge Fade Effect */}
