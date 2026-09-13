@@ -4,7 +4,6 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { Logo } from './Logo';
-import { TechmastersTopBanner } from './TechmastersTopBanner';
 
 export function Navbar() {
   const pathname = usePathname();
@@ -42,9 +41,6 @@ export function Navbar() {
 
   return (
     <header className="fixed top-0 w-full z-50 transition-all duration-300">
-      {/* Top Banner: Techmasters Innovations Attribution */}
-      <TechmastersTopBanner />
-
       {/* Main Navbar */}
       <div
         className={`w-full transition-all duration-300 ${
