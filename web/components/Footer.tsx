@@ -277,14 +277,14 @@ export function Footer() {
       </div>
 
       {/* 3. Bottom Legal, Copyright & Regional Reach */}
-      <div className="border-t border-slate-800/90 bg-[#020306] py-6 relative z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-3 text-xs sm:text-sm text-slate-300 text-center md:text-left">
+      <div className="border-t border-slate-200 bg-white py-5 sm:py-6 relative z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-3 text-xs sm:text-sm text-slate-700 text-center md:text-left">
           <p className="leading-relaxed">
             © 2026 CovenantNest • Official Product of{' '}
-            <strong className="text-amber-300 font-bold">Techmasters Innovations Private Limited</strong>. All rights reserved.
+            <strong className="text-slate-900 font-bold">Techmasters Innovations Private Limited</strong>. All rights reserved.
           </p>
 
-          <p className="text-slate-400 font-medium leading-relaxed">
+          <p className="text-slate-600 font-medium leading-relaxed">
             Serving Christian Families across Bidar, Bengaluru, Kalaburagi, Hyderabad &amp; Pan-India.
           </p>
         </div>
