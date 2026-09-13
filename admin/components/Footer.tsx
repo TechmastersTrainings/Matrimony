@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { Logo } from './Logo';
 
 export function Footer() {
+  const mainSiteUrl = 'https://covenantnest.techmaster.space';
+
   return (
     <footer className="bg-gradient-to-b from-[#0b1320] via-[#070b14] to-[#04060a] text-slate-300 relative overflow-hidden border-t border-amber-500/20 font-sans">
       {/* Warm Ambient Radial Aura */}
@@ -18,24 +20,24 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-10">
           {/* Column 1: Brand, Mission & Corporate Attribution (4 cols on lg) */}
           <div className="lg:col-span-4 space-y-4">
-            <Link href="/" className="inline-block group">
+            <Link href="/dashboard" className="inline-block group">
               <Logo size="md" lightText={true} showTechmastersTag={true} />
             </Link>
 
             <p className="text-xs sm:text-sm text-slate-300/85 leading-relaxed max-w-sm">
-              A reverent Christian matrimonial sanctuary where holy covenants build blessed homes. Safeguarding candidate dignity, pastoral honor, and family privacy at every step.
+              Administrative Command Center &amp; Pastoral Moderation Gateway for CovenantNest Christian Matrimony. Dedicated to candidate dignity, church verification, and family privacy.
             </p>
 
             {/* Sacred Matrimony Trust Badge */}
             <div className="pt-1">
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900/90 border border-amber-400/30 text-amber-300 text-xs font-semibold backdrop-blur-md shadow-inner">
                 <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
-                <span>✝ Holy Christian Matrimony • Verified &amp; Protected</span>
+                <span>Administrative Moderation &amp; Verification Suite</span>
               </div>
             </div>
 
             <p className="text-[11px] text-slate-400 pt-1">
-              Headquartered in Bidar, Karnataka • Dedicated to Christian Families Pan-India.
+              Headquartered in Bidar, Karnataka • Techmasters Innovations Enterprise Infrastructure.
             </p>
           </div>
 
@@ -46,67 +48,81 @@ export function Footer() {
             </h4>
             <ul className="space-y-2 text-xs sm:text-[13px] text-slate-300">
               <li>
-                <Link
-                  href="/discover?denomination=METHODIST"
+                <a
+                  href={`${mainSiteUrl}/discover?denomination=METHODIST`}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="hover:text-amber-300 hover:translate-x-1 transition-all inline-flex items-center gap-2"
                 >
                   <span className="text-amber-400 text-xs font-bold">›</span>
                   <span>Methodist Matrimony (MCI)</span>
-                </Link>
+                </a>
               </li>
               <li>
-                <Link
-                  href="/discover?denomination=CSI"
+                <a
+                  href={`${mainSiteUrl}/discover?denomination=CSI`}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="hover:text-amber-300 hover:translate-x-1 transition-all inline-flex items-center gap-2"
                 >
                   <span className="text-amber-400 text-xs font-bold">›</span>
                   <span>CSI Christian Matrimony</span>
-                </Link>
+                </a>
               </li>
               <li>
-                <Link
-                  href="/discover?denomination=CATHOLIC"
+                <a
+                  href={`${mainSiteUrl}/discover?denomination=CATHOLIC`}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="hover:text-amber-300 hover:translate-x-1 transition-all inline-flex items-center gap-2"
                 >
                   <span className="text-amber-400 text-xs font-bold">›</span>
                   <span>Roman Catholic Matrimony</span>
-                </Link>
+                </a>
               </li>
               <li>
-                <Link
-                  href="/discover?denomination=BAPTIST"
+                <a
+                  href={`${mainSiteUrl}/discover?denomination=BAPTIST`}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="hover:text-amber-300 hover:translate-x-1 transition-all inline-flex items-center gap-2"
                 >
                   <span className="text-amber-400 text-xs font-bold">›</span>
                   <span>Baptist Christian Matrimony</span>
-                </Link>
+                </a>
               </li>
               <li>
-                <Link
-                  href="/discover?denomination=PENTECOSTAL"
+                <a
+                  href={`${mainSiteUrl}/discover?denomination=PENTECOSTAL`}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="hover:text-amber-300 hover:translate-x-1 transition-all inline-flex items-center gap-2"
                 >
                   <span className="text-amber-400 text-xs font-bold">›</span>
                   <span>Pentecostal &amp; Assemblies</span>
-                </Link>
+                </a>
               </li>
               <li>
-                <Link
-                  href="/discover"
+                <a
+                  href={`${mainSiteUrl}/discover`}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="hover:text-amber-300 hover:translate-x-1 transition-all inline-flex items-center gap-2"
                 >
                   <span className="text-amber-400 text-xs font-bold">›</span>
                   <span>Mar Thoma &amp; Orthodox Brides/Grooms</span>
-                </Link>
+                </a>
               </li>
               <li>
-                <Link
-                  href="/discover"
+                <a
+                  href={`${mainSiteUrl}/discover`}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="hover:text-amber-300 hover:translate-x-1 transition-all inline-flex items-center gap-2"
                 >
                   <span className="text-amber-400 text-xs font-bold">›</span>
                   <span>All Pan-India Christian Marriages</span>
-                </Link>
+                </a>
               </li>
             </ul>
           </div>
@@ -114,71 +130,68 @@ export function Footer() {
           {/* Column 3: Quick Navigation (2 cols on lg) */}
           <div className="lg:col-span-2 space-y-3">
             <h4 className="font-brand text-xs sm:text-sm font-bold text-amber-300 uppercase tracking-wider border-b border-slate-800/80 pb-2.5">
-              Quick Navigation
+              Admin &amp; Portal Nav
             </h4>
             <ul className="space-y-2 text-xs sm:text-[13px] text-slate-300">
               <li>
                 <Link
-                  href="/discover"
+                  href="/dashboard"
                   className="hover:text-amber-300 hover:translate-x-1 transition-all inline-flex items-center gap-2"
                 >
                   <span className="text-amber-400 text-xs font-bold">›</span>
-                  <span>Search Profiles</span>
+                  <span>Admin Dashboard</span>
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/register"
+                  href="/profiles"
+                  className="hover:text-amber-300 hover:translate-x-1 transition-all inline-flex items-center gap-2"
+                >
+                  <span className="text-amber-400 text-xs font-bold">›</span>
+                  <span>Candidate Moderation</span>
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/users"
+                  className="hover:text-amber-300 hover:translate-x-1 transition-all inline-flex items-center gap-2"
+                >
+                  <span className="text-amber-400 text-xs font-bold">›</span>
+                  <span>User Directory</span>
+                </Link>
+              </li>
+              <li>
+                <a
+                  href={mainSiteUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="text-amber-400 hover:text-amber-300 hover:translate-x-1 transition-all inline-flex items-center gap-2 font-bold"
                 >
                   <span className="text-orange-400 text-xs font-bold">›</span>
-                  <span>Register Free</span>
-                </Link>
+                  <span>Main Web Portal</span>
+                </a>
               </li>
               <li>
-                <Link
-                  href="/subscriptions"
+                <a
+                  href={`${mainSiteUrl}/subscriptions`}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="hover:text-amber-300 hover:translate-x-1 transition-all inline-flex items-center gap-2"
                 >
                   <span className="text-amber-400 text-xs font-bold">›</span>
-                  <span>Membership Plans</span>
-                </Link>
+                  <span>Subscription Plans</span>
+                </a>
               </li>
               <li>
-                <Link
-                  href="/verification-status"
-                  className="hover:text-amber-300 hover:translate-x-1 transition-all inline-flex items-center gap-2"
-                >
-                  <span className="text-amber-400 text-xs font-bold">›</span>
-                  <span>Verification Status</span>
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/interests"
-                  className="hover:text-amber-300 hover:translate-x-1 transition-all inline-flex items-center gap-2"
-                >
-                  <span className="text-amber-400 text-xs font-bold">›</span>
-                  <span>Interests &amp; Matches</span>
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/login"
-                  className="hover:text-amber-300 hover:translate-x-1 transition-all inline-flex items-center gap-2"
-                >
-                  <span className="text-amber-400 text-xs font-bold">›</span>
-                  <span>Member Login</span>
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/about"
+                <a
+                  href={`${mainSiteUrl}/about`}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="hover:text-amber-300 hover:translate-x-1 transition-all inline-flex items-center gap-2"
                 >
                   <span className="text-amber-400 text-xs font-bold">›</span>
                   <span>About CovenantNest</span>
-                </Link>
+                </a>
               </li>
             </ul>
           </div>
@@ -190,49 +203,59 @@ export function Footer() {
             </h4>
             <ul className="space-y-2 text-xs sm:text-[13px] text-slate-300">
               <li>
-                <Link
-                  href="/subscriptions"
+                <a
+                  href={`${mainSiteUrl}/subscriptions`}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="hover:text-amber-300 hover:translate-x-1 transition-all inline-flex items-center gap-2 text-slate-200 font-medium"
                 >
                   <span className="text-emerald-400 text-xs font-bold">✓</span>
                   <span>Mutual Consent Policy</span>
-                </Link>
+                </a>
               </li>
               <li>
-                <Link
-                  href="/profile/photos"
+                <a
+                  href={`${mainSiteUrl}/profile/photos`}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="hover:text-amber-300 hover:translate-x-1 transition-all inline-flex items-center gap-2"
                 >
                   <span className="text-emerald-400 text-xs font-bold">✓</span>
                   <span>Photo Privacy &amp; Discretion</span>
-                </Link>
+                </a>
               </li>
               <li>
-                <Link
-                  href="/terms"
+                <a
+                  href={`${mainSiteUrl}/terms`}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="hover:text-amber-300 hover:translate-x-1 transition-all inline-flex items-center gap-2"
                 >
                   <span className="text-amber-400 text-xs font-bold">›</span>
                   <span>Terms of Service</span>
-                </Link>
+                </a>
               </li>
               <li>
-                <Link
-                  href="/privacy"
+                <a
+                  href={`${mainSiteUrl}/privacy`}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="hover:text-amber-300 hover:translate-x-1 transition-all inline-flex items-center gap-2"
                 >
                   <span className="text-amber-400 text-xs font-bold">›</span>
                   <span>Privacy Policy</span>
-                </Link>
+                </a>
               </li>
               <li>
-                <Link
-                  href="/verification-status"
+                <a
+                  href={`${mainSiteUrl}/verification-status`}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="hover:text-amber-300 hover:translate-x-1 transition-all inline-flex items-center gap-2"
                 >
                   <span className="text-amber-400 text-xs font-bold">›</span>
-                  <span>Church &amp; Pastoral Verification</span>
-                </Link>
+                  <span>Church Verification Policy</span>
+                </a>
               </li>
             </ul>
           </div>

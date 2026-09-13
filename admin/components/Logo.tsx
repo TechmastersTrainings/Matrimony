@@ -67,15 +67,15 @@ export function Logo({
         </div>
         
         <div className="flex flex-wrap items-center gap-2 mt-1">
-          <span className={`font-sans font-black tracking-[0.16em] uppercase text-cyan-800 ${sizeClasses.sub}`}>
+          <span className={`font-sans font-black tracking-[0.16em] uppercase ${lightText ? 'text-cyan-300' : 'text-cyan-800'} ${sizeClasses.sub}`}>
             CHRISTIAN MATRIMONY • ADMIN PORTAL
           </span>
 
           {showTechmastersTag && (
             <>
-              <span className="text-slate-300 font-bold hidden sm:inline">•</span>
-              <span className={`font-sans font-semibold tracking-wider text-slate-800 flex items-center gap-1.5 bg-cyan-50/80 border border-cyan-200 px-2 py-0.5 rounded-full ${sizeClasses.tag}`}>
-                <span className="inline-block w-1.5 h-1.5 rounded-full bg-cyan-600 animate-pulse" />
+              <span className="text-slate-400 font-bold hidden sm:inline">•</span>
+              <span className={`font-sans font-semibold tracking-wider flex items-center gap-1.5 px-2 py-0.5 rounded-full ${lightText ? 'text-slate-200 bg-white/10 border border-white/20' : 'text-slate-800 bg-cyan-50/80 border border-cyan-200'} ${sizeClasses.tag}`}>
+                <span className="inline-block w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
                 Techmasters Innovations
               </span>
             </>
