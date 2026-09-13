@@ -19,31 +19,6 @@ export function Footer() {
             <p className="text-xs text-slate-600 leading-relaxed max-w-sm">
               A reverent Christian matrimonial sanctuary where holy covenants build blessed homes. Safeguarding candidate dignity, pastoral honor, and family privacy at every step.
             </p>
-
-            {/* Corporate Attribution Card */}
-            <div className="p-3.5 rounded-2xl bg-white/80 border border-[#e2d5c0] space-y-2 shadow-2xs">
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
-                <span className="font-bold text-slate-900 text-[11px] uppercase tracking-wider">
-                  Enterprise Engineering Backbone
-                </span>
-              </div>
-              <p className="text-[11px] text-slate-600 leading-snug">
-                Engineered and maintained by <strong className="text-slate-900 font-bold">Techmasters Innovations Private Limited</strong>.
-              </p>
-              <div className="pt-1.5 border-t border-[#ece2d1] text-[11px] text-slate-500 space-y-0.5">
-                <p>📍 Mailoor Road, Bidar, Karnataka - 585403</p>
-                <p>
-                  ✉️{' '}
-                  <a
-                    href="mailto:info@techmastersinnovations.in"
-                    className="text-cyan-900 hover:underline font-semibold"
-                  >
-                    info@techmastersinnovations.in
-                  </a>
-                </p>
-              </div>
-            </div>
           </div>
 
           {/* Column 2: Christian Denominations (3 cols on lg) */}
@@ -238,14 +213,14 @@ export function Footer() {
       </div>
 
       {/* 2. Bottom Legal, Copyright & Regional Reach */}
-      <div className="border-t border-[#ded3be] bg-[#f2e9db]/90 py-4">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-2.5 text-[11px] text-slate-600 text-center sm:text-left">
-          <p>
+      <div className="border-t border-[#ded3be] bg-[#f2e9db]/90 py-5 sm:py-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-3 text-xs sm:text-sm text-slate-700 text-center md:text-left">
+          <p className="leading-relaxed">
             © 2026 CovenantNest • Official Product of{' '}
             <strong className="text-slate-900 font-bold">Techmasters Innovations Private Limited</strong>. All rights reserved.
           </p>
 
-          <p className="text-slate-600 font-medium">
+          <p className="text-slate-700 font-medium leading-relaxed">
             Serving Christian Families across Bidar, Bengaluru, Kalaburagi, Hyderabad &amp; Pan-India.
           </p>
         </div>
