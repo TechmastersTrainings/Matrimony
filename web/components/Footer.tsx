@@ -6,136 +6,305 @@ import { Logo } from './Logo';
 
 export function Footer() {
   return (
-    <footer className="bg-[#f5efe6] text-slate-700 border-t border-[#e2d5c0] pt-7 pb-5 text-xs font-sans">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-5">
-        {/* Top Header Bar: Logo, Regional Identity & Trust Badges */}
-        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 pb-5 border-b border-[#ded3be]">
-          {/* Brand & Product Indicator */}
-          <div className="flex flex-wrap items-center gap-3">
-            <Link href="/" className="inline-block group shrink-0">
-              <Logo size="sm" lightText={false} showTechmastersTag={false} />
+    <footer className="bg-gradient-to-b from-[#faf6ee] via-[#f7f2e7] to-[#ede4d3] text-slate-700 border-t border-[#ded3be] text-xs font-sans">
+      {/* 1. Top Community & Faith Trust Strip */}
+      <div className="border-b border-[#e2d5c0]/80 bg-[#fdfbf7]/70">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+            <div className="flex items-center gap-2.5 p-2 rounded-xl bg-white/70 border border-[#e8ddcb] shadow-2xs">
+              <span className="w-8 h-8 rounded-lg bg-emerald-100/70 border border-emerald-300 text-emerald-800 flex items-center justify-center font-bold text-sm shrink-0">
+                ✓
+              </span>
+              <div>
+                <h4 className="font-bold text-slate-900 text-xs">100% Church Verified</h4>
+                <p className="text-[10px] text-slate-500 leading-tight">Parish &amp; pastor credentials</p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2.5 p-2 rounded-xl bg-white/70 border border-[#e8ddcb] shadow-2xs">
+              <span className="w-8 h-8 rounded-lg bg-cyan-100/70 border border-cyan-300 text-cyan-900 flex items-center justify-center text-sm shrink-0">
+                🔒
+              </span>
+              <div>
+                <h4 className="font-bold text-slate-900 text-xs">Zero Unsolicited Reveals</h4>
+                <p className="text-[10px] text-slate-500 leading-tight">Mutual consent protected</p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2.5 p-2 rounded-xl bg-white/70 border border-[#e8ddcb] shadow-2xs">
+              <span className="w-8 h-8 rounded-lg bg-orange-100/70 border border-orange-300 text-orange-900 flex items-center justify-center text-sm shrink-0">
+                ⛪
+              </span>
+              <div>
+                <h4 className="font-bold text-slate-900 text-xs">All Fellowships Welcome</h4>
+                <p className="text-[10px] text-slate-500 leading-tight">MCI, CSI, Catholic, Baptist</p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2.5 p-2 rounded-xl bg-white/70 border border-[#e8ddcb] shadow-2xs">
+              <span className="w-8 h-8 rounded-lg bg-amber-100/70 border border-amber-300 text-amber-900 flex items-center justify-center text-sm shrink-0">
+                🏛️
+              </span>
+              <div>
+                <h4 className="font-bold text-slate-900 text-xs">Headquartered in Bidar</h4>
+                <p className="text-[10px] text-slate-500 leading-tight">Techmasters Innovations Campus</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 2. Main Multi-Column Structured Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-8">
+          {/* Column 1: Brand, Purpose & Corporate Identity (5 cols on lg) */}
+          <div className="lg:col-span-4 space-y-4">
+            <Link href="/" className="inline-block group">
+              <Logo size="md" lightText={false} showTechmastersTag={true} />
             </Link>
 
-            <span className="hidden sm:inline text-[#c7b9a2]">|</span>
+            <p className="text-xs text-slate-600 leading-relaxed max-w-sm">
+              A reverent Christian matrimonial sanctuary where holy covenants build blessed homes. Safeguarding candidate dignity, pastoral honor, and family privacy at every step.
+            </p>
 
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#fffdf9] border border-[#d8cab3] text-[11px] text-slate-800 font-semibold shadow-xs">
-              <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
-              <span>
-                A <strong className="text-slate-950 font-bold">Techmasters Innovations</strong> Product
-              </span>
-            </div>
-
-            <span className="hidden sm:inline text-[#c7b9a2]">•</span>
-
-            <div className="text-[11px] text-slate-700 font-medium bg-[#fffdf9] border border-[#d8cab3] px-3 py-1 rounded-full shadow-xs">
-              <span>Mailoor Road, Bidar, Karnataka - 585403</span>
+            {/* Corporate Attribution Card */}
+            <div className="p-3.5 rounded-2xl bg-white/80 border border-[#e2d5c0] space-y-2 shadow-2xs">
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+                <span className="font-bold text-slate-900 text-[11px] uppercase tracking-wider">
+                  Enterprise Engineering Backbone
+                </span>
+              </div>
+              <p className="text-[11px] text-slate-600 leading-snug">
+                Engineered and maintained by <strong className="text-slate-900 font-bold">Techmasters Innovations Private Limited</strong>.
+              </p>
+              <div className="pt-1.5 border-t border-[#ece2d1] text-[11px] text-slate-500 space-y-0.5">
+                <p>📍 Mailoor Road, Bidar, Karnataka - 585403</p>
+                <p>
+                  ✉️{' '}
+                  <a
+                    href="mailto:info@techmastersinnovations.in"
+                    className="text-cyan-900 hover:underline font-semibold"
+                  >
+                    info@techmastersinnovations.in
+                  </a>
+                </p>
+              </div>
             </div>
           </div>
 
-          {/* Trust Value Badges (Zero Emojis, Clean Typography) */}
-          <div className="flex flex-wrap items-center gap-2 text-[11px] shrink-0">
-            <span className="inline-flex items-center px-2.5 py-1 rounded-lg bg-[#eaf4ec] border border-[#b8dfbe] text-emerald-900 font-semibold shadow-xs">
-              Verified Profiles
-            </span>
-            <span className="inline-flex items-center px-2.5 py-1 rounded-lg bg-[#ebf2f8] border border-[#b9d3eb] text-blue-900 font-semibold shadow-xs">
-              Confidential &amp; Safe
-            </span>
-            <span className="inline-flex items-center px-2.5 py-1 rounded-lg bg-[#fbf2e3] border border-[#ecd0a2] text-amber-950 font-semibold shadow-xs">
-              Pastoral &amp; Community Verified
-            </span>
+          {/* Column 2: Christian Denominations (3 cols on lg) */}
+          <div className="lg:col-span-3 space-y-3">
+            <h4 className="font-brand text-sm font-bold text-slate-900 uppercase tracking-wider border-b border-[#e2d5c0] pb-2">
+              Christian Denominations
+            </h4>
+            <ul className="space-y-2 text-xs text-slate-600">
+              <li>
+                <Link
+                  href="/discover?denomination=METHODIST"
+                  className="hover:text-cyan-900 hover:translate-x-0.5 transition-all inline-flex items-center gap-1.5"
+                >
+                  <span className="text-cyan-700 text-[10px]">›</span>
+                  <span>Methodist Matrimony (MCI)</span>
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/discover?denomination=CSI"
+                  className="hover:text-cyan-900 hover:translate-x-0.5 transition-all inline-flex items-center gap-1.5"
+                >
+                  <span className="text-cyan-700 text-[10px]">›</span>
+                  <span>CSI Christian Matrimony</span>
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/discover?denomination=CATHOLIC"
+                  className="hover:text-cyan-900 hover:translate-x-0.5 transition-all inline-flex items-center gap-1.5"
+                >
+                  <span className="text-cyan-700 text-[10px]">›</span>
+                  <span>Roman Catholic Matrimony</span>
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/discover?denomination=BAPTIST"
+                  className="hover:text-cyan-900 hover:translate-x-0.5 transition-all inline-flex items-center gap-1.5"
+                >
+                  <span className="text-cyan-700 text-[10px]">›</span>
+                  <span>Baptist Christian Matrimony</span>
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/discover?denomination=PENTECOSTAL"
+                  className="hover:text-cyan-900 hover:translate-x-0.5 transition-all inline-flex items-center gap-1.5"
+                >
+                  <span className="text-cyan-700 text-[10px]">›</span>
+                  <span>Pentecostal &amp; Fellowships</span>
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/discover"
+                  className="hover:text-cyan-900 hover:translate-x-0.5 transition-all inline-flex items-center gap-1.5"
+                >
+                  <span className="text-cyan-700 text-[10px]">›</span>
+                  <span>Mar Thoma &amp; Orthodox Brides/Grooms</span>
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/discover"
+                  className="hover:text-cyan-900 hover:translate-x-0.5 transition-all inline-flex items-center gap-1.5"
+                >
+                  <span className="text-cyan-700 text-[10px]">›</span>
+                  <span>All Pan-India Christian Marriages</span>
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Column 3: Quick Navigation (2 cols on lg) */}
+          <div className="lg:col-span-2 space-y-3">
+            <h4 className="font-brand text-sm font-bold text-slate-900 uppercase tracking-wider border-b border-[#e2d5c0] pb-2">
+              Quick Navigation
+            </h4>
+            <ul className="space-y-2 text-xs text-slate-600">
+              <li>
+                <Link
+                  href="/discover"
+                  className="hover:text-cyan-900 hover:translate-x-0.5 transition-all inline-flex items-center gap-1.5"
+                >
+                  <span className="text-cyan-700 text-[10px]">›</span>
+                  <span>Search Profiles</span>
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/register"
+                  className="hover:text-cyan-900 hover:translate-x-0.5 transition-all inline-flex items-center gap-1.5 font-bold text-slate-900"
+                >
+                  <span className="text-orange-600 text-[10px]">›</span>
+                  <span>Register Free</span>
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/subscriptions"
+                  className="hover:text-cyan-900 hover:translate-x-0.5 transition-all inline-flex items-center gap-1.5"
+                >
+                  <span className="text-cyan-700 text-[10px]">›</span>
+                  <span>Membership Plans</span>
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/verification-status"
+                  className="hover:text-cyan-900 hover:translate-x-0.5 transition-all inline-flex items-center gap-1.5"
+                >
+                  <span className="text-cyan-700 text-[10px]">›</span>
+                  <span>Verification Status</span>
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/interests"
+                  className="hover:text-cyan-900 hover:translate-x-0.5 transition-all inline-flex items-center gap-1.5"
+                >
+                  <span className="text-cyan-700 text-[10px]">›</span>
+                  <span>Interests &amp; Matches</span>
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/login"
+                  className="hover:text-cyan-900 hover:translate-x-0.5 transition-all inline-flex items-center gap-1.5"
+                >
+                  <span className="text-cyan-700 text-[10px]">›</span>
+                  <span>Member Login</span>
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/about"
+                  className="hover:text-cyan-900 hover:translate-x-0.5 transition-all inline-flex items-center gap-1.5"
+                >
+                  <span className="text-cyan-700 text-[10px]">›</span>
+                  <span>About CovenantNest</span>
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Column 4: Privacy, Safety & Trust (3 cols on lg) */}
+          <div className="lg:col-span-3 space-y-3">
+            <h4 className="font-brand text-sm font-bold text-slate-900 uppercase tracking-wider border-b border-[#e2d5c0] pb-2">
+              Privacy, Trust &amp; Legal
+            </h4>
+            <ul className="space-y-2 text-xs text-slate-600">
+              <li>
+                <Link
+                  href="/subscriptions"
+                  className="hover:text-cyan-900 hover:translate-x-0.5 transition-all inline-flex items-center gap-1.5 font-semibold text-slate-800"
+                >
+                  <span className="text-emerald-700 text-[10px]">✓</span>
+                  <span>Mutual Consent Policy</span>
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/profile/photos"
+                  className="hover:text-cyan-900 hover:translate-x-0.5 transition-all inline-flex items-center gap-1.5"
+                >
+                  <span className="text-emerald-700 text-[10px]">✓</span>
+                  <span>Photo Privacy &amp; Discretion</span>
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/terms"
+                  className="hover:text-cyan-900 hover:translate-x-0.5 transition-all inline-flex items-center gap-1.5"
+                >
+                  <span className="text-cyan-700 text-[10px]">›</span>
+                  <span>Terms of Service</span>
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/privacy"
+                  className="hover:text-cyan-900 hover:translate-x-0.5 transition-all inline-flex items-center gap-1.5"
+                >
+                  <span className="text-cyan-700 text-[10px]">›</span>
+                  <span>Privacy Policy</span>
+                </Link>
+              </li>
+            </ul>
+
+            {/* Razorpay Trust Box */}
+            <div className="mt-4 p-3 rounded-xl bg-white/70 border border-[#e2d5c0] space-y-1">
+              <div className="flex items-center gap-1.5 text-xs font-bold text-slate-900">
+                <span>🛡️</span>
+                <span>100% Certified Safe &amp; Secure</span>
+              </div>
+              <p className="text-[10px] text-slate-500 leading-snug">
+                Bank-Grade 128-bit SSL Encryption. Direct UPI, Debit/Credit Card &amp; NetBanking processing via Razorpay.
+              </p>
+            </div>
           </div>
         </div>
+      </div>
 
-        {/* Middle Section: Compact Inline Navigation Bars */}
-        <div className="space-y-2.5 py-0.5">
-          {/* 1. Denominations (Inline) */}
-          <div className="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-3 text-xs">
-            <span className="font-extrabold text-burgundy-900 uppercase text-[11px] tracking-wider shrink-0 min-w-[130px]">
-              Denominations:
-            </span>
-            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-charcoal-700 font-medium">
-              <Link href="/discover?denomination=METHODIST" className="hover:text-burgundy-800 hover:underline transition-colors">
-                Methodist Matrimony (MCI)
-              </Link>
-              <span className="text-[#c7b9a2]">•</span>
-              <Link href="/discover?denomination=CSI" className="hover:text-burgundy-800 hover:underline transition-colors">
-                CSI Christian Matrimony
-              </Link>
-              <span className="text-[#c7b9a2]">•</span>
-              <Link href="/discover?denomination=CATHOLIC" className="hover:text-burgundy-800 hover:underline transition-colors">
-                Roman Catholic Matrimony
-              </Link>
-              <span className="text-[#c7b9a2]">•</span>
-              <Link href="/discover?denomination=BAPTIST" className="hover:text-burgundy-800 hover:underline transition-colors">
-                Baptist Matrimony
-              </Link>
-              <span className="text-[#c7b9a2]">•</span>
-              <Link href="/discover?denomination=PENTECOSTAL" className="hover:text-burgundy-800 hover:underline transition-colors">
-                Pentecostal Matrimony
-              </Link>
-            </div>
-          </div>
-
-          {/* 2. Navigation (Inline) */}
-          <div className="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-3 text-xs">
-            <span className="font-extrabold text-burgundy-900 uppercase text-[11px] tracking-wider shrink-0 min-w-[130px]">
-              Navigation:
-            </span>
-            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-charcoal-700 font-medium">
-              <Link href="/about" className="hover:text-burgundy-800 hover:underline transition-colors font-bold text-charcoal-900">
-                About Us
-              </Link>
-              <span className="text-[#c7b9a2]">•</span>
-              <Link href="/discover" className="hover:text-burgundy-800 hover:underline transition-colors">
-                Search Profiles
-              </Link>
-              <span className="text-[#c7b9a2]">•</span>
-              <Link href="/register" className="hover:text-burgundy-800 hover:underline transition-colors">
-                Register Free
-              </Link>
-              <span className="text-[#c7b9a2]">•</span>
-              <Link href="/subscriptions" className="hover:text-burgundy-800 hover:underline transition-colors">
-                Membership Plans
-              </Link>
-              <span className="text-[#c7b9a2]">•</span>
-              <Link href="/verification-status" className="hover:text-burgundy-800 hover:underline transition-colors">
-                Verification Status
-              </Link>
-            </div>
-          </div>
-
-          {/* 3. Privacy & Support (Inline) */}
-          <div className="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-3 text-xs">
-            <span className="font-extrabold text-burgundy-900 uppercase text-[11px] tracking-wider shrink-0 min-w-[130px]">
-              Privacy &amp; Trust:
-            </span>
-            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-charcoal-700 font-medium">
-              <Link href="/subscriptions" className="hover:text-burgundy-800 hover:underline transition-colors">
-                Controlled Contact Reveal Policy
-              </Link>
-              <span className="text-[#c7b9a2]">•</span>
-              <Link href="/profile/photos" className="hover:text-burgundy-800 hover:underline transition-colors">
-                Photo Privacy Guidelines
-              </Link>
-              <span className="text-[#c7b9a2]">•</span>
-              <span className="hover:text-burgundy-800 hover:underline cursor-pointer transition-colors">
-                Terms of Service
-              </span>
-              <span className="text-[#c7b9a2]">•</span>
-              <span className="hover:text-burgundy-800 hover:underline cursor-pointer transition-colors">
-                Privacy Policy
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Bottom Bar: Copyright & Regional Reach */}
-        <div className="pt-3.5 border-t border-[#ded3be] flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] text-slate-600">
+      {/* 3. Bottom Legal, Copyright & Regional Reach */}
+      <div className="border-t border-[#ded3be] bg-[#f2e9db]/90 py-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-2.5 text-[11px] text-slate-600 text-center sm:text-left">
           <p>
-            © 2026 CovenantNest • <span className="text-slate-900 font-bold">Techmasters Innovations Private Limited</span>. All rights reserved.
+            © 2026 CovenantNest • Official Product of{' '}
+            <strong className="text-slate-900 font-bold">Techmasters Innovations Private Limited</strong>. All rights reserved.
           </p>
-          <p className="text-slate-700 font-medium">
-            Corporate Office: Mailoor Road, Bidar, Karnataka - 585403
+
+          <p className="text-slate-600 font-medium">
+            Serving Christian Families across Bidar, Bengaluru, Kalaburagi, Hyderabad &amp; Pan-India.
           </p>
         </div>
       </div>
