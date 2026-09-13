@@ -42,25 +42,25 @@ export function MatrimonyHeroSection() {
             </h1>
 
             {/* Sacred Scripture Quote with Light Orange accent frame */}
-            <div className="w-full max-w-lg bg-gradient-to-r from-orange-50/80 via-amber-50/50 to-cyan-50/50 border-l-4 border-orange-500 py-2.5 px-4 rounded-r-xl shadow-2xs text-left">
-              <p className="text-sm sm:text-base font-serif italic text-charcoal-900 leading-snug">
+            <div className="w-full max-w-lg bg-gradient-to-r from-orange-50/80 via-amber-50/50 to-cyan-50/50 border-l-4 border-orange-500 py-2 px-3.5 rounded-r-xl shadow-2xs text-left">
+              <p className="text-xs sm:text-sm font-serif italic text-charcoal-900 leading-snug">
                 &ldquo;Therefore what God has joined together, let no one separate.&rdquo;
               </p>
-              <span className="block text-xs uppercase tracking-widest text-orange-800 font-bold mt-1">
+              <span className="block text-[10px] uppercase tracking-widest text-orange-800 font-bold mt-0.5">
                 — Mark 10:9
               </span>
             </div>
 
             {/* Matrimony Emotion & Theme Narrative */}
-            <p className="text-sm sm:text-base text-slate-600 max-w-lg leading-relaxed font-normal">
+            <p className="text-xs sm:text-sm text-slate-600 max-w-lg leading-relaxed font-normal">
               A reverent Christian matrimonial sanctuary where faithful brides, bridegrooms, and prayerful families across Methodist, CSI, Roman Catholic, Baptist, Pentecostal, and Protestant fellowships build blessed, lifelong homes in Christ.
             </p>
 
             {/* Action CTAs */}
-            <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto pt-1">
+            <div className="flex flex-col sm:flex-row gap-2.5 w-full sm:w-auto pt-1">
               <Link
                 href="/register"
-                className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-burgundy-700 via-rose-600 to-orange-600 hover:from-burgundy-600 hover:to-orange-500 text-white px-7 py-3 rounded-xl font-extrabold text-sm sm:text-base shadow-md shadow-orange-950/15 border border-orange-400/40 transition-all transform hover:-translate-y-0.5"
+                className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-burgundy-700 via-rose-600 to-orange-600 hover:from-burgundy-600 hover:to-orange-500 text-white px-5 py-2.5 rounded-xl font-extrabold text-xs sm:text-sm shadow-md shadow-orange-950/15 border border-orange-400/40 transition-all transform hover:-translate-y-0.5"
               >
                 <span>Begin Your Journey Free</span>
                 <span>→</span>
@@ -68,7 +68,7 @@ export function MatrimonyHeroSection() {
 
               <Link
                 href="/discover"
-                className="inline-flex items-center justify-center gap-2 bg-white hover:bg-cyan-50/80 text-cyan-950 px-7 py-3 rounded-xl font-bold text-sm sm:text-base border border-cyan-200 shadow-2xs transition-all transform hover:-translate-y-0.5"
+                className="inline-flex items-center justify-center gap-2 bg-white hover:bg-cyan-50/80 text-cyan-950 px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm border border-cyan-200 shadow-2xs transition-all transform hover:-translate-y-0.5"
               >
                 <span>Search Profiles</span>
                 <span>→</span>
@@ -76,16 +76,16 @@ export function MatrimonyHeroSection() {
             </div>
 
             {/* Trust Checklist Badges */}
-            <div className="pt-2 flex flex-wrap items-center justify-center lg:justify-start gap-3 text-xs sm:text-sm font-bold text-slate-700">
-              <div className="flex items-center gap-1.5 bg-emerald-50 border border-emerald-200 px-3 py-1 rounded-full text-emerald-900 shadow-2xs">
+            <div className="pt-1.5 flex flex-wrap items-center justify-center lg:justify-start gap-2.5 text-xs font-bold text-slate-700">
+              <div className="flex items-center gap-1.5 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full text-emerald-900 shadow-2xs">
                 <span className="text-emerald-600 font-black">✓</span>
                 <span>100% Genuine Profiles</span>
               </div>
-              <div className="flex items-center gap-1.5 bg-cyan-50 border border-cyan-200 px-3 py-1 rounded-full text-cyan-900 shadow-2xs">
+              <div className="flex items-center gap-1.5 bg-cyan-50 border border-cyan-200 px-2.5 py-0.5 rounded-full text-cyan-900 shadow-2xs">
                 <span>⛪</span>
                 <span>Church Endorsements</span>
               </div>
-              <div className="flex items-center gap-1.5 bg-orange-50 border border-orange-200 px-3 py-1 rounded-full text-orange-900 shadow-2xs">
+              <div className="flex items-center gap-1.5 bg-orange-50 border border-orange-200 px-2.5 py-0.5 rounded-full text-orange-900 shadow-2xs">
                 <span>🔒</span>
                 <span>Strict Family Privacy</span>
               </div>
@@ -106,22 +106,22 @@ export function MatrimonyHeroSection() {
               <div className="absolute inset-0 bg-gradient-to-t from-charcoal-950/70 via-transparent to-transparent pointer-events-none" />
 
               {/* Floating Top-Right Pill */}
-              <div className="absolute top-3 right-3 bg-white/95 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-cyan-950 border border-cyan-200/80 shadow-sm flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
+              <div className="absolute top-3 right-3 bg-white/95 backdrop-blur-md px-2.5 py-0.5 rounded-full text-[10px] font-bold text-cyan-950 border border-cyan-200/80 shadow-sm flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
                 <span>Verified Profiles</span>
               </div>
 
               {/* Floating Bottom Card */}
-              <div className="absolute bottom-3 left-3 right-3 bg-white/95 backdrop-blur-md p-3.5 rounded-xl border border-white/60 shadow-lg space-y-1">
+              <div className="absolute bottom-3 left-3 right-3 bg-white/95 backdrop-blur-md p-3 rounded-xl border border-white/60 shadow-lg space-y-0.5">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs sm:text-sm font-serif font-extrabold text-charcoal-900">
+                  <span className="text-xs font-serif font-extrabold text-charcoal-900">
                     CovenantNest Matrimony
                   </span>
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-orange-700 bg-orange-50 border border-orange-200 px-2 py-0.5 rounded-md">
+                  <span className="text-[9px] font-bold uppercase tracking-wider text-orange-700 bg-orange-50 border border-orange-200 px-1.5 py-0.5 rounded-md">
                     Holy Union
                   </span>
                 </div>
-                <p className="text-xs text-charcoal-600 font-medium">
+                <p className="text-[10px] text-charcoal-600 font-medium">
                   Connecting blessed Christian brides &amp; bridegrooms across Bidar &amp; Pan-India.
                 </p>
               </div>
@@ -129,43 +129,44 @@ export function MatrimonyHeroSection() {
           </div>
         </div>
 
-        {/* Four Sacred Hallmarks of Christian Marriage - Distinct Colorful Cards (Compact with readable font) */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 w-full pt-4 border-t border-charcoal-100/70 text-left">
+        {/* Four Sacred Hallmarks of Christian Marriage - Distinct Colorful Cards (Compact) */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-3 w-full pt-3.5 border-t border-charcoal-100/70 text-left">
           {/* Card 01 - Cyan Accent */}
-          <div className="p-3.5 sm:p-4 rounded-xl bg-gradient-to-br from-cyan-50/90 to-cyan-100/30 border border-cyan-200 hover:border-cyan-400 transition-all shadow-2xs">
-            <span className="text-xs font-mono font-bold text-cyan-700 tracking-wider mb-1 block">01 • PRAYER</span>
-            <h4 className="text-sm font-bold text-cyan-950">Rooted in Prayer</h4>
-            <p className="text-xs text-cyan-900/80 mt-1 leading-snug">
+          <div className="p-3 rounded-xl bg-gradient-to-br from-cyan-50/90 to-cyan-100/30 border border-cyan-200 hover:border-cyan-400 transition-all shadow-2xs">
+            <span className="text-[10px] font-mono font-bold text-cyan-700 tracking-wider mb-0.5 block">01 • PRAYER</span>
+            <h4 className="text-xs font-bold text-cyan-950">Rooted in Prayer</h4>
+            <p className="text-[10px] text-cyan-900/80 mt-0.5 leading-snug">
               Every holy union begins in prayer and divine guidance.
             </p>
           </div>
 
           {/* Card 02 - Light Orange Accent */}
-          <div className="p-3.5 sm:p-4 rounded-xl bg-gradient-to-br from-orange-50/90 to-amber-100/30 border border-orange-200 hover:border-orange-400 transition-all shadow-2xs">
-            <span className="text-xs font-mono font-bold text-orange-700 tracking-wider mb-1 block">02 • COVENANT</span>
-            <h4 className="text-sm font-bold text-orange-950">Holy Covenant</h4>
-            <p className="text-xs text-orange-900/80 mt-1 leading-snug">
+          <div className="p-3 rounded-xl bg-gradient-to-br from-orange-50/90 to-amber-100/30 border border-orange-200 hover:border-orange-400 transition-all shadow-2xs">
+            <span className="text-[10px] font-mono font-bold text-orange-700 tracking-wider mb-0.5 block">02 • COVENANT</span>
+            <h4 className="text-xs font-bold text-orange-950">Holy Covenant</h4>
+            <p className="text-[10px] text-orange-900/80 mt-0.5 leading-snug">
               A sacred lifelong promise of love, grace, and fidelity.
             </p>
           </div>
 
           {/* Card 03 - Light Green Accent */}
-          <div className="p-3.5 sm:p-4 rounded-xl bg-gradient-to-br from-emerald-50/90 to-green-100/30 border border-emerald-200 hover:border-emerald-400 transition-all shadow-2xs">
-            <span className="text-xs font-mono font-bold text-emerald-700 tracking-wider mb-1 block">03 • BLESSING</span>
-            <h4 className="text-sm font-bold text-emerald-950">Family Blessing</h4>
-            <p className="text-xs text-emerald-900/80 mt-1 leading-snug">
+          <div className="p-3 rounded-xl bg-gradient-to-br from-emerald-50/90 to-green-100/30 border border-emerald-200 hover:border-emerald-400 transition-all shadow-2xs">
+            <span className="text-[10px] font-mono font-bold text-emerald-700 tracking-wider mb-0.5 block">03 • BLESSING</span>
+            <h4 className="text-xs font-bold text-emerald-950">Family Blessing</h4>
+            <p className="text-[10px] text-emerald-900/80 mt-0.5 leading-snug">
               Honoring parents, church elders, and community traditions.
             </p>
           </div>
 
           {/* Card 04 - Rose & Amethyst Accent */}
-          <div className="p-3.5 sm:p-4 rounded-xl bg-gradient-to-br from-rose-50/90 to-pink-100/30 border border-rose-200 hover:border-rose-400 transition-all shadow-2xs">
-            <span className="text-xs font-mono font-bold text-rose-700 tracking-wider mb-1 block">04 • GRACE</span>
-            <h4 className="text-sm font-bold text-rose-950">Lifelong Fellowship</h4>
-            <p className="text-xs text-rose-900/80 mt-1 leading-snug">
+          <div className="p-3 rounded-xl bg-gradient-to-br from-rose-50/90 to-pink-100/30 border border-rose-200 hover:border-rose-400 transition-all shadow-2xs">
+            <span className="text-[10px] font-mono font-bold text-rose-700 tracking-wider mb-0.5 block">04 • GRACE</span>
+            <h4 className="text-xs font-bold text-rose-950">Lifelong Fellowship</h4>
+            <p className="text-[10px] text-rose-900/80 mt-0.5 leading-snug">
               Walking together under Christ’s unconditional grace.
             </p>
           </div>
+
         </div>
       </div>
     </section>
