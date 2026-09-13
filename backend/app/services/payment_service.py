@@ -29,21 +29,23 @@ class PaymentService:
 
         # 1. BASIC PLAN (₹ 499 / 30 Days)
         basic = db.query(SubscriptionPlan).filter(SubscriptionPlan.plan_code == SubscriptionPlanCode.BASIC).first()
+        basic_features = [
+            "Browse verified profiles & full candidate bios",
+            "Express 5 matrimonial interests",
+            "5 Photo uploads",
+            "5 In-App Messaging with Matches",
+            "Verified Profile Badge",
+            "Mutual Contact Exchange upon Accepted Interest (Up to 5 Matches)",
+            "Strict Privacy: Contact numbers locked until mutual consent",
+        ]
         if not basic:
             basic = SubscriptionPlan(
                 plan_code=SubscriptionPlanCode.BASIC,
                 name="Basic Christian Plan",
                 price_inr=499,
                 duration_days=30,
-                contact_reveals_limit=3,
-                features=[
-                    "3 Contact Phone/Email Reveals",
-                    "Browse verified profiles & full candidate bios",
-                    "Express unlimited matrimonial interests",
-                    "5 Photo uploads",
-                    "Unlimited In-App Messaging with Matches",
-                    "Verified Profile Badge",
-                ],
+                contact_reveals_limit=5,
+                features=basic_features,
                 is_active=True,
             )
             db.add(basic)
@@ -51,90 +53,68 @@ class PaymentService:
             basic.name = "Basic Christian Plan"
             basic.price_inr = 499
             basic.duration_days = 30
-            basic.contact_reveals_limit = 3
-            basic.features = [
-                "3 Contact Phone/Email Reveals",
-                "Browse verified profiles & full candidate bios",
-                "Express unlimited matrimonial interests",
-                "5 Photo uploads",
-                "Unlimited In-App Messaging with Matches",
-                "Verified Profile Badge",
-            ]
+            basic.contact_reveals_limit = 5
+            basic.features = basic_features
 
-        # 2. STANDARD PLAN (₹ 1,499 / 90 Days)
+        # 2. STANDARD PLAN (₹ 799 / 70 Days) - Unilateral contact reveals removed
         std = db.query(SubscriptionPlan).filter(SubscriptionPlan.plan_code == SubscriptionPlanCode.STANDARD).first()
+        std_features = [
+            "Send unlimited interests",
+            "Priority Christian matching",
+            "Bidar Parish support",
+            "Unlimited In-App Messaging with Matches",
+            "Verified Profile Badge",
+            "Mutual Contact Sharing (Unlocked only after mutual acceptance)",
+        ]
         if not std:
             std = SubscriptionPlan(
                 plan_code=SubscriptionPlanCode.STANDARD,
                 name="Standard Christian Plan",
-                price_inr=1499,
-                duration_days=90,
+                price_inr=799,
+                duration_days=70,
                 contact_reveals_limit=15,
-                features=[
-                    "15 Contact Phone/Email Reveals",
-                    "Send unlimited interests",
-                    "15 Direct contact reveals",
-                    "Priority Christian matching",
-                    "Bidar Parish support",
-                    "Unlimited In-App Messaging with Matches",
-                    "Verified Profile Badge",
-                ],
+                features=std_features,
                 is_active=True,
             )
             db.add(std)
         else:
             std.name = "Standard Christian Plan"
-            std.price_inr = 1499
-            std.duration_days = 90
+            std.price_inr = 799
+            std.duration_days = 70
             std.contact_reveals_limit = 15
-            std.features = [
-                "15 Contact Phone/Email Reveals",
-                "Send unlimited interests",
-                "15 Direct contact reveals",
-                "Priority Christian matching",
-                "Bidar Parish support",
-                "Unlimited In-App Messaging with Matches",
-                "Verified Profile Badge",
-            ]
+            std.features = std_features
 
-        # 3. PREMIUM BLESSED MATRIMONY (₹ 2,999 / 180 Days)
+        # 3. PREMIUM BLESSED MATRIMONY (₹ 999 / 100 Days) - Most Popular
         prem = db.query(SubscriptionPlan).filter(SubscriptionPlan.plan_code == SubscriptionPlanCode.PREMIUM).first()
+        prem_features = [
+            "Send unlimited interests",
+            "Unlimited In-App Messaging with Matches",
+            "Featured profile placement",
+            "Personal relationship manager",
+            "Verified Profile Badge",
+            "Mutual Contact Sharing (Unlocked only after mutual acceptance)",
+            "Zero Unsolicited Contact Reveals Guarantee",
+        ]
         if not prem:
             prem = SubscriptionPlan(
                 plan_code=SubscriptionPlanCode.PREMIUM,
                 name="Premium Blessed Matrimony",
-                price_inr=2999,
-                duration_days=180,
+                price_inr=999,
+                duration_days=100,
                 contact_reveals_limit=40,
-                features=[
-                    "40 Contact Phone/Email Reveals",
-                    "Unlimited direct messaging",
-                    "40 Contact reveals",
-                    "Featured profile placement",
-                    "Personal relationship manager",
-                    "Unlimited In-App Messaging with Matches",
-                    "Verified Profile Badge",
-                ],
+                features=prem_features,
                 is_active=True,
             )
             db.add(prem)
         else:
             prem.name = "Premium Blessed Matrimony"
-            prem.price_inr = 2999
-            prem.duration_days = 180
+            prem.price_inr = 999
+            prem.duration_days = 100
             prem.contact_reveals_limit = 40
-            prem.features = [
-                "40 Contact Phone/Email Reveals",
-                "Unlimited direct messaging",
-                "40 Contact reveals",
-                "Featured profile placement",
-                "Personal relationship manager",
-                "Unlimited In-App Messaging with Matches",
-                "Verified Profile Badge",
-            ]
+            prem.features = prem_features
 
         db.commit()
-        logger.info("Synchronized subscription plans in database (BASIC ₹499, STANDARD ₹1499, PREMIUM ₹2999).")
+        logger.info("Synchronized subscription plans in database (BASIC ₹499/30d, STANDARD ₹799/70d, PREMIUM ₹999/100d with mutual consent privacy).")
 
     @staticmethod
     def create_razorpay_order(

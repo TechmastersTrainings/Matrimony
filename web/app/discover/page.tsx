@@ -239,7 +239,7 @@ export default function DiscoverPage() {
               <p className="text-xs sm:text-sm text-charcoal-600 max-w-sm mx-auto leading-relaxed">
                 {modalActionType === 'interest'
                   ? 'To express matrimonial interest and connect directly with verified candidates, an active membership plan is required.'
-                  : 'Detailed family background, parish endorsements, and direct phone reveals are reserved for active CovenantNest members.'}
+                  : 'Detailed family background, parish endorsements, and mutual contact exchange upon accepted interest are reserved for active CovenantNest members.'}
               </p>
             </div>
 
@@ -285,7 +285,7 @@ export default function DiscoverPage() {
                 </li>
                 <li className="flex items-center gap-2">
                   <span className="text-emerald-700 font-bold">✓</span>
-                  <span>Request verified direct phone number and WhatsApp reveals.</span>
+                  <span>Request safe mutual contact sharing with matched candidates upon mutual consent.</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <span className="text-emerald-700 font-bold">✓</span>
@@ -441,7 +441,7 @@ export default function DiscoverPage() {
                   </span>
                 </div>
                 <p className="text-sm sm:text-base text-charcoal-800 leading-relaxed font-medium max-w-3xl">
-                  You are viewing candidate summaries. <strong className="text-burgundy-900 font-bold">An active subscription plan is required</strong> to express matrimonial interest and unlock full verified profiles (pastoral testimony, family background, and verified contact reveals).
+                  You are viewing candidate summaries. <strong className="text-burgundy-900 font-bold">An active subscription plan is required</strong> to express matrimonial interest and unlock full verified profiles (pastoral testimony, family background, and safe mutual contact exchange upon mutual consent).
                 </p>
               </div>
             </div>
