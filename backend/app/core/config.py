@@ -92,7 +92,14 @@ class Settings(BaseSettings):
     # Future Service Abstraction Placeholders
     RAZORPAY_KEY_ID: str = "rzp_test_TWXn6r1HPxwz0r"
     RAZORPAY_KEY_SECRET: str = "6u35s2LHnOuWVlBWF94HP1by"
+    # SMS & WhatsApp Gateway Configuration
     INDIAN_SMS_PROVIDER_API_KEY: Optional[str] = None
+    FAST2SMS_API_KEY: Optional[str] = None
+    MSG91_AUTH_KEY: Optional[str] = None
+    MSG91_TEMPLATE_ID: Optional[str] = None
+    TWILIO_ACCOUNT_SID: Optional[str] = None
+    TWILIO_AUTH_TOKEN: Optional[str] = None
+    TWILIO_PHONE_NUMBER: Optional[str] = None
     UPI_PAYMENT_GATEWAY_KEY: Optional[str] = None
     UPI_PAYWAY_SECRET: Optional[str] = None
     FIREBASE_CREDENTIALS_PATH: Optional[str] = None
