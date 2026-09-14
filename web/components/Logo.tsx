@@ -73,8 +73,8 @@ export function Logo({
 
           {showTechmastersTag && (
             <>
-              <span className="text-slate-400 font-bold hidden sm:inline">•</span>
-              <span className={`font-sans font-semibold tracking-wider flex items-center gap-1.5 px-2 py-0.5 rounded-full ${lightText ? 'text-slate-200 bg-white/10 border border-white/20' : 'text-charcoal-800 bg-cyan-50/80 border border-cyan-200'} ${sizeClasses.tag}`}>
+              <span className="text-slate-400 font-bold hidden xl:inline">•</span>
+              <span className={`font-sans font-semibold tracking-wider hidden xl:flex items-center gap-1.5 px-2 py-0.5 rounded-full ${lightText ? 'text-slate-200 bg-white/10 border border-white/20' : 'text-charcoal-800 bg-cyan-50/80 border border-cyan-200'} ${sizeClasses.tag}`}>
                 <span className="inline-block w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
                 Techmasters Innovations
               </span>

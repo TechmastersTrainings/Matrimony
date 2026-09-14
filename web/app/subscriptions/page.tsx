@@ -285,40 +285,40 @@ export default function SubscriptionsPage() {
             return (
               <div
                 key={p.id}
-                className={`border rounded-3xl p-7 sm:p-8 shadow-sm transition-all duration-300 flex flex-col justify-between relative group ${theme.card}`}
+                className={`border rounded-2xl p-5 sm:p-6 shadow-sm transition-all duration-300 flex flex-col justify-between relative group ${theme.card}`}
               >
                 <div>
                   {/* Header */}
-                  <div className="flex items-center justify-between mb-3">
-                    <h3 className="text-xl font-brand font-bold text-slate-900">{p.name}</h3>
+                  <div className="flex items-center justify-between mb-2.5">
+                    <h3 className="text-base sm:text-lg font-brand font-bold text-slate-900">{p.name}</h3>
                     {isPopular && (
-                      <span className="text-[11px] font-black uppercase bg-gradient-to-r from-orange-500 to-amber-500 text-white px-3 py-1 rounded-xl shadow-xs tracking-wider">
+                      <span className="text-[10px] font-extrabold uppercase bg-gradient-to-r from-orange-500 to-amber-500 text-white px-2.5 py-0.5 rounded-lg shadow-xs tracking-wider">
                         Most Popular
                       </span>
                     )}
                   </div>
 
                   {/* Price */}
-                  <div className="mb-6 pb-6 border-b border-charcoal-100">
+                  <div className="mb-4 pb-4 border-b border-charcoal-100">
                     <div className="flex items-baseline gap-1">
-                      <span className={`text-4xl sm:text-5xl font-extrabold font-serif ${theme.price}`}>
+                      <span className={`text-2xl sm:text-3xl font-extrabold font-serif ${theme.price}`}>
                         ₹ {p.price_inr.toLocaleString()}
                       </span>
                     </div>
-                    <span className={`text-xs font-bold inline-block mt-2 px-3 py-1 rounded-lg border ${theme.badge}`}>
+                    <span className={`text-[11px] font-semibold inline-block mt-1.5 px-2.5 py-0.5 rounded-md border ${theme.badge}`}>
                       Valid for {p.duration_days} days
                     </span>
                   </div>
 
                   {/* Features Bullet List */}
-                  <div className="space-y-3.5 mb-8 text-xs sm:text-sm text-slate-700 font-medium">
+                  <div className="space-y-2.5 mb-6 text-xs text-slate-700 font-medium leading-relaxed">
                     {p.features &&
                       p.features.map((f, fIdx) => (
-                        <div key={fIdx} className="flex items-start gap-3">
-                          <span className={`${theme.bullet} font-black text-sm leading-none shrink-0 mt-0.5`}>
+                        <div key={fIdx} className="flex items-start gap-2.5">
+                          <span className={`${theme.bullet} font-extrabold text-xs leading-none shrink-0 mt-0.5`}>
                             ✓
                           </span>
-                          <span className="leading-snug">{f}</span>
+                          <span className="leading-snug text-xs">{f}</span>
                         </div>
                       ))}
                   </div>
@@ -329,10 +329,10 @@ export default function SubscriptionsPage() {
                   type="button"
                   onClick={() => handleSubscribe(p)}
                   disabled={processing}
-                  className={`w-full py-3.5 rounded-2xl text-xs sm:text-sm font-extrabold transition-all duration-200 ${theme.btn}`}
+                  className={`w-full py-2.5 sm:py-3 rounded-xl text-xs font-bold transition-all duration-200 ${theme.btn}`}
                 >
                   {processing && selectedPlan?.id === p.id
-                    ? 'Opening Razorpay Checkout...'
+                    ? 'Opening Checkout...'
                     : `Choose ${p.name}`}
                 </button>
               </div>
@@ -389,7 +389,7 @@ export default function SubscriptionsPage() {
           <div className="flex items-center gap-3">
             <span className="text-xl">🛡️</span>
             <span>
-              <strong>100% Secure Payments</strong> via Razorpay • 128-bit Bank Encryption • Verified Christian Community
+              <strong>100% Secure Payments</strong> via Cashfree Payments • 128-bit Bank Encryption • Verified Christian Community
             </span>
           </div>
           <div className="flex items-center gap-2 text-cyan-900 font-bold">

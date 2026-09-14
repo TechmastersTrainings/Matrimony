@@ -59,10 +59,10 @@ export function Navbar() {
           </Link>
 
           {/* Center Navigation Links - Floating Glassmorphic Pill Cluster */}
-          <nav className="hidden lg:flex items-center gap-1 px-3 py-1.5 rounded-full bg-stone-100/70 border border-stone-200/60 backdrop-blur-md shadow-2xs">
+          <nav className="hidden lg:flex items-center gap-0.5 xl:gap-1 px-2.5 xl:px-3 py-1.5 rounded-full bg-stone-100/70 border border-stone-200/60 backdrop-blur-md shadow-2xs">
             <Link
               href="/"
-              className={`text-xs font-semibold px-3.5 py-1.5 rounded-full transition-all duration-200 ${
+              className={`text-[11px] xl:text-xs font-semibold px-2.5 xl:px-3 py-1.5 rounded-full transition-all duration-200 ${
                 pathname === '/'
                   ? 'bg-white text-burgundy-900 shadow-xs font-bold'
                   : 'text-stone-600 hover:text-stone-900 hover:bg-white/60'
@@ -73,7 +73,7 @@ export function Navbar() {
 
             <Link
               href="/discover"
-              className={`text-xs font-semibold px-3.5 py-1.5 rounded-full transition-all duration-200 flex items-center gap-1.5 ${
+              className={`text-[11px] xl:text-xs font-semibold px-2.5 xl:px-3 py-1.5 rounded-full transition-all duration-200 flex items-center gap-1.5 ${
                 pathname === '/discover'
                   ? 'bg-white text-burgundy-900 shadow-xs font-bold'
                   : 'text-stone-600 hover:text-stone-900 hover:bg-white/60'
@@ -87,7 +87,7 @@ export function Navbar() {
 
             <Link
               href="/subscriptions"
-              className={`text-xs font-semibold px-3.5 py-1.5 rounded-full transition-all duration-200 ${
+              className={`text-[11px] xl:text-xs font-semibold px-2.5 xl:px-3 py-1.5 rounded-full transition-all duration-200 ${
                 pathname === '/subscriptions'
                   ? 'bg-white text-burgundy-900 shadow-xs font-bold'
                   : 'text-stone-600 hover:text-stone-900 hover:bg-white/60'
@@ -98,7 +98,7 @@ export function Navbar() {
 
             <Link
               href="/about"
-              className={`text-xs font-semibold px-3.5 py-1.5 rounded-full transition-all duration-200 ${
+              className={`text-[11px] xl:text-xs font-semibold px-2.5 xl:px-3 py-1.5 rounded-full transition-all duration-200 ${
                 pathname === '/about'
                   ? 'bg-white text-burgundy-900 shadow-xs font-bold'
                   : 'text-stone-600 hover:text-stone-900 hover:bg-white/60'
@@ -108,16 +108,32 @@ export function Navbar() {
             </Link>
 
             {isAuthenticated && (
-              <Link
-                href="/interests"
-                className={`text-xs font-semibold px-3.5 py-1.5 rounded-full transition-all duration-200 ${
-                  pathname === '/interests'
-                    ? 'bg-white text-burgundy-900 shadow-xs font-bold'
-                    : 'text-stone-600 hover:text-stone-900 hover:bg-white/60'
-                }`}
-              >
-                Interests &amp; Matches
-              </Link>
+              <>
+                <Link
+                  href="/interests"
+                  className={`text-[11px] xl:text-xs font-semibold px-2.5 xl:px-3 py-1.5 rounded-full transition-all duration-200 ${
+                    pathname === '/interests'
+                      ? 'bg-white text-burgundy-900 shadow-xs font-bold'
+                      : 'text-stone-600 hover:text-stone-900 hover:bg-white/60'
+                  }`}
+                >
+                  Interests &amp; Matches
+                </Link>
+
+                <Link
+                  href="/dashboard"
+                  className={`text-[11px] xl:text-xs font-semibold px-2.5 xl:px-3 py-1.5 rounded-full transition-all duration-200 flex items-center gap-1.5 ${
+                    pathname === '/dashboard'
+                      ? 'bg-white text-burgundy-900 shadow-xs font-bold'
+                      : 'text-stone-600 hover:text-stone-900 hover:bg-white/60'
+                  }`}
+                >
+                  <svg className="w-3.5 h-3.5 text-stone-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  </svg>
+                  <span>My Dashboard</span>
+                </Link>
+              </>
             )}
           </nav>
 
@@ -134,28 +150,15 @@ export function Navbar() {
             )}
 
             {isAuthenticated ? (
-              <>
-                <Link
-                  href="/dashboard"
-                  className={`text-xs font-bold px-4 py-2 rounded-full transition-all border flex items-center gap-1.5 ${
-                    pathname === '/dashboard'
-                      ? 'bg-gradient-to-r from-burgundy-800 to-rose-700 text-white border-burgundy-900 shadow-sm'
-                      : 'bg-stone-100 hover:bg-stone-200 text-stone-800 border-stone-200 shadow-2xs'
-                  }`}
-                >
-                  <svg className="w-3.5 h-3.5 text-current" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                  </svg>
-                  <span>My Dashboard</span>
-                </Link>
-
-                <button
-                  onClick={handleLogout}
-                  className="text-xs font-semibold text-stone-500 hover:text-rose-700 px-3 py-1.5 rounded-full hover:bg-rose-50/80 transition-colors"
-                >
-                  Logout
-                </button>
-              </>
+              <button
+                onClick={handleLogout}
+                className="group inline-flex items-center gap-1.5 text-xs font-bold text-stone-600 hover:text-rose-700 px-3.5 py-1.5 rounded-full bg-stone-100/80 hover:bg-rose-50 border border-stone-200/80 hover:border-rose-200 transition-all duration-200 shadow-2xs"
+              >
+                <svg className="w-3.5 h-3.5 text-stone-400 group-hover:text-rose-600 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
+                <span>Logout</span>
+              </button>
             ) : (
               <>
                 <Link
@@ -239,18 +242,20 @@ export function Navbar() {
                   Member Portal
                 </div>
                 <Link
-                  href="/dashboard"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="px-3.5 py-2 rounded-xl text-stone-800 hover:bg-stone-100/80 hover:text-burgundy-800 transition-colors"
-                >
-                  My Dashboard
-                </Link>
-                <Link
                   href="/interests"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="px-3.5 py-2 rounded-xl text-stone-800 hover:bg-stone-100/80 hover:text-burgundy-800 transition-colors"
+                  className="px-3.5 py-2 rounded-xl text-stone-800 hover:bg-stone-100/80 hover:text-burgundy-800 transition-colors flex items-center justify-between"
                 >
-                  Interests &amp; Matches
+                  <span>Interests &amp; Matches</span>
+                  <span className="text-xs text-stone-400">›</span>
+                </Link>
+                <Link
+                  href="/dashboard"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="px-3.5 py-2 rounded-xl text-stone-800 hover:bg-stone-100/80 hover:text-burgundy-800 transition-colors flex items-center justify-between"
+                >
+                  <span>My Dashboard</span>
+                  <span className="text-xs text-stone-400">›</span>
                 </Link>
                 <Link
                   href="/profile/photos"
