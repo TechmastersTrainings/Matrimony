@@ -186,9 +186,29 @@ class MockOtpService(OtpServiceBase):
         if target.replace("+91", "").strip().isdigit():
             clean_mobile = target.replace("+91", "").strip()[-10:]
 
-            # Option A: Fast2SMS DLT Gateway
-            fast2sms_key = getattr(settings, "FAST2SMS_API_KEY", None) or getattr(settings, "INDIAN_SMS_PROVIDER_API_KEY", None)
-            if fast2sms_key:
+            # Option A: MSG91 OTP Gateway (DLT compliant, standard OTP route)
+            msg91_key = getattr(settings, "MSG91_AUTH_KEY", None) or getattr(settings, "INDIAN_SMS_PROVIDER_API_KEY", None)
+            msg91_template = getattr(settings, "MSG91_TEMPLATE_ID", None)
+            if msg91_key:
+                try:
+                    import urllib.request
+                    import json
+                    msg91_url = f"https://control.msg91.com/api/v5/otp?mobile=91{clean_mobile}&authkey={msg91_key}&otp={code}"
+                    if msg91_template:
+                        msg91_url += f"&template_id={msg91_template}"
+                    req = urllib.request.Request(msg91_url, headers={"Content-Type": "application/json"})
+                    with urllib.request.urlopen(req, timeout=10) as resp:
+                        resp_data = json.loads(resp.read().decode())
+                        if resp_data.get("type") == "success":
+                            logger.info(f"[SMS GATEWAY - MSG91] Live OTP {code} successfully dispatched to +91-{clean_mobile} (Request ID: {resp_data.get('request_id')})")
+                        else:
+                            logger.warning(f"[SMS GATEWAY - MSG91] Provider response: {resp_data}")
+                except Exception as msg91_err:
+                    logger.warning(f"[SMS GATEWAY - MSG91] Delivery error: {msg91_err}")
+
+            # Option B: Fast2SMS DLT Gateway (if distinct FAST2SMS_API_KEY configured)
+            fast2sms_key = getattr(settings, "FAST2SMS_API_KEY", None)
+            if fast2sms_key and fast2sms_key != msg91_key:
                 try:
                     import urllib.request
                     import json
@@ -202,21 +222,6 @@ class MockOtpService(OtpServiceBase):
                             logger.warning(f"[SMS GATEWAY - Fast2SMS] Provider response: {resp_data}")
                 except Exception as sms_err:
                     logger.warning(f"[SMS GATEWAY - Fast2SMS] Delivery error: {sms_err}")
-
-            # Option B: MSG91 OTP Gateway
-            msg91_key = getattr(settings, "MSG91_AUTH_KEY", None)
-            msg91_template = getattr(settings, "MSG91_TEMPLATE_ID", None)
-            if msg91_key and msg91_template:
-                try:
-                    import urllib.request
-                    import json
-                    msg91_url = f"https://control.msg91.com/api/v5/otp?template_id={msg91_template}&mobile=91{clean_mobile}&authkey={msg91_key}&otp={code}"
-                    req = urllib.request.Request(msg91_url, headers={"Content-Type": "application/json"})
-                    with urllib.request.urlopen(req, timeout=10) as resp:
-                        resp_data = json.loads(resp.read().decode())
-                        logger.info(f"[SMS GATEWAY - MSG91] Response for +91-{clean_mobile}: {resp_data}")
-                except Exception as msg91_err:
-                    logger.warning(f"[SMS GATEWAY - MSG91] Delivery error: {msg91_err}")
 
             # Option C: Twilio SMS / WhatsApp Gateway
             twilio_sid = getattr(settings, "TWILIO_ACCOUNT_SID", None)
