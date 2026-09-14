@@ -7,7 +7,8 @@ import { SubscriptionPlanItem } from '../../types';
 
 declare global {
   interface Window {
-    Razorpay: any;
+    Cashfree: any;
+    Razorpay?: any;
   }
 }
 
@@ -111,6 +112,26 @@ export default function SubscriptionsPage() {
       }
     }
     loadPlans();
+
+    // Check if user returned from Cashfree checkout via redirect URL
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      const returnOrderId = urlParams.get('order_id');
+      if (returnOrderId) {
+        (async () => {
+          try {
+            setProcessing(true);
+            const verifyRes = await apiClient.verifyPayment(returnOrderId);
+            alert(verifyRes.message || 'Payment Verified & Subscription Activated Successfully! All Church, Package, and Location details are now unlocked.');
+            window.location.href = '/discover';
+          } catch (e: any) {
+            console.warn('Auto return order verification note:', e);
+          } finally {
+            setProcessing(false);
+          }
+        })();
+      }
+    }
   }, []);
 
   const handleSubscribe = async (plan: SubscriptionPlanItem) => {
@@ -125,27 +146,31 @@ export default function SubscriptionsPage() {
     setProcessing(true);
 
     try {
-      // Step 1: Call Backend to Create Razorpay Order
+      // Step 1: Call Backend to Create Cashfree Order
       const order = await apiClient.createSubscriptionOrder(plan.id);
 
-      const razorpayKey = order.key_id || process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
+      const cashfreeMode = (order.mode || process.env.NEXT_PUBLIC_CASHFREE_MODE || 'sandbox').toLowerCase() === 'production' ? 'production' : 'sandbox';
 
-      // Step 2: Open Razorpay Standard Checkout Modal
-      if (typeof window !== 'undefined' && window.Razorpay) {
-        const options = {
-          key: razorpayKey,
-          amount: order.amount || plan.price_inr * 100,
-          currency: order.currency || 'INR',
-          name: 'CovenantNest Christian Matrimony',
-          description: `${plan.name} (${plan.duration_days} Days)`,
-          order_id: order.order_id || order.id,
-          handler: async function (response: any) {
+      // Step 2: Open Cashfree Standard Checkout Modal
+      if (typeof window !== 'undefined' && window.Cashfree && order.payment_session_id) {
+        const cashfree = window.Cashfree({
+          mode: cashfreeMode,
+        });
+
+        const checkoutOptions = {
+          paymentSessionId: order.payment_session_id,
+          redirectTarget: '_modal',
+        };
+
+        cashfree.checkout(checkoutOptions).then(async (result: any) => {
+          if (result.error) {
+            alert(`Payment Required: Transaction could not be completed (${result.error.message || 'Cancelled by user'}). Please try again.`);
+            setProcessing(false);
+            return;
+          }
+          if (result.redirect || result.paymentDetails) {
             try {
-              const verifyRes = await apiClient.verifyPayment(
-                response.razorpay_order_id || order.order_id,
-                response.razorpay_payment_id,
-                response.razorpay_signature
-              );
+              const verifyRes = await apiClient.verifyPayment(order.order_id);
               alert(verifyRes.message || 'Payment Verified & Subscription Activated Successfully! All Church, Package, and Location details are now unlocked.');
               window.location.href = '/discover';
             } catch (vErr: any) {
@@ -153,34 +178,13 @@ export default function SubscriptionsPage() {
             } finally {
               setProcessing(false);
             }
-          },
-          prefill: {
-            name: typeof window !== 'undefined' ? (localStorage.getItem('user_name') || 'CovenantNest Member') : 'CovenantNest Member',
-            email: typeof window !== 'undefined' ? (localStorage.getItem('user_email') || '') : '',
-            contact: typeof window !== 'undefined' ? (localStorage.getItem('user_mobile') || '') : '',
-          },
-          theme: {
-            color: '#0891b2',
-          },
-          modal: {
-            ondismiss: function () {
-              setProcessing(false);
-              console.log('Razorpay payment modal dismissed by user.');
-            },
-          },
-        };
-
-        const rzp = new window.Razorpay(options);
-        rzp.on('payment.failed', function (resp: any) {
-          alert(`Payment Required: Transaction could not be completed (${resp.error?.description || 'Transaction declined'}). Please try again.`);
-          setProcessing(false);
+          }
         });
-        rzp.open();
       } else {
-        // Fallback for simulation / direct verification if script delayed
+        // Fallback for direct simulation / verification
         const verify = await apiClient.verifyPayment(
           order.order_id,
-          `pay_rzp_sim_${Date.now()}`,
+          `cf_pay_sim_${Date.now()}`,
           'sim_sig_verified_2026'
         );
         alert(verify.message || 'Subscription successfully activated!');
@@ -188,16 +192,16 @@ export default function SubscriptionsPage() {
         setProcessing(false);
       }
     } catch (err: any) {
-      alert(`Razorpay Payment Notice: ${err.message}`);
+      alert(`Payment Notice: ${err.message}`);
       setProcessing(false);
     }
   };
 
   return (
     <div className="relative min-h-[calc(100vh-80px)] py-10 sm:py-14 bg-[#fdfbf7] text-charcoal-900 font-sans overflow-hidden">
-      {/* Razorpay Standard Web Checkout Script */}
+      {/* Cashfree Standard Web Checkout Script v3 */}
       <Script
-        src="https://checkout.razorpay.com/v1/checkout.js"
+        src="https://sdk.cashfree.com/js/v3/cashfree.js"
         onLoad={() => setScriptLoaded(true)}
       />
 

@@ -58,7 +58,7 @@ export default function PrivacyPage() {
             4. Enterprise Security Standards
           </h2>
           <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-            All user authentication is safeguarded using industry-standard JWT encryption and bcrypt password hashing. Financial transactions are conducted over 128-bit SSL encrypted channels via RBI-authorized payment processors (Razorpay).
+            All user authentication is safeguarded using industry-standard JWT encryption and bcrypt password hashing. Financial transactions are conducted over 128-bit SSL encrypted channels via RBI-authorized payment processors (Cashfree Payments).
           </p>
         </div>
 

@@ -58,7 +58,7 @@ export default function TermsPage() {
             4. Payments and Subscription Plans
           </h2>
           <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-            All subscription payments (Basic, Standard, and Premium) are processed securely through certified bank-grade gateways (Razorpay). Memberships grant access to in-app messaging, verified profile details, and mutual interest requests for the designated duration.
+            All subscription payments (Basic, Standard, and Premium) are processed securely through certified bank-grade gateways (Cashfree Payments). Memberships grant access to in-app messaging, verified profile details, and mutual interest requests for the designated duration.
           </p>
         </div>
 

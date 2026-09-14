@@ -11,7 +11,7 @@ from backend.app.models.user import User
 from backend.app.services.database import get_db
 from backend.app.services.payment_service import PaymentService
 
-router = APIRouter(tags=["Subscriptions & Razorpay Payments"])
+router = APIRouter(tags=["Subscriptions & Cashfree Payments"])
 
 
 class CreateOrderRequest(BaseModel):
@@ -115,21 +115,21 @@ async def create_order(
 
 
 # Step 3: Verify Razorpay Payment Signature Endpoints
-@router.post("/subscriptions/verify-payment", summary="Verify Razorpay Payment Signature")
-@router.post("/verify-payment", summary="Verify Razorpay Payment (Standard API)")
+@router.post("/subscriptions/verify-payment", summary="Verify Cashfree Payment Status")
+@router.post("/verify-payment", summary="Verify Cashfree Payment (Standard API)")
 async def verify_payment(
     payload: VerifyPaymentRequest,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    order_id = payload.razorpay_order_id or payload.order_id
-    payment_id = payload.razorpay_payment_id or payload.gateway_payment_id or payload.payment_id
-    signature = payload.razorpay_signature or payload.gateway_signature or payload.signature
+    order_id = payload.order_id or payload.razorpay_order_id
+    payment_id = payload.payment_id or payload.gateway_payment_id or payload.razorpay_payment_id or ""
+    signature = payload.signature or payload.gateway_signature or payload.razorpay_signature or ""
 
-    if not order_id or not payment_id or not signature:
+    if not order_id:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Missing required fields: order_id, payment_id, and signature are required.",
+            detail="Missing required field: order_id is required.",
         )
 
     res = PaymentService.verify_and_complete_payment(

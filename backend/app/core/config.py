@@ -89,9 +89,15 @@ class Settings(BaseSettings):
     # Monitoring & Error Reporting
     SENTRY_DSN: Optional[str] = None
 
-    # Future Service Abstraction Placeholders
-    RAZORPAY_KEY_ID: str = "rzp_test_TWXn6r1HPxwz0r"
-    RAZORPAY_KEY_SECRET: str = "6u35s2LHnOuWVlBWF94HP1by"
+    # Payment Gateway Configuration (Cashfree)
+    CASHFREE_APP_ID: Optional[str] = None
+    CASHFREE_SECRET_KEY: Optional[str] = None
+    CASHFREE_ENV: str = "TEST"  # "TEST" (Sandbox) or "PROD" (Production)
+    CASHFREE_API_VERSION: str = "2023-08-01"
+
+    # Backward compatibility placeholders
+    RAZORPAY_KEY_ID: str = ""
+    RAZORPAY_KEY_SECRET: str = ""
     # SMS & WhatsApp Gateway Configuration
     INDIAN_SMS_PROVIDER_API_KEY: Optional[str] = None
     FAST2SMS_API_KEY: Optional[str] = None

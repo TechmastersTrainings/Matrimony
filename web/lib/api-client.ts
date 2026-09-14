@@ -326,17 +326,17 @@ class ApiClient {
     return data;
   }
 
-  async verifyPayment(orderId: string, paymentId: string, signature: string): Promise<any> {
+  async verifyPayment(orderId: string, paymentId?: string, signature?: string): Promise<any> {
     const res = await fetch(`${API_BASE_URL}/subscriptions/verify-payment`, {
       method: 'POST',
       headers: this.getHeaders(),
       body: JSON.stringify({
         order_id: orderId,
         razorpay_order_id: orderId,
-        gateway_payment_id: paymentId,
-        razorpay_payment_id: paymentId,
-        gateway_signature: signature,
-        razorpay_signature: signature,
+        gateway_payment_id: paymentId || '',
+        razorpay_payment_id: paymentId || '',
+        gateway_signature: signature || '',
+        razorpay_signature: signature || '',
       }),
     });
     const data = await res.json();
