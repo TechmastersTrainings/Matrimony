@@ -8,6 +8,7 @@ const heroSlides = [
     image: '/images/indian-christian-wedding-couple.jpg',
     badge: 'Christian Matrimony • Bidar & Pan-India',
     title: 'Where Holy Covenants Build Blessed Homes',
+    highlight: 'Blessed Homes',
     subtitle:
       'Connecting devout Christian brides & bridegrooms across Karnataka, Telangana, and Pan-India through prayerful, verified matrimonial introductions.',
     scripture: '“Therefore what God has joined together, let no one separate.” — Mark 10:9',
@@ -16,6 +17,7 @@ const heroSlides = [
     image: '/images/christian-church-altar-wedding.jpg',
     badge: 'Till You Marry Commitment',
     title: 'Register Once. Complete Support Till Marriage',
+    highlight: 'Till Marriage',
     subtitle:
       'Say goodbye to arbitrary 30-day renewal anxiety. Our sacred agency stands faithfully beside Christian families throughout their entire journey.',
     scripture: '“Love is patient, love is kind. It always protects, always trusts, always hopes.” — 1 Cor 13:4-7',
@@ -24,6 +26,7 @@ const heroSlides = [
     image: '/images/christian-couple-traditional.jpg',
     badge: 'Honoring Christian Heritage',
     title: 'Preserving Faith, Modesty & Family Values',
+    highlight: 'Family Values',
     subtitle:
       'Connecting devout Methodist (MCI), CSI, Roman Catholic, Baptist, Pentecostal, and Protestant fellowships with dignity and pastoral respect.',
     scripture: '“Charm is deceptive, and beauty is fleeting; but a woman who fears the Lord is to be praised.” — Prov 31:30',
@@ -32,6 +35,7 @@ const heroSlides = [
     image: '/images/christian-wedding-vows-rings.jpg',
     badge: '100% Confidential & Secure',
     title: 'Mutual Family Consent & Protected Privacy',
+    highlight: 'Protected Privacy',
     subtitle:
       'Contact numbers remain strictly locked until both families accept mutual interest. Daily contact limits protect candidate modesty.',
     scripture: '“Above all, love each other deeply, because love covers over a multitude of sins.” — 1 Peter 4:8',
@@ -40,6 +44,7 @@ const heroSlides = [
     image: '/images/christian-wedding-rings-bible.jpg',
     badge: 'Scriptural Foundation',
     title: 'A Cord of Three Strands is Not Quickly Broken',
+    highlight: 'Three Strands',
     subtitle:
       'Christ-centered unions prayerfully nurtured through verified background credentials, pastoral blessings, and parental guidance.',
     scripture: '“Though one may be overpowered, two can defend themselves. A cord of three strands is not quickly broken.” — Eccl 4:12',
@@ -59,25 +64,17 @@ export function MatrimonyHeroSection() {
     return () => clearInterval(interval);
   }, [isPaused]);
 
-  const goToPrev = () => {
-    setCurrentSlide((prev) => (prev === 0 ? heroSlides.length - 1 : prev - 1));
-  };
-
-  const goToNext = () => {
-    setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
-  };
-
   const activeSlide = heroSlides[currentSlide];
 
   return (
-    <section className="relative w-full overflow-hidden bg-slate-950">
-      {/* 1. Full-Width Banner Carousel Container */}
+    <section className="relative w-full overflow-hidden bg-[#fbf9f5]">
+      {/* 1. Full-Width Lighter Banner Carousel Container */}
       <div
-        className="relative w-full min-h-[560px] sm:min-h-[620px] lg:min-h-[680px] flex items-center select-none"
+        className="relative w-full min-h-[560px] sm:min-h-[620px] lg:min-h-[660px] flex items-center select-none"
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
       >
-        {/* Carousel Background Images with Smooth Crossfade */}
+        {/* Carousel Background Images with Natural Light & Soft Luminous Gradient */}
         {heroSlides.map((slide, idx) => (
           <div
             key={idx}
@@ -88,57 +85,38 @@ export function MatrimonyHeroSection() {
             <img
               src={slide.image}
               alt={slide.title}
-              className="w-full h-full object-cover object-center lg:object-top transform scale-105 transition-transform duration-[6000ms] ease-out"
+              className="w-full h-full object-cover object-center lg:object-top transform scale-105 transition-transform duration-[6000ms] ease-out filter brightness-105 contrast-100"
             />
-            {/* Cinematic Gradient Overlay: Dark left gradient for high-contrast white text */}
-            <div className="absolute inset-0 bg-gradient-to-r from-slate-950/95 via-slate-950/80 to-slate-950/40 lg:to-slate-950/25" />
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-transparent to-slate-950/50" />
+            {/* Lighter, Softer Gradient Overlay: Allows the wedding photo to be brightly seen while keeping text razor-sharp */}
+            <div className="absolute inset-0 bg-gradient-to-r from-[#fbf9f5]/95 via-[#fbf9f5]/80 to-[#fbf9f5]/25 lg:to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#fbf9f5]/90 via-transparent to-transparent" />
           </div>
         ))}
 
-        {/* Carousel Left / Right Navigation Chevrons */}
-        <button
-          type="button"
-          onClick={goToPrev}
-          aria-label="Previous Slide"
-          className="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-black/40 hover:bg-black/75 text-white backdrop-blur-md flex items-center justify-center text-xl font-bold border border-white/20 transition-all z-30 cursor-pointer shadow-lg hover:scale-105"
-        >
-          ‹
-        </button>
-
-        <button
-          type="button"
-          onClick={goToNext}
-          aria-label="Next Slide"
-          className="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-black/40 hover:bg-black/75 text-white backdrop-blur-md flex items-center justify-center text-xl font-bold border border-white/20 transition-all z-30 cursor-pointer shadow-lg hover:scale-105"
-        >
-          ›
-        </button>
-
-        {/* Main Content Area: Cinematic Headline, Scripture & CTAs */}
+        {/* Main Content Area: Cinematic Headline, Scripture & CTAs (No arrow buttons) */}
         <div className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-24">
-          <div className="max-w-3xl flex flex-col justify-center text-left space-y-4 sm:space-y-6 text-white">
+          <div className="max-w-3xl flex flex-col justify-center text-left space-y-4 sm:space-y-6 text-slate-900">
             
-            {/* Badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs sm:text-sm font-extrabold tracking-wide uppercase text-amber-300 w-fit shadow-xs">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+            {/* Badge with Light Styling */}
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/95 backdrop-blur-md border border-orange-200/90 text-xs sm:text-sm font-extrabold tracking-wide uppercase text-orange-900 w-fit shadow-xs">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping" />
               <span>{activeSlide.badge}</span>
             </div>
 
-            {/* Dynamic H1 Headline */}
-            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.12] font-brand drop-shadow-md">
+            {/* Dynamic H1 Headline with Rich Contrast */}
+            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.12] font-brand text-slate-950 drop-shadow-2xs">
               {activeSlide.title}
             </h1>
 
-            {/* Dynamic Scripture Quote */}
-            <div className="border-l-4 border-amber-400 pl-4 py-1.5 bg-white/10 backdrop-blur-sm rounded-r-xl max-w-2xl">
-              <p className="text-xs sm:text-sm md:text-base font-serif italic text-amber-200/95 leading-relaxed">
+            {/* Dynamic Scripture Quote with Warm Light Accent */}
+            <div className="border-l-4 border-orange-500 pl-4 py-2 bg-gradient-to-r from-orange-50/95 via-amber-50/80 to-transparent backdrop-blur-xs rounded-r-xl max-w-2xl shadow-2xs">
+              <p className="text-xs sm:text-sm md:text-base font-serif italic text-slate-800 leading-relaxed font-medium">
                 {activeSlide.scripture}
               </p>
             </div>
 
             {/* Narrative Subtitle */}
-            <p className="text-sm sm:text-base md:text-lg text-slate-200/95 max-w-2xl font-normal leading-relaxed drop-shadow-xs">
+            <p className="text-sm sm:text-base md:text-lg text-slate-700 max-w-2xl font-normal leading-relaxed">
               {activeSlide.subtitle}
             </p>
 
@@ -146,7 +124,7 @@ export function MatrimonyHeroSection() {
             <div className="pt-2 flex flex-wrap items-center gap-4">
               <Link
                 href="/discover"
-                className="inline-flex items-center gap-2.5 bg-gradient-to-r from-burgundy-700 via-rose-600 to-orange-600 hover:from-burgundy-600 hover:to-orange-500 text-white px-7 py-3 rounded-xl font-extrabold text-sm sm:text-base shadow-lg border border-orange-400/40 transition-all hover:scale-103"
+                className="inline-flex items-center gap-2.5 bg-gradient-to-r from-burgundy-700 via-rose-600 to-orange-600 hover:from-burgundy-600 hover:to-orange-500 text-white px-7 py-3 rounded-xl font-extrabold text-sm sm:text-base shadow-md shadow-orange-950/15 border border-orange-400/40 transition-all hover:scale-103 cursor-pointer"
               >
                 <span>Explore Verified Profiles</span>
                 <span>→</span>
@@ -154,16 +132,16 @@ export function MatrimonyHeroSection() {
 
               <Link
                 href="/register"
-                className="inline-flex items-center gap-2 bg-white/15 hover:bg-white/25 text-white px-7 py-3 rounded-xl font-bold text-sm sm:text-base border border-white/30 backdrop-blur-md transition-all hover:scale-103"
+                className="inline-flex items-center gap-2 bg-white hover:bg-slate-50 text-slate-900 px-7 py-3 rounded-xl font-bold text-sm sm:text-base border border-slate-300/80 shadow-xs backdrop-blur-md transition-all hover:scale-103 cursor-pointer"
               >
                 <span>Register Free Candidate</span>
                 <span>+</span>
               </Link>
             </div>
 
-            {/* Slide Counter & Indicators */}
+            {/* Automatic Slide Counter & Indicator Dots (No manual arrow buttons) */}
             <div className="flex items-center gap-3 pt-4">
-              <span className="text-xs font-mono font-bold tracking-widest text-slate-300">
+              <span className="text-xs font-mono font-bold tracking-widest text-slate-600">
                 {String(currentSlide + 1).padStart(2, '0')} / {String(heroSlides.length).padStart(2, '0')}
               </span>
 
@@ -175,7 +153,7 @@ export function MatrimonyHeroSection() {
                     onClick={() => setCurrentSlide(dotIdx)}
                     aria-label={`Jump to slide ${dotIdx + 1}`}
                     className={`h-2 rounded-full transition-all cursor-pointer ${
-                      currentSlide === dotIdx ? 'w-8 bg-amber-400' : 'w-2.5 bg-white/40 hover:bg-white/70'
+                      currentSlide === dotIdx ? 'w-8 bg-orange-600' : 'w-2.5 bg-slate-300 hover:bg-slate-400'
                     }`}
                   />
                 ))}
