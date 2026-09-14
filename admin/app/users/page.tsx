@@ -38,6 +38,7 @@ export default function AdminUsersPage() {
 
     try {
       await adminApiClient.updateUserStatus(userId, newStatus, reason);
+      alert(`User #${userId} status updated to ${newStatus} successfully.`);
       showToast(`✓ User #${userId} status updated to ${newStatus}.`);
       await loadUsers();
     } catch (err: any) {

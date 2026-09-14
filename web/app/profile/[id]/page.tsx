@@ -35,17 +35,27 @@ export default function CandidateProfileDetailPage() {
 
   const handleSendInterest = async () => {
     if (!profile) return;
+    const token = typeof window !== 'undefined' ? (localStorage.getItem('access_token') || localStorage.getItem('token')) : null;
+    if (!token) {
+      alert('Need to login: Please log in to your account to express matrimonial interest.');
+      router.push(`/login?redirect=/profile/${profileId}`);
+      return;
+    }
     if (isLocked) {
+      alert('Payment Required: An active subscription plan is required to express matrimonial interest to this candidate.');
       router.push('/subscriptions');
       return;
     }
     try {
       await apiClient.sendInterest(profile.user_id);
+      alert('Interest sent successfully! You will be notified when they respond.');
       setActionMessage('✓ Matrimonial interest sent successfully. You will be notified when they respond.');
     } catch (err: any) {
       if (err.message?.includes('subscription') || err.status === 402) {
+        alert('Payment Required: Please subscribe to an active plan to express matrimonial interest.');
         router.push('/subscriptions');
       } else {
+        alert(`Notice: ${err.message}`);
         setActionMessage(`Notice: ${err.message}`);
       }
     }
@@ -53,17 +63,27 @@ export default function CandidateProfileDetailPage() {
 
   const handleRequestReveal = async () => {
     if (!profile) return;
+    const token = typeof window !== 'undefined' ? (localStorage.getItem('access_token') || localStorage.getItem('token')) : null;
+    if (!token) {
+      alert('Need to login: Please log in to your account to request candidate contact details.');
+      router.push(`/login?redirect=/profile/${profileId}`);
+      return;
+    }
     if (isLocked) {
+      alert('Payment Required: An active subscription plan is required to view candidate contact details.');
       router.push('/subscriptions');
       return;
     }
     try {
       const res = await apiClient.requestContactReveal(profile.user_id);
+      alert(res.message || 'Contact reveal request submitted successfully! Once mutually accepted, contact details will unlock.');
       setActionMessage(res.message || '✓ Contact reveal request submitted. Once accepted, mutual verification unlocks phone and email.');
     } catch (err: any) {
       if (err.message?.includes('subscription') || err.status === 402) {
+        alert('Payment Required: Please subscribe to an active plan to request contact details.');
         router.push('/subscriptions');
       } else {
+        alert(`Notice: ${err.message}`);
         setActionMessage(`Notice: ${err.message}`);
       }
     }
@@ -248,10 +268,17 @@ export default function CandidateProfileDetailPage() {
                 <div className="flex items-center gap-2">
                   <span className="text-charcoal-500 font-semibold w-24 shrink-0">Church:</span>
                   {isLocked ? (
-                    <span className="inline-flex items-center gap-1 text-gold-800 text-[11px] font-semibold bg-gold-50 px-2 py-0.5 rounded-md border border-gold-200">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        alert('Payment Required: Please subscribe to an active plan to unlock Church and Parish information.');
+                        router.push('/subscriptions');
+                      }}
+                      className="inline-flex items-center gap-1 text-gold-800 text-[11px] font-semibold bg-gold-50 hover:bg-gold-100 px-2 py-0.5 rounded-md border border-gold-200 cursor-pointer transition-colors"
+                    >
                       <span>🔒</span>
                       <span>Church Info Locked</span>
-                    </span>
+                    </button>
                   ) : (
                     <span className="text-charcoal-900 font-medium truncate">{profile.church_name || '—'}</span>
                   )}
@@ -265,10 +292,17 @@ export default function CandidateProfileDetailPage() {
                 <div className="flex items-center gap-2">
                   <span className="text-charcoal-500 font-semibold w-24 shrink-0">Profession:</span>
                   {isLocked ? (
-                    <span className="inline-flex items-center gap-1 text-gold-800 text-[11px] font-semibold bg-gold-50 px-2 py-0.5 rounded-md border border-gold-200">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        alert('Payment Required: Please subscribe to an active plan to unlock Profession details.');
+                        router.push('/subscriptions');
+                      }}
+                      className="inline-flex items-center gap-1 text-gold-800 text-[11px] font-semibold bg-gold-50 hover:bg-gold-100 px-2 py-0.5 rounded-md border border-gold-200 cursor-pointer transition-colors"
+                    >
                       <span>🔒</span>
                       <span>Profession Locked</span>
-                    </span>
+                    </button>
                   ) : (
                     <span className="text-charcoal-900 font-medium truncate">{profile.occupation_title || '—'}</span>
                   )}
@@ -277,10 +311,17 @@ export default function CandidateProfileDetailPage() {
                 <div className="flex items-center gap-2">
                   <span className="text-charcoal-500 font-semibold w-24 shrink-0">Location:</span>
                   {isLocked ? (
-                    <span className="inline-flex items-center gap-1 text-gold-800 text-[11px] font-semibold bg-gold-50 px-2 py-0.5 rounded-md border border-gold-200">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        alert('Payment Required: Please subscribe to an active plan to unlock full Location details.');
+                        router.push('/subscriptions');
+                      }}
+                      className="inline-flex items-center gap-1 text-gold-800 text-[11px] font-semibold bg-gold-50 hover:bg-gold-100 px-2 py-0.5 rounded-md border border-gold-200 cursor-pointer transition-colors"
+                    >
                       <span>🔒</span>
                       <span>Location Locked</span>
-                    </span>
+                    </button>
                   ) : (
                     <span className="text-charcoal-800 font-medium truncate">📍 {profile.district || '—'}{profile.state ? `, ${profile.state}` : ''}</span>
                   )}
@@ -289,10 +330,17 @@ export default function CandidateProfileDetailPage() {
                 <div className="flex items-center gap-2">
                   <span className="text-charcoal-500 font-semibold w-24 shrink-0">Annual Income:</span>
                   {isLocked ? (
-                    <span className="inline-flex items-center gap-1 text-gold-800 text-[11px] font-semibold bg-gold-50 px-2 py-0.5 rounded-md border border-gold-200">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        alert('Payment Required: Please subscribe to an active plan to unlock Package and Annual Income details.');
+                        router.push('/subscriptions');
+                      }}
+                      className="inline-flex items-center gap-1 text-gold-800 text-[11px] font-semibold bg-gold-50 hover:bg-gold-100 px-2 py-0.5 rounded-md border border-gold-200 cursor-pointer transition-colors"
+                    >
                       <span>🔒</span>
                       <span>Package Info Locked</span>
-                    </span>
+                    </button>
                   ) : (
                     <span className="text-emerald-700 font-medium truncate">
                       {profile.annual_income_min ? (profile.annual_income_min >= 100000 ? `₹${(profile.annual_income_min / 100000).toFixed(1)} LPA+` : `₹${profile.annual_income_min.toLocaleString('en-IN')}`) : 'Confidential'}

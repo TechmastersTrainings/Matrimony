@@ -170,7 +170,14 @@ export default function DiscoverPage() {
   };
 
   const handleExpressInterestClick = (candidate: CandidateCard) => {
+    const token = typeof window !== 'undefined' ? (localStorage.getItem('access_token') || localStorage.getItem('token')) : null;
+    if (!token) {
+      alert('Need to login: Please log in to your account to express interest.');
+      router.push('/login?redirect=/discover');
+      return;
+    }
     if (!isSubscribed && !isAdmin) {
+      alert('Payment Required: An active subscription plan is required to express interest to candidates.');
       setSelectedCandidate(candidate);
       setModalActionType('interest');
       setSubscriptionModalOpen(true);
@@ -180,8 +187,16 @@ export default function DiscoverPage() {
   };
 
   const handleViewProfileClick = (e: React.MouseEvent, candidate: CandidateCard) => {
+    const token = typeof window !== 'undefined' ? (localStorage.getItem('access_token') || localStorage.getItem('token')) : null;
+    if (!token) {
+      e.preventDefault();
+      alert('Need to login: Please log in to your account to view candidate profiles.');
+      router.push('/login?redirect=/discover');
+      return;
+    }
     if (!isSubscribed && !isAdmin) {
       e.preventDefault();
+      alert('Payment Required: An active subscription plan is required to view full candidate details.');
       setSelectedCandidate(candidate);
       setModalActionType('view_profile');
       setSubscriptionModalOpen(true);
@@ -875,10 +890,18 @@ export default function DiscoverPage() {
                           <div className="flex items-center gap-2">
                             <span className="text-charcoal-500 font-semibold w-24 shrink-0">Church:</span>
                             {!isSubscribed && !isAdmin ? (
-                              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-orange-50 border border-orange-200 text-orange-900 font-semibold text-[11px]">
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  alert('Payment Required: Please subscribe to an active plan to unlock Church and Parish information.');
+                                  router.push('/subscriptions');
+                                }}
+                                className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-orange-50 hover:bg-orange-100 border border-orange-200 text-orange-900 font-semibold text-[11px] cursor-pointer transition-colors"
+                              >
                                 <span>🔒</span>
                                 <span>Church Info Locked</span>
-                              </span>
+                              </button>
                             ) : (
                               <span className="text-charcoal-900 font-medium truncate">{c.church_name || '—'}</span>
                             )}
@@ -892,10 +915,18 @@ export default function DiscoverPage() {
                           <div className="flex items-center gap-2">
                             <span className="text-charcoal-500 font-semibold w-24 shrink-0">Profession:</span>
                             {!isSubscribed && !isAdmin ? (
-                              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-orange-50 border border-orange-200 text-orange-900 font-semibold text-[11px]">
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  alert('Payment Required: Please subscribe to an active plan to unlock Profession details.');
+                                  router.push('/subscriptions');
+                                }}
+                                className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-orange-50 hover:bg-orange-100 border border-orange-200 text-orange-900 font-semibold text-[11px] cursor-pointer transition-colors"
+                              >
                                 <span>🔒</span>
                                 <span>Profession Locked</span>
-                              </span>
+                              </button>
                             ) : (
                               <span className="text-charcoal-900 font-medium truncate">{c.occupation_title || '—'}</span>
                             )}
@@ -904,10 +935,18 @@ export default function DiscoverPage() {
                           <div className="flex items-center gap-2">
                             <span className="text-charcoal-500 font-semibold w-24 shrink-0">Location:</span>
                             {!isSubscribed && !isAdmin ? (
-                              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-emerald-50 border border-emerald-200 text-emerald-900 font-semibold text-[11px]">
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  alert('Payment Required: Please subscribe to an active plan to unlock full Location details.');
+                                  router.push('/subscriptions');
+                                }}
+                                className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-900 font-semibold text-[11px] cursor-pointer transition-colors"
+                              >
                                 <span>🔒</span>
                                 <span>Location Locked</span>
-                              </span>
+                              </button>
                             ) : (
                               <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-emerald-50 border border-emerald-200 text-emerald-900 font-semibold text-[11px] truncate">
                                 📍 {c.district || 'Bidar'}, {c.state || 'Karnataka'}
@@ -918,10 +957,18 @@ export default function DiscoverPage() {
                           <div className="flex items-center gap-2">
                             <span className="text-charcoal-500 font-semibold w-24 shrink-0">Annual Income:</span>
                             {!isSubscribed && !isAdmin ? (
-                              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-orange-50 border border-orange-200 text-orange-900 font-semibold text-[11px]">
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  alert('Payment Required: Please subscribe to an active plan to unlock Package and Annual Income details.');
+                                  router.push('/subscriptions');
+                                }}
+                                className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-orange-50 hover:bg-orange-100 border border-orange-200 text-orange-900 font-semibold text-[11px] cursor-pointer transition-colors"
+                              >
                                 <span>🔒</span>
                                 <span>Package Info Locked</span>
-                              </span>
+                              </button>
                             ) : (
                               <span className="text-emerald-700 font-bold truncate">
                                 {c.annual_income_min ? (c.annual_income_min >= 100000 ? `₹${(c.annual_income_min / 100000).toFixed(1)} LPA+` : `₹${c.annual_income_min.toLocaleString('en-IN')}`) : 'Confidential'}

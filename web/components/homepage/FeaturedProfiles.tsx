@@ -74,10 +74,18 @@ function ProfileCardItem({ profile: p }: { profile: CandidateCard }) {
 
           {/* Location Protected Badge */}
           <div>
-            <span className="text-[11px] text-slate-600 font-semibold inline-flex items-center gap-1 bg-slate-100/90 border border-slate-200/80 px-2.5 py-0.5 rounded-full">
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                alert('Payment Required: Please subscribe to an active plan to unlock full Location and Contact details.');
+                window.location.href = '/subscriptions';
+              }}
+              className="text-[11px] text-slate-600 font-semibold inline-flex items-center gap-1 bg-slate-100/90 hover:bg-slate-200/90 border border-slate-200/80 px-2.5 py-0.5 rounded-full cursor-pointer transition-colors"
+            >
               <span>🔒</span>
               <span>Location Protected</span>
-            </span>
+            </button>
           </div>
 
           {/* Education & Occupation */}
@@ -94,13 +102,22 @@ function ProfileCardItem({ profile: p }: { profile: CandidateCard }) {
 
       {/* Action Button */}
       <div className="mt-3.5 pt-1 px-1">
-        <Link
-          href={`/profile/${p.id}`}
-          className="w-full py-2 px-4 rounded-xl bg-cyan-50/90 hover:bg-gradient-to-r hover:from-cyan-700 hover:to-teal-700 text-cyan-950 hover:text-white border border-cyan-200 hover:border-cyan-700 text-xs sm:text-sm font-bold transition-all duration-200 flex items-center justify-center gap-1.5 shadow-2xs group/btn"
+        <button
+          type="button"
+          onClick={() => {
+            const token = typeof window !== 'undefined' ? (localStorage.getItem('access_token') || localStorage.getItem('token')) : null;
+            if (!token) {
+              alert('Need to login: Please log in to your account to view candidate profiles.');
+              window.location.href = `/login?redirect=/profile/${p.id}`;
+              return;
+            }
+            window.location.href = `/profile/${p.id}`;
+          }}
+          className="w-full py-2 px-4 rounded-xl bg-cyan-50/90 hover:bg-gradient-to-r hover:from-cyan-700 hover:to-teal-700 text-cyan-950 hover:text-white border border-cyan-200 hover:border-cyan-700 text-xs sm:text-sm font-bold transition-all duration-200 flex items-center justify-center gap-1.5 shadow-2xs group/btn cursor-pointer"
         >
           <span>View Profile</span>
           <span className="transition-transform group-hover/btn:translate-x-0.5">→</span>
-        </Link>
+        </button>
       </div>
     </div>
   );

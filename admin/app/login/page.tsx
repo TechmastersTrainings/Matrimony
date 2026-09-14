@@ -51,6 +51,7 @@ function AdminLoginFormContent() {
 
       localStorage.setItem('admin_access_token', data.access_token);
       localStorage.setItem('admin_role', data.role);
+      alert('Login successful! Welcome to CovenantNest Admin Command Center.');
       router.push('/dashboard');
     } catch (err: any) {
       setError(err.message || 'Login failed.');

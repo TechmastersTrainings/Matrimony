@@ -26,6 +26,14 @@ export default function InterestsPage() {
   };
 
   useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const token = localStorage.getItem('access_token');
+      if (!token) {
+        alert('Need to login: Please log in to view your matrimonial interests.');
+        window.location.href = '/login?redirect=/interests';
+        return;
+      }
+    }
     loadInterests(tab);
   }, [tab]);
 

@@ -114,6 +114,13 @@ export default function SubscriptionsPage() {
   }, []);
 
   const handleSubscribe = async (plan: SubscriptionPlanItem) => {
+    const token = typeof window !== 'undefined' ? (localStorage.getItem('access_token') || localStorage.getItem('token')) : null;
+    if (!token) {
+      alert('Need to login: Please log in to your account to purchase a subscription plan.');
+      window.location.href = `/login?redirect=/subscriptions`;
+      return;
+    }
+
     setSelectedPlan(plan);
     setProcessing(true);
 
@@ -139,7 +146,7 @@ export default function SubscriptionsPage() {
                 response.razorpay_payment_id,
                 response.razorpay_signature
               );
-              alert(verifyRes.message || 'Payment Verified & Subscription Activated!');
+              alert(verifyRes.message || 'Payment Verified & Subscription Activated Successfully! All Church, Package, and Location details are now unlocked.');
               window.location.href = '/discover';
             } catch (vErr: any) {
               alert(`Payment Verification Error: ${vErr.message}`);
@@ -165,7 +172,7 @@ export default function SubscriptionsPage() {
 
         const rzp = new window.Razorpay(options);
         rzp.on('payment.failed', function (resp: any) {
-          alert(`Payment Failed: ${resp.error?.description || 'Transaction declined.'}`);
+          alert(`Payment Required: Transaction could not be completed (${resp.error?.description || 'Transaction declined'}). Please try again.`);
           setProcessing(false);
         });
         rzp.open();

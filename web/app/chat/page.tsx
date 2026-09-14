@@ -25,6 +25,15 @@ export default function ChatPage() {
   };
 
   useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const token = localStorage.getItem('access_token');
+      if (!token) {
+        alert('Need to login: Please log in to access your matrimonial chats.');
+        window.location.href = '/login?redirect=/chat';
+        return;
+      }
+    }
+
     async function loadConversations() {
       try {
         const list = await apiClient.getConversations();
@@ -72,7 +81,12 @@ export default function ChatPage() {
       setMessages((prev) => [...prev, msg]);
       setTimeout(scrollToBottom, 100);
     } catch (err: any) {
-      alert(`Could not send message: ${err.message}`);
+      if (err.message?.includes('subscription') || err.message?.includes('plan') || err.status === 402) {
+        alert('Payment Required: An active subscription plan is required to send messages to candidates.');
+        window.location.href = '/subscriptions';
+      } else {
+        alert(`Could not send message: ${err.message}`);
+      }
       setInputText(textToSend);
     } finally {
       setSending(false);

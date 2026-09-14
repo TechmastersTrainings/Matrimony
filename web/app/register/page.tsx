@@ -90,6 +90,7 @@ function RegisterFormContent() {
         manager_relation: managerRelation || undefined,
       });
 
+      alert('Account created successfully! Please enter the 6-digit OTP code sent to your mobile to verify your account.');
       router.push(`/verify?target=${encodeURIComponent(mobileNumber.trim())}`);
     } catch (err: any) {
       setError(err.message || 'Registration failed. Please check your information.');

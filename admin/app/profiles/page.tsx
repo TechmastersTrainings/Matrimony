@@ -70,6 +70,7 @@ function AdminProfilesContent() {
     setActionLoading(true);
     try {
       await adminApiClient.approveProfile(profileId);
+      alert(`Profile CN-${profileId} approved successfully! This candidate is now published and live on the main site.`);
       showToast(`✓ Profile CN-${profileId} approved successfully and published.`);
 
       setProfiles((prev) =>
@@ -102,6 +103,7 @@ function AdminProfilesContent() {
     setActionLoading(true);
     try {
       await adminApiClient.rejectProfile(pId, rejectReason.trim());
+      alert(`Profile CN-${pId} rejected successfully.`);
       showToast(`Profile CN-${pId} rejected.`);
       setActionType(null);
       setRejectReason('');

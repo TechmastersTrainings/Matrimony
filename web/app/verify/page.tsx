@@ -48,6 +48,7 @@ function VerifyOtpContent() {
 
     try {
       const res = await apiClient.verifyOtp(target.trim(), otpCode.trim(), 'REGISTRATION');
+      alert('Account created successfully! Your phone number has been verified. Welcome to CovenantNest.');
       // If candidate has not finished their bio details (education, faith, family), always open profile builder wizard
       if (res && res.profile_status === 'APPROVED') {
         router.push('/dashboard');
