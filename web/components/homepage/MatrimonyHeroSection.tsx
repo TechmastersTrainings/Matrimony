@@ -1,27 +1,85 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+
+const heroSlides = [
+  {
+    image: '/images/indian-christian-wedding-couple.jpg',
+    title: 'Blessed Holy Matrimony',
+    subtitle: 'Connecting faithful Christian brides & grooms in Christ',
+    badge: 'Holy Union',
+  },
+  {
+    image: '/images/christian-church-altar-wedding.jpg',
+    title: 'Sacred Altar Prayer',
+    subtitle: 'Solemn vows rooted in prayer and pastoral honor',
+    badge: 'Church Blessing',
+  },
+  {
+    image: '/images/christian-couple-traditional.jpg',
+    title: 'Joyful Christian Families',
+    subtitle: 'Preserving modesty, Christian culture, and harmony',
+    badge: 'Faith & Family',
+  },
+  {
+    image: '/images/christian-wedding-vows-rings.jpg',
+    title: 'Holy Covenant of Vows',
+    subtitle: 'A cord of three strands is not quickly broken (Eccl 4:12)',
+    badge: 'Holy Vows',
+  },
+];
 
 export function MatrimonyHeroSection() {
+  const router = useRouter();
+  const [lookingFor, setLookingFor] = useState<'FEMALE' | 'MALE'>('FEMALE');
+  const [ageRange, setAgeRange] = useState('21-30');
+  const [denomination, setDenomination] = useState('');
+  const [district, setDistrict] = useState('');
+
+  // Hero Carousel State
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+
+  useEffect(() => {
+    if (isPaused) return;
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
+    }, 4500);
+    return () => clearInterval(interval);
+  }, [isPaused]);
+
+  const handleQuickSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    const params = new URLSearchParams();
+    if (lookingFor) params.set('gender', lookingFor);
+    if (denomination) params.set('denomination', denomination);
+    if (district) params.set('district', district);
+    if (ageRange) {
+      const [min, max] = ageRange.split('-');
+      if (min) params.set('age_min', min);
+      if (max) params.set('age_max', max);
+    }
+    router.push(`/discover?${params.toString()}`);
+  };
+
   return (
     <section className="relative flex items-center justify-center overflow-hidden bg-[#fdfbf7] text-[#1e1b18] pt-20 sm:pt-24 pb-8 sm:pb-10 border-b border-charcoal-100">
-      {/* Background Light Atmospheric Matrimonial View (Shaadi & Jeevansathi style) */}
+      {/* Background Light Atmospheric Matrimonial View */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-        {/* Sun-kissed light background image layer */}
         <div
-          className="absolute inset-0 bg-cover bg-right lg:bg-center bg-no-repeat opacity-25 filter saturate-125 contrast-105"
-          style={{ backgroundImage: "url('/images/covenant-wedding-couple.jpg')" }}
+          className="absolute inset-0 bg-cover bg-right lg:bg-center bg-no-repeat opacity-20 filter saturate-125 contrast-105"
+          style={{ backgroundImage: "url('/images/indian-christian-wedding-couple.jpg')" }}
         />
-        {/* Directional gradient ensuring crisp text readability on the left while revealing the bright couple */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#fdfbf7] via-[#fdfbf7]/85 to-transparent lg:to-[#fdfbf7]/30" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#fdfbf7] via-[#fdfbf7]/90 to-transparent lg:to-[#fdfbf7]/40" />
         <div className="absolute inset-0 bg-gradient-to-b from-[#fdfbf7]/60 via-transparent to-[#fdfbf7]" />
         <div className="absolute top-6 left-1/4 w-[500px] h-[250px] bg-gradient-to-tr from-cyan-200/20 via-orange-200/20 to-transparent rounded-full blur-3xl" />
         <div className="absolute bottom-6 right-1/4 w-80 h-80 bg-emerald-100/20 rounded-full blur-3xl" />
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-5 space-y-6 sm:space-y-8">
-        {/* Top: 2-Column Split Hero (Shaadi & Jeevansathi Style) */}
+        {/* Top: 2-Column Split Hero */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
           {/* Left Column: Headline, Narrative & CTAs */}
           <div className="lg:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-left space-y-4">
@@ -92,41 +150,183 @@ export function MatrimonyHeroSection() {
             </div>
           </div>
 
-          {/* Right Column: High-Resolution Couple Showcase Card (Shaadi/Jeevansathi Hero Style) */}
+          {/* Right Column: Interactive Christian Couple Showcase Carousel */}
           <div className="lg:col-span-5 flex justify-center">
-            <div className="relative w-full max-w-xs sm:max-w-sm aspect-[4/4.8] rounded-2xl overflow-hidden shadow-xl border-3 border-white ring-1 ring-cyan-500/20 group">
-              {/* Image */}
-              <img
-                src="/images/covenant-wedding-couple.jpg"
-                alt="Blessed Christian Matrimony Couple"
-                className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700"
-              />
-
-              {/* Gentle Light Gradient Vignette */}
-              <div className="absolute inset-0 bg-gradient-to-t from-charcoal-950/70 via-transparent to-transparent pointer-events-none" />
+            <div
+              className="relative w-full max-w-xs sm:max-w-sm aspect-[4/4.8] rounded-2xl overflow-hidden shadow-xl border-3 border-white ring-1 ring-cyan-500/20 group select-none"
+              onMouseEnter={() => setIsPaused(true)}
+              onMouseLeave={() => setIsPaused(false)}
+            >
+              {/* Slides */}
+              {heroSlides.map((slide, idx) => (
+                <div
+                  key={idx}
+                  className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${
+                    currentSlide === idx ? 'opacity-100 z-0' : 'opacity-0 -z-10'
+                  }`}
+                >
+                  <img
+                    src={slide.image}
+                    alt={slide.title}
+                    className="w-full h-full object-cover object-top"
+                  />
+                  {/* Subtle Gradient Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-charcoal-950/75 via-transparent to-transparent" />
+                </div>
+              ))}
 
               {/* Floating Top-Right Pill */}
-              <div className="absolute top-3 right-3 bg-white/95 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-cyan-950 border border-cyan-200/80 shadow-sm flex items-center gap-1.5">
+              <div className="absolute top-3 right-3 bg-white/95 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-cyan-950 border border-cyan-200/80 shadow-sm flex items-center gap-1.5 z-10">
                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
                 <span>Verified Profiles</span>
               </div>
 
-              {/* Floating Bottom Card */}
-              <div className="absolute bottom-3 left-3 right-3 bg-white/95 backdrop-blur-md p-3.5 rounded-xl border border-white/60 shadow-lg space-y-1">
+              {/* Left Arrow Button */}
+              <button
+                type="button"
+                onClick={() => setCurrentSlide((prev) => (prev === 0 ? heroSlides.length - 1 : prev - 1))}
+                aria-label="Previous Slide"
+                className="absolute left-2.5 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/40 hover:bg-black/70 text-white backdrop-blur-sm flex items-center justify-center text-sm font-bold opacity-0 group-hover:opacity-100 transition-opacity z-20 cursor-pointer shadow-md"
+              >
+                ‹
+              </button>
+
+              {/* Right Arrow Button */}
+              <button
+                type="button"
+                onClick={() => setCurrentSlide((prev) => (prev + 1) % heroSlides.length)}
+                aria-label="Next Slide"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/40 hover:bg-black/70 text-white backdrop-blur-sm flex items-center justify-center text-sm font-bold opacity-0 group-hover:opacity-100 transition-opacity z-20 cursor-pointer shadow-md"
+              >
+                ›
+              </button>
+
+              {/* Floating Bottom Info Card with Slide Details */}
+              <div className="absolute bottom-3 left-3 right-3 bg-white/95 backdrop-blur-md p-3.5 rounded-xl border border-white/60 shadow-lg space-y-1.5 z-10">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs sm:text-sm font-serif font-extrabold text-charcoal-900">
-                    CovenantNest Matrimony
+                  <span className="text-xs sm:text-sm font-serif font-extrabold text-charcoal-900 truncate">
+                    {heroSlides[currentSlide].title}
                   </span>
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-orange-700 bg-orange-50 border border-orange-200 px-2 py-0.5 rounded-md">
-                    Holy Union
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-orange-700 bg-orange-50 border border-orange-200 px-2 py-0.5 rounded-md shrink-0">
+                    {heroSlides[currentSlide].badge}
                   </span>
                 </div>
-                <p className="text-xs text-charcoal-600 font-medium">
-                  Connecting blessed Christian brides &amp; bridegrooms across Bidar &amp; Pan-India.
+                <p className="text-[11px] text-charcoal-600 font-medium line-clamp-1">
+                  {heroSlides[currentSlide].subtitle}
                 </p>
+
+                {/* Carousel Indicator Dots */}
+                <div className="flex items-center justify-center gap-1.5 pt-1">
+                  {heroSlides.map((_, dotIdx) => (
+                    <button
+                      key={dotIdx}
+                      type="button"
+                      onClick={() => setCurrentSlide(dotIdx)}
+                      aria-label={`Go to slide ${dotIdx + 1}`}
+                      className={`h-1.5 rounded-full transition-all cursor-pointer ${
+                        currentSlide === dotIdx ? 'w-5 bg-orange-600' : 'w-1.5 bg-slate-300 hover:bg-slate-400'
+                      }`}
+                    />
+                  ))}
+                </div>
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Interactive Quick Partner Search Finder Widget */}
+        <div className="w-full bg-white rounded-2xl border border-charcoal-200 p-4 sm:p-5 shadow-md shadow-charcoal-950/5">
+          <div className="flex items-center justify-between flex-wrap gap-2 mb-3 pb-2 border-b border-charcoal-100">
+            <div className="flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-orange-500 animate-pulse" />
+              <h3 className="text-xs sm:text-sm font-extrabold uppercase tracking-wider text-slate-900 font-brand">
+                Quick Partner Search • Find Christian Matches
+              </h3>
+            </div>
+            <span className="text-[11px] font-semibold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full">
+              ✓ Free to Search &amp; Explore
+            </span>
+          </div>
+
+          <form onSubmit={handleQuickSearch} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 items-end">
+            {/* 1. Looking For */}
+            <div className="space-y-1">
+              <label className="text-xs font-bold text-slate-700 block">I am seeking</label>
+              <select
+                value={lookingFor}
+                onChange={(e) => setLookingFor(e.target.value as 'FEMALE' | 'MALE')}
+                aria-label="I am seeking"
+                className="w-full text-xs font-semibold bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-900 focus:ring-2 focus:ring-cyan-500 focus:outline-none"
+              >
+                <option value="FEMALE">Christian Bride (Female)</option>
+                <option value="MALE">Christian Groom (Male)</option>
+              </select>
+            </div>
+
+            {/* 2. Age Range */}
+            <div className="space-y-1">
+              <label className="text-xs font-bold text-slate-700 block">Age Range</label>
+              <select
+                value={ageRange}
+                onChange={(e) => setAgeRange(e.target.value)}
+                aria-label="Age Range"
+                className="w-full text-xs font-semibold bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-900 focus:ring-2 focus:ring-cyan-500 focus:outline-none"
+              >
+                <option value="18-25">18 - 25 Yrs</option>
+                <option value="21-30">21 - 30 Yrs</option>
+                <option value="25-35">25 - 35 Yrs</option>
+                <option value="30-45">30 - 45 Yrs</option>
+                <option value="18-60">All Ages</option>
+              </select>
+            </div>
+
+            {/* 3. Denomination */}
+            <div className="space-y-1">
+              <label className="text-xs font-bold text-slate-700 block">Church Denomination</label>
+              <select
+                value={denomination}
+                onChange={(e) => setDenomination(e.target.value)}
+                aria-label="Church Denomination"
+                className="w-full text-xs font-semibold bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-900 focus:ring-2 focus:ring-cyan-500 focus:outline-none"
+              >
+                <option value="">All Denominations</option>
+                <option value="Methodist (MCI)">Methodist (MCI)</option>
+                <option value="CSI">Church of South India (CSI)</option>
+                <option value="Roman Catholic">Roman Catholic</option>
+                <option value="Baptist">Baptist</option>
+                <option value="Pentecostal">Pentecostal / Born-Again</option>
+                <option value="Protestant">Protestant &amp; Independent</option>
+              </select>
+            </div>
+
+            {/* 4. Region / District */}
+            <div className="space-y-1">
+              <label className="text-xs font-bold text-slate-700 block">Region / City</label>
+              <select
+                value={district}
+                onChange={(e) => setDistrict(e.target.value)}
+                aria-label="Region or City"
+                className="w-full text-xs font-semibold bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-900 focus:ring-2 focus:ring-cyan-500 focus:outline-none"
+              >
+                <option value="">All Regions</option>
+                <option value="Bidar">Bidar &amp; North Karnataka</option>
+                <option value="Bengaluru">Bengaluru</option>
+                <option value="Hyderabad">Hyderabad / Telangana</option>
+                <option value="Kalaburagi">Kalaburagi</option>
+              </select>
+            </div>
+
+            {/* 5. CTA Button */}
+            <div>
+              <button
+                type="submit"
+                className="w-full bg-gradient-to-r from-burgundy-700 via-rose-600 to-orange-600 hover:from-burgundy-600 hover:to-orange-500 text-white font-extrabold text-xs sm:text-sm py-2.5 px-4 rounded-lg shadow-sm transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-1.5 cursor-pointer"
+              >
+                <span>Search Matches</span>
+                <span>→</span>
+              </button>
+            </div>
+          </form>
         </div>
 
         {/* Four Sacred Hallmarks of Christian Marriage - Distinct Colorful Cards (Compact with readable font) */}

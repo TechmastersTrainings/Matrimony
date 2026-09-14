@@ -79,6 +79,19 @@ export default function DiscoverPage() {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const urlParams = new URLSearchParams(window.location.search);
+      const qParam = urlParams.get('q');
+      if (qParam) setSearchQuery(qParam);
+      const genParam = urlParams.get('gender');
+      if (genParam) setGender(genParam.toUpperCase());
+      const denomParam = urlParams.get('denomination');
+      if (denomParam) setDenomination(denomParam);
+      const distParam = urlParams.get('district');
+      if (distParam) setDistrict(distParam);
+      const minAgeParam = urlParams.get('age_min');
+      if (minAgeParam) setAgeMin(minAgeParam);
+      const maxAgeParam = urlParams.get('age_max');
+      if (maxAgeParam) setAgeMax(maxAgeParam);
+
       const adminToken = urlParams.get('admin_token');
       if (adminToken) {
         localStorage.setItem('access_token', adminToken);

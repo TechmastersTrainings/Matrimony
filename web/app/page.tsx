@@ -1,7 +1,11 @@
 import React from 'react';
 import { MatrimonyHeroSection } from '../components/homepage/MatrimonyHeroSection';
+import { BrowseByDenomination } from '../components/homepage/BrowseByDenomination';
 import { FeaturedProfiles } from '../components/homepage/FeaturedProfiles';
+import { HowItWorksSection } from '../components/homepage/HowItWorksSection';
 import { MatrimonyCovenantSection } from '../components/homepage/MatrimonyCovenantSection';
+import { BlessedStoriesSection } from '../components/homepage/BlessedStoriesSection';
+import { ChristianMatrimonyFAQ } from '../components/homepage/ChristianMatrimonyFAQ';
 import { ScriptureSanctuarySection } from '../components/homepage/ScriptureSanctuarySection';
 import { AboutTechmastersSection } from '../components/homepage/AboutTechmastersSection';
 import { MatrimonyInvitationBanner } from '../components/homepage/MatrimonyInvitationBanner';
@@ -9,24 +13,35 @@ import { MatrimonyInvitationBanner } from '../components/homepage/MatrimonyInvit
 export default function HomePage() {
   return (
     <div className="flex flex-col min-h-screen bg-[#fdfbf7] font-sans">
-      {/* 1. Cinematic Matrimony Hero Section with Shaadi-style couple imagery */}
+      {/* 1. Cinematic Matrimony Hero Section with Quick Partner Search & Authentic Couple Photo */}
       <MatrimonyHeroSection />
 
-      {/* 2. Real Verified Christian Brides & Grooms from Database */}
+      {/* 2. Browse by Christian Denomination (Methodist, CSI, Catholic, Baptist, Pentecostal) */}
+      <BrowseByDenomination />
+
+      {/* 3. Real Verified Christian Brides & Grooms from Database */}
       <FeaturedProfiles />
 
-      {/* 3. Sacred Covenant, Faith & Family Privacy (Compact Unified Section) */}
+      {/* 4. How It Works: 3 Reverent Steps to Holy Matrimony */}
+      <HowItWorksSection />
+
+      {/* 5. Sacred Covenant, "Till You Marry" Promise, Daily Safety Limits & Discretion */}
       <MatrimonyCovenantSection />
 
-      {/* 4. Scripture Sanctuary: 1 Corinthians 13:4-8 & Ecclesiastes 4:12 */}
+      {/* 6. Blessed Christian Unions & Real Stories */}
+      <BlessedStoriesSection />
+
+      {/* 7. Christian Matrimony FAQ Accordion for Families */}
+      <ChristianMatrimonyFAQ />
+
+      {/* 8. Scripture Sanctuary: 1 Corinthians 13:4-8 & Ecclesiastes 4:12 */}
       <ScriptureSanctuarySection />
 
-      {/* 5. About Us & Techmasters Innovations Backbone */}
+      {/* 9. About Us & Techmasters Innovations Backbone */}
       <AboutTechmastersSection />
 
-      {/* 6. Matrimony Invitation Closing Banner */}
+      {/* 10. Matrimony Invitation Closing Banner */}
       <MatrimonyInvitationBanner />
     </div>
   );
 }
-

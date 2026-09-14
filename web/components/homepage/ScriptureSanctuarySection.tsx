@@ -9,8 +9,14 @@ export function ScriptureSanctuarySection() {
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-amber-200/20 rounded-full blur-3xl pointer-events-none" />
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-        {/* Elegant Gold Accent Line */}
-        <div className="w-16 h-0.5 bg-gradient-to-r from-transparent via-gold-500 to-transparent mx-auto mb-6" />
+        {/* Holy Bible Rings Medallion */}
+        <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4 rounded-full overflow-hidden border-2 border-amber-400/80 shadow-md ring-4 ring-amber-100/60">
+          <img
+            src="/images/christian-wedding-rings-bible.jpg"
+            alt="Wedding Rings on Holy Bible"
+            className="w-full h-full object-cover"
+          />
+        </div>
 
         {/* Sacred Love Scripture Passage */}
         <blockquote className="font-serif text-xl sm:text-2xl md:text-3xl italic text-burgundy-950 leading-relaxed sm:leading-loose">
