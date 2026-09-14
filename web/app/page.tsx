@@ -1,6 +1,5 @@
 import React from 'react';
 import { MatrimonyHeroSection } from '../components/homepage/MatrimonyHeroSection';
-import { BrowseByDenomination } from '../components/homepage/BrowseByDenomination';
 import { FeaturedProfiles } from '../components/homepage/FeaturedProfiles';
 import { HowItWorksSection } from '../components/homepage/HowItWorksSection';
 import { MatrimonyCovenantSection } from '../components/homepage/MatrimonyCovenantSection';
@@ -13,13 +12,10 @@ import { MatrimonyInvitationBanner } from '../components/homepage/MatrimonyInvit
 export default function HomePage() {
   return (
     <div className="flex flex-col min-h-screen bg-[#fdfbf7] font-sans">
-      {/* 1. Cinematic Matrimony Hero Section with Quick Partner Search & Authentic Couple Photo */}
+      {/* 1. Cinematic Matrimony Hero Section with Full-Bleed Carousel */}
       <MatrimonyHeroSection />
 
-      {/* 2. Browse by Christian Denomination (Methodist, CSI, Catholic, Baptist, Pentecostal) */}
-      <BrowseByDenomination />
-
-      {/* 3. Real Verified Christian Brides & Grooms from Database */}
+      {/* 2. Real Verified Christian Brides & Grooms from Database */}
       <FeaturedProfiles />
 
       {/* 4. How It Works: 3 Reverent Steps to Holy Matrimony */}
