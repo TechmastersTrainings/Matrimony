@@ -121,7 +121,7 @@ export default function SubscriptionsPage() {
       // Step 1: Call Backend to Create Razorpay Order
       const order = await apiClient.createSubscriptionOrder(plan.id);
 
-      const razorpayKey = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || order.key_id || 'rzp_test_TWXn6r1HPxwz0r';
+      const razorpayKey = order.key_id || process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
 
       // Step 2: Open Razorpay Standard Checkout Modal
       if (typeof window !== 'undefined' && window.Razorpay) {
@@ -148,9 +148,9 @@ export default function SubscriptionsPage() {
             }
           },
           prefill: {
-            name: 'CovenantNest Member',
-            email: 'member@covenantnest.com',
-            contact: '9999999999',
+            name: typeof window !== 'undefined' ? (localStorage.getItem('user_name') || 'CovenantNest Member') : 'CovenantNest Member',
+            email: typeof window !== 'undefined' ? (localStorage.getItem('user_email') || '') : '',
+            contact: typeof window !== 'undefined' ? (localStorage.getItem('user_mobile') || '') : '',
           },
           theme: {
             color: '#0891b2',
