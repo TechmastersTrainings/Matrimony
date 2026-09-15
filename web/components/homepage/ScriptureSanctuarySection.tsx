@@ -4,43 +4,68 @@ import React from 'react';
 
 export function ScriptureSanctuarySection() {
   return (
-    <section className="py-20 bg-gradient-to-b from-[#faf6ee] via-rose-50/40 to-[#fdfbf7] text-[#1e1b18] relative overflow-hidden border-t border-[#ece2d1]">
-      {/* Warm Golden Glow Backdrop */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-amber-200/20 rounded-full blur-3xl pointer-events-none" />
+    <section className="py-16 sm:py-20 lg:py-24 bg-gradient-to-b from-[#fdfbf7] via-[#faf6ee] to-[#fdfbf7] text-[#1e1b18] relative overflow-hidden border-t border-[#ece2d1]">
+      {/* Soft Luminous Warm Golden Glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] bg-amber-200/20 rounded-full blur-3xl pointer-events-none" />
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-        {/* Holy Bible Rings Medallion */}
-        <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4 rounded-full overflow-hidden border-2 border-amber-400/80 shadow-md ring-4 ring-amber-100/60">
-          <img
-            src="/images/christian-wedding-rings-bible.jpg"
-            alt="Wedding Rings on Holy Bible"
-            className="w-full h-full object-cover"
-          />
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        
+        {/* Beautiful Elegant 2-Column Scripture Card */}
+        <div className="relative rounded-3xl bg-white/90 backdrop-blur-sm border border-amber-200/80 shadow-xl shadow-amber-950/5 p-6 sm:p-10 lg:p-12">
+          
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 items-center">
+            
+            {/* Left Column: Authentic Holy Bible & Wedding Rings Image */}
+            <div className="md:col-span-5 flex justify-center">
+              <div className="relative w-full max-w-[280px] sm:max-w-xs aspect-[4/4.8] rounded-2xl overflow-hidden shadow-lg border-2 border-amber-300/80 ring-4 ring-amber-100/70 group">
+                <img
+                  src="/images/christian-wedding-rings-bible.jpg"
+                  alt="Wedding Rings resting on open Holy Bible"
+                  className="w-full h-full object-cover object-center transform group-hover:scale-105 transition-transform duration-700 ease-out"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
+                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-white/95 backdrop-blur-md px-3.5 py-1 rounded-full border border-amber-300 text-[11px] font-bold text-amber-950 uppercase tracking-wider shadow-sm whitespace-nowrap">
+                  Holy Bible • Sacred Vows
+                </div>
+              </div>
+            </div>
+
+            {/* Right Column: Sacred Scripture Quote & Citation */}
+            <div className="md:col-span-7 flex flex-col justify-center text-left space-y-4 sm:space-y-5">
+              
+              {/* Decorative Gold Quotation Mark */}
+              <div className="font-serif text-5xl sm:text-6xl text-amber-400/60 leading-none select-none -mb-3 sm:-mb-4">
+                &ldquo;
+              </div>
+
+              {/* The 1 Corinthians 13:4–8 Passage */}
+              <blockquote className="font-serif text-base sm:text-lg md:text-xl lg:text-2xl italic text-burgundy-950 leading-relaxed sm:leading-loose">
+                Love is patient, love is kind. It does not envy, it does not boast, it is not proud. It does not dishonor others, it is not self-seeking, it is not easily angered, it keeps no record of wrongs. Love does not delight in evil but rejoices with the truth. It always protects, always trusts, always hopes, always perseveres.{' '}
+                <span className="font-extrabold not-italic text-burgundy-900 underline decoration-amber-400 decoration-2 underline-offset-4">
+                  Love never fails.
+                </span>
+                &rdquo;
+              </blockquote>
+
+              {/* Delicate Divider */}
+              <div className="h-0.5 w-16 bg-gradient-to-r from-amber-400 to-amber-600 rounded-full my-1" />
+
+              {/* Biblical Citation */}
+              <div className="space-y-0.5">
+                <cite className="not-italic text-sm sm:text-base font-extrabold uppercase tracking-widest text-burgundy-900 block font-brand">
+                  1 Corinthians 13:4–8
+                </cite>
+                <span className="text-xs sm:text-sm text-slate-600 font-medium block">
+                  The Divine Standard for Christian Marriages
+                </span>
+              </div>
+
+            </div>
+
+          </div>
+
         </div>
 
-        {/* Sacred Love Scripture Passage */}
-        <blockquote className="font-serif text-xl sm:text-2xl md:text-3xl italic text-burgundy-950 leading-relaxed sm:leading-loose">
-          &ldquo;Love is patient, love is kind. It does not envy, it does not boast, it is not proud. It does not dishonor others, it is not self-seeking, it is not easily angered, it keeps no record of wrongs. Love does not delight in evil but rejoices with the truth. It always protects, always trusts, always hopes, always perseveres. Love never fails.&rdquo;
-        </blockquote>
-
-        <div className="mt-6 flex flex-col items-center gap-1">
-          <cite className="not-italic text-xs sm:text-sm font-bold uppercase tracking-widest text-burgundy-800">
-            1 Corinthians 13:4–8
-          </cite>
-          <span className="text-xs text-slate-500 font-medium">
-            The Divine Standard for Christian Marriages
-          </span>
-        </div>
-
-        {/* The Threefold Cord Reflection */}
-        <div className="mt-12 p-6 rounded-2xl bg-white border border-[#ece2d1] shadow-xs max-w-2xl mx-auto">
-          <p className="text-xs sm:text-sm text-slate-700 italic font-serif leading-relaxed">
-            &ldquo;Though one may be overpowered, two can defend themselves. A cord of three strands is not quickly broken.&rdquo;
-            <span className="block not-italic font-sans text-[11px] font-bold text-gold-800 mt-2">
-              — Ecclesiastes 4:12 • A Husband, A Wife, and Christ at the Center
-            </span>
-          </p>
-        </div>
       </div>
     </section>
   );
