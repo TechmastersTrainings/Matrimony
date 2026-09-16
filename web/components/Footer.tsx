@@ -24,12 +24,34 @@ export function Footer() {
             </Link>
 
             <p className="text-xs sm:text-sm text-slate-300/85 leading-relaxed max-w-sm">
-              A reverent Christian matrimonial sanctuary where holy covenants build blessed homes. Safeguarding candidate dignity, pastoral honor, and family privacy at every step.
+              A sacred initiative by <strong className="text-amber-200">Techmasters Innovations Private Limited</strong>, headquartered in Bidar, Karnataka, India. Safeguarding candidate dignity, pastoral honor, and family privacy at every step.
             </p>
 
-            <p className="text-[11px] text-slate-400 pt-1">
-              Corporate Office: Mailoor Road, Bidar, Karnataka - 585403.
-            </p>
+            <div className="space-y-1 text-[11px] text-slate-400 pt-1">
+              <p className="text-slate-300">
+                Director: <span className="font-semibold text-white">Mrs. Rekha Sachin Themgyale</span>
+              </p>
+              <p className="text-slate-300">
+                Managing Director: <span className="font-semibold text-white">Mr. Sachin Anil Themgyale</span>
+              </p>
+              <p>Corporate Office: Mailoor Road, Bidar, Karnataka - 585403.</p>
+              <p className="pt-0.5">
+                Contact:{' '}
+                <a href="mailto:info@techmastersinnovations.in" className="hover:text-amber-300 transition-colors underline">
+                  info@techmastersinnovations.in
+                </a>{' '}
+                |{' '}
+                <a href="mailto:techmastersinnovations@gmail.com" className="hover:text-amber-300 transition-colors underline">
+                  techmastersinnovations@gmail.com
+                </a>
+              </p>
+              <p>
+                Support:{' '}
+                <a href="mailto:support@covenantnest.techmaster.space" className="hover:text-amber-300 transition-colors underline">
+                  support@covenantnest.techmaster.space
+                </a>
+              </p>
+            </div>
           </div>
 
           {/* Column 2: Christian Denominations (3 cols on lg) */}
@@ -229,6 +251,15 @@ export function Footer() {
               </li>
               <li>
                 <Link
+                  href="/refund-policy"
+                  className="hover:text-amber-300 hover:translate-x-1 transition-all inline-flex items-center gap-2"
+                >
+                  <span className="text-amber-400 text-xs font-bold">›</span>
+                  <span>Refund &amp; Cancellation Policy</span>
+                </Link>
+              </li>
+              <li>
+                <Link
                   href="/verification-status"
                   className="hover:text-amber-300 hover:translate-x-1 transition-all inline-flex items-center gap-2"
                 >
@@ -243,15 +274,29 @@ export function Footer() {
 
       {/* 3. Bottom Legal, Copyright & Regional Reach */}
       <div className="border-t border-slate-800/80 bg-[#03060d] py-5 sm:py-6 relative z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-3 text-xs sm:text-sm text-slate-400 text-center md:text-left">
-          <p className="leading-relaxed">
-            © 2026 CovenantNest • Official Product of{' '}
-            <strong className="text-amber-300 font-bold">Techmasters Innovations Private Limited</strong>. All rights reserved.
-          </p>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs sm:text-sm text-slate-400 text-center md:text-left">
+          <div className="space-y-1">
+            <p className="leading-relaxed">
+              © 2026 <strong className="text-amber-300 font-bold">Techmasters Innovations Pvt. Ltd.</strong> All rights reserved.
+            </p>
+            <p className="text-[11px] text-slate-500">
+              Covenant Nest • A sacred initiative headquartered in Bidar, Karnataka, India.
+            </p>
+          </div>
 
-          <p className="text-slate-400 font-medium leading-relaxed">
-            Serving Christian Families across Bidar, Bengaluru, Kalaburagi, Hyderabad &amp; Pan-India.
-          </p>
+          <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-xs font-medium text-slate-300">
+            <Link href="/privacy" className="hover:text-amber-300 transition-colors">
+              Privacy Policy
+            </Link>
+            <span className="text-slate-600">|</span>
+            <Link href="/terms" className="hover:text-amber-300 transition-colors">
+              Terms of Service
+            </Link>
+            <span className="text-slate-600">|</span>
+            <Link href="/refund-policy" className="hover:text-amber-300 transition-colors">
+              Refund &amp; Cancellation Policy
+            </Link>
+          </div>
         </div>
       </div>
     </footer>

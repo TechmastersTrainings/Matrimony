@@ -3,13 +3,14 @@ import Link from 'next/link';
 
 export const metadata = {
   title: 'Terms of Service | CovenantNest — Christian Matrimony',
-  description: 'Terms of service and code of conduct for CovenantNest Christian Matrimony platform.',
+  description: 'Official Terms of Service and user conduct agreement for CovenantNest Christian Matrimony.',
 };
 
 export default function TermsPage() {
   return (
     <div className="min-h-screen bg-[#fdfbf7] text-[#1e1b18] py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto bg-white border border-[#ece2d1] rounded-3xl p-6 sm:p-10 shadow-sm space-y-8">
+        {/* Header */}
         <div className="border-b border-charcoal-100 pb-6 space-y-2 text-center">
           <span className="text-xs font-bold uppercase tracking-widest text-cyan-800">
             Legal &amp; Community Guidelines
@@ -22,63 +23,106 @@ export default function TermsPage() {
           </p>
         </div>
 
-        {/* Section 1 */}
+        {/* 1. Acceptance of Terms */}
         <div className="space-y-3">
           <h2 className="text-lg font-bold text-slate-900 font-brand">
-            1. Sacred Matrimonial Purpose
+            1. Acceptance of Terms
           </h2>
           <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-            CovenantNest is exclusively intended for Christian brides, bridegrooms, and their families seeking honorable, God-ordained holy matrimony. The platform strictly prohibits casual dating, unsolicited solicitation, commercial advertising, or fraudulent representation.
+            By registering on Covenant Nest (<a href="https://covenantnest.techmaster.space" className="text-cyan-900 underline font-semibold">covenantnest.techmaster.space</a>), you agree to these Terms of Service. If you do not agree, please do not use this platform.
           </p>
         </div>
 
-        {/* Section 2 */}
+        {/* 2. Eligibility */}
         <div className="space-y-3">
           <h2 className="text-lg font-bold text-slate-900 font-brand">
-            2. Strict Mutual Consent Privacy Policy
+            2. Eligibility
+          </h2>
+          <ul className="list-disc pl-5 space-y-2 text-xs sm:text-sm text-slate-600 leading-relaxed">
+            <li>You must be at least 18 years of age.</li>
+            <li>You must be a practicing Christian seeking holy matrimony in accordance with your faith and family values.</li>
+            <li>You agree to provide truthful, accurate, and complete information during registration.</li>
+          </ul>
+        </div>
+
+        {/* 3. User Conduct & Sacred Covenant */}
+        <div className="space-y-3">
+          <h2 className="text-lg font-bold text-slate-900 font-brand">
+            3. User Conduct &amp; Sacred Covenant
           </h2>
           <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-            In accordance with our strict privacy framework, contact phone numbers and email addresses are <strong>never</strong> revealed or sold to any user simply upon purchasing a subscription. Contact information remains encrypted and locked until <strong>both</strong> candidates mutually accept matrimonial interest and provide explicit consent to exchange contact details.
+            You agree <strong>NOT</strong> to:
+          </p>
+          <ul className="list-disc pl-5 space-y-2 text-xs sm:text-sm text-slate-600 leading-relaxed">
+            <li>Create fake, duplicate, or misleading profiles.</li>
+            <li>Use the platform for commercial purposes, spam, or data harvesting.</li>
+            <li>Harass, abuse, or send inappropriate messages to other members.</li>
+            <li>Share financial information or request money from other members.</li>
+          </ul>
+        </div>
+
+        {/* 4. Verification & Account Termination */}
+        <div className="space-y-3">
+          <h2 className="text-lg font-bold text-slate-900 font-brand">
+            4. Verification &amp; Account Termination
+          </h2>
+          <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+            Covenant Nest reserves the right to request additional verification documents at any time. We reserve the right to suspend or permanently terminate any account that violates these terms, engages in fraudulent behavior, or disrespects the dignity of the community, without prior notice.
           </p>
         </div>
 
-        {/* Section 3 */}
+        {/* 5. Limitation of Liability */}
         <div className="space-y-3">
           <h2 className="text-lg font-bold text-slate-900 font-brand">
-            3. Genuine Candidate Verification
+            5. Limitation of Liability
           </h2>
           <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-            Users agree to submit truthful, accurate personal, educational, church fellowship, and familial information. Any attempt to create fictitious, impersonated, or misleading profiles will result in immediate termination of account access without refund.
+            While we strive to verify all profiles, Covenant Nest and Techmasters Innovations Pvt. Ltd. act only as a facilitator. We are not liable for the actions, intentions, or outcomes of interactions between members. Users are strongly advised to involve their families and pastoral guides before proceeding to any physical meetings or financial commitments.
           </p>
         </div>
 
-        {/* Section 4 */}
+        {/* 6. Modifications */}
         <div className="space-y-3">
           <h2 className="text-lg font-bold text-slate-900 font-brand">
-            4. Payments and Subscription Plans
+            6. Modifications
           </h2>
           <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-            All subscription payments (Basic, Standard, and Premium) are processed securely through certified bank-grade gateways (Cashfree Payments). Memberships grant access to in-app messaging, verified profile details, and mutual interest requests for the designated duration.
+            We may update these terms periodically. Continued use of the platform constitutes acceptance of the revised terms.
           </p>
         </div>
 
-        {/* Section 5 */}
-        <div className="space-y-3">
-          <h2 className="text-lg font-bold text-slate-900 font-brand">
-            5. Platform Governance &amp; Headquarters
-          </h2>
-          <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-            CovenantNest is engineered, owned, and operated by <strong>Techmasters Innovations Private Limited</strong>, Mailoor Road, Bidar, Karnataka - 585403. For inquiries, please contact <a href="mailto:info@techmastersinnovations.in" className="text-cyan-900 underline font-semibold">info@techmastersinnovations.in</a>.
+        {/* Corporate Governance */}
+        <div className="p-4 rounded-xl bg-cyan-50/70 border border-cyan-200 text-xs sm:text-sm text-slate-800 space-y-1">
+          <p className="font-bold text-slate-900">Corporate Governance:</p>
+          <p>Techmasters Innovations Private Limited</p>
+          <p>Managing Director: Mr. Sachin Anil Themgyale | Director: Mrs. Rekha Sachin Themgyale</p>
+          <p>Mailoor Road, Bidar, Karnataka - 585403, India.</p>
+          <p>
+            Contact:{' '}
+            <a href="mailto:info@techmastersinnovations.in" className="text-cyan-900 underline font-semibold">
+              info@techmastersinnovations.in
+            </a>{' '}
+            |{' '}
+            <a href="mailto:support@covenantnest.techmaster.space" className="text-cyan-900 underline font-semibold">
+              support@covenantnest.techmaster.space
+            </a>
           </p>
         </div>
 
-        <div className="pt-6 border-t border-charcoal-100 flex justify-between items-center text-xs">
+        {/* Links */}
+        <div className="pt-6 border-t border-charcoal-100 flex flex-wrap justify-between items-center gap-4 text-xs">
           <Link href="/" className="text-cyan-900 hover:underline font-bold">
             ← Return to Home
           </Link>
-          <Link href="/privacy" className="text-cyan-900 hover:underline font-bold">
-            View Privacy Policy →
-          </Link>
+          <div className="flex gap-4">
+            <Link href="/privacy" className="text-cyan-900 hover:underline font-bold">
+              Privacy Policy
+            </Link>
+            <span className="text-slate-300">•</span>
+            <Link href="/refund-policy" className="text-cyan-900 hover:underline font-bold">
+              Refund &amp; Cancellation Policy
+            </Link>
+          </div>
         </div>
       </div>
     </div>
