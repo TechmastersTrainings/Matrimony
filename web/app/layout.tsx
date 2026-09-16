@@ -20,6 +20,10 @@ export const metadata = {
     'Catholic Matrimony',
     'Indian Christian Matrimony',
   ],
+  icons: {
+    icon: '/logo.png',
+    apple: '/logo.png',
+  },
 };
 
 export default function RootLayout({
