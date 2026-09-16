@@ -5,7 +5,6 @@ import { HowItWorksSection } from '../components/homepage/HowItWorksSection';
 import { MatrimonyCovenantSection } from '../components/homepage/MatrimonyCovenantSection';
 import { BlessedStoriesSection } from '../components/homepage/BlessedStoriesSection';
 import { ScriptureSanctuarySection } from '../components/homepage/ScriptureSanctuarySection';
-import { AboutTechmastersSection } from '../components/homepage/AboutTechmastersSection';
 import { MatrimonyInvitationBanner } from '../components/homepage/MatrimonyInvitationBanner';
 
 export default function HomePage() {
@@ -29,10 +28,7 @@ export default function HomePage() {
       {/* 7. Scripture Sanctuary: 1 Corinthians 13:4-8 & Ecclesiastes 4:12 */}
       <ScriptureSanctuarySection />
 
-      {/* 9. About Us & Techmasters Innovations Backbone */}
-      <AboutTechmastersSection />
-
-      {/* 10. Matrimony Invitation Closing Banner */}
+      {/* 8. Matrimony Invitation Closing Banner */}
       <MatrimonyInvitationBanner />
     </div>
   );
