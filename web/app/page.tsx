@@ -23,7 +23,7 @@ export default function HomePage() {
       {/* 5. Sacred Covenant, "Till You Marry" Promise, Daily Safety Limits & Discretion */}
       <MatrimonyCovenantSection />
 
-      {/* 6. Blessed Christian Unions & Real Stories */}
+      {/* 6. Sacred Christian Matrimony Gallery */}
       <BlessedStoriesSection />
 
       {/* 7. Scripture Sanctuary: 1 Corinthians 13:4-8 & Ecclesiastes 4:12 */}
