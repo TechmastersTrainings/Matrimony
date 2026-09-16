@@ -273,26 +273,32 @@ export function Footer() {
       </div>
 
       {/* 3. Bottom Legal, Copyright & Regional Reach */}
-      <div className="border-t border-slate-800/80 bg-[#03060d] py-5 sm:py-6 relative z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs sm:text-sm text-slate-400 text-center md:text-left">
+      <div
+        className="border-t border-rose-950/60 relative z-10 py-5 sm:py-6 bg-cover bg-center bg-no-repeat overflow-hidden"
+        style={{ backgroundImage: "url('/images/footer-bottom-bg.png')" }}
+      >
+        {/* Subtle dark tint overlay for enhanced text readability */}
+        <div className="absolute inset-0 bg-black/35 pointer-events-none" />
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs sm:text-sm text-slate-200 text-center md:text-left relative z-10">
           <div className="space-y-1">
             <p className="leading-relaxed">
               © 2026 <strong className="text-amber-300 font-bold">Techmasters Innovations Pvt. Ltd.</strong> All rights reserved.
             </p>
-            <p className="text-[11px] text-slate-500">
+            <p className="text-[11px] text-rose-100/80">
               Covenant Nest • A sacred initiative headquartered in Bidar, Karnataka, India.
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-xs font-medium text-slate-300">
+          <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-xs font-medium text-slate-200">
             <Link href="/privacy" className="hover:text-amber-300 transition-colors">
               Privacy Policy
             </Link>
-            <span className="text-slate-600">|</span>
+            <span className="text-rose-300/40">|</span>
             <Link href="/terms" className="hover:text-amber-300 transition-colors">
               Terms of Service
             </Link>
-            <span className="text-slate-600">|</span>
+            <span className="text-rose-300/40">|</span>
             <Link href="/refund-policy" className="hover:text-amber-300 transition-colors">
               Refund &amp; Cancellation Policy
             </Link>
