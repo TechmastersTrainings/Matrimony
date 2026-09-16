@@ -5,9 +5,7 @@ import Link from 'next/link';
 
 const stories = [
   {
-    names: 'Preethi & Emmanuel',
     fellowship: 'Methodist Church in India (MCI) • Bidar & Bengaluru',
-    year: 'Blessed Covenant 2025',
     image: '/images/christian-couple-traditional.jpg',
     quote:
       'We wanted a platform that respected Christian family traditions and wouldn’t treat marriage like casual dating. From our first prayerful interest to the day our parents met with our pastor, Covenant Nest gave us complete safety, dignity, and peace of mind.',
@@ -21,9 +19,7 @@ const stories = [
     },
   },
   {
-    names: 'Dr. Rachel & Joshua',
     fellowship: 'Church of South India (CSI) • Bengaluru Diocese',
-    year: 'Blessed Covenant 2025',
     image: '/images/indian-christian-wedding-couple.jpg',
     quote:
       'Finding a life partner who understands both medical healthcare duties and our deep commitment to Christ seemed difficult. The mutual consent verification made our parents immediately comfortable and confident.',
@@ -37,9 +33,7 @@ const stories = [
     },
   },
   {
-    names: 'Anita & Stephen Paul',
     fellowship: 'Roman Catholic & Protestant Fellowship • Pan-India',
-    year: 'Blessed Covenant 2024',
     image: '/images/christian-church-altar-wedding.jpg',
     quote:
       'The "Till You Marry" commitment gave our families zero pressure. We took our time praying through the match, involved our elders and parish priest, and celebrated our holy matrimony before the altar of God.',
@@ -123,7 +117,7 @@ export function BlessedStoriesSection() {
             <div className="relative w-full max-w-sm aspect-[4/4.2] rounded-2xl overflow-hidden shadow-md border-2 border-white ring-1 ring-charcoal-200/80 group">
               <img
                 src={current.image}
-                alt={current.names}
+                alt={current.fellowship}
                 className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-charcoal-950/70 via-transparent to-transparent pointer-events-none" />
@@ -135,10 +129,10 @@ export function BlessedStoriesSection() {
 
               <div className="absolute bottom-3 left-3 right-3 bg-white/95 backdrop-blur-md p-3 rounded-xl border border-white/60 shadow-md">
                 <span className="text-xs font-serif font-extrabold text-charcoal-900 block">
-                  {current.names}
-                </span>
-                <span className="text-[11px] text-slate-500 line-clamp-1">
                   {current.fellowship}
+                </span>
+                <span className="text-[11px] text-emerald-800 font-semibold block mt-0.5">
+                  Church &amp; Pastoral Verified Fellowship
                 </span>
               </div>
             </div>
@@ -152,7 +146,7 @@ export function BlessedStoriesSection() {
                 {current.quote}
               </p>
               <footer className="text-xs font-bold text-rose-800 uppercase tracking-wider">
-                — {current.names}, {current.year}
+                — Christian Family Testimony • {current.fellowship}
               </footer>
             </blockquote>
 
