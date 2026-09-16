@@ -173,6 +173,15 @@ export function Footer() {
                   <span>About CovenantNest</span>
                 </Link>
               </li>
+              <li>
+                <Link
+                  href="/faq"
+                  className="hover:text-amber-300 hover:translate-x-1 transition-all inline-flex items-center gap-2"
+                >
+                  <span className="text-amber-400 text-xs font-bold">›</span>
+                  <span>Family FAQs</span>
+                </Link>
+              </li>
             </ul>
           </div>
 

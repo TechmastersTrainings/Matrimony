@@ -107,6 +107,17 @@ export function Navbar() {
               About
             </Link>
 
+            <Link
+              href="/faq"
+              className={`text-[11px] xl:text-xs font-semibold px-2.5 xl:px-3 py-1.5 rounded-full transition-all duration-200 ${
+                pathname === '/faq'
+                  ? 'bg-white text-burgundy-900 shadow-xs font-bold'
+                  : 'text-stone-600 hover:text-stone-900 hover:bg-white/60'
+              }`}
+            >
+              FAQ
+            </Link>
+
             {isAuthenticated && (
               <>
                 <Link
@@ -233,6 +244,14 @@ export function Navbar() {
               className="px-3.5 py-2 rounded-xl text-stone-800 hover:bg-stone-100/80 hover:text-burgundy-800 transition-colors flex items-center justify-between"
             >
               <span>About CovenantNest</span>
+              <span className="text-xs text-stone-400">›</span>
+            </Link>
+            <Link
+              href="/faq"
+              onClick={() => setMobileMenuOpen(false)}
+              className="px-3.5 py-2 rounded-xl text-stone-800 hover:bg-stone-100/80 hover:text-burgundy-800 transition-colors flex items-center justify-between"
+            >
+              <span>Frequently Asked Questions (FAQ)</span>
               <span className="text-xs text-stone-400">›</span>
             </Link>
 

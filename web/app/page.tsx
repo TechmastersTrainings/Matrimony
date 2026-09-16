@@ -4,7 +4,6 @@ import { FeaturedProfiles } from '../components/homepage/FeaturedProfiles';
 import { HowItWorksSection } from '../components/homepage/HowItWorksSection';
 import { MatrimonyCovenantSection } from '../components/homepage/MatrimonyCovenantSection';
 import { BlessedStoriesSection } from '../components/homepage/BlessedStoriesSection';
-import { ChristianMatrimonyFAQ } from '../components/homepage/ChristianMatrimonyFAQ';
 import { ScriptureSanctuarySection } from '../components/homepage/ScriptureSanctuarySection';
 import { AboutTechmastersSection } from '../components/homepage/AboutTechmastersSection';
 import { MatrimonyInvitationBanner } from '../components/homepage/MatrimonyInvitationBanner';
@@ -27,10 +26,7 @@ export default function HomePage() {
       {/* 6. Blessed Christian Unions & Real Stories */}
       <BlessedStoriesSection />
 
-      {/* 7. Christian Matrimony FAQ Accordion for Families */}
-      <ChristianMatrimonyFAQ />
-
-      {/* 8. Scripture Sanctuary: 1 Corinthians 13:4-8 & Ecclesiastes 4:12 */}
+      {/* 7. Scripture Sanctuary: 1 Corinthians 13:4-8 & Ecclesiastes 4:12 */}
       <ScriptureSanctuarySection />
 
       {/* 9. About Us & Techmasters Innovations Backbone */}
