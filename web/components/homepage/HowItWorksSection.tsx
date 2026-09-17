@@ -31,7 +31,7 @@ export function HowItWorksSection() {
       subtitle: 'Family & Pastoral Blessing',
       description:
         'When interest is mutually accepted, verified family phone numbers and complete background are unlocked. Families meet, pray together, and proceed toward holy matrimony.',
-      image: '/images/christian-church-altar-wedding.jpg',
+      image: '/images/covenant-wedding-couple.jpg',
       badge: 'Step 3 • Holy Covenant',
       badgeColor: 'text-emerald-900 bg-emerald-100 border-emerald-200',
     },

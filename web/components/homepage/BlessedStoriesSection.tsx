@@ -24,7 +24,7 @@ const galleryItems: GalleryItem[] = [
     title: 'Holy Vows Before the Altar of God',
     category: 'Sacred Church Ceremony',
     fellowship: 'Methodist Church in India (MCI), CSI & Catholic Traditions',
-    image: '/images/christian-church-altar-wedding.jpg',
+    image: '/images/covenant-wedding-couple.jpg',
     description:
       'Christian marriage begins at the altar in reverence and prayer. Standing before God and the church fellowship, bride and groom exchange sacred vows, receive pastoral blessings, and dedicate their lifelong union to Christ.',
     highlight1: {
