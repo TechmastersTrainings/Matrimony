@@ -49,7 +49,7 @@ export function Logo({
         
         <div className="flex flex-wrap items-center gap-2 mt-1">
           <span className={`font-sans font-black tracking-[0.16em] uppercase ${lightText ? 'text-cyan-300' : 'text-cyan-800'} ${sizeClasses.sub}`}>
-            CHRISTIAN MATRIMONY • BIDAR &amp; PAN INDIA
+            CHRISTIAN MATRIMONY • BIDAR &amp; KARNATAKA
           </span>
 
           {showTechmastersTag && (

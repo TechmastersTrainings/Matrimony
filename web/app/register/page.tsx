@@ -114,7 +114,7 @@ function RegisterFormContent() {
             <span className="text-orange-400">•</span>
             <span>Christian Matrimony</span>
             <span className="text-emerald-500">•</span>
-            <span className="text-emerald-800 font-medium text-[11px]">Bidar &amp; Pan-India</span>
+            <span className="text-emerald-800 font-medium text-[11px]">Bidar &amp; Karnataka</span>
           </div>
 
           <h1 className="text-3xl sm:text-4xl font-serif font-extrabold text-charcoal-900 tracking-tight">

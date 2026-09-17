@@ -6,11 +6,11 @@ import Link from 'next/link';
 const heroSlides = [
   {
     image: '/images/indian-christian-wedding-couple.jpg',
-    badge: 'Christian Matrimony • Bidar & Pan-India',
+    badge: 'Christian Matrimony • Bidar & Karnataka',
     title: 'Where Holy Covenants Build Blessed Homes',
     highlight: 'Blessed Homes',
     subtitle:
-      'Connecting devout Christian brides & bridegrooms across Karnataka, Telangana, and Pan-India through prayerful, verified matrimonial introductions.',
+      'Connecting devout Christian brides & bridegrooms across Bidar, Karnataka, and beyond through prayerful, verified matrimonial introductions.',
     scripture: '“Therefore what God has joined together, let no one separate.” — Mark 10:9',
   },
   {
@@ -32,7 +32,7 @@ const heroSlides = [
     scripture: '“Charm is deceptive, and beauty is fleeting; but a woman who fears the Lord is to be praised.” — Prov 31:30',
   },
   {
-    image: '/images/christian-wedding-vows-rings.jpg',
+    image: '/images/christian-wedding-rings-bible.jpg',
     badge: '100% Confidential & Secure',
     title: 'Mutual Family Consent & Protected Privacy',
     highlight: 'Protected Privacy',
@@ -41,7 +41,7 @@ const heroSlides = [
     scripture: '“Above all, love each other deeply, because love covers over a multitude of sins.” — 1 Peter 4:8',
   },
   {
-    image: '/images/christian-wedding-rings-bible.jpg',
+    image: '/images/covenant-sunset-couple.jpg',
     badge: 'Scriptural Foundation',
     title: 'A Cord of Three Strands is Not Quickly Broken',
     highlight: 'Three Strands',
@@ -52,7 +52,6 @@ const heroSlides = [
 ];
 
 export function MatrimonyHeroSection() {
-  // Hero carousel state
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
 
@@ -60,21 +59,29 @@ export function MatrimonyHeroSection() {
     if (isPaused) return;
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
-    }, 5000);
+    }, 6000);
     return () => clearInterval(interval);
   }, [isPaused]);
 
   const activeSlide = heroSlides[currentSlide];
 
+  const handlePrev = () => {
+    setCurrentSlide((prev) => (prev - 1 + heroSlides.length) % heroSlides.length);
+  };
+
+  const handleNext = () => {
+    setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
+  };
+
   return (
-    <section className="relative w-full overflow-hidden bg-[#fbf9f5]">
-      {/* 1. Full-Width Lighter Banner Carousel Container */}
+    <section className="relative w-full overflow-hidden bg-[#fbf9f5] group">
+      {/* Full-Width Carousel Container */}
       <div
-        className="relative w-full min-h-[560px] sm:min-h-[620px] lg:min-h-[660px] flex items-center select-none"
+        className="relative w-full min-h-[580px] sm:min-h-[640px] lg:min-h-[680px] flex items-center select-none"
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
       >
-        {/* Carousel Background Images with Natural Light & Soft Luminous Gradient */}
+        {/* High-Resolution Carousel Slides with Natural Color Vibrancy */}
         {heroSlides.map((slide, idx) => (
           <div
             key={idx}
@@ -82,49 +89,53 @@ export function MatrimonyHeroSection() {
               currentSlide === idx ? 'opacity-100 z-0' : 'opacity-0 pointer-events-none -z-10'
             }`}
           >
+            {/* The High-Res Photo: positioned cleanly on the right half, razor sharp */}
             <img
               src={slide.image}
               alt={slide.title}
-              className="w-full h-full object-cover object-center lg:object-top transform scale-105 transition-transform duration-[6000ms] ease-out filter brightness-105 contrast-100"
+              className="w-full h-full object-cover object-[75%_25%] sm:object-[80%_30%] lg:object-[85%_35%] transform scale-100 transition-transform duration-[7000ms] ease-out filter contrast-[1.03] saturate-[1.05]"
             />
-            {/* Lighter, Softer Gradient Overlay: Allows the wedding photo to be brightly seen while keeping text razor-sharp */}
-            <div className="absolute inset-0 bg-gradient-to-r from-[#fbf9f5]/95 via-[#fbf9f5]/80 to-[#fbf9f5]/25 lg:to-transparent" />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#fbf9f5]/90 via-transparent to-transparent" />
+
+            {/* Left-Side Directional Gradient: Shields text on the left while leaving the couple 100% visible & bright on the right */}
+            <div className="absolute inset-y-0 left-0 w-full md:w-[65%] lg:w-[50%] bg-gradient-to-r from-[#fbf9f5] via-[#fbf9f5]/95 to-transparent z-10" />
+
+            {/* Subtle bottom edge blend into ivory canvas */}
+            <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-[#fbf9f5] via-[#fbf9f5]/60 to-transparent z-10" />
           </div>
         ))}
 
-        {/* Main Content Area: Cinematic Headline, Scripture & CTAs (No arrow buttons) */}
-        <div className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-24">
-          <div className="max-w-3xl flex flex-col justify-center text-left space-y-4 sm:space-y-6 text-slate-900">
+        {/* Content Container (Left-Aligned with High Contrast) */}
+        <div className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-18 lg:py-22">
+          <div className="max-w-2xl flex flex-col justify-center text-left space-y-4 sm:space-y-5 text-[#1e1b18]">
             
-            {/* Badge with Light Styling */}
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/95 backdrop-blur-md border border-orange-200/90 text-xs sm:text-sm font-extrabold tracking-wide uppercase text-orange-900 w-fit shadow-xs">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping" />
+            {/* Badge */}
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/95 backdrop-blur-md border border-amber-300/80 text-xs sm:text-sm font-bold tracking-wide uppercase text-[#8c1936] w-fit shadow-xs">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
               <span>{activeSlide.badge}</span>
             </div>
 
-            {/* Dynamic H1 Headline with Rich Contrast */}
-            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.12] font-brand text-slate-950 drop-shadow-2xs">
+            {/* Headline */}
+            <h1 className="text-3xl sm:text-5xl lg:text-[54px] font-extrabold tracking-tight leading-[1.14] font-brand text-stone-950">
               {activeSlide.title}
             </h1>
 
-            {/* Dynamic Scripture Quote with Warm Light Accent */}
-            <div className="border-l-4 border-orange-500 pl-4 py-2 bg-gradient-to-r from-orange-50/95 via-amber-50/80 to-transparent backdrop-blur-xs rounded-r-xl max-w-2xl shadow-2xs">
-              <p className="text-xs sm:text-sm md:text-base font-serif italic text-slate-800 leading-relaxed font-medium">
+            {/* Scripture Quote Box */}
+            <div className="border-l-4 border-[#8c1936] pl-4 py-2 bg-gradient-to-r from-amber-50/90 via-rose-50/60 to-transparent backdrop-blur-xs rounded-r-xl max-w-xl shadow-2xs">
+              <p className="text-xs sm:text-sm md:text-base font-serif italic text-stone-800 leading-relaxed font-medium">
                 {activeSlide.scripture}
               </p>
             </div>
 
-            {/* Narrative Subtitle */}
-            <p className="text-sm sm:text-base md:text-lg text-slate-700 max-w-2xl font-normal leading-relaxed">
+            {/* Subtitle */}
+            <p className="text-sm sm:text-base md:text-lg text-stone-700 max-w-xl font-normal leading-relaxed">
               {activeSlide.subtitle}
             </p>
 
-            {/* Action Links */}
-            <div className="pt-2 flex flex-wrap items-center gap-4">
+            {/* Action Buttons */}
+            <div className="pt-2 flex flex-wrap items-center gap-3.5">
               <Link
                 href="/discover"
-                className="inline-flex items-center gap-2.5 bg-gradient-to-r from-burgundy-700 via-rose-600 to-orange-600 hover:from-burgundy-600 hover:to-orange-500 text-white px-7 py-3 rounded-xl font-extrabold text-sm sm:text-base shadow-md shadow-orange-950/15 border border-orange-400/40 transition-all hover:scale-103 cursor-pointer"
+                className="inline-flex items-center gap-2 bg-gradient-to-r from-[#8c1936] via-[#a31d40] to-[#c59b27] hover:from-[#771932] hover:to-[#8c1936] text-white px-6 py-3 rounded-full font-bold text-sm sm:text-base shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5 cursor-pointer"
               >
                 <span>Explore Verified Profiles</span>
                 <span>→</span>
@@ -132,16 +143,16 @@ export function MatrimonyHeroSection() {
 
               <Link
                 href="/register"
-                className="inline-flex items-center gap-2 bg-white hover:bg-slate-50 text-slate-900 px-7 py-3 rounded-xl font-bold text-sm sm:text-base border border-slate-300/80 shadow-xs backdrop-blur-md transition-all hover:scale-103 cursor-pointer"
+                className="inline-flex items-center gap-1.5 bg-white hover:bg-stone-50 text-stone-900 px-6 py-3 rounded-full font-bold text-sm sm:text-base border border-[#d8c8b6] shadow-xs backdrop-blur-md transition-all hover:border-[#8c1936] cursor-pointer"
               >
-                <span>Register Free Candidate</span>
-                <span>+</span>
+                <span>Register Free</span>
+                <span className="text-[#8c1936] font-extrabold">+</span>
               </Link>
             </div>
 
-            {/* Automatic Slide Counter & Indicator Dots (No manual arrow buttons) */}
-            <div className="flex items-center gap-3 pt-4">
-              <span className="text-xs font-mono font-bold tracking-widest text-slate-600">
+            {/* Interactive Carousel Progress & Indicators */}
+            <div className="flex items-center gap-4 pt-3">
+              <span className="text-xs font-mono font-bold tracking-wider text-stone-600">
                 {String(currentSlide + 1).padStart(2, '0')} / {String(heroSlides.length).padStart(2, '0')}
               </span>
 
@@ -152,8 +163,10 @@ export function MatrimonyHeroSection() {
                     type="button"
                     onClick={() => setCurrentSlide(dotIdx)}
                     aria-label={`Jump to slide ${dotIdx + 1}`}
-                    className={`h-2 rounded-full transition-all cursor-pointer ${
-                      currentSlide === dotIdx ? 'w-8 bg-orange-600' : 'w-2.5 bg-slate-300 hover:bg-slate-400'
+                    className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
+                      currentSlide === dotIdx
+                        ? 'w-8 bg-gradient-to-r from-[#8c1936] to-[#c59b27]'
+                        : 'w-2 bg-stone-300 hover:bg-stone-400'
                     }`}
                   />
                 ))}
@@ -162,6 +175,25 @@ export function MatrimonyHeroSection() {
 
           </div>
         </div>
+
+        {/* Carousel Navigation Arrows (Visible on hover on larger screens) */}
+        <button
+          type="button"
+          onClick={handlePrev}
+          aria-label="Previous slide"
+          className="hidden md:flex absolute left-4 z-30 w-10 h-10 rounded-full bg-white/80 hover:bg-white text-stone-800 shadow-md border border-stone-200 items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 cursor-pointer"
+        >
+          ‹
+        </button>
+
+        <button
+          type="button"
+          onClick={handleNext}
+          aria-label="Next slide"
+          className="hidden md:flex absolute right-4 z-30 w-10 h-10 rounded-full bg-white/80 hover:bg-white text-stone-800 shadow-md border border-stone-200 items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 cursor-pointer"
+        >
+          ›
+        </button>
       </div>
     </section>
   );

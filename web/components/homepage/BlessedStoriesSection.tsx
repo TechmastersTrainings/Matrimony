@@ -70,8 +70,8 @@ const galleryItems: GalleryItem[] = [
   },
   {
     title: 'Diverse Fellowships Across India',
-    category: 'Pan-India Christian Community',
-    fellowship: 'Bidar, Karnataka, Telangana & Pan-India Dioceses',
+    category: 'Christian Community',
+    fellowship: 'Bidar, Karnataka & Telangana Dioceses',
     image: '/images/indian-christian-wedding-couple.jpg',
     description:
       'CovenantNest respectfully brings together Christian brides, grooms, and prayerful families across Methodist (MCI), CSI, Roman Catholic, Baptist, and Pentecostal fellowships, preserving distinct church heritages.',

@@ -226,7 +226,7 @@ class EmailService:
         <strong>What this means for you:</strong>
       </p>
       <ul style="color: #475569; font-size: 13px; padding-left: 20px; line-height: 1.8;">
-        <li>Your profile is now discoverable by verified Christian brides & grooms across Bidar, Karnataka, and Pan-India.</li>
+        <li>Your profile is now discoverable by verified Christian brides & grooms across Bidar, Karnataka, and beyond.</li>
         <li>You can browse profiles, bookmark candidates, and express matrimonial interest.</li>
         <li>Your contact details remain confidential and protected under our controlled reveal policy.</li>
       </ul>

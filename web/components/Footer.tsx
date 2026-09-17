@@ -120,7 +120,7 @@ export function Footer() {
                   className="hover:text-amber-300 hover:translate-x-1 transition-all inline-flex items-center gap-2"
                 >
                   <span className="text-amber-400 text-xs font-bold">›</span>
-                  <span>All Pan-India Christian Marriages</span>
+                  <span>All Verified Christian Marriages</span>
                 </Link>
               </li>
             </ul>

@@ -598,7 +598,7 @@ export default function DiscoverPage() {
                   onChange={(e) => setDistrict(e.target.value)}
                   className="w-full text-xs font-medium rounded-xl border border-[#ded0ba] p-3 bg-white text-slate-900 focus:outline-none focus:border-burgundy-600 shadow-xs"
                 >
-                  <option value="">All Locations (Pan-India)</option>
+                  <option value="">All Locations</option>
                   <option value="Bidar">Bidar (Karnataka)</option>
                   <option value="Bengaluru">Bengaluru</option>
                   <option value="Kalaburagi">Kalaburagi / Gulbarga</option>

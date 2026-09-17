@@ -6,7 +6,7 @@ import { TopLoadingBar } from '../components/TopLoadingBar';
 import { InactivityHandler } from '../components/InactivityHandler';
 
 export const metadata = {
-  title: 'CovenantNest | Blessed Christian Matrimony | Bidar, Karnataka & Pan-India',
+  title: 'CovenantNest | Blessed Christian Matrimony | Bidar & Karnataka',
   description:
     'CovenantNest is a reverent Christian matrimonial sanctuary where holy covenants build blessed homes. Connecting brides, bridegrooms, and prayerful families across Bidar, Karnataka, and India.',
   keywords: [

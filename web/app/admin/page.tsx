@@ -255,7 +255,7 @@ function AdminDashboardContent() {
               {metrics?.total_grooms ?? profiles.filter((p) => p.gender === 'MALE').length}G
             </div>
             <span className="text-xs text-orange-900/80 font-medium block">
-              Bidar &amp; Pan-India Candidates
+              Bidar &amp; Karnataka Candidates
             </span>
           </div>
 
@@ -660,7 +660,7 @@ function AdminDashboardContent() {
               <div className="space-y-2 text-xs">
                 <div className="flex items-center justify-between p-3 rounded-xl bg-emerald-50/70 border border-emerald-200">
                   <span className="font-bold text-emerald-950">Active Region Coverage:</span>
-                  <span className="font-mono text-emerald-800">Bidar, Karnataka &amp; Pan-India</span>
+                  <span className="font-mono text-emerald-800">Bidar, Karnataka &amp; Beyond</span>
                 </div>
                 <div className="flex items-center justify-between p-3 rounded-xl bg-cyan-50/70 border border-cyan-200">
                   <span className="font-bold text-cyan-950">Fake Profile Detections:</span>

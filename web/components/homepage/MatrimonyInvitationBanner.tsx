@@ -46,7 +46,7 @@ export function MatrimonyInvitationBanner() {
         </div>
 
         <p className="text-[11px] sm:text-xs text-cyan-200/90 pt-0.5">
-          Serving Christian families across Bidar, Bengaluru, Kalaburagi, Hyderabad &amp; Pan-India.
+          Serving Christian families across Bidar, Bengaluru, Kalaburagi, Hyderabad &amp; beyond.
         </p>
       </div>
     </section>
