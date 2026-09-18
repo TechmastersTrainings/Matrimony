@@ -29,7 +29,15 @@ const heroSlides = [
     scripture: '“Charm is deceptive, and beauty is fleeting; but a woman who fears the Lord is to be praised.” — Prov 31:30',
   },
   {
-    image: '/images/christian-wedding-rings-bible.jpg',
+    image: '/images/christian-wedding-sunset.png',
+    badge: 'Prayer & Fellowship',
+    title: 'Blessed Unions Nurtured in Grace & Faith',
+    subtitle:
+      'Connecting prayerful Christian families across Bidar, Bengaluru, Kalaburagi, Hyderabad & beyond with complete trust and transparency.',
+    scripture: '“Be completely humble and gentle; be patient, bearing with one another in love.” — Eph 4:2',
+  },
+  {
+    image: '/images/christian-wedding-vows-rings.jpg',
     badge: '100% Confidential & Secure',
     title: 'Mutual Family Consent & Protected Privacy',
     subtitle:
@@ -37,7 +45,7 @@ const heroSlides = [
     scripture: '“Above all, love each other deeply, because love covers over a multitude of sins.” — 1 Peter 4:8',
   },
   {
-    image: '/images/covenant-sunset-couple.jpg',
+    image: '/images/christian-wedding-rings-bible.jpg',
     badge: 'Scriptural Foundation',
     title: 'A Cord of Three Strands is Not Quickly Broken',
     subtitle:
@@ -72,11 +80,11 @@ export function MatrimonyHeroSection() {
     <section className="relative w-full overflow-hidden bg-[#fbf9f5]">
       {/* Full-Width Carousel Container with Subtle Navigation Controls */}
       <div
-        className="group relative w-full min-h-[560px] sm:min-h-[620px] lg:min-h-[660px] flex items-center select-none"
+        className="group relative w-full min-h-[520px] sm:min-h-[580px] lg:min-h-[660px] flex items-center select-none"
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
       >
-        {/* 1376×768 HD Carousel Background Images */}
+        {/* 6 High-Definition Carousel Background Images */}
         {heroSlides.map((slide, idx) => (
           <div
             key={idx}
