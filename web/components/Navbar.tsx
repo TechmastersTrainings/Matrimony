@@ -60,19 +60,20 @@ export function Navbar() {
   return (
     <header className="fixed top-0 left-0 right-0 w-full z-50 transition-all duration-200">
       <div
-        className={`w-full h-20 transition-all duration-300 ${
-          scrolled
-            ? 'bg-[#150a0f]/98 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.45),0_1px_0_rgba(197,155,39,0.15)] border-b border-[#3b1926]'
-            : 'bg-[#1c0d14]/95 backdrop-blur-md border-b border-[#3b1926]/80'
+        style={{
+          backgroundColor: scrolled ? 'rgba(21, 10, 15, 0.98)' : 'rgba(28, 13, 20, 0.95)',
+        }}
+        className={`w-full h-16 sm:h-20 transition-all duration-300 backdrop-blur-xl border-b border-[#3b1926] ${
+          scrolled ? 'shadow-[0_8px_32px_rgba(0,0,0,0.5)]' : 'shadow-md'
         }`}
       >
-        <div className="max-w-7xl mx-auto h-full px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-6">
-          {/* Brand Logo with Pure Bright White Luminous Text */}
+        <div className="max-w-7xl mx-auto h-full px-3 sm:px-6 lg:px-8 flex items-center justify-between gap-3 sm:gap-6">
+          {/* Brand Logo - Compact on mobile */}
           <Link href="/" className="shrink-0 transition-opacity hover:opacity-90">
             <Logo size="md" showTechmastersTag={false} lightText={true} />
           </Link>
 
-          {/* Desktop Center Navigation */}
+          {/* Desktop Center Navigation Links */}
           <nav className="hidden lg:flex items-center gap-1 xl:gap-2">
             {navLinks.map((link) => {
               const active = isActive(link.href);
@@ -114,7 +115,7 @@ export function Navbar() {
             )}
           </nav>
 
-          {/* Right CTAs + Mobile/Tablet Menu Button */}
+          {/* Right Action Buttons */}
           <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             {isAdmin && (
               <Link
@@ -155,7 +156,7 @@ export function Navbar() {
               </>
             )}
 
-            {/* Mobile / Tablet Hamburger Button */}
+            {/* Mobile / Tablet Hamburger Toggle Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-label="Toggle navigation menu"
@@ -175,9 +176,12 @@ export function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Menu Drawer with Dark Luxury Theme */}
+      {/* Mobile Menu Drawer - Dark Luxury Theme */}
       {mobileMenuOpen && (
-        <div className="lg:hidden bg-[#1c0d14]/98 backdrop-blur-2xl border-b border-[#3b1926] px-5 sm:px-8 py-4 space-y-3 shadow-2xl animate-in fade-in slide-in-from-top-2 duration-150 text-stone-200 max-h-[calc(100vh-5rem)] overflow-y-auto">
+        <div
+          style={{ backgroundColor: 'rgba(21, 10, 15, 0.98)' }}
+          className="lg:hidden border-b border-[#3b1926] px-5 sm:px-8 py-4 space-y-3 shadow-2xl animate-in fade-in slide-in-from-top-2 duration-150 text-stone-200 max-h-[calc(100vh-4rem)] overflow-y-auto"
+        >
           <nav className="flex flex-col space-y-1">
             {navLinks.map((link) => {
               const active = isActive(link.href);

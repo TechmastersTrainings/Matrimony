@@ -53,8 +53,11 @@ export function Logo({
         </div>
         
         <div className="flex flex-wrap items-center gap-2 mt-1">
-          <span className={`font-sans font-black tracking-[0.16em] uppercase ${lightText ? 'text-cyan-300' : 'text-cyan-800'} ${sizeClasses.sub}`}>
+          <span className={`font-sans font-black tracking-[0.16em] uppercase ${lightText ? 'text-cyan-300' : 'text-cyan-800'} ${sizeClasses.sub} hidden sm:inline-block`}>
             CHRISTIAN MATRIMONY • BIDAR &amp; KARNATAKA
+          </span>
+          <span className={`font-sans font-black tracking-wider uppercase ${lightText ? 'text-cyan-300' : 'text-cyan-800'} text-[8.5px] sm:hidden`}>
+            CHRISTIAN MATRIMONY
           </span>
 
           {showTechmastersTag && (
