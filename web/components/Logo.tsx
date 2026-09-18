@@ -17,7 +17,12 @@ export function Logo({
 }: LogoProps) {
   const sizeClasses = {
     sm: { icon: 'w-8 h-8', text: 'text-lg sm:text-xl', sub: 'text-[9px]', tag: 'text-[8px]' },
-    md: { icon: 'w-11 h-11 sm:w-12 sm:h-12', text: 'text-2xl sm:text-3xl', sub: 'text-[10px] sm:text-[11px]', tag: 'text-[9px] sm:text-[10px]' },
+    md: {
+      icon: 'w-9 h-9 sm:w-11 sm:h-11 md:w-12 md:h-12',
+      text: 'text-xl sm:text-2xl md:text-3xl',
+      sub: 'text-[8.5px] sm:text-[10px] md:text-[11px] tracking-[0.1em] sm:tracking-[0.16em]',
+      tag: 'text-[8px] sm:text-[9px] md:text-[10px]',
+    },
     lg: { icon: 'w-14 h-14 sm:w-16 sm:h-16', text: 'text-3xl sm:text-4xl', sub: 'text-[12px]', tag: 'text-[11px]' },
     xl: { icon: 'w-18 h-18 sm:w-20 sm:h-20', text: 'text-4xl sm:text-5xl', sub: 'text-[14px]', tag: 'text-[12px]' },
   }[size];

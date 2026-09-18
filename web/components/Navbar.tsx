@@ -114,12 +114,12 @@ export function Navbar() {
             )}
           </nav>
 
-          {/* Desktop Right CTAs */}
-          <div className="hidden sm:flex items-center gap-3 shrink-0">
+          {/* Right CTAs + Mobile/Tablet Menu Button */}
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             {isAdmin && (
               <Link
                 href="/admin"
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-slate-950 text-amber-300 hover:bg-slate-900 border border-amber-400/40 transition-colors shadow-2xs"
+                className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-slate-950 text-amber-300 hover:bg-slate-900 border border-amber-400/40 transition-colors shadow-2xs"
               >
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
                 <span>Admin</span>
@@ -129,7 +129,7 @@ export function Navbar() {
             {isAuthenticated ? (
               <button
                 onClick={handleLogout}
-                className="inline-flex items-center gap-1.5 text-sm font-semibold text-stone-300 hover:text-rose-300 px-3.5 py-2 rounded-full hover:bg-rose-500/15 border border-white/10 hover:border-rose-400/30 transition-all duration-150"
+                className="hidden sm:inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-stone-300 hover:text-rose-300 px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-full hover:bg-rose-500/15 border border-white/10 hover:border-rose-400/30 transition-all duration-150"
               >
                 <svg className="w-4 h-4 text-stone-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
@@ -140,28 +140,26 @@ export function Navbar() {
               <>
                 <Link
                   href="/login"
-                  className="text-sm font-semibold text-stone-300 hover:text-amber-300 px-3.5 py-2 rounded-full hover:bg-white/10 transition-colors"
+                  className="hidden sm:inline-block text-xs sm:text-sm font-semibold text-stone-300 hover:text-amber-300 px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-full hover:bg-white/10 transition-colors"
                 >
                   Login
                 </Link>
 
                 <Link
                   href="/register"
-                  className="inline-flex items-center gap-1.5 bg-gradient-to-r from-[#8c1936] via-[#a82245] to-[#771932] hover:from-[#a82245] hover:to-[#8c1936] text-white text-sm font-bold px-5 py-2.5 rounded-full shadow-md shadow-rose-950/40 border border-amber-400/40 hover:border-amber-300 transition-all duration-150 transform hover:-translate-y-0.5"
+                  className="inline-flex items-center gap-1 sm:gap-1.5 bg-gradient-to-r from-[#8c1936] via-[#a82245] to-[#771932] hover:from-[#a82245] hover:to-[#8c1936] text-white text-xs sm:text-sm font-bold px-3 sm:px-5 py-1.5 sm:py-2 rounded-full shadow-md shadow-rose-950/40 border border-amber-400/40 hover:border-amber-300 transition-all duration-150 transform hover:-translate-y-0.5"
                 >
                   <span>Register Free</span>
-                  <span className="text-amber-300">→</span>
+                  <span className="text-amber-300 hidden sm:inline">→</span>
                 </Link>
               </>
             )}
-          </div>
 
-          {/* Mobile Hamburger Button */}
-          <div className="lg:hidden flex items-center">
+            {/* Mobile / Tablet Hamburger Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-label="Toggle navigation menu"
-              className="p-2 rounded-xl text-stone-200 hover:text-amber-300 hover:bg-white/10 transition-colors"
+              className="lg:hidden p-2 rounded-xl text-stone-200 hover:text-amber-300 hover:bg-white/10 transition-colors cursor-pointer"
             >
               {mobileMenuOpen ? (
                 <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -179,7 +177,7 @@ export function Navbar() {
 
       {/* Mobile Menu Drawer with Dark Luxury Theme */}
       {mobileMenuOpen && (
-        <div className="lg:hidden bg-[#1c0d14]/98 backdrop-blur-2xl border-b border-[#3b1926] px-5 py-4 space-y-3 shadow-2xl animate-in fade-in slide-in-from-top-2 duration-150 text-stone-200">
+        <div className="lg:hidden bg-[#1c0d14]/98 backdrop-blur-2xl border-b border-[#3b1926] px-5 sm:px-8 py-4 space-y-3 shadow-2xl animate-in fade-in slide-in-from-top-2 duration-150 text-stone-200 max-h-[calc(100vh-5rem)] overflow-y-auto">
           <nav className="flex flex-col space-y-1">
             {navLinks.map((link) => {
               const active = isActive(link.href);

@@ -95,24 +95,24 @@ export function MatrimonyHeroSection() {
           </div>
         ))}
 
-        {/* Previous Slide Arrow Button (‹) */}
+        {/* Previous Slide Arrow Button (‹) - shown on tablet and desktop */}
         <button
           type="button"
           onClick={prevSlide}
           aria-label="Previous Slide"
-          className="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full bg-white/80 hover:bg-white text-stone-800 hover:text-[#8c1936] shadow-lg border border-stone-200/80 backdrop-blur-md flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200 cursor-pointer hover:scale-105"
+          className="hidden md:flex absolute left-4 lg:left-6 top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full bg-white/85 hover:bg-white text-stone-800 hover:text-[#8c1936] shadow-lg border border-stone-200/80 backdrop-blur-md items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200 cursor-pointer hover:scale-105"
         >
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
           </svg>
         </button>
 
-        {/* Next Slide Arrow Button (›) */}
+        {/* Next Slide Arrow Button (›) - shown on tablet and desktop */}
         <button
           type="button"
           onClick={nextSlide}
           aria-label="Next Slide"
-          className="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full bg-white/80 hover:bg-white text-stone-800 hover:text-[#8c1936] shadow-lg border border-stone-200/80 backdrop-blur-md flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200 cursor-pointer hover:scale-105"
+          className="hidden md:flex absolute right-4 lg:right-6 top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full bg-white/85 hover:bg-white text-stone-800 hover:text-[#8c1936] shadow-lg border border-stone-200/80 backdrop-blur-md items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200 cursor-pointer hover:scale-105"
         >
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
@@ -120,36 +120,36 @@ export function MatrimonyHeroSection() {
         </button>
 
         {/* Main Content Area: Cinematic Headline, Scripture & CTAs */}
-        <div className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-24">
-          <div className="max-w-2xl lg:max-w-xl flex flex-col justify-center text-left space-y-4 sm:space-y-5 text-slate-900">
+        <div className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 md:py-20 lg:py-24">
+          <div className="max-w-2xl lg:max-w-xl flex flex-col justify-center text-left space-y-3.5 sm:space-y-5 text-slate-900">
             {/* Badge with Gold/Green Highlight */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/95 backdrop-blur-md border border-amber-200/90 text-xs sm:text-[13px] font-bold tracking-wide uppercase text-amber-950 w-fit shadow-xs">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping" />
+            <div className="inline-flex items-center gap-2 px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full bg-white/95 backdrop-blur-md border border-amber-200/90 text-[11px] sm:text-[13px] font-bold tracking-wide uppercase text-amber-950 w-fit shadow-xs">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
               <span>{activeSlide.badge}</span>
             </div>
 
             {/* Dynamic H1 Headline */}
-            <h1 className="text-3xl sm:text-5xl lg:text-[54px] font-extrabold tracking-tight leading-[1.12] font-brand text-slate-950 drop-shadow-2xs">
+            <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-[54px] font-extrabold tracking-tight leading-[1.14] font-brand text-slate-950 drop-shadow-2xs">
               {activeSlide.title}
             </h1>
 
             {/* Dynamic Scripture Quote with Warm Burgundy/Gold Accent */}
-            <div className="border-l-4 border-[#8c1936] pl-4 py-2 bg-gradient-to-r from-amber-50/90 via-rose-50/60 to-transparent backdrop-blur-xs rounded-r-xl max-w-xl shadow-2xs">
+            <div className="border-l-4 border-[#8c1936] pl-3.5 sm:pl-4 py-1.5 sm:py-2 bg-gradient-to-r from-amber-50/90 via-rose-50/60 to-transparent backdrop-blur-xs rounded-r-xl max-w-xl shadow-2xs">
               <p className="text-xs sm:text-sm md:text-base font-serif italic text-slate-800 leading-relaxed font-medium">
                 {activeSlide.scripture}
               </p>
             </div>
 
             {/* Narrative Subtitle */}
-            <p className="text-sm sm:text-base text-slate-700 max-w-xl font-normal leading-relaxed">
+            <p className="text-xs sm:text-sm md:text-base text-slate-700 max-w-xl font-normal leading-relaxed">
               {activeSlide.subtitle}
             </p>
 
             {/* Action Links */}
-            <div className="pt-2 flex flex-wrap items-center gap-3.5">
+            <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3.5">
               <Link
                 href="/discover"
-                className="inline-flex items-center gap-2.5 bg-gradient-to-r from-[#8c1936] via-[#a82245] to-[#771932] hover:from-[#771932] hover:to-[#8c1936] text-white px-7 py-3 rounded-xl font-bold text-sm sm:text-base shadow-md shadow-rose-950/20 border border-amber-400/30 transition-all hover:scale-103 cursor-pointer"
+                className="inline-flex items-center justify-center gap-2.5 bg-gradient-to-r from-[#8c1936] via-[#a82245] to-[#771932] hover:from-[#771932] hover:to-[#8c1936] text-white px-6 sm:px-7 py-2.5 sm:py-3 rounded-full sm:rounded-xl font-bold text-xs sm:text-base shadow-md shadow-rose-950/20 border border-amber-400/30 transition-all hover:scale-103 cursor-pointer text-center"
               >
                 <span>Explore Verified Profiles</span>
                 <span>→</span>
@@ -157,7 +157,7 @@ export function MatrimonyHeroSection() {
 
               <Link
                 href="/register"
-                className="inline-flex items-center gap-2 bg-white hover:bg-stone-50 text-slate-900 px-7 py-3 rounded-xl font-bold text-sm sm:text-base border border-stone-300 shadow-xs backdrop-blur-md transition-all hover:scale-103 cursor-pointer"
+                className="inline-flex items-center justify-center gap-2 bg-white hover:bg-stone-50 text-slate-900 px-6 sm:px-7 py-2.5 sm:py-3 rounded-full sm:rounded-xl font-bold text-xs sm:text-base border border-stone-300 shadow-xs backdrop-blur-md transition-all hover:scale-103 cursor-pointer text-center"
               >
                 <span>Register Free Candidate</span>
                 <span>+</span>
@@ -165,7 +165,7 @@ export function MatrimonyHeroSection() {
             </div>
 
             {/* Slide Counter & Smooth Progress Indicators */}
-            <div className="flex items-center gap-3 pt-3">
+            <div className="flex items-center gap-3 pt-2 sm:pt-3">
               <span className="text-xs font-mono font-bold tracking-widest text-slate-600">
                 {String(currentSlide + 1).padStart(2, '0')} / {String(heroSlides.length).padStart(2, '0')}
               </span>
