@@ -148,7 +148,7 @@ export function Navbar() {
 
                 <Link
                   href="/register"
-                  className="inline-flex items-center gap-1 sm:gap-1.5 bg-gradient-to-r from-[#8c1936] via-[#a82245] to-[#771932] hover:from-[#a82245] hover:to-[#8c1936] text-white text-xs sm:text-sm font-bold px-3 sm:px-5 py-1.5 sm:py-2 rounded-full shadow-md shadow-rose-950/40 border border-amber-400/40 hover:border-amber-300 transition-all duration-150 transform hover:-translate-y-0.5"
+                  className="hidden sm:inline-flex items-center gap-1 sm:gap-1.5 bg-gradient-to-r from-[#8c1936] via-[#a82245] to-[#771932] hover:from-[#a82245] hover:to-[#8c1936] text-white text-xs sm:text-sm font-bold px-3 sm:px-5 py-1.5 sm:py-2 rounded-full shadow-md shadow-rose-950/40 border border-amber-400/40 hover:border-amber-300 transition-all duration-150 transform hover:-translate-y-0.5"
                 >
                   <span>Register Free</span>
                   <span className="text-amber-300 hidden sm:inline">→</span>

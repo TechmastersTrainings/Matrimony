@@ -95,11 +95,12 @@ export function MatrimonyHeroSection() {
             <img
               src={slide.image}
               alt={slide.title}
-              className="w-full h-full object-cover object-[80%_30%] lg:object-[85%_35%] transform scale-100 transition-transform duration-[6000ms] ease-out filter brightness-[1.02] contrast-[1.02]"
+              className="w-full h-full object-cover object-center md:object-[85%_35%] transform scale-100 transition-transform duration-[6000ms] ease-out filter brightness-[1.02] contrast-[1.02]"
             />
-            {/* Directional Left-Side Text Protection Gradient: Only shades text area on the left.
-                The right half (where the couple & faces are positioned) has ZERO white overlay for 100% vibrant, sharp visibility */}
-            <div className="absolute inset-y-0 left-0 w-full md:w-[65%] lg:w-[50%] bg-gradient-to-r from-[#fbf9f5] via-[#fbf9f5]/90 to-transparent z-10 pointer-events-none" />
+            {/* Responsive Text Protection Gradient Overlay:
+                On mobile, top-to-bottom subtle shade ensures background couple photo stays 100% visible while text is crisp.
+                On desktop, left-to-right shade protects text area on the left. */}
+            <div className="absolute inset-0 bg-gradient-to-t from-[#fbf9f5] via-[#fbf9f5]/85 to-[#fbf9f5]/40 md:inset-y-0 md:left-0 md:w-[65%] lg:w-[50%] md:bg-gradient-to-r md:from-[#fbf9f5] md:via-[#fbf9f5]/90 md:to-transparent z-10 pointer-events-none" />
           </div>
         ))}
 
@@ -128,16 +129,16 @@ export function MatrimonyHeroSection() {
         </button>
 
         {/* Main Content Area: Cinematic Headline, Scripture & CTAs */}
-        <div className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 md:py-20 lg:py-24">
-          <div className="max-w-2xl lg:max-w-xl flex flex-col justify-center text-left space-y-3.5 sm:space-y-5 text-slate-900">
+        <div className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-16 md:py-20 lg:py-24">
+          <div className="max-w-2xl lg:max-w-xl flex flex-col justify-center text-left space-y-3 sm:space-y-5 text-slate-900">
             {/* Badge with Gold/Green Highlight */}
-            <div className="inline-flex items-center gap-2 px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full bg-white/95 backdrop-blur-md border border-amber-200/90 text-[11px] sm:text-[13px] font-bold tracking-wide uppercase text-amber-950 w-fit shadow-xs">
+            <div className="inline-flex items-center gap-2 px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full bg-white/95 backdrop-blur-md border border-amber-200/90 text-[10px] sm:text-[13px] font-bold tracking-wide uppercase text-amber-950 w-fit shadow-xs">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
               <span>{activeSlide.badge}</span>
             </div>
 
             {/* Dynamic H1 Headline */}
-            <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-[54px] font-extrabold tracking-tight leading-[1.14] font-brand text-slate-950 drop-shadow-2xs">
+            <h1 className="text-xl sm:text-4xl md:text-5xl lg:text-[54px] font-extrabold tracking-tight leading-tight sm:leading-[1.14] font-brand text-slate-950 drop-shadow-2xs">
               {activeSlide.title}
             </h1>
 

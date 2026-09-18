@@ -149,10 +149,10 @@ export function BlessedStoriesSection() {
         </div>
 
         {/* Gallery Card with Transition */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center bg-white rounded-3xl border border-charcoal-200 p-6 sm:p-8 shadow-xs relative overflow-hidden min-h-[440px]">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center bg-white rounded-2xl sm:rounded-3xl border border-charcoal-200 p-4 sm:p-8 shadow-xs relative overflow-hidden min-h-0 lg:min-h-[440px]">
           {/* Left Column: Gallery Photo */}
           <div className="lg:col-span-5 flex justify-center">
-            <div className="relative w-full max-w-sm aspect-[4/4.2] rounded-2xl overflow-hidden shadow-md border-2 border-white ring-1 ring-charcoal-200/80 group">
+            <div className="relative w-full max-w-full sm:max-w-sm aspect-[4/3] sm:aspect-[4/4.2] rounded-xl sm:rounded-2xl overflow-hidden shadow-md border-2 border-white ring-1 ring-charcoal-200/80 group">
               <img
                 src={current.image}
                 alt={current.title}
@@ -160,16 +160,16 @@ export function BlessedStoriesSection() {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-charcoal-950/70 via-transparent to-transparent pointer-events-none" />
 
-              <div className="absolute top-3 left-3 bg-white/95 backdrop-blur-md px-3 py-1 rounded-full text-[11px] font-bold text-emerald-950 border border-emerald-200 shadow-xs flex items-center gap-1.5">
+              <div className="absolute top-3 left-3 bg-white/95 backdrop-blur-md px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full text-[10px] sm:text-[11px] font-bold text-emerald-950 border border-emerald-200 shadow-xs flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-emerald-500" />
                 <span>{current.category}</span>
               </div>
 
-              <div className="absolute bottom-3 left-3 right-3 bg-white/95 backdrop-blur-md p-3 rounded-xl border border-white/60 shadow-md">
-                <span className="text-xs font-serif font-extrabold text-charcoal-900 block">
+              <div className="absolute bottom-2.5 left-2.5 right-2.5 bg-white/95 backdrop-blur-md p-2.5 sm:p-3 rounded-xl border border-white/60 shadow-md">
+                <span className="text-xs font-serif font-extrabold text-charcoal-900 block truncate">
                   {current.title}
                 </span>
-                <span className="text-[11px] text-slate-500 line-clamp-1">
+                <span className="text-[10px] sm:text-[11px] text-slate-500 line-clamp-1">
                   {current.fellowship}
                 </span>
               </div>
@@ -177,23 +177,23 @@ export function BlessedStoriesSection() {
           </div>
 
           {/* Right Column: Tradition & Values Description */}
-          <div className="lg:col-span-7 space-y-5 flex flex-col justify-between">
-            <div className="space-y-3">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-amber-50 border border-amber-200 text-[11px] font-bold text-amber-900 uppercase tracking-wider">
+          <div className="lg:col-span-7 space-y-4 sm:space-y-5 flex flex-col justify-between">
+            <div className="space-y-2 sm:space-y-3">
+              <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-md bg-amber-50 border border-amber-200 text-[10px] sm:text-[11px] font-bold text-amber-900 uppercase tracking-wider">
                 <span>⛪</span>
                 <span>{current.category}</span>
               </div>
-              <h3 className="text-xl sm:text-2xl font-extrabold text-slate-900 font-brand">
+              <h3 className="text-lg sm:text-2xl font-extrabold text-slate-900 font-brand">
                 {current.title}
               </h3>
-              <p className="text-sm sm:text-base text-slate-700 leading-relaxed min-h-[70px]">
+              <p className="text-xs sm:text-base text-slate-700 leading-relaxed">
                 {current.description}
               </p>
             </div>
 
             {/* Micro Highlights Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-3 border-t border-slate-100">
-              <div className="p-3.5 rounded-xl bg-orange-50/60 border border-orange-200/60 space-y-1">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3 pt-3 border-t border-slate-100">
+              <div className="p-3 sm:p-3.5 rounded-xl bg-orange-50/60 border border-orange-200/60 space-y-0.5">
                 <span className="text-xs font-bold text-orange-950 block">
                   {current.highlight1.title}
                 </span>
@@ -202,7 +202,7 @@ export function BlessedStoriesSection() {
                 </p>
               </div>
 
-              <div className="p-3.5 rounded-xl bg-cyan-50/60 border border-cyan-200/60 space-y-1">
+              <div className="p-3 sm:p-3.5 rounded-xl bg-cyan-50/60 border border-cyan-200/60 space-y-0.5">
                 <span className="text-xs font-bold text-cyan-950 block">
                   {current.highlight2.title}
                 </span>
@@ -213,18 +213,18 @@ export function BlessedStoriesSection() {
             </div>
 
             {/* Bottom Actions & Slide Tabs */}
-            <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-4">
-              <div className="flex items-center gap-3">
+            <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
                 <Link
                   href="/register"
-                  className="inline-flex items-center gap-2 bg-gradient-to-r from-burgundy-700 via-rose-600 to-orange-600 hover:from-burgundy-600 hover:to-orange-500 text-white font-extrabold text-xs sm:text-sm px-6 py-2.5 rounded-xl shadow-xs transition-all"
+                  className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-burgundy-700 via-rose-600 to-orange-600 hover:from-burgundy-600 hover:to-orange-500 text-white font-extrabold text-xs sm:text-sm px-5 py-2.5 rounded-xl shadow-xs transition-all text-center"
                 >
                   <span>Start Your Matrimonial Journey</span>
                   <span>→</span>
                 </Link>
                 <Link
                   href="/about"
-                  className="text-xs font-bold text-cyan-950 hover:underline"
+                  className="text-xs font-bold text-cyan-950 hover:underline text-center sm:text-left py-1 sm:py-0"
                 >
                   Our Values →
                 </Link>

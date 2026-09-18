@@ -173,28 +173,28 @@ export function FeaturedProfiles() {
     <section className="py-10 sm:py-12 bg-[#fdfbf7] border-t border-[#ece2d1] text-[#1e1b18]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-6 sm:mb-8 gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-5 sm:mb-8 gap-3 sm:gap-4">
           <div>
             <span className="text-xs sm:text-sm font-extrabold uppercase tracking-widest text-cyan-800 block mb-1">
               Verified Profiles
             </span>
-            <h2 className="font-brand text-3xl sm:text-4xl font-bold text-slate-900 tracking-tight">
+            <h2 className="font-brand text-2xl sm:text-4xl font-bold text-slate-900 tracking-tight">
               Meet People Who Share Your Faith &amp; Values
             </h2>
-            <p className="text-sm sm:text-base text-slate-600 mt-1">
+            <p className="text-xs sm:text-base text-slate-600 mt-1">
               Browse genuine Christian brides and bridegrooms verified with church and family credentials.
             </p>
           </div>
 
-          <div className="flex items-center gap-3 shrink-0">
+          <div className="flex flex-wrap items-center justify-between sm:justify-end gap-2.5 sm:gap-3 shrink-0 pt-1 sm:pt-0">
             {/* Carousel Arrow Controls */}
             {profiles.length > 0 && (
-              <div className="flex items-center gap-2 bg-white border border-[#ece2d1] p-1.5 rounded-full shadow-2xs">
+              <div className="flex items-center gap-2 bg-white border border-[#ece2d1] p-1 sm:p-1.5 rounded-full shadow-2xs">
                 <button
                   type="button"
                   onClick={() => scroll('left')}
                   disabled={!canScrollLeft}
-                  className="w-9 h-9 rounded-full flex items-center justify-center text-slate-700 hover:text-cyan-900 hover:bg-cyan-50 transition-colors disabled:opacity-30 disabled:cursor-not-allowed text-base font-bold"
+                  className="w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center text-slate-700 hover:text-cyan-900 hover:bg-cyan-50 transition-colors disabled:opacity-30 disabled:cursor-not-allowed text-base font-bold"
                   aria-label="Scroll carousel left"
                 >
                   ←
@@ -203,7 +203,7 @@ export function FeaturedProfiles() {
                   type="button"
                   onClick={() => scroll('right')}
                   disabled={!canScrollRight}
-                  className="w-9 h-9 rounded-full flex items-center justify-center text-slate-700 hover:text-cyan-900 hover:bg-cyan-50 transition-colors disabled:opacity-30 disabled:cursor-not-allowed text-base font-bold"
+                  className="w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center text-slate-700 hover:text-cyan-900 hover:bg-cyan-50 transition-colors disabled:opacity-30 disabled:cursor-not-allowed text-base font-bold"
                   aria-label="Scroll carousel right"
                 >
                   →
@@ -213,7 +213,7 @@ export function FeaturedProfiles() {
 
             <Link
               href="/discover"
-              className="inline-flex items-center gap-2 text-sm sm:text-base font-bold text-cyan-900 hover:text-cyan-700 group bg-cyan-50/80 border border-cyan-200 px-5 py-2.5 rounded-full hover:bg-cyan-100 transition-all shadow-2xs"
+              className="inline-flex items-center gap-1.5 text-xs sm:text-base font-bold text-cyan-900 hover:text-cyan-700 group bg-cyan-50/80 border border-cyan-200 px-4 sm:px-5 py-2 sm:py-2.5 rounded-full hover:bg-cyan-100 transition-all shadow-2xs"
             >
               <span>Search All Profiles</span>
               <span className="group-hover:translate-x-1 transition-transform">→</span>

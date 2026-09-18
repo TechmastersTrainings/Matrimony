@@ -27,7 +27,7 @@ export function Footer() {
               A sacred initiative by <strong className="text-amber-200">Techmasters Innovations Private Limited</strong>, headquartered in Bidar, Karnataka, India. Safeguarding candidate dignity, pastoral honor, and family privacy at every step.
             </p>
 
-            <div className="space-y-1 text-[11px] text-slate-400 pt-1">
+            <div className="space-y-1 text-[11px] text-slate-400 pt-1 break-words">
               <p className="text-slate-300">
                 Director: <span className="font-semibold text-white">Mrs. Rekha Sachin Themgyale</span>
               </p>
@@ -35,19 +35,19 @@ export function Footer() {
                 Managing Director: <span className="font-semibold text-white">Mr. Sachin Anil Themgyale</span>
               </p>
               <p>Corporate Office: Mailoor Road, Bidar, Karnataka - 585403.</p>
-              <p className="pt-0.5">
-                Contact:{' '}
-                <a href="mailto:info@techmastersinnovations.in" className="hover:text-amber-300 transition-colors underline">
+              <p className="pt-0.5 flex flex-wrap items-center gap-x-1.5 gap-y-0.5">
+                <span>Contact:</span>
+                <a href="mailto:info@techmastersinnovations.in" className="hover:text-amber-300 transition-colors underline break-all">
                   info@techmastersinnovations.in
-                </a>{' '}
-                |{' '}
-                <a href="mailto:techmastersinnovations@gmail.com" className="hover:text-amber-300 transition-colors underline">
+                </a>
+                <span>|</span>
+                <a href="mailto:techmastersinnovations@gmail.com" className="hover:text-amber-300 transition-colors underline break-all">
                   techmastersinnovations@gmail.com
                 </a>
               </p>
-              <p>
-                Support:{' '}
-                <a href="mailto:support@covenantnest.techmaster.space" className="hover:text-amber-300 transition-colors underline">
+              <p className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5">
+                <span>Support:</span>
+                <a href="mailto:support@covenantnest.techmaster.space" className="hover:text-amber-300 transition-colors underline break-all">
                   support@covenantnest.techmaster.space
                 </a>
               </p>
