@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { motion, Variants } from 'framer-motion';
 
 export function HowItWorksSection() {
   const steps = [
@@ -37,12 +38,33 @@ export function HowItWorksSection() {
     },
   ];
 
+  const containerVariants: Variants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.18,
+      },
+    },
+  };
+
+  const cardVariants: Variants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+  };
+
   return (
     <section className="py-12 sm:py-16 bg-gradient-to-b from-[#fdfbf7] via-[#faf6ee] to-[#fdfbf7] text-[#1e1b18] border-b border-charcoal-100/70">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-12 space-y-2">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-xs font-bold text-emerald-950">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-50px' }}
+          transition={{ duration: 0.5 }}
+          className="text-center max-w-2xl mx-auto mb-10 sm:mb-12 space-y-2"
+        >
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-xs font-bold text-emerald-950 shadow-xs">
             <span>🕊️</span>
             <span>3 Simple, Reverent Steps</span>
           </div>
@@ -52,14 +74,23 @@ export function HowItWorksSection() {
           <p className="text-xs sm:text-base text-slate-600">
             A dignified, faith-centered path connecting Christian brides, grooms, and prayerful families across India.
           </p>
-        </div>
+        </motion.div>
 
         {/* 3 Step Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '-50px' }}
+          className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8"
+        >
           {steps.map((s, idx) => (
-            <div
+            <motion.div
               key={idx}
-              className="bg-white rounded-2xl border border-charcoal-200 overflow-hidden shadow-xs hover:shadow-md transition-all duration-300 flex flex-col justify-between group hover:-translate-y-1"
+              variants={cardVariants}
+              whileHover={{ y: -6, scale: 1.015 }}
+              transition={{ duration: 0.25 }}
+              className="bg-white rounded-2xl border border-charcoal-200 overflow-hidden shadow-xs hover:shadow-xl transition-shadow duration-300 flex flex-col justify-between group"
             >
               {/* Step Image */}
               <div className="relative w-full aspect-[16/10] overflow-hidden bg-slate-900">
@@ -104,12 +135,18 @@ export function HowItWorksSection() {
                   <span className="text-slate-400 font-mono">Step {s.num} of 3</span>
                 </div>
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
 
         {/* Bottom Callout Bar */}
-        <div className="mt-10 sm:mt-12 bg-gradient-to-r from-orange-50 via-amber-50 to-cyan-50 border border-orange-200/80 rounded-2xl p-5 sm:p-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="mt-10 sm:mt-12 bg-gradient-to-r from-orange-50 via-amber-50 to-cyan-50 border border-orange-200/80 rounded-2xl p-5 sm:p-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left shadow-xs hover:shadow-md transition-shadow"
+        >
           <div className="space-y-1">
             <h4 className="text-sm sm:text-base font-extrabold text-slate-900 font-brand">
               Ready to begin your prayerful matrimonial journey?
@@ -120,12 +157,12 @@ export function HowItWorksSection() {
           </div>
           <Link
             href="/register"
-            className="shrink-0 inline-flex items-center gap-2 bg-gradient-to-r from-burgundy-700 via-rose-600 to-orange-600 hover:from-burgundy-600 hover:to-orange-500 text-white font-extrabold text-xs sm:text-sm px-6 py-2.5 rounded-xl shadow-sm transition-all"
+            className="btn-shine-effect shrink-0 inline-flex items-center gap-2 bg-gradient-to-r from-burgundy-700 via-rose-600 to-orange-600 hover:from-burgundy-600 hover:to-orange-500 text-white font-extrabold text-xs sm:text-sm px-6 py-2.5 rounded-xl shadow-sm transition-transform hover:scale-103"
           >
             <span>Register Profile Free</span>
             <span>→</span>
           </Link>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

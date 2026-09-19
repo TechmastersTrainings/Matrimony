@@ -1,20 +1,24 @@
 'use client';
 
 import React from 'react';
+import { motion } from 'framer-motion';
 
 export function ScriptureSanctuarySection() {
   return (
     <section className="py-16 sm:py-20 lg:py-24 bg-gradient-to-b from-[#fdfbf7] via-[#faf6ee] to-[#fdfbf7] text-[#1e1b18] relative overflow-hidden border-t border-[#ece2d1]">
       {/* Soft Luminous Warm Golden Glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] bg-amber-200/20 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] bg-amber-200/20 rounded-full blur-3xl pointer-events-none animate-ambient" />
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        
-        {/* Beautiful Elegant 2-Column Scripture Card */}
-        <div className="relative rounded-2xl sm:rounded-3xl bg-white/90 backdrop-blur-sm border border-amber-200/80 shadow-xl shadow-amber-950/5 p-4 sm:p-10 lg:p-12">
-          
+        {/* Beautiful Elegant 2-Column Scripture Card with Motion Reveal */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-50px' }}
+          transition={{ duration: 0.6, ease: 'easeOut' }}
+          className="relative rounded-2xl sm:rounded-3xl bg-white/90 backdrop-blur-sm border border-amber-200/80 shadow-xl shadow-amber-950/5 p-4 sm:p-10 lg:p-12 animate-float-slow"
+        >
           <div className="grid grid-cols-1 md:grid-cols-12 gap-6 lg:gap-12 items-center">
-            
             {/* Left Column: Authentic Holy Bible & Wedding Rings Image */}
             <div className="md:col-span-5 flex justify-center">
               <div className="relative w-full max-w-[240px] sm:max-w-xs aspect-[4/4.8] rounded-xl sm:rounded-2xl overflow-hidden shadow-lg border-2 border-amber-300/80 ring-4 ring-amber-100/70 group">
@@ -32,7 +36,6 @@ export function ScriptureSanctuarySection() {
 
             {/* Right Column: Sacred Scripture Quote & Citation */}
             <div className="md:col-span-7 flex flex-col justify-center text-left space-y-3 sm:space-y-5">
-              
               {/* Decorative Gold Quotation Mark */}
               <div className="font-serif text-4xl sm:text-6xl text-amber-400/60 leading-none select-none -mb-2 sm:-mb-4">
                 &ldquo;
@@ -59,13 +62,9 @@ export function ScriptureSanctuarySection() {
                   The Divine Standard for Christian Marriages
                 </span>
               </div>
-
             </div>
-
           </div>
-
-        </div>
-
+        </motion.div>
       </div>
     </section>
   );

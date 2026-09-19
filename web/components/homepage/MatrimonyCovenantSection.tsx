@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { motion } from 'framer-motion';
 
 export function MatrimonyCovenantSection() {
   const pillars = [
@@ -55,7 +56,13 @@ export function MatrimonyCovenantSection() {
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Header */}
-        <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-10 space-y-2">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-50px' }}
+          transition={{ duration: 0.5 }}
+          className="text-center max-w-2xl mx-auto mb-8 sm:mb-10 space-y-2"
+        >
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-cyan-50 via-orange-50 to-emerald-50 border border-cyan-200 text-charcoal-900 text-xs sm:text-sm font-bold uppercase tracking-wider shadow-2xs">
             <span className="w-2 h-2 rounded-full bg-cyan-500 animate-pulse" />
             <span>Our Sacred Covenant &amp; Trust Pillars</span>
@@ -68,14 +75,19 @@ export function MatrimonyCovenantSection() {
           <p className="text-xs sm:text-base text-slate-600 max-w-xl mx-auto leading-relaxed font-normal">
             Christian marriage is a holy covenant instituted by God. We hold our platform to the highest biblical integrity and family security standards.
           </p>
-        </div>
+        </motion.div>
 
         {/* 3 Pillars Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6">
           {pillars.map((p, idx) => (
-            <div
+            <motion.div
               key={idx}
-              className={`p-6 sm:p-7 rounded-2xl ${p.bg} border ${p.border} transition-all duration-200 shadow-2xs hover:shadow-md flex flex-col justify-between`}
+              initial={{ opacity: 0, y: 25 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-30px' }}
+              transition={{ duration: 0.5, delay: idx * 0.15 }}
+              whileHover={{ y: -6, scale: 1.015 }}
+              className={`p-6 sm:p-7 rounded-2xl ${p.bg} border ${p.border} transition-shadow duration-300 shadow-2xs hover:shadow-xl flex flex-col justify-between cursor-pointer`}
             >
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
@@ -103,7 +115,7 @@ export function MatrimonyCovenantSection() {
                 </span>
                 <span className="text-slate-400 font-mono">Pillar {p.num}</span>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>

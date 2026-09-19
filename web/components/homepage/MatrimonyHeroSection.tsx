@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const heroSlides = [
   {
@@ -84,79 +85,119 @@ export function MatrimonyHeroSection() {
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
       >
-        {/* 6 High-Definition Carousel Background Images */}
-        {heroSlides.map((slide, idx) => (
-          <div
-            key={idx}
-            className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-              currentSlide === idx ? 'opacity-100 z-0' : 'opacity-0 pointer-events-none -z-10'
-            }`}
-          >
-            <img
-              src={slide.image}
-              alt={slide.title}
-              className="w-full h-full object-cover object-center transform scale-100 transition-transform duration-[7000ms] ease-out filter brightness-[0.92] contrast-[1.10]"
-            />
-            {/* High-Contrast Shading Overlay: Deep cinematic gradient overlay that keeps the full image 100% visible in vibrant contrast while ensuring crisp text readability */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/30 md:bg-gradient-to-r md:from-black/90 md:via-black/50 md:to-transparent z-10 pointer-events-none" />
-          </div>
-        ))}
+        {/* 6 High-Definition Carousel Background Images with Smooth Motion Fade & Scale */}
+        <AnimatePresence mode="sync">
+          {heroSlides.map((slide, idx) =>
+            currentSlide === idx ? (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, scale: 1.05 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+                className="absolute inset-0"
+              >
+                <img
+                  src={slide.image}
+                  alt={slide.title}
+                  className="w-full h-full object-cover object-center filter brightness-[0.92] contrast-[1.10]"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/30 md:bg-gradient-to-r md:from-black/90 md:via-black/50 md:to-transparent z-10 pointer-events-none" />
+              </motion.div>
+            ) : null
+          )}
+        </AnimatePresence>
 
         {/* Previous Slide Arrow Button (‹) */}
-        <button
+        <motion.button
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
           type="button"
           onClick={prevSlide}
           aria-label="Previous Slide"
-          className="hidden md:flex absolute left-4 lg:left-6 top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full bg-black/60 hover:bg-black/80 text-white hover:text-amber-300 shadow-xl border border-white/20 items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200 cursor-pointer hover:scale-105"
+          className="hidden md:flex absolute left-4 lg:left-6 top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full bg-black/60 hover:bg-black/80 text-white hover:text-amber-300 shadow-xl border border-white/20 items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 cursor-pointer"
         >
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
           </svg>
-        </button>
+        </motion.button>
 
         {/* Next Slide Arrow Button (›) */}
-        <button
+        <motion.button
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
           type="button"
           onClick={nextSlide}
           aria-label="Next Slide"
-          className="hidden md:flex absolute right-4 lg:right-6 top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full bg-black/60 hover:bg-black/80 text-white hover:text-amber-300 shadow-xl border border-white/20 items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200 cursor-pointer hover:scale-105"
+          className="hidden md:flex absolute right-4 lg:right-6 top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full bg-black/60 hover:bg-black/80 text-white hover:text-amber-300 shadow-xl border border-white/20 items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 cursor-pointer"
         >
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
           </svg>
-        </button>
+        </motion.button>
 
-        {/* Main Content Area: Cinematic High-Contrast Headline, Scripture & CTAs */}
+        {/* Main Content Area with Staggered Entrance Motion */}
         <div className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-16 md:py-20 lg:py-24">
-          <div className="max-w-2xl lg:max-w-xl flex flex-col justify-center text-left space-y-3.5 sm:space-y-5 text-white">
+          <motion.div
+            key={currentSlide}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: 'easeOut' }}
+            className="max-w-2xl lg:max-w-xl flex flex-col justify-center text-left space-y-3.5 sm:space-y-5 text-white"
+          >
             {/* Badge with Gold/Green Highlight */}
-            <div className="inline-flex items-center gap-2 px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full bg-black/50 border border-amber-400/50 text-[10px] sm:text-[13px] font-bold tracking-wide uppercase text-amber-300 w-fit shadow-md">
+            <motion.div
+              initial={{ opacity: 0, x: -15 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.1, duration: 0.4 }}
+              className="inline-flex items-center gap-2 px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full bg-black/50 border border-amber-400/50 text-[10px] sm:text-[13px] font-bold tracking-wide uppercase text-amber-300 w-fit shadow-md"
+            >
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
               <span>{activeSlide.badge}</span>
-            </div>
+            </motion.div>
 
             {/* Dynamic H1 Headline */}
-            <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-[54px] font-extrabold tracking-tight leading-tight sm:leading-[1.14] font-brand text-white drop-shadow-md">
+            <motion.h1
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2, duration: 0.5 }}
+              className="text-2xl sm:text-4xl md:text-5xl lg:text-[54px] font-extrabold tracking-tight leading-tight sm:leading-[1.14] font-brand text-white drop-shadow-md"
+            >
               {activeSlide.title}
-            </h1>
+            </motion.h1>
 
             {/* Dynamic Scripture Quote with Warm Gold Accent */}
-            <div className="border-l-4 border-amber-400 pl-3.5 sm:pl-4 py-2 bg-black/45 rounded-r-xl max-w-xl border-y border-r border-white/10 shadow-lg">
+            <motion.div
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3, duration: 0.5 }}
+              className="border-l-4 border-amber-400 pl-3.5 sm:pl-4 py-2 bg-black/45 rounded-r-xl max-w-xl border-y border-r border-white/10 shadow-lg"
+            >
               <p className="text-xs sm:text-sm md:text-base font-serif italic text-amber-100 leading-relaxed font-medium">
                 {activeSlide.scripture}
               </p>
-            </div>
+            </motion.div>
 
             {/* Narrative Subtitle */}
-            <p className="text-xs sm:text-sm md:text-base text-stone-200 max-w-xl font-normal leading-relaxed drop-shadow-xs">
+            <motion.p
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4, duration: 0.5 }}
+              className="text-xs sm:text-sm md:text-base text-stone-200 max-w-xl font-normal leading-relaxed drop-shadow-xs"
+            >
               {activeSlide.subtitle}
-            </p>
+            </motion.p>
 
             {/* Action Links */}
-            <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3.5">
+            <motion.div
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5, duration: 0.5 }}
+              className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3.5"
+            >
               <Link
                 href="/discover"
-                className="inline-flex items-center justify-center gap-2.5 bg-gradient-to-r from-[#8c1936] via-[#a82245] to-[#771932] hover:from-[#771932] hover:to-[#8c1936] text-white px-6 sm:px-7 py-2.5 sm:py-3 rounded-full sm:rounded-xl font-bold text-xs sm:text-base shadow-xl border border-amber-400/40 transition-all hover:scale-103 cursor-pointer text-center"
+                className="btn-shine-effect inline-flex items-center justify-center gap-2.5 bg-gradient-to-r from-[#8c1936] via-[#a82245] to-[#771932] hover:from-[#771932] hover:to-[#8c1936] text-white px-6 sm:px-7 py-2.5 sm:py-3 rounded-full sm:rounded-xl font-bold text-xs sm:text-base shadow-xl border border-amber-400/40 transition-transform hover:scale-103 cursor-pointer text-center"
               >
                 <span>Explore Verified Profiles</span>
                 <span>→</span>
@@ -164,12 +205,12 @@ export function MatrimonyHeroSection() {
 
               <Link
                 href="/register"
-                className="inline-flex items-center justify-center gap-2 bg-white/15 hover:bg-white/25 text-white px-6 sm:px-7 py-2.5 sm:py-3 rounded-full sm:rounded-xl font-bold text-xs sm:text-base border border-white/30 shadow-xl transition-all hover:scale-103 cursor-pointer text-center"
+                className="inline-flex items-center justify-center gap-2 bg-white/15 hover:bg-white/25 text-white px-6 sm:px-7 py-2.5 sm:py-3 rounded-full sm:rounded-xl font-bold text-xs sm:text-base border border-white/30 shadow-xl transition-transform hover:scale-103 cursor-pointer text-center"
               >
                 <span>Register Free Candidate</span>
                 <span>+</span>
               </Link>
-            </div>
+            </motion.div>
 
             {/* Slide Counter & Smooth Progress Indicators */}
             <div className="flex items-center gap-3 pt-2 sm:pt-3">
@@ -193,7 +234,7 @@ export function MatrimonyHeroSection() {
                 ))}
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>

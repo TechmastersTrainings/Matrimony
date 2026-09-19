@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 import { apiClient } from '../../lib/api-client';
 import { CandidateCard } from '../../types';
 import { getPhotoUrl } from '../../lib/utils';
@@ -17,7 +18,11 @@ function ProfileCardItem({ profile: p }: { profile: CandidateCard }) {
   const hasPhoto = !!photoUrl && !imageError;
 
   return (
-    <div className="w-[240px] sm:w-[260px] md:w-[275px] shrink-0 snap-start bg-white border border-[#ece2d1] hover:border-cyan-500/80 rounded-2xl p-3 sm:p-3.5 shadow-xs hover:shadow-lg transition-all duration-300 flex flex-col justify-between group hover:-translate-y-1">
+    <motion.div
+      whileHover={{ y: -6, scale: 1.015 }}
+      transition={{ duration: 0.25, ease: 'easeOut' }}
+      className="w-[240px] sm:w-[260px] md:w-[275px] shrink-0 snap-start bg-white border border-[#ece2d1] hover:border-cyan-500/80 rounded-2xl p-3 sm:p-3.5 shadow-xs hover:shadow-xl transition-shadow duration-300 flex flex-col justify-between group cursor-pointer"
+    >
       <div>
         {/* Generous Portrait Photo Container (NOT a circle!) */}
         <div className="relative w-full aspect-[3/4] rounded-xl overflow-hidden bg-slate-900 shadow-xs mb-3">
@@ -119,7 +124,7 @@ function ProfileCardItem({ profile: p }: { profile: CandidateCard }) {
           <span className="transition-transform group-hover/btn:translate-x-0.5">→</span>
         </button>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
@@ -171,7 +176,13 @@ export function FeaturedProfiles() {
 
   return (
     <section className="py-10 sm:py-12 bg-[#fdfbf7] border-t border-[#ece2d1] text-[#1e1b18]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <motion.div
+        initial={{ opacity: 0, y: 25 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-50px' }}
+        transition={{ duration: 0.6, ease: 'easeOut' }}
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+      >
         {/* Section Header */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-5 sm:mb-8 gap-3 sm:gap-4">
           <div>
@@ -266,7 +277,7 @@ export function FeaturedProfiles() {
             </Link>
           </div>
         )}
-      </div>
+      </motion.div>
     </section>
   );
 }
