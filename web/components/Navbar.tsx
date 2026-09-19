@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Logo } from './Logo';
 
 export function Navbar() {
@@ -88,6 +89,13 @@ export function Navbar() {
                   }`}
                 >
                   {link.label}
+                  {active && (
+                    <motion.span
+                      layoutId="activeNavIndicator"
+                      className="absolute bottom-0 left-3 right-3 h-0.5 bg-gradient-to-r from-amber-400 to-rose-400 rounded-full"
+                      transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                    />
+                  )}
                 </Link>
               );
             })}
@@ -148,7 +156,7 @@ export function Navbar() {
 
                 <Link
                   href="/register"
-                  className="hidden sm:inline-flex items-center gap-1 sm:gap-1.5 bg-gradient-to-r from-[#8c1936] via-[#a82245] to-[#771932] hover:from-[#a82245] hover:to-[#8c1936] text-white text-xs sm:text-sm font-bold px-3 sm:px-5 py-1.5 sm:py-2 rounded-full shadow-md shadow-rose-950/40 border border-amber-400/40 hover:border-amber-300 transition-all duration-150 transform hover:-translate-y-0.5"
+                  className="btn-shine-effect hidden sm:inline-flex items-center gap-1 sm:gap-1.5 bg-gradient-to-r from-[#8c1936] via-[#a82245] to-[#771932] hover:from-[#a82245] hover:to-[#8c1936] text-white text-xs sm:text-sm font-bold px-3 sm:px-5 py-1.5 sm:py-2 rounded-full shadow-md shadow-rose-950/40 border border-amber-400/40 hover:border-amber-300 transition-transform hover:scale-103"
                 >
                   <span>Register Free</span>
                   <span className="text-amber-300 hidden sm:inline">→</span>
@@ -157,7 +165,8 @@ export function Navbar() {
             )}
 
             {/* Mobile / Tablet Hamburger Toggle Button */}
-            <button
+            <motion.button
+              whileTap={{ scale: 0.9 }}
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-label="Toggle navigation menu"
               className="lg:hidden p-2 rounded-xl text-stone-200 hover:text-amber-300 hover:bg-white/10 transition-colors cursor-pointer"
@@ -171,115 +180,121 @@ export function Navbar() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
               )}
-            </button>
+            </motion.button>
           </div>
         </div>
       </div>
 
-      {/* Mobile Menu Drawer - Dark Luxury Theme */}
-      {mobileMenuOpen && (
-        <div
-          style={{ backgroundColor: 'rgba(21, 10, 15, 0.98)' }}
-          className="lg:hidden border-b border-[#3b1926] px-5 sm:px-8 py-4 space-y-3 shadow-2xl animate-in fade-in slide-in-from-top-2 duration-150 text-stone-200 max-h-[calc(100vh-4rem)] overflow-y-auto"
-        >
-          <nav className="flex flex-col space-y-1">
-            {navLinks.map((link) => {
-              const active = isActive(link.href);
-              return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={`px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-colors flex items-center justify-between ${
-                    active
-                      ? 'text-amber-300 bg-amber-400/15 border border-amber-400/30 font-bold'
-                      : 'text-stone-300 hover:text-white hover:bg-white/10'
-                  }`}
-                >
-                  <span>{link.label}</span>
-                  {active && <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />}
-                </Link>
-              );
-            })}
-
-            {isAuthenticated && (
-              <>
-                <div className="pt-2 pb-1 text-[11px] uppercase font-bold text-stone-400 px-3.5 tracking-wider">
-                  Member Portal
-                </div>
-                {authenticatedLinks.map((link) => {
-                  const active = isActive(link.href);
-                  return (
-                    <Link
-                      key={link.href}
-                      href={link.href}
-                      onClick={() => setMobileMenuOpen(false)}
-                      className={`px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-colors flex items-center justify-between ${
-                        active
-                          ? 'text-amber-300 bg-amber-400/15 border border-amber-400/30 font-bold'
-                          : 'text-stone-300 hover:text-white hover:bg-white/10'
-                      }`}
-                    >
-                      <span>{link.label}</span>
-                      {active && <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />}
-                    </Link>
-                  );
-                })}
-
-                <Link
-                  href="/profile/photos"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="px-3.5 py-2.5 rounded-xl text-sm font-semibold text-stone-300 hover:text-white hover:bg-white/10 transition-colors"
-                >
-                  Manage Photos
-                </Link>
-
-                {isAdmin && (
+      {/* Mobile Menu Drawer - Framer Motion Spring Drawer */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0, y: -10 }}
+            animate={{ opacity: 1, height: 'auto', y: 0 }}
+            exit={{ opacity: 0, height: 0, y: -10 }}
+            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+            style={{ backgroundColor: 'rgba(21, 10, 15, 0.98)' }}
+            className="lg:hidden border-b border-[#3b1926] px-5 sm:px-8 py-4 space-y-3 shadow-2xl text-stone-200 max-h-[calc(100vh-4rem)] overflow-y-auto"
+          >
+            <nav className="flex flex-col space-y-1">
+              {navLinks.map((link) => {
+                const active = isActive(link.href);
+                return (
                   <Link
-                    href="/admin"
+                    key={link.href}
+                    href={link.href}
                     onClick={() => setMobileMenuOpen(false)}
-                    className="px-3.5 py-2.5 rounded-xl text-sm font-bold bg-slate-950 text-amber-300 flex items-center gap-2 border border-amber-400/40 mt-1"
+                    className={`px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-colors flex items-center justify-between ${
+                      active
+                        ? 'text-amber-300 bg-amber-400/15 border border-amber-400/30 font-bold'
+                        : 'text-stone-300 hover:text-white hover:bg-white/10'
+                    }`}
                   >
-                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                    <span>Admin Portal</span>
+                    <span>{link.label}</span>
+                    {active && <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />}
                   </Link>
-                )}
-              </>
-            )}
-          </nav>
+                );
+              })}
 
-          <div className="pt-3 border-t border-[#3b1926] flex flex-col gap-2">
-            {isAuthenticated ? (
-              <button
-                onClick={() => {
-                  handleLogout();
-                  setMobileMenuOpen(false);
-                }}
-                className="w-full text-center text-sm font-semibold py-2.5 rounded-full text-rose-300 bg-rose-950/40 border border-rose-800/40 hover:bg-rose-900/40 transition-colors"
-              >
-                Logout
-              </button>
-            ) : (
-              <>
-                <Link
-                  href="/login"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="w-full text-center text-sm font-semibold py-2.5 rounded-full border border-white/20 text-white hover:bg-white/10 transition-colors"
+              {isAuthenticated && (
+                <>
+                  <div className="pt-2 pb-1 text-[11px] uppercase font-bold text-stone-400 px-3.5 tracking-wider">
+                    Member Portal
+                  </div>
+                  {authenticatedLinks.map((link) => {
+                    const active = isActive(link.href);
+                    return (
+                      <Link
+                        key={link.href}
+                        href={link.href}
+                        onClick={() => setMobileMenuOpen(false)}
+                        className={`px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-colors flex items-center justify-between ${
+                          active
+                            ? 'text-amber-300 bg-amber-400/15 border border-amber-400/30 font-bold'
+                            : 'text-stone-300 hover:text-white hover:bg-white/10'
+                        }`}
+                      >
+                        <span>{link.label}</span>
+                        {active && <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />}
+                      </Link>
+                    );
+                  })}
+
+                  <Link
+                    href="/profile/photos"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="px-3.5 py-2.5 rounded-xl text-sm font-semibold text-stone-300 hover:text-white hover:bg-white/10 transition-colors"
+                  >
+                    Manage Photos
+                  </Link>
+
+                  {isAdmin && (
+                    <Link
+                      href="/admin"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="px-3.5 py-2.5 rounded-xl text-sm font-bold bg-slate-950 text-amber-300 flex items-center gap-2 border border-amber-400/40 mt-1"
+                    >
+                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                      <span>Admin Portal</span>
+                    </Link>
+                  )}
+                </>
+              )}
+            </nav>
+
+            <div className="pt-3 border-t border-[#3b1926] flex flex-col gap-2">
+              {isAuthenticated ? (
+                <button
+                  onClick={() => {
+                    handleLogout();
+                    setMobileMenuOpen(false);
+                  }}
+                  className="w-full text-center text-sm font-semibold py-2.5 rounded-full text-rose-300 bg-rose-950/40 border border-rose-800/40 hover:bg-rose-900/40 transition-colors"
                 >
-                  Login
-                </Link>
-                <Link
-                  href="/register"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="w-full text-center text-sm font-bold py-2.5 rounded-full bg-gradient-to-r from-[#8c1936] via-[#a82245] to-[#771932] text-white border border-amber-400/40 shadow-sm transition-colors"
-                >
-                  Register Free →
-                </Link>
-              </>
-            )}
-          </div>
-        </div>
-      )}
+                  Logout
+                </button>
+              ) : (
+                <>
+                  <Link
+                    href="/login"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="w-full text-center text-sm font-semibold py-2.5 rounded-full border border-white/20 text-white hover:bg-white/10 transition-colors"
+                  >
+                    Login
+                  </Link>
+                  <Link
+                    href="/register"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="btn-shine-effect w-full text-center text-sm font-bold py-2.5 rounded-full bg-gradient-to-r from-[#8c1936] via-[#a82245] to-[#771932] text-white border border-amber-400/40 shadow-sm transition-transform hover:scale-102"
+                  >
+                    Register Free →
+                  </Link>
+                </>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 }
