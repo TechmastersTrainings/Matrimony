@@ -47,8 +47,8 @@ export function Footer() {
               </p>
               <p className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5">
                 <span>Support:</span>
-                <a href="mailto:support@covenantnest.techmaster.space" className="hover:text-amber-300 transition-colors underline break-all">
-                  support@covenantnest.techmaster.space
+                <a href="mailto:support@techmastersinnovations.in" className="hover:text-amber-300 transition-colors underline break-all">
+                  support@techmastersinnovations.in
                 </a>
               </p>
             </div>

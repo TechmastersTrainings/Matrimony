@@ -139,8 +139,8 @@ export default function PrivacyPage() {
             </p>
             <p>
               Platform Support:{' '}
-              <a href="mailto:support@covenantnest.techmaster.space" className="text-cyan-900 underline font-semibold">
-                support@covenantnest.techmaster.space
+              <a href="mailto:support@techmastersinnovations.in" className="text-cyan-900 underline font-semibold">
+                support@techmastersinnovations.in
               </a>
             </p>
             <p>

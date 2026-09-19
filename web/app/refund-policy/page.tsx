@@ -40,8 +40,8 @@ export default function RefundPolicyPage() {
           </h2>
           <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
             You may delete your account and all associated personal data at any time by navigating to your Profile Settings or by emailing{' '}
-            <a href="mailto:support@covenantnest.techmaster.space" className="text-cyan-900 underline font-semibold">
-              support@covenantnest.techmaster.space
+            <a href="mailto:support@techmastersinnovations.in" className="text-cyan-900 underline font-semibold">
+              support@techmastersinnovations.in
             </a>
             . Upon deletion, your profile will be permanently removed from our active matching database within 7 days.
           </p>
@@ -84,8 +84,8 @@ export default function RefundPolicyPage() {
             </p>
             <p>
               Support:{' '}
-              <a href="mailto:support@covenantnest.techmaster.space" className="text-cyan-900 underline font-semibold">
-                support@covenantnest.techmaster.space
+              <a href="mailto:support@techmastersinnovations.in" className="text-cyan-900 underline font-semibold">
+                support@techmastersinnovations.in
               </a>
             </p>
             <p>Techmasters Innovations Pvt. Ltd., Mailoor Road, Bidar, Karnataka - 585403, India.</p>
