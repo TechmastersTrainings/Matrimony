@@ -1,151 +1,385 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
-import { motion, Variants } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+
+interface StepPoint {
+  icon: string;
+  title: string;
+  desc: string;
+}
+
+interface StepData {
+  id: number;
+  phase: string;
+  badge: string;
+  title: string;
+  subtitle: string;
+  frontDesc: string;
+  image: string;
+  badgeStyle: string;
+  borderStyle: string;
+  activeGlow: string;
+  backGradient: string;
+  points: StepPoint[];
+  scripture: string;
+  highlight: string;
+}
+
+const roadmapSteps: StepData[] = [
+  {
+    id: 1,
+    phase: 'Step 1',
+    badge: 'Free Candidate Registration',
+    title: 'Create Your Sacred Profile Free',
+    subtitle: 'Faith, Parish & Family Values',
+    frontDesc:
+      'Share your Christian testimony, baptism details, church parish, education, and career. Sensitive contact details remain strictly locked under privacy protection.',
+    image: '/images/christian-wedding-rings-bible.jpg',
+    badgeStyle: 'bg-amber-500/15 text-amber-900 border-amber-300/80',
+    borderStyle: 'hover:border-amber-400/80 hover:shadow-amber-500/10',
+    activeGlow: 'from-amber-500 to-amber-600',
+    backGradient: 'from-[#1a0f0a] via-[#26150c] to-[#0f0805]',
+    points: [
+      {
+        icon: '✝️',
+        title: 'Parish & Faith Credentials',
+        desc: 'Detail your Methodist (MCI), CSI, Catholic, Baptist, or Pentecostal parish membership.',
+      },
+      {
+        icon: '🔒',
+        title: 'Locked Contact Privacy',
+        desc: 'Phone numbers and family address are strictly hidden from public view & web crawlers.',
+      },
+      {
+        icon: '🕊️',
+        title: 'Zero Registration Fee',
+        desc: 'Complete candidate setup and verified match discovery with zero upfront registration fees.',
+      },
+    ],
+    scripture: '“Commit your way to the Lord; trust in Him and He will do this.” — Psalm 37:5',
+    highlight: '100% Private & Verified',
+  },
+  {
+    id: 2,
+    phase: 'Step 2',
+    badge: 'Prayerful Matrimonial Matching',
+    title: 'Discover & Express Holy Interest',
+    subtitle: 'Denomination & Value Alignment',
+    frontDesc:
+      'Search genuine verified Christian profiles filtered by church fellowship. Send prayerful matrimonial interests with complete family dignity.',
+    image: '/images/christian-wedding-vows-rings.jpg',
+    badgeStyle: 'bg-cyan-500/15 text-cyan-900 border-cyan-300/80',
+    borderStyle: 'hover:border-cyan-400/80 hover:shadow-cyan-500/10',
+    activeGlow: 'from-cyan-500 to-teal-600',
+    backGradient: 'from-[#07171d] via-[#0b242e] to-[#040d11]',
+    points: [
+      {
+        icon: '⛪',
+        title: 'Denominational Filters',
+        desc: 'Filter candidates by faith practices, education, profession, and regional heritage.',
+      },
+      {
+        icon: '🛡️',
+        title: 'Anti-Harassment Caps',
+        desc: 'Daily rate-limited interest caps prevent commercial spam and protect candidate modesty.',
+      },
+      {
+        icon: '💌',
+        title: 'Dignified Expressions',
+        desc: 'Send reverent notifications of interest without awkward cold calling or commercial intrusion.',
+      },
+    ],
+    scripture: '“Be completely humble and gentle; be patient, bearing with one another in love.” — Eph 4:2',
+    highlight: 'Daily Safety Limits',
+  },
+  {
+    id: 3,
+    phase: 'Step 3',
+    badge: 'Holy Covenant & Family Blessing',
+    title: 'Mutual Consent & Blessed Union',
+    subtitle: 'Family & Pastoral Guidance',
+    frontDesc:
+      'When interest is mutually accepted, verified family contact numbers are unlocked. Families meet, pray together, and proceed toward holy matrimony.',
+    image: '/images/covenant-wedding-couple.jpg',
+    badgeStyle: 'bg-emerald-500/15 text-emerald-900 border-emerald-300/80',
+    borderStyle: 'hover:border-emerald-400/80 hover:shadow-emerald-500/10',
+    activeGlow: 'from-emerald-500 to-green-600',
+    backGradient: 'from-[#061c14] via-[#092b1e] to-[#030e0a]',
+    points: [
+      {
+        icon: '🤝',
+        title: 'Mutual Consent Unlocking',
+        desc: 'Direct phone numbers unlock only after mutual acceptance from both candidate families.',
+      },
+      {
+        icon: '👨‍👩‍👧',
+        title: 'Parental & Pastoral Care',
+        desc: 'Parents and church elders guide meeting arrangements with complete honor and transparency.',
+      },
+      {
+        icon: '💍',
+        title: '“Till You Marry” Assurance',
+        desc: 'Faithful agency support throughout your search until holy matrimony, with zero arbitrary deadlines.',
+      },
+    ],
+    scripture: '“A cord of three strands is not quickly broken.” — Ecclesiastes 4:12',
+    highlight: 'Till You Marry Assurance',
+  },
+];
 
 export function HowItWorksSection() {
-  const steps = [
-    {
-      num: '01',
-      title: 'Create Your Sacred Profile Free',
-      subtitle: 'Faith, Parish & Family Values',
-      description:
-        'Share your testimony, baptism details, church parish, education, and career. Your phone number and sensitive contact details remain strictly locked under privacy protection.',
-      image: '/images/christian-wedding-rings-bible.jpg',
-      badge: 'Step 1 • Free Registration',
-      badgeColor: 'text-orange-900 bg-orange-100 border-orange-200',
-    },
-    {
-      num: '02',
-      title: 'Discover & Express Holy Interest',
-      subtitle: 'Denomination & Value Alignment',
-      description:
-        'Search genuine, verified Christian profiles filtered by denomination (Methodist, CSI, Catholic, Baptist, Pentecostal). Send prayerful matrimonial interests without awkwardness.',
-      image: '/images/christian-wedding-vows-rings.jpg',
-      badge: 'Step 2 • Prayerful Matching',
-      badgeColor: 'text-cyan-900 bg-cyan-100 border-cyan-200',
-    },
-    {
-      num: '03',
-      title: 'Mutual Consent & Blessed Union',
-      subtitle: 'Family & Pastoral Blessing',
-      description:
-        'When interest is mutually accepted, verified family phone numbers and complete background are unlocked. Families meet, pray together, and proceed toward holy matrimony.',
-      image: '/images/covenant-wedding-couple.jpg',
-      badge: 'Step 3 • Holy Covenant',
-      badgeColor: 'text-emerald-900 bg-emerald-100 border-emerald-200',
-    },
-  ];
+  const [flippedCards, setFlippedCards] = useState<Record<number, boolean>>({});
+  const [activeStepId, setActiveStepId] = useState<number>(1);
 
-  const containerVariants: Variants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.18,
-      },
-    },
-  };
-
-  const cardVariants: Variants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+  const toggleFlip = (id: number) => {
+    setFlippedCards((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
   };
 
   return (
-    <section className="py-12 sm:py-16 bg-gradient-to-b from-[#fdfbf7] via-[#faf6ee] to-[#fdfbf7] text-[#1e1b18] border-b border-charcoal-100/70">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-14 sm:py-20 bg-gradient-to-b from-[#fdfbf7] via-[#faf6ee] to-[#fdfbf7] text-[#1e1b18] border-b border-charcoal-100/70 relative overflow-hidden select-none">
+      {/* Ambient Decorative Background Halo */}
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[800px] h-[350px] bg-gradient-to-r from-amber-200/15 via-rose-200/15 to-cyan-200/15 rounded-full blur-3xl pointer-events-none animate-ambient" />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-10 sm:space-y-14">
         {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-50px' }}
-          transition={{ duration: 0.5 }}
-          className="text-center max-w-2xl mx-auto mb-10 sm:mb-12 space-y-2"
+          transition={{ duration: 0.6 }}
+          className="text-center max-w-3xl mx-auto space-y-3"
         >
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-xs font-bold text-emerald-950 shadow-xs">
-            <span>🕊️</span>
-            <span>3 Simple, Reverent Steps</span>
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-amber-50 via-rose-50 to-cyan-50 border border-amber-200/80 text-xs font-extrabold uppercase tracking-wider text-amber-950 shadow-2xs">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
+            <span>Interactive Matrimonial Roadmap</span>
           </div>
-          <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight font-brand">
+
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight font-brand">
             How Covenant Nest Works
           </h2>
-          <p className="text-xs sm:text-base text-slate-600">
-            A dignified, faith-centered path connecting Christian brides, grooms, and prayerful families across India.
+
+          <p className="text-xs sm:text-base text-slate-600 max-w-2xl mx-auto leading-relaxed font-normal">
+            A dignified, scriptural 3-phase journey connecting Christian brides, bridegrooms, and prayerful families across Bidar, Karnataka, and beyond.
           </p>
         </motion.div>
 
-        {/* 3 Step Cards Grid */}
+        {/* Animated Connected Roadmap Timeline Bar */}
         <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-50px' }}
-          className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-30px' }}
+          transition={{ duration: 0.6, delay: 0.15 }}
+          className="relative max-w-4xl mx-auto px-2"
         >
-          {steps.map((s, idx) => (
-            <motion.div
-              key={idx}
-              variants={cardVariants}
-              whileHover={{ y: -6, scale: 1.015 }}
-              transition={{ duration: 0.25 }}
-              className="bg-white rounded-2xl border border-charcoal-200 overflow-hidden shadow-xs hover:shadow-xl transition-shadow duration-300 flex flex-col justify-between group"
-            >
-              {/* Step Image */}
-              <div className="relative w-full aspect-[16/10] overflow-hidden bg-slate-900">
-                <img
-                  src={s.image}
-                  alt={s.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                
-                {/* Step Number Tag */}
-                <div className="absolute top-3 left-3">
-                  <span className="w-8 h-8 rounded-lg bg-slate-950/80 backdrop-blur-md text-amber-400 font-mono font-black text-sm flex items-center justify-center border border-amber-400/40 shadow-xs">
-                    {s.num}
-                  </span>
-                </div>
+          {/* Connecting Track Line behind Nodes */}
+          <div className="absolute top-1/2 left-8 right-8 -translate-y-1/2 h-1 bg-stone-200 rounded-full z-0" />
+          
+          {/* Glowing Animated Progress Bar */}
+          <motion.div
+            className="absolute top-1/2 left-8 -translate-y-1/2 h-1 bg-gradient-to-r from-amber-500 via-rose-500 to-emerald-500 rounded-full z-0 transition-all duration-500"
+            style={{
+              width: activeStepId === 1 ? '0%' : activeStepId === 2 ? '50%' : 'calc(100% - 4rem)',
+            }}
+          />
 
-                {/* Badge Tag */}
-                <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between">
-                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md border ${s.badgeColor} shadow-xs`}>
-                    {s.badge}
+          {/* 3 Interactive Milestone Nodes */}
+          <div className="relative z-10 flex items-center justify-between">
+            {roadmapSteps.map((step) => {
+              const isActive = activeStepId === step.id;
+              return (
+                <button
+                  key={step.id}
+                  type="button"
+                  onClick={() => {
+                    setActiveStepId(step.id);
+                    // Also flip card if not flipped
+                    setFlippedCards((prev) => ({ ...prev, [step.id]: false }));
+                  }}
+                  className="flex flex-col items-center group cursor-pointer"
+                >
+                  <motion.div
+                    whileHover={{ scale: 1.15 }}
+                    whileTap={{ scale: 0.95 }}
+                    className={`w-10 h-10 sm:w-12 sm:h-12 rounded-2xl flex items-center justify-center font-bold text-sm sm:text-base transition-all duration-300 shadow-md ${
+                      isActive
+                        ? 'bg-gradient-to-tr from-slate-900 via-burgundy-950 to-slate-900 text-amber-300 border-2 border-amber-400 ring-4 ring-amber-400/20 scale-110'
+                        : 'bg-white text-slate-700 border border-stone-300 hover:border-amber-400'
+                    }`}
+                  >
+                    <span>{step.id === 1 ? '✝️' : step.id === 2 ? '🕊️' : '💒'}</span>
+                  </motion.div>
+                  <span
+                    className={`mt-2 text-[11px] sm:text-xs font-extrabold uppercase tracking-wider transition-colors ${
+                      isActive ? 'text-burgundy-900 font-black' : 'text-slate-500 group-hover:text-slate-900'
+                    }`}
+                  >
+                    {step.phase}
                   </span>
-                </div>
-              </div>
-
-              {/* Step Text Body */}
-              <div className="p-5 sm:p-6 space-y-2.5 flex-1 flex flex-col justify-between">
-                <div>
-                  <span className="text-xs font-bold text-slate-400 uppercase tracking-wider block">
-                    {s.subtitle}
-                  </span>
-                  <h3 className="text-base sm:text-lg font-bold text-slate-900 font-brand mt-1 group-hover:text-cyan-900 transition-colors">
-                    {s.title}
-                  </h3>
-                  <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mt-2">
-                    {s.description}
-                  </p>
-                </div>
-
-                <div className="pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-slate-700">
-                  <span className="text-emerald-700">✓ 100% Family Safe</span>
-                  <span className="text-slate-400 font-mono">Step {s.num} of 3</span>
-                </div>
-              </div>
-            </motion.div>
-          ))}
+                </button>
+              );
+            })}
+          </div>
         </motion.div>
 
-        {/* Bottom Callout Bar */}
+        {/* 3 Interactive Flip Cards Grid (NO 01 / 02 / 03 overlay badges!) */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 perspective-1000">
+          {roadmapSteps.map((step, idx) => {
+            const isFlipped = !!flippedCards[step.id];
+
+            return (
+              <motion.div
+                key={step.id}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-40px' }}
+                transition={{ duration: 0.5, delay: idx * 0.15 }}
+                className="relative min-h-[460px] sm:min-h-[490px] w-full"
+                style={{ perspective: '1200px' }}
+              >
+                <motion.div
+                  animate={{ rotateY: isFlipped ? 180 : 0 }}
+                  transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                  style={{ transformStyle: 'preserve-3d' }}
+                  className="w-full h-full relative"
+                >
+                  {/* ==================== CARD FRONT VIEW ==================== */}
+                  <div
+                    style={{ backfaceVisibility: 'hidden' }}
+                    className={`absolute inset-0 w-full h-full bg-white rounded-2xl sm:rounded-3xl border border-charcoal-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group ${step.borderStyle}`}
+                  >
+                    {/* High-Definition Photo Container (NO 01 | 02 | 03 overlay badges!) */}
+                    <div className="relative w-full aspect-[16/10] overflow-hidden bg-slate-900">
+                      <img
+                        src={step.image}
+                        alt={step.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent" />
+
+                      {/* Phase Badge */}
+                      <div className="absolute top-3 left-3">
+                        <span className={`text-[10px] sm:text-[11px] font-extrabold px-3 py-1 rounded-full border shadow-xs backdrop-blur-md ${step.badgeStyle}`}>
+                          {step.badge}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Step Card Text Body */}
+                    <div className="p-5 sm:p-6 space-y-3 flex-1 flex flex-col justify-between">
+                      <div className="space-y-1.5">
+                        <span className="text-[11px] font-extrabold text-slate-400 uppercase tracking-widest block font-mono">
+                          {step.subtitle}
+                        </span>
+                        <h3 className="text-base sm:text-lg font-extrabold text-slate-900 font-brand group-hover:text-burgundy-900 transition-colors">
+                          {step.title}
+                        </h3>
+                        <p className="text-xs sm:text-sm text-slate-600 leading-relaxed pt-1">
+                          {step.frontDesc}
+                        </p>
+                      </div>
+
+                      {/* Flip Action Button */}
+                      <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
+                        <span className="text-emerald-700 text-xs font-bold flex items-center gap-1">
+                          <span>✓</span>
+                          <span>{step.highlight}</span>
+                        </span>
+
+                        <button
+                          type="button"
+                          onClick={() => {
+                            toggleFlip(step.id);
+                            setActiveStepId(step.id);
+                          }}
+                          className="px-3 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold transition-all flex items-center gap-1 cursor-pointer hover:scale-105 border border-slate-200"
+                        >
+                          <span>Full Details</span>
+                          <span className="text-amber-600">↺</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* ==================== CARD BACK VIEW (FLIPPED) ==================== */}
+                  <div
+                    style={{
+                      backfaceVisibility: 'hidden',
+                      transform: 'rotateY(180deg)',
+                    }}
+                    className={`absolute inset-0 w-full h-full bg-gradient-to-br ${step.backGradient} text-white rounded-2xl sm:rounded-3xl border border-amber-400/30 p-5 sm:p-6 flex flex-col justify-between shadow-2xl overflow-hidden`}
+                  >
+                    {/* Header */}
+                    <div className="space-y-2 border-b border-white/15 pb-3">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[10px] font-mono font-black uppercase tracking-widest text-amber-300 bg-amber-400/10 border border-amber-400/30 px-2.5 py-0.5 rounded-md">
+                          {step.phase} • Detailed Steps
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => toggleFlip(step.id)}
+                          className="w-7 h-7 rounded-full bg-white/10 hover:bg-white/20 text-stone-200 flex items-center justify-center text-xs font-bold transition-colors cursor-pointer"
+                          aria-label="Close flip card"
+                        >
+                          ✕
+                        </button>
+                      </div>
+
+                      <h4 className="font-brand text-base sm:text-lg font-bold text-white">
+                        {step.title}
+                      </h4>
+                    </div>
+
+                    {/* Detailed Features List */}
+                    <div className="space-y-2.5 py-2 flex-1">
+                      {step.points.map((pt, pIdx) => (
+                        <div key={pIdx} className="flex items-start gap-2.5 bg-white/5 border border-white/10 p-2.5 rounded-xl">
+                          <span className="text-sm shrink-0">{pt.icon}</span>
+                          <div className="space-y-0.5 text-left">
+                            <span className="text-xs font-bold text-amber-300 block">
+                              {pt.title}
+                            </span>
+                            <p className="text-[11px] text-stone-300 leading-tight">
+                              {pt.desc}
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Scripture Quote Footer */}
+                    <div className="pt-2 border-t border-white/15 space-y-2">
+                      <p className="text-[11px] font-serif italic text-amber-200/90 leading-snug">
+                        {step.scripture}
+                      </p>
+
+                      <button
+                        type="button"
+                        onClick={() => toggleFlip(step.id)}
+                        className="w-full py-2 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-amber-950 font-extrabold text-xs transition-all shadow-md flex items-center justify-center gap-1.5 cursor-pointer"
+                      >
+                        <span>Back to Overview</span>
+                        <span>↻</span>
+                      </button>
+                    </div>
+                  </div>
+                </motion.div>
+              </motion.div>
+            );
+          })}
+        </div>
+
+        {/* Bottom Callout Banner */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="mt-10 sm:mt-12 bg-gradient-to-r from-orange-50 via-amber-50 to-cyan-50 border border-orange-200/80 rounded-2xl p-5 sm:p-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left shadow-xs hover:shadow-md transition-shadow"
+          className="bg-gradient-to-r from-orange-50 via-amber-50 to-cyan-50 border border-orange-200/80 rounded-2xl p-5 sm:p-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left shadow-xs hover:shadow-md transition-shadow"
         >
           <div className="space-y-1">
             <h4 className="text-sm sm:text-base font-extrabold text-slate-900 font-brand">
@@ -155,6 +389,7 @@ export function HowItWorksSection() {
               Create your profile in under 3 minutes. Zero registration fee.
             </p>
           </div>
+
           <Link
             href="/register"
             className="btn-shine-effect shrink-0 inline-flex items-center gap-2 bg-gradient-to-r from-burgundy-700 via-rose-600 to-orange-600 hover:from-burgundy-600 hover:to-orange-500 text-white font-extrabold text-xs sm:text-sm px-6 py-2.5 rounded-xl shadow-sm transition-transform hover:scale-103"
