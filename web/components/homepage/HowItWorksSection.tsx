@@ -127,7 +127,6 @@ const roadmapSteps: StepData[] = [
 
 export function HowItWorksSection() {
   const [flippedCards, setFlippedCards] = useState<Record<number, boolean>>({});
-  const [activeStepId, setActiveStepId] = useState<number>(1);
   const flipTimers = useRef<Record<number, NodeJS.Timeout>>({});
 
   const handleCardFlip = (id: number, forceState?: boolean) => {
@@ -149,22 +148,22 @@ export function HowItWorksSection() {
   };
 
   return (
-    <section className="py-12 sm:py-16 bg-gradient-to-b from-[#fdfbf7] via-[#faf6ee] to-[#fdfbf7] text-[#1e1b18] border-b border-charcoal-100/70 relative overflow-hidden select-none">
+    <section className="py-10 sm:py-12 bg-gradient-to-b from-[#fdfbf7] via-[#faf6ee] to-[#fdfbf7] text-[#1e1b18] border-b border-charcoal-100/70 relative overflow-hidden select-none">
       {/* Ambient Decorative Background Halo */}
       <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[800px] h-[350px] bg-gradient-to-r from-amber-200/15 via-rose-200/15 to-cyan-200/15 rounded-full blur-3xl pointer-events-none animate-ambient" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-8 sm:space-y-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-6 sm:space-y-8">
         {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-50px' }}
           transition={{ duration: 0.6 }}
-          className="text-center max-w-2xl mx-auto space-y-2.5"
+          className="text-center max-w-2xl mx-auto space-y-2"
         >
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-gradient-to-r from-amber-50 via-rose-50 to-cyan-50 border border-amber-200/80 text-xs font-extrabold uppercase tracking-wider text-amber-950 shadow-2xs">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gradient-to-r from-amber-50 via-rose-50 to-cyan-50 border border-amber-200/80 text-xs font-extrabold uppercase tracking-wider text-amber-950 shadow-2xs">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
-            <span>Interactive Matrimonial Roadmap</span>
+            <span>Matrimonial Journey</span>
           </div>
 
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight font-brand">
@@ -174,56 +173,6 @@ export function HowItWorksSection() {
           <p className="text-xs sm:text-base text-slate-600 max-w-xl mx-auto leading-relaxed font-normal">
             A simple, trusted way for Christian brides, grooms, and families to connect across India.
           </p>
-        </motion.div>
-
-        {/* Animated Connected Roadmap Timeline Bar (Clean icon nodes, NO Step 1/2/3 labels!) */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-30px' }}
-          transition={{ duration: 0.6, delay: 0.15 }}
-          className="relative max-w-3xl mx-auto px-2"
-        >
-          {/* Connecting Track Line behind Nodes */}
-          <div className="absolute top-1/2 left-6 right-6 -translate-y-1/2 h-1 bg-stone-200 rounded-full z-0" />
-
-          {/* Glowing Animated Progress Bar */}
-          <motion.div
-            className="absolute top-1/2 left-6 -translate-y-1/2 h-1 bg-gradient-to-r from-amber-500 via-rose-500 to-emerald-500 rounded-full z-0 transition-all duration-500"
-            style={{
-              width: activeStepId === 1 ? '0%' : activeStepId === 2 ? '50%' : 'calc(100% - 3rem)',
-            }}
-          />
-
-          {/* 3 Interactive Milestone Nodes */}
-          <div className="relative z-10 flex items-center justify-between">
-            {roadmapSteps.map((step) => {
-              const isActive = activeStepId === step.id;
-              return (
-                <button
-                  key={step.id}
-                  type="button"
-                  onClick={() => {
-                    setActiveStepId(step.id);
-                    handleCardFlip(step.id, false);
-                  }}
-                  className="flex flex-col items-center group cursor-pointer"
-                >
-                  <motion.div
-                    whileHover={{ scale: 1.15 }}
-                    whileTap={{ scale: 0.95 }}
-                    className={`w-10 h-10 sm:w-12 sm:h-12 rounded-2xl flex items-center justify-center font-bold text-sm sm:text-base transition-all duration-300 shadow-md ${
-                      isActive
-                        ? 'bg-gradient-to-tr from-slate-900 via-burgundy-950 to-slate-900 text-amber-300 border-2 border-amber-400 ring-4 ring-amber-400/20 scale-110'
-                        : 'bg-white text-slate-700 border border-stone-300 hover:border-amber-400'
-                    }`}
-                  >
-                    <span>{step.id === 1 ? '✝️' : step.id === 2 ? '🕊️' : '💒'}</span>
-                  </motion.div>
-                </button>
-              );
-            })}
-          </div>
         </motion.div>
 
         {/* 3 Interactive Flip Cards Grid (Hover triggers flip & 5s auto-flipback) */}
@@ -242,7 +191,6 @@ export function HowItWorksSection() {
                 style={{ perspective: '1200px' }}
                 onMouseEnter={() => {
                   handleCardFlip(step.id, true);
-                  setActiveStepId(step.id);
                 }}
               >
                 <motion.div
@@ -304,7 +252,6 @@ export function HowItWorksSection() {
                           type="button"
                           onClick={() => {
                             handleCardFlip(step.id);
-                            setActiveStepId(step.id);
                           }}
                           className="px-2.5 py-1 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold transition-all flex items-center gap-1 cursor-pointer hover:scale-105 border border-slate-200"
                         >
