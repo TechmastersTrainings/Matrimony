@@ -7,39 +7,39 @@ export function MatrimonyCovenantSection() {
   const pillars = [
     {
       num: '01',
-      badge: 'LIFELONG COMMITMENT',
-      title: 'Support Till Holy Matrimony',
+      badge: 'PROTECTED FAITH PROFILE',
+      title: 'Create a protected faith profile',
       description:
-        'We stand faithfully alongside Christian brides, grooms, and parents throughout their entire search. No arbitrary 30-day expiration anxiety—giving your family peaceful, prayerful time to discern God’s ordained will.',
+        'Your phone number is never displayed publicly. Share your testimony, church parish details, education, and family values with complete privacy and peace of mind.',
       bg: 'bg-gradient-to-br from-cyan-50/90 to-cyan-100/30',
       border: 'border-cyan-200 hover:border-cyan-400',
       numBadge: 'bg-cyan-100 text-cyan-900 border-cyan-300',
       titleColor: 'text-cyan-950',
-      highlight: 'Till You Marry Assurance',
+      highlight: 'Phone Number Never Public',
     },
     {
       num: '02',
-      badge: 'ANTI-HARASSMENT SECURITY',
-      title: 'Daily Safety Caps & Anti-Scraping',
+      badge: 'MUTUAL INTEREST',
+      title: 'Discover compatibility, then express interest',
       description:
-        'To safeguard the honor, modesty, and peace of mind of our members—especially Christian brides—contact unlocks are strictly rate-limited per day. This prevents data harvesting, mass cold-calls, and commercial spam.',
+        'Conversation begins only after interest is mutual. Filter verified profiles by church denomination and connect without cold calling or pressure.',
       bg: 'bg-gradient-to-br from-emerald-50/90 to-emerald-100/30',
       border: 'border-emerald-200 hover:border-emerald-400',
       numBadge: 'bg-emerald-100 text-emerald-900 border-emerald-300',
       titleColor: 'text-emerald-950',
-      highlight: 'Daily Contact Limits',
+      highlight: 'Conversation Mutual First',
     },
     {
       num: '03',
-      badge: 'FAMILY DISCRETION',
-      title: 'Mutual Consent Contact Unlocking',
+      badge: 'FAMILY CONNECTION',
+      title: 'Connect families and prepare for marriage',
       description:
-        'Direct contact details, family addresses, and confidential biodatas are unlocked only after mutual consent between both sides. Zero public search engine crawling or casual dating leakage.',
+        'Both people control when family contact is opened. Families meet with pastoral guidance, honor, and zero arbitrary 30-day deadline pressures.',
       bg: 'bg-gradient-to-br from-orange-50/90 to-amber-100/30',
       border: 'border-orange-200 hover:border-orange-400',
       numBadge: 'bg-orange-100 text-orange-900 border-orange-300',
       titleColor: 'text-orange-950',
-      highlight: 'Mutual Consent Required',
+      highlight: 'Both People Control Access',
     },
   ];
 
