@@ -91,29 +91,29 @@ export function MatrimonyCovenantSection() {
             >
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className={`w-8 h-8 rounded-lg ${p.numBadge} border flex items-center justify-center font-mono text-sm font-black shadow-2xs`}>
+                  <span className={`w-9 h-9 rounded-lg ${p.numBadge} border flex items-center justify-center font-mono text-sm font-black shadow-2xs`}>
                     {p.num}
                   </span>
-                  <span className="text-[10px] sm:text-xs font-extrabold uppercase tracking-wider text-slate-700 bg-white/95 border border-slate-200 px-2.5 py-1 rounded-md">
+                  <span className="text-xs sm:text-sm font-extrabold uppercase tracking-wider text-slate-800 bg-white/95 border border-slate-200 px-3 py-1 rounded-md">
                     {p.badge}
                   </span>
                 </div>
 
-                <h3 className={`text-base sm:text-lg font-bold ${p.titleColor} font-brand`}>
+                <h3 className={`text-lg sm:text-xl font-extrabold ${p.titleColor} font-brand`}>
                   {p.title}
                 </h3>
 
-                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                <p className="text-sm sm:text-base text-slate-700 leading-relaxed">
                   {p.description}
                 </p>
               </div>
 
-              <div className="pt-4 mt-4 border-t border-slate-200/60 flex items-center justify-between text-xs font-bold text-slate-800">
-                <span className="inline-flex items-center gap-1 text-emerald-700">
+              <div className="pt-4 mt-4 border-t border-slate-200/60 flex items-center justify-between text-xs sm:text-sm font-bold text-slate-800">
+                <span className="inline-flex items-center gap-1 text-emerald-700 font-extrabold">
                   <span>✓</span>
                   <span>{p.highlight}</span>
                 </span>
-                <span className="text-slate-400 font-mono">Pillar {p.num}</span>
+                <span className="text-slate-400 font-mono text-xs">Pillar {p.num}</span>
               </div>
             </motion.div>
           ))}
