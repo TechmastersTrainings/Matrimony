@@ -121,8 +121,8 @@ export function MatrimonyHeroSection() {
   const activeSlide = heroSlides[currentSlide];
 
   return (
-    <section className="relative w-full overflow-hidden bg-stone-950 select-none">
-      {/* LayerSlider Animated Auto-Progress Line Top */}
+    <section className="relative w-full overflow-hidden bg-[#0a090d] text-white select-none">
+      {/* Top Animated Auto-Progress Line */}
       <div className="absolute top-0 left-0 right-0 h-1 bg-white/10 z-40 overflow-hidden">
         <motion.div
           key={progressKey}
@@ -133,127 +133,52 @@ export function MatrimonyHeroSection() {
         />
       </div>
 
-      {/* LayerSlider Hero Main Container */}
+      {/* Subtle Atmospheric Ambient Backdrop (Soft warm glow, NOT stretched/maximized image) */}
+      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+        <div className="absolute top-1/4 left-1/4 w-[600px] h-[400px] bg-gradient-to-tr from-amber-500/10 via-rose-500/10 to-transparent rounded-full blur-[100px]" />
+        <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[350px] bg-gradient-to-bl from-amber-400/10 via-amber-600/5 to-transparent rounded-full blur-[90px]" />
+      </div>
+
+      {/* Main Hero Container: Balanced 2-Column Showcase */}
       <div
-        className="group relative w-full min-h-[540px] sm:min-h-[600px] lg:min-h-[670px] flex items-center"
+        className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 lg:py-16"
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
       >
-        {/* Layer 1: Background Images with Ken Burns Zoom & High Contrast */}
-        <AnimatePresence mode="sync">
-          {heroSlides.map((slide, idx) =>
-            currentSlide === idx ? (
-              <motion.div
-                key={idx}
-                initial={{ opacity: 0, scale: 1.12 }}
-                animate={{ opacity: 1, scale: 1.02 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
-                className="absolute inset-0"
-              >
-                <img
-                  src={slide.image}
-                  alt={slide.title}
-                  className="w-full h-full object-cover object-center filter brightness-[1.03] contrast-[1.06]"
-                />
-                {/* Clean Subtle Dark Gradient Overlay Behind Text for 100% Readability - Zero Navy Blue Tint */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-black/15 lg:bg-gradient-to-r lg:from-black/85 lg:via-black/50 lg:to-transparent z-10 pointer-events-none" />
-              </motion.div>
-            ) : null
-          )}
-        </AnimatePresence>
-
-        {/* Ambient Decorative Halo Light Layer (Warm Amber/Rose Gold Glow) */}
-        <div className="absolute top-1/4 left-1/4 w-[500px] h-[300px] bg-gradient-to-r from-amber-500/15 via-rose-500/15 to-amber-600/10 rounded-full blur-3xl pointer-events-none z-15 animate-pulse" />
-
-        {/* Layer 2: Previous Slide Navigation Arrow */}
-        <motion.button
-          whileHover={{ scale: 1.15, x: -2 }}
-          whileTap={{ scale: 0.95 }}
-          type="button"
-          onClick={prevSlide}
-          aria-label="Previous Slide"
-          className="hidden md:flex absolute left-4 lg:left-6 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-full bg-slate-950/70 hover:bg-slate-900 text-white hover:text-amber-300 shadow-2xl border border-amber-400/30 backdrop-blur-md items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 cursor-pointer"
-        >
-          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
-          </svg>
-        </motion.button>
-
-        {/* Layer 2: Next Slide Navigation Arrow */}
-        <motion.button
-          whileHover={{ scale: 1.15, x: 2 }}
-          whileTap={{ scale: 0.95 }}
-          type="button"
-          onClick={nextSlide}
-          aria-label="Next Slide"
-          className="hidden md:flex absolute right-4 lg:right-6 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-full bg-slate-950/70 hover:bg-slate-900 text-white hover:text-amber-300 shadow-2xl border border-amber-400/30 backdrop-blur-md items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 cursor-pointer"
-        >
-          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
-          </svg>
-        </motion.button>
-
-        {/* Layer 3: Main Slide Content + Floating Parallax Badge (LayerSlider Layout) */}
-        <div className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 lg:py-20 flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-12">
-          {/* Left Hero Content Box with Staggered Multi-Layer Motion */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+          {/* Left Column: Rich Typography, Scripture & Actions (7 cols) */}
           <motion.div
             key={currentSlide}
-            initial={{ opacity: 0, x: -30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-            className="w-full lg:max-w-2xl flex flex-col justify-center text-left space-y-4 sm:space-y-5 text-white"
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            className="lg:col-span-7 flex flex-col justify-center text-left space-y-4 sm:space-y-5"
           >
-            {/* Layer 3A: Top Pill Badge */}
-            <motion.div
-              initial={{ opacity: 0, y: -15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1, duration: 0.5 }}
-              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900/80 border border-amber-400/40 text-xs sm:text-sm font-extrabold uppercase tracking-wider text-amber-300 w-fit backdrop-blur-md shadow-lg"
-            >
+            {/* Top Pill Badge */}
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-amber-400/40 text-xs sm:text-sm font-extrabold uppercase tracking-wider text-amber-300 w-fit backdrop-blur-md shadow-lg">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
               <span>{activeSlide.badge}</span>
-            </motion.div>
+            </div>
 
-            {/* Layer 3B: Main Title with Rich Layered Typography */}
-            <motion.h1
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2, duration: 0.6 }}
-              className="text-2xl sm:text-4xl md:text-5xl lg:text-[52px] font-extrabold tracking-tight leading-tight sm:leading-[1.12] font-brand text-white drop-shadow-lg"
-            >
+            {/* Main Title */}
+            <h1 className="text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tight leading-tight sm:leading-[1.14] font-brand text-white drop-shadow-md">
               {activeSlide.title}
-            </motion.h1>
+            </h1>
 
-            {/* Layer 3C: Scripture Box with Glassmorphism & Gold Border */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3, duration: 0.6 }}
-              className="border-l-4 border-amber-400 pl-4 py-2.5 bg-slate-900/60 backdrop-blur-md rounded-r-2xl border-y border-r border-amber-400/20 shadow-xl max-w-xl"
-            >
+            {/* Scripture Box with Gold Accent */}
+            <div className="border-l-4 border-amber-400 pl-4 py-2.5 bg-white/5 backdrop-blur-md rounded-r-2xl border-y border-r border-amber-400/20 shadow-xl max-w-xl">
               <p className="text-xs sm:text-sm md:text-base font-serif italic text-amber-100 leading-relaxed font-medium">
                 {activeSlide.scripture}
               </p>
-            </motion.div>
+            </div>
 
-            {/* Layer 3D: Subtitle Copy */}
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4, duration: 0.6 }}
-              className="text-xs sm:text-sm md:text-base text-stone-200 font-normal leading-relaxed max-w-xl"
-            >
+            {/* Subtitle */}
+            <p className="text-xs sm:text-sm md:text-base text-stone-200 font-normal leading-relaxed max-w-xl">
               {activeSlide.subtitle}
-            </motion.p>
+            </p>
 
-            {/* Layer 3E: Action CTA Buttons */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5, duration: 0.6 }}
-              className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-3"
-            >
+            {/* CTA Buttons */}
+            <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
               <Link
                 href="/discover"
                 className="btn-shine-effect inline-flex items-center justify-center gap-2.5 bg-gradient-to-r from-burgundy-700 via-rose-600 to-amber-600 hover:from-burgundy-800 hover:to-amber-700 text-white px-6 sm:px-7 py-3 rounded-xl font-bold text-xs sm:text-sm shadow-2xl border border-amber-400/40 transition-transform hover:scale-103 cursor-pointer text-center"
@@ -269,9 +194,9 @@ export function MatrimonyHeroSection() {
                 <span>Create Protected Profile</span>
                 <span>+</span>
               </Link>
-            </motion.div>
+            </div>
 
-            {/* Layer 3F: Slide Indicators & Controls */}
+            {/* Slide Navigation & Indicators */}
             <div className="flex items-center gap-4 pt-3">
               <span className="text-xs font-mono font-bold tracking-widest text-amber-300">
                 {String(currentSlide + 1).padStart(2, '0')} / {String(heroSlides.length).padStart(2, '0')}
@@ -292,8 +217,56 @@ export function MatrimonyHeroSection() {
                   />
                 ))}
               </div>
+
+              {/* Prev / Next Buttons */}
+              <div className="flex items-center gap-2 ml-auto sm:ml-4">
+                <button
+                  type="button"
+                  onClick={prevSlide}
+                  aria-label="Previous Slide"
+                  className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 border border-amber-400/30 flex items-center justify-center text-stone-200 hover:text-amber-300 transition-colors cursor-pointer"
+                >
+                  ‹
+                </button>
+                <button
+                  type="button"
+                  onClick={nextSlide}
+                  aria-label="Next Slide"
+                  className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 border border-amber-400/30 flex items-center justify-center text-stone-200 hover:text-amber-300 transition-colors cursor-pointer"
+                >
+                  ›
+                </button>
+              </div>
             </div>
           </motion.div>
+
+          {/* Right Column: The Photograph Shown As Is & Zoomed Out (5 cols) */}
+          <div className="lg:col-span-5 flex justify-center items-center">
+            <div className="relative w-full max-w-lg lg:max-w-none group">
+              {/* Outer Golden Ambient Halo */}
+              <div className="absolute -inset-2 bg-gradient-to-tr from-amber-500/25 via-rose-500/20 to-amber-400/20 rounded-3xl blur-xl opacity-75 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+
+              {/* Elegant Framed Photo Container (Natural 16:9 un-maximized proportions) */}
+              <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden border-2 border-amber-400/35 ring-1 ring-white/20 shadow-2xl bg-black/50">
+                <img
+                  src="/images/hero-sunset-covenant-hands.jpg"
+                  alt="Holy Matrimony Covenant Hands and Rings"
+                  className="w-full h-auto object-contain block transform transition-transform duration-500"
+                />
+
+                {/* Subtle Bottom Card Badge */}
+                <div className="absolute bottom-2.5 left-2.5 right-2.5 px-3.5 py-1.5 rounded-xl bg-black/65 backdrop-blur-md border border-amber-400/30 flex items-center justify-between text-xs text-amber-200 shadow-lg">
+                  <span className="font-semibold flex items-center gap-1.5">
+                    <span>💍</span>
+                    <span>Holy Matrimony Covenant</span>
+                  </span>
+                  <span className="font-serif italic text-amber-100/90 text-[11px]">
+                    Genesis 2:24
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
