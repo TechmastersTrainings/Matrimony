@@ -20,7 +20,7 @@ interface SlideData {
 
 const heroSlides: SlideData[] = [
   {
-    image: '/images/hero-sunset-covenant-hands.jpg',
+    image: '/images/hero-church-cathedral-couple.jpg',
     badge: 'Christian Matrimony • Sacred Vows',
     title: 'Where Holy Covenants Build Blessed Homes',
     subtitle:
@@ -34,7 +34,7 @@ const heroSlides: SlideData[] = [
     },
   },
   {
-    image: '/images/hero-sunset-covenant-hands.jpg',
+    image: '/images/hero-proposal-stage-couple.jpg',
     badge: 'Till You Marry Commitment',
     title: 'Register Once. Support Till Holy Marriage',
     subtitle: 'Say goodbye to arbitrary 30-day renewal anxiety. Our sacred agency stands faithfully beside Christian families throughout their entire journey.',
@@ -47,11 +47,11 @@ const heroSlides: SlideData[] = [
     },
   },
   {
-    image: '/images/hero-sunset-covenant-hands.jpg',
-    badge: 'Christ-Centered Unions',
-    title: 'A Cord of Three Strands is Not Quickly Broken',
+    image: '/images/hero-traditional-lehenga-couple.jpg',
+    badge: 'Honoring Christian Heritage',
+    title: 'Preserving Faith, Modesty & Family Values',
     subtitle: 'Connecting devout Methodist (MCI), CSI, Roman Catholic, Baptist, Pentecostal, and Protestant fellowships with dignity.',
-    scripture: '“A cord of three strands is not quickly broken.” — Ecclesiastes 4:12',
+    scripture: '“Charm is deceptive, and beauty is fleeting; but a woman who fears the Lord is to be praised.” — Prov 31:30',
     floatingCard: {
       icon: '⛪',
       title: 'Denomination Filters',
@@ -62,27 +62,14 @@ const heroSlides: SlideData[] = [
   {
     image: '/images/hero-sunset-covenant-hands.jpg',
     badge: 'Protected Phone Privacy',
-    title: 'Mutual Consent & Unlocked Family Contacts',
+    title: 'A Cord of Three Strands is Not Quickly Broken',
     subtitle: 'Your phone number is never displayed publicly. Conversation begins only after interest is mutual, giving both families total control.',
-    scripture: '“Above all, love each other deeply, because love covers over a multitude of sins.” — 1 Peter 4:8',
+    scripture: '“A cord of three strands is not quickly broken.” — Ecclesiastes 4:12',
     floatingCard: {
       icon: '🔒',
       title: 'Private Phone Number',
       subtitle: 'Direct contacts shared only upon mutual consent',
       tag: 'Locked & Safe',
-    },
-  },
-  {
-    image: '/images/hero-sunset-covenant-hands.jpg',
-    badge: 'Honoring Christian Heritage',
-    title: 'Preserving Faith, Modesty & Family Values',
-    subtitle: 'Connecting Christian families with honor, respect, parental involvement, and zero pressure.',
-    scripture: '“Charm is deceptive, and beauty is fleeting; but a woman who fears the Lord is to be praised.” — Prov 31:30',
-    floatingCard: {
-      icon: '🤝',
-      title: 'Mutual Consent',
-      subtitle: 'Families meet with pastoral guidance and joy',
-      tag: 'Family Centered',
     },
   },
 ];
@@ -240,28 +227,41 @@ export function MatrimonyHeroSection() {
             </div>
           </motion.div>
 
-          {/* Right Column: The Photograph Shown As Is & Zoomed Out (5 cols) */}
+          {/* Right Column: Compact, Decreased Width & Height, Unaltered Photograph (5 cols) */}
           <div className="lg:col-span-5 flex justify-center items-center">
-            <div className="relative w-full max-w-lg lg:max-w-none group">
+            <div className="relative w-full max-w-sm sm:max-w-md lg:max-w-[460px] group">
               {/* Outer Golden Ambient Halo */}
-              <div className="absolute -inset-2 bg-gradient-to-tr from-amber-500/25 via-rose-500/20 to-amber-400/20 rounded-3xl blur-xl opacity-75 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+              <div className="absolute -inset-2 bg-gradient-to-tr from-amber-500/20 via-rose-500/15 to-amber-400/15 rounded-3xl blur-xl opacity-75 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
-              {/* Elegant Framed Photo Container (Natural 16:9 un-maximized proportions) */}
-              <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden border-2 border-amber-400/35 ring-1 ring-white/20 shadow-2xl bg-black/50">
-                <img
-                  src="/images/hero-sunset-covenant-hands.jpg"
-                  alt="Holy Matrimony Covenant Hands and Rings"
-                  className="w-full h-auto object-contain block transform transition-transform duration-500"
-                />
+              {/* Elegant Framed Photo Container (Compact size, uncropped) */}
+              <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden border-2 border-amber-400/35 ring-1 ring-white/15 shadow-2xl bg-black/60 h-[250px] sm:h-[290px] lg:h-[310px] flex items-center justify-center p-1.5">
+                <AnimatePresence mode="wait">
+                  <motion.img
+                    key={currentSlide}
+                    src={activeSlide.image}
+                    alt={activeSlide.title}
+                    initial={{ opacity: 0, scale: 0.98 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.45, ease: 'easeInOut' }}
+                    className="w-full h-full object-contain rounded-xl sm:rounded-2xl block"
+                  />
+                </AnimatePresence>
 
                 {/* Subtle Bottom Card Badge */}
-                <div className="absolute bottom-2.5 left-2.5 right-2.5 px-3.5 py-1.5 rounded-xl bg-black/65 backdrop-blur-md border border-amber-400/30 flex items-center justify-between text-xs text-amber-200 shadow-lg">
-                  <span className="font-semibold flex items-center gap-1.5">
+                <div className="absolute bottom-2.5 left-2.5 right-2.5 px-3 py-1.5 rounded-xl bg-black/70 backdrop-blur-md border border-amber-400/30 flex items-center justify-between text-xs text-amber-200 shadow-lg">
+                  <span className="font-semibold flex items-center gap-1.5 truncate">
                     <span>💍</span>
-                    <span>Holy Matrimony Covenant</span>
+                    <span className="truncate">Holy Matrimony Covenant</span>
                   </span>
-                  <span className="font-serif italic text-amber-100/90 text-[11px]">
-                    Genesis 2:24
+                  <span className="font-serif italic text-amber-100/90 text-[11px] shrink-0 ml-2">
+                    {currentSlide === 0
+                      ? 'Mark 10:9'
+                      : currentSlide === 1
+                      ? '1 Cor 13:4-7'
+                      : currentSlide === 2
+                      ? 'Prov 31:30'
+                      : 'Eccl 4:12'}
                   </span>
                 </div>
               </div>
