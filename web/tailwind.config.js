@@ -77,10 +77,11 @@ module.exports = {
         },
       },
       fontFamily: {
-        sans: ['Plus Jakarta Sans', 'Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+        sans: ['Plus Jakarta Sans', 'Work Sans', 'Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
         serif: ['Playfair Display', 'Cinzel', 'Georgia', 'serif'],
         brand: ['Playfair Display', 'Cinzel', 'Georgia', 'serif'],
         heading: ['Outfit', 'Plus Jakarta Sans', 'sans-serif'],
+        script: ['Sacramento', 'cursive', 'Playfair Display', 'serif'],
       },
     },
   },
