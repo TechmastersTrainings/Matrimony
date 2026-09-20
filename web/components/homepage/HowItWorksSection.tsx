@@ -94,7 +94,7 @@ const roadmapSteps: StepData[] = [
     title: 'Connect families and prepare for marriage',
     frontDesc:
       'When both of you accept interest, verified family numbers are shared. Both people control when family contact is opened.',
-    image: '/images/hero-sunset-covenant-hands.jpg',
+    image: '/images/christian-couple-church-prayer.jpg',
     badgeStyle: 'bg-emerald-500/15 text-emerald-900 border-emerald-300/80',
     borderStyle: 'hover:border-emerald-400/80 hover:shadow-emerald-500/10',
     activeGlow: 'from-emerald-500 to-green-600',
