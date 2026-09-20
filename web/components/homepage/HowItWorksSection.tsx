@@ -216,12 +216,6 @@ export function HowItWorksSection() {
                           {step.badge}
                         </span>
                       </div>
-
-                      {/* Hover Hint Badge */}
-                      <div className="absolute bottom-2.5 right-2.5 bg-black/60 backdrop-blur-md text-amber-300 text-[11px] px-2 py-0.5 rounded-full font-bold border border-amber-400/30 flex items-center gap-1 opacity-90 group-hover:opacity-100 transition-opacity">
-                        <span>Hover to Flip</span>
-                        <span>↺</span>
-                      </div>
                     </div>
 
                     {/* Step Card Text Body */}
