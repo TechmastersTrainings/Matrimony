@@ -177,21 +177,6 @@ export function BlessedStoriesSection() {
                   alt={current.title}
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-charcoal-950/70 via-transparent to-transparent pointer-events-none" />
-
-                <div className="absolute top-3 left-3 bg-white/95 backdrop-blur-md px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full text-[10px] sm:text-[11px] font-bold text-emerald-950 border border-emerald-200 shadow-xs flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500" />
-                  <span>{current.category}</span>
-                </div>
-
-                <div className="absolute bottom-2.5 left-2.5 right-2.5 bg-white/95 backdrop-blur-md p-2.5 sm:p-3 rounded-xl border border-white/60 shadow-md">
-                  <span className="text-xs font-serif font-extrabold text-charcoal-900 block truncate">
-                    {current.title}
-                  </span>
-                  <span className="text-[10px] sm:text-[11px] text-slate-500 line-clamp-1">
-                    {current.fellowship}
-                  </span>
-                </div>
               </div>
             </div>
 
