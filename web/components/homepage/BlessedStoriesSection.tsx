@@ -25,7 +25,7 @@ const galleryItems: GalleryItem[] = [
     title: 'Holy Vows Before the Altar of God',
     category: 'Sacred Church Ceremony',
     fellowship: 'Methodist Church in India (MCI), CSI & Catholic Traditions',
-    image: '/images/hero-slide-4.jpg',
+    image: '/images/hero-sunset-covenant-hands.jpg',
     description:
       'Christian marriage begins at the altar in reverence and prayer. Standing before God and the church fellowship, bride and groom exchange sacred vows, receive pastoral blessings, and dedicate their lifelong union to Christ.',
     highlight1: {
@@ -41,7 +41,7 @@ const galleryItems: GalleryItem[] = [
     title: 'The Joy of Two Families United in Christ',
     category: 'Family Fellowship & Blessing',
     fellowship: 'Traditional Christian Matrimonial Celebrations',
-    image: '/images/hero-slide-1.jpg',
+    image: '/images/hero-sunset-covenant-hands.jpg',
     description:
       'Christian matrimony brings two families together with mutual respect and joy. Supported by parental prayers, elders, and church leaders, families celebrate each step with thanksgiving, honoring generational faith.',
     highlight1: {
@@ -57,7 +57,7 @@ const galleryItems: GalleryItem[] = [
     title: 'Symbols of an Unbroken Covenant',
     category: 'Exchanging Wedding Vows & Rings',
     fellowship: 'Biblical Foundations & Christian Heritage',
-    image: '/images/hero-slide-2.jpg',
+    image: '/images/christian-wedding-rings-bible.jpg',
     description:
       'The exchange of rings upon the Holy Scriptures signifies an everlasting covenant anchored in God’s grace. Grounded in biblical love and devotion, Christian couples step forward in lifelong harmony and faith.',
     highlight1: {
@@ -73,7 +73,7 @@ const galleryItems: GalleryItem[] = [
     title: 'Diverse Fellowships Across India',
     category: 'Christian Community',
     fellowship: 'Bidar, Karnataka & Telangana Dioceses',
-    image: '/images/hero-slide-3.jpg',
+    image: '/images/hero-sunset-covenant-hands.jpg',
     description:
       'CovenantNest respectfully brings together Christian brides, grooms, and prayerful families across Methodist (MCI), CSI, Roman Catholic, Baptist, and Pentecostal fellowships, preserving distinct church heritages.',
     highlight1: {

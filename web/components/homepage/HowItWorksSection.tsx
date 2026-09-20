@@ -66,7 +66,7 @@ const roadmapSteps: StepData[] = [
     subtitle: 'Search Verified Profiles',
     frontDesc:
       'Look through genuine Christian profiles filtered by church or city. Conversation begins only after interest is mutual.',
-    image: '/images/hero-slide-2.jpg',
+    image: '/images/hero-sunset-covenant-hands.jpg',
     badgeStyle: 'bg-cyan-500/15 text-cyan-900 border-cyan-300/80',
     borderStyle: 'hover:border-cyan-400/80 hover:shadow-cyan-500/10',
     activeGlow: 'from-cyan-500 to-teal-600',
@@ -98,7 +98,7 @@ const roadmapSteps: StepData[] = [
     subtitle: 'Parents & Pastors Meeting',
     frontDesc:
       'When both of you accept interest, verified family numbers are shared. Both people control when family contact is opened.',
-    image: '/images/hero-slide-5.jpg',
+    image: '/images/hero-sunset-covenant-hands.jpg',
     badgeStyle: 'bg-emerald-500/15 text-emerald-900 border-emerald-300/80',
     borderStyle: 'hover:border-emerald-400/80 hover:shadow-emerald-500/10',
     activeGlow: 'from-emerald-500 to-green-600',

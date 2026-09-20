@@ -20,7 +20,7 @@ interface SlideData {
 
 const heroSlides: SlideData[] = [
   {
-    image: '/images/hero-slide-1.jpg',
+    image: '/images/hero-sunset-covenant-hands.jpg',
     badge: 'Christian Matrimony • Sacred Vows',
     title: 'Where Holy Covenants Build Blessed Homes',
     subtitle:
@@ -34,7 +34,7 @@ const heroSlides: SlideData[] = [
     },
   },
   {
-    image: '/images/hero-slide-2.jpg',
+    image: '/images/hero-sunset-covenant-hands.jpg',
     badge: 'Till You Marry Commitment',
     title: 'Register Once. Support Till Holy Marriage',
     subtitle: 'Say goodbye to arbitrary 30-day renewal anxiety. Our sacred agency stands faithfully beside Christian families throughout their entire journey.',
@@ -47,9 +47,9 @@ const heroSlides: SlideData[] = [
     },
   },
   {
-    image: '/images/hero-slide-3.jpg',
+    image: '/images/hero-sunset-covenant-hands.jpg',
     badge: 'Christ-Centered Unions',
-    title: 'Rooted in Faith, Guided by the Cross',
+    title: 'A Cord of Three Strands is Not Quickly Broken',
     subtitle: 'Connecting devout Methodist (MCI), CSI, Roman Catholic, Baptist, Pentecostal, and Protestant fellowships with dignity.',
     scripture: '“A cord of three strands is not quickly broken.” — Ecclesiastes 4:12',
     floatingCard: {
@@ -60,7 +60,7 @@ const heroSlides: SlideData[] = [
     },
   },
   {
-    image: '/images/hero-slide-4.jpg',
+    image: '/images/hero-sunset-covenant-hands.jpg',
     badge: 'Protected Phone Privacy',
     title: 'Mutual Consent & Unlocked Family Contacts',
     subtitle: 'Your phone number is never displayed publicly. Conversation begins only after interest is mutual, giving both families total control.',
@@ -73,7 +73,7 @@ const heroSlides: SlideData[] = [
     },
   },
   {
-    image: '/images/hero-slide-5.jpg',
+    image: '/images/hero-sunset-covenant-hands.jpg',
     badge: 'Honoring Christian Heritage',
     title: 'Preserving Faith, Modesty & Family Values',
     subtitle: 'Connecting Christian families with honor, respect, parental involvement, and zero pressure.',
