@@ -295,46 +295,6 @@ export function MatrimonyHeroSection() {
               </div>
             </div>
           </motion.div>
-
-          {/* Right Floating Parallax Feature Card (LayerSlider Premium Depth Accent) */}
-          <motion.div
-            key={`floating-${currentSlide}`}
-            initial={{ opacity: 0, y: 40, rotate: 2 }}
-            animate={{ opacity: 1, y: 0, rotate: 0 }}
-            transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="hidden lg:block w-72 shrink-0 bg-gradient-to-br from-slate-900/90 via-slate-950/95 to-slate-900/90 backdrop-blur-xl border border-amber-400/40 p-6 rounded-3xl shadow-2xl text-white relative group overflow-hidden"
-          >
-            {/* Top Shine Flare Accent */}
-            <div className="absolute -top-12 -right-12 w-32 h-32 bg-amber-400/20 rounded-full blur-2xl group-hover:scale-125 transition-transform" />
-
-            <div className="space-y-4 relative z-10">
-              <div className="flex items-center justify-between">
-                <span className="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-400/20 to-rose-500/20 border border-amber-400/30 flex items-center justify-center text-2xl shadow-inner">
-                  {activeSlide.floatingCard.icon}
-                </span>
-
-                <span className="text-[10px] font-mono font-black uppercase tracking-widest text-amber-300 bg-amber-400/10 border border-amber-400/30 px-2.5 py-1 rounded-md">
-                  {activeSlide.floatingCard.tag}
-                </span>
-              </div>
-
-              <div className="space-y-1">
-                <h3 className="font-brand text-base font-bold text-white">
-                  {activeSlide.floatingCard.title}
-                </h3>
-                <p className="text-xs text-stone-300 leading-relaxed">
-                  {activeSlide.floatingCard.subtitle}
-                </p>
-              </div>
-
-              <div className="pt-3 border-t border-white/10 flex items-center justify-between text-[11px] font-extrabold text-emerald-400">
-                <span className="flex items-center gap-1">
-                  <span>✓</span>
-                  <span>Covenant Safety Verified</span>
-                </span>
-              </div>
-            </div>
-          </motion.div>
         </div>
       </div>
     </section>

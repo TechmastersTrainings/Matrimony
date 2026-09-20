@@ -125,16 +125,6 @@ export function Navbar() {
 
           {/* Right Action Buttons */}
           <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-            {isAdmin && (
-              <Link
-                href="/admin"
-                className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-slate-950 text-amber-300 hover:bg-slate-900 border border-amber-400/40 transition-colors shadow-2xs"
-              >
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                <span>Admin</span>
-              </Link>
-            )}
-
             {isAuthenticated ? (
               <button
                 onClick={handleLogout}
@@ -247,17 +237,6 @@ export function Navbar() {
                   >
                     Manage Photos
                   </Link>
-
-                  {isAdmin && (
-                    <Link
-                      href="/admin"
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="px-3.5 py-2.5 rounded-xl text-sm font-bold bg-slate-950 text-amber-300 flex items-center gap-2 border border-amber-400/40 mt-1"
-                    >
-                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                      <span>Admin Portal</span>
-                    </Link>
-                  )}
                 </>
               )}
             </nav>

@@ -254,6 +254,43 @@ body[unresolved] {
   pointer-events: none;
 }
 
+/* Cruip Waitlist Theme Design System */
+.cruip-bg-dark {
+  background-color: #0B0F19;
+}
+
+.cruip-card-dark {
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+}
+
+.cruip-gradient-text {
+  background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 50%, #94a3b8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.cruip-glow-indigo {
+  box-shadow: 0 0 25px rgba(99, 102, 241, 0.35);
+}
+
+.cruip-glow-rose {
+  box-shadow: 0 0 25px rgba(244, 63, 94, 0.35);
+}
+
+.cruip-border-glow {
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  transition: all 0.3s ease;
+}
+
+.cruip-border-glow:hover {
+  border-color: rgba(99, 102, 241, 0.7);
+  box-shadow: 0 0 30px rgba(99, 102, 241, 0.25);
+}
+
 /* Shimmer Loading Animation */
 @keyframes shimmer {
   100% {
