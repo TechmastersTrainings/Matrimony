@@ -20,8 +20,8 @@ interface SlideData {
 
 const heroSlides: SlideData[] = [
   {
-    image: '/images/indian-christian-wedding-couple.jpg',
-    badge: 'Christian Matrimony • Bidar & Karnataka',
+    image: '/images/hero-slide-1.jpg',
+    badge: 'Christian Matrimony • Sacred Vows',
     title: 'Where Holy Covenants Build Blessed Homes',
     subtitle:
       'Connecting devout Christian brides & bridegrooms across Bidar, Karnataka, and beyond through prayerful, verified matrimonial introductions.',
@@ -34,7 +34,7 @@ const heroSlides: SlideData[] = [
     },
   },
   {
-    image: '/images/covenant-wedding-couple.jpg',
+    image: '/images/hero-slide-2.jpg',
     badge: 'Till You Marry Commitment',
     title: 'Register Once. Support Till Holy Marriage',
     subtitle: 'Say goodbye to arbitrary 30-day renewal anxiety. Our sacred agency stands faithfully beside Christian families throughout their entire journey.',
@@ -47,11 +47,11 @@ const heroSlides: SlideData[] = [
     },
   },
   {
-    image: '/images/christian-couple-traditional.jpg',
-    badge: 'Honoring Christian Heritage',
-    title: 'Preserving Faith, Modesty & Family Values',
+    image: '/images/hero-slide-3.jpg',
+    badge: 'Christ-Centered Unions',
+    title: 'Rooted in Faith, Guided by the Cross',
     subtitle: 'Connecting devout Methodist (MCI), CSI, Roman Catholic, Baptist, Pentecostal, and Protestant fellowships with dignity.',
-    scripture: '“Charm is deceptive, and beauty is fleeting; but a woman who fears the Lord is to be praised.” — Prov 31:30',
+    scripture: '“A cord of three strands is not quickly broken.” — Ecclesiastes 4:12',
     floatingCard: {
       icon: '⛪',
       title: 'Denomination Filters',
@@ -60,7 +60,7 @@ const heroSlides: SlideData[] = [
     },
   },
   {
-    image: '/images/christian-wedding-vows-rings.jpg',
+    image: '/images/hero-slide-4.jpg',
     badge: 'Protected Phone Privacy',
     title: 'Mutual Consent & Unlocked Family Contacts',
     subtitle: 'Your phone number is never displayed publicly. Conversation begins only after interest is mutual, giving both families total control.',
@@ -73,16 +73,16 @@ const heroSlides: SlideData[] = [
     },
   },
   {
-    image: '/images/christian-wedding-rings-bible.jpg',
-    badge: 'Scriptural Foundation',
-    title: 'A Cord of Three Strands is Not Quickly Broken',
-    subtitle: 'Christ-centered unions prayerfully nurtured through verified background credentials, pastoral blessings, and parental guidance.',
-    scripture: '“A cord of three strands is not quickly broken.” — Ecclesiastes 4:12',
+    image: '/images/hero-slide-5.jpg',
+    badge: 'Honoring Christian Heritage',
+    title: 'Preserving Faith, Modesty & Family Values',
+    subtitle: 'Connecting Christian families with honor, respect, parental involvement, and zero pressure.',
+    scripture: '“Charm is deceptive, and beauty is fleeting; but a woman who fears the Lord is to be praised.” — Prov 31:30',
     floatingCard: {
-      icon: '📖',
-      title: 'Biblical Integrity',
-      subtitle: 'Guided by faith, prayer, and pastoral respect',
-      tag: 'Faith Centered',
+      icon: '🤝',
+      title: 'Mutual Consent',
+      subtitle: 'Families meet with pastoral guidance and joy',
+      tag: 'Family Centered',
     },
   },
 ];
@@ -121,7 +121,7 @@ export function MatrimonyHeroSection() {
   const activeSlide = heroSlides[currentSlide];
 
   return (
-    <section className="relative w-full overflow-hidden bg-slate-950 select-none">
+    <section className="relative w-full overflow-hidden bg-stone-950 select-none">
       {/* LayerSlider Animated Auto-Progress Line Top */}
       <div className="absolute top-0 left-0 right-0 h-1 bg-white/10 z-40 overflow-hidden">
         <motion.div
@@ -154,18 +154,17 @@ export function MatrimonyHeroSection() {
                 <img
                   src={slide.image}
                   alt={slide.title}
-                  className="w-full h-full object-cover object-center filter brightness-[0.88] contrast-[1.12]"
+                  className="w-full h-full object-cover object-center filter brightness-[1.03] contrast-[1.06]"
                 />
-                {/* LayerSlider Multi-Gradient Vignette & Shading */}
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-slate-950/40 lg:bg-gradient-to-r lg:from-slate-950/95 lg:via-slate-950/70 lg:to-transparent z-10 pointer-events-none" />
-                <div className="absolute inset-0 bg-radial-gradient from-transparent via-black/40 to-black/80 z-10 pointer-events-none" />
+                {/* Clean Subtle Dark Gradient Overlay Behind Text for 100% Readability - Zero Navy Blue Tint */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-black/15 lg:bg-gradient-to-r lg:from-black/85 lg:via-black/50 lg:to-transparent z-10 pointer-events-none" />
               </motion.div>
             ) : null
           )}
         </AnimatePresence>
 
-        {/* Ambient Decorative Halo Light Layer */}
-        <div className="absolute top-1/4 left-1/4 w-[500px] h-[300px] bg-gradient-to-r from-amber-500/20 via-rose-500/15 to-cyan-500/15 rounded-full blur-3xl pointer-events-none z-15 animate-pulse" />
+        {/* Ambient Decorative Halo Light Layer (Warm Amber/Rose Gold Glow) */}
+        <div className="absolute top-1/4 left-1/4 w-[500px] h-[300px] bg-gradient-to-r from-amber-500/15 via-rose-500/15 to-amber-600/10 rounded-full blur-3xl pointer-events-none z-15 animate-pulse" />
 
         {/* Layer 2: Previous Slide Navigation Arrow */}
         <motion.button

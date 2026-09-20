@@ -11,7 +11,7 @@ export function MatrimonyInvitationBanner() {
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20 filter brightness-110"
-          style={{ backgroundImage: "url('/images/covenant-wedding-couple.jpg')" }}
+          style={{ backgroundImage: "url('/images/hero-slide-4.jpg')" }}
         />
         <div className="absolute inset-0 bg-gradient-to-r from-[#5a1024]/90 via-[#771932]/85 to-[#0c3944]/90" />
       </div>
