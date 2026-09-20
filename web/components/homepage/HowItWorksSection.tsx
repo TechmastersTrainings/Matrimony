@@ -14,7 +14,6 @@ interface StepData {
   id: number;
   badge: string;
   title: string;
-  subtitle: string;
   frontDesc: string;
   image: string;
   badgeStyle: string;
@@ -31,7 +30,6 @@ const roadmapSteps: StepData[] = [
     id: 1,
     badge: 'Free Signup',
     title: 'Create a protected faith profile',
-    subtitle: 'Your Details & Church Parish',
     frontDesc:
       'Fill in your profile with your details, education, work, and church name. Your phone number is never displayed publicly.',
     image: '/images/christian-wedding-rings-bible.jpg',
@@ -63,7 +61,6 @@ const roadmapSteps: StepData[] = [
     id: 2,
     badge: 'Find Match',
     title: 'Discover compatibility, then express interest',
-    subtitle: 'Search Verified Profiles',
     frontDesc:
       'Look through genuine Christian profiles filtered by church or city. Conversation begins only after interest is mutual.',
     image: '/images/hero-sunset-covenant-hands.jpg',
@@ -95,7 +92,6 @@ const roadmapSteps: StepData[] = [
     id: 3,
     badge: 'Family Meeting',
     title: 'Connect families and prepare for marriage',
-    subtitle: 'Parents & Pastors Meeting',
     frontDesc:
       'When both of you accept interest, verified family numbers are shared. Both people control when family contact is opened.',
     image: '/images/hero-sunset-covenant-hands.jpg',
@@ -202,7 +198,8 @@ export function HowItWorksSection() {
                   {/* ==================== CARD FRONT VIEW ==================== */}
                   <div
                     style={{ backfaceVisibility: 'hidden' }}
-                    className={`absolute inset-0 w-full h-full bg-white rounded-2xl border border-charcoal-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group ${step.borderStyle}`}
+                    onClick={() => handleCardFlip(step.id, true)}
+                    className={`absolute inset-0 w-full h-full bg-white rounded-2xl border border-charcoal-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group cursor-pointer ${step.borderStyle}`}
                   >
                     {/* High-Definition Photo Container */}
                     <div className="relative w-full aspect-[16/10] overflow-hidden bg-slate-900 cursor-pointer">
@@ -230,9 +227,6 @@ export function HowItWorksSection() {
                     {/* Step Card Text Body */}
                     <div className="p-4 sm:p-5 space-y-2.5 flex-1 flex flex-col justify-between">
                       <div className="space-y-1.5">
-                        <span className="text-xs font-bold text-slate-500 uppercase tracking-wider block font-mono">
-                          {step.subtitle}
-                        </span>
                         <h3 className="text-base sm:text-lg font-extrabold text-slate-900 font-brand group-hover:text-burgundy-900 transition-colors">
                           {step.title}
                         </h3>
@@ -241,23 +235,12 @@ export function HowItWorksSection() {
                         </p>
                       </div>
 
-                      {/* Flip Action Footer */}
+                      {/* Card Footer Highlight */}
                       <div className="pt-2.5 border-t border-slate-100 flex items-center justify-between">
                         <span className="text-emerald-700 text-xs font-bold flex items-center gap-1">
                           <span>✓</span>
                           <span>{step.highlight}</span>
                         </span>
-
-                        <button
-                          type="button"
-                          onClick={() => {
-                            handleCardFlip(step.id);
-                          }}
-                          className="px-2.5 py-1 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold transition-all flex items-center gap-1 cursor-pointer hover:scale-105 border border-slate-200"
-                        >
-                          <span>Details</span>
-                          <span className="text-amber-600">↺</span>
-                        </button>
                       </div>
                     </div>
                   </div>
@@ -271,24 +254,18 @@ export function HowItWorksSection() {
                     className={`absolute inset-0 w-full h-full bg-gradient-to-br ${step.backGradient} text-white rounded-2xl border border-amber-400/30 p-4 sm:p-5 flex flex-col justify-between shadow-2xl overflow-hidden`}
                   >
                     {/* Header */}
-                    <div className="space-y-1.5 border-b border-white/15 pb-2.5">
-                      <div className="flex items-center justify-between">
-                        <span className="text-[11px] font-mono font-black uppercase tracking-widest text-amber-300 bg-amber-400/10 border border-amber-400/30 px-2.5 py-0.5 rounded-md">
-                          Details (Auto-flips in 5s)
-                        </span>
-                        <button
-                          type="button"
-                          onClick={() => handleCardFlip(step.id, false)}
-                          className="w-6 h-6 rounded-full bg-white/10 hover:bg-white/20 text-stone-200 flex items-center justify-center text-xs font-bold transition-colors cursor-pointer"
-                          aria-label="Close flip card"
-                        >
-                          ✕
-                        </button>
-                      </div>
-
+                    <div className="flex items-center justify-between border-b border-white/15 pb-2.5">
                       <h4 className="font-brand text-base sm:text-lg font-bold text-white">
                         {step.title}
                       </h4>
+                      <button
+                        type="button"
+                        onClick={() => handleCardFlip(step.id, false)}
+                        className="w-6 h-6 rounded-full bg-white/10 hover:bg-white/20 text-stone-200 flex items-center justify-center text-xs font-bold transition-colors cursor-pointer shrink-0 ml-2"
+                        aria-label="Close flip card"
+                      >
+                        ✕
+                      </button>
                     </div>
 
                     {/* Detailed Features List */}
