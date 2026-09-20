@@ -247,23 +247,6 @@ export function MatrimonyHeroSection() {
                     className="w-full h-full object-contain rounded-xl sm:rounded-2xl block"
                   />
                 </AnimatePresence>
-
-                {/* Subtle Bottom Card Badge */}
-                <div className="absolute bottom-2.5 left-2.5 right-2.5 px-3 py-1.5 rounded-xl bg-black/70 backdrop-blur-md border border-amber-400/30 flex items-center justify-between text-xs text-amber-200 shadow-lg">
-                  <span className="font-semibold flex items-center gap-1.5 truncate">
-                    <span>💍</span>
-                    <span className="truncate">Holy Matrimony Covenant</span>
-                  </span>
-                  <span className="font-serif italic text-amber-100/90 text-[11px] shrink-0 ml-2">
-                    {currentSlide === 0
-                      ? 'Mark 10:9'
-                      : currentSlide === 1
-                      ? '1 Cor 13:4-7'
-                      : currentSlide === 2
-                      ? 'Prov 31:30'
-                      : 'Eccl 4:12'}
-                  </span>
-                </div>
               </div>
             </div>
           </div>
