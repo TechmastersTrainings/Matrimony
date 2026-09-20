@@ -5,14 +5,36 @@
 @import url('https://fonts.googleapis.com/css2?family=Sacramento&family=Work+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,600;0,700;0,800;0,900;1,600&family=Cinzel:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap');
 
 :root {
-  --primary-burgundy: #8c1936;
-  --primary-burgundy-hover: #771932;
-  --accent-gold: #c59b27;
-  --accent-gold-light: #f6f1dc;
-  --bg-ivory: #fdfbf7;
+  --color-amber-200: lab(91.7203% -.505269 49.9084);
+  --color-indigo-50: lab(95.4818% .411302 -6.78529);
+  --color-indigo-100: lab(91.6577% 1.04591 -12.7199);
+  --color-indigo-200: lab(84.4329% 3.18977 -23.9688);
+  --color-indigo-300: lab(74.0235% 8.54138 -41.6075);
+  --color-indigo-400: lab(59.866% 22.4834 -64.4485);
+  --color-indigo-500: lab(48.295% 38.3129 -81.9673);
+  --color-indigo-600: lab(38.4009% 52.6132 -92.3857);
+  --color-indigo-900: lab(23.3911% 24.6978 -50.4718);
+  --color-indigo-950: lab(12.4853% 14.9672 -31.3418);
+  --color-pink-400: lab(64.5597% 64.3615 -12.7988);
+  --color-gray-100: lab(96.1596% -.0823438 -1.13575);
+  --color-gray-200: lab(91.6229% -.159115 -2.26791);
+  --color-gray-300: lab(85.1236% -.612259 -3.7138);
+  --color-gray-400: lab(65.9269% -.832707 -8.17473);
+  --color-gray-500: lab(47.7841% -.393182 -10.0268);
+  --color-gray-600: lab(35.6337% -1.58697 -10.8425);
+  --color-gray-700: lab(27.1134% -.956401 -12.3224);
+  --color-gray-800: lab(16.1051% -1.18239 -11.7533);
+  --color-gray-900: lab(8.11897% .811279 -12.254);
+  --color-gray-950: lab(1.90334% .278696 -5.48866);
+
+  --primary-burgundy: var(--color-indigo-600);
+  --primary-burgundy-hover: var(--color-indigo-900);
+  --accent-gold: var(--color-amber-200);
+  --accent-gold-light: var(--color-indigo-50);
+  --bg-ivory: var(--color-gray-100);
   --bg-surface: #ffffff;
-  --border-warm: #ece2d1;
-  --text-charcoal: #1e1b18;
+  --border-warm: var(--color-gray-200);
+  --text-charcoal: var(--color-gray-900);
 }
 
 html {
