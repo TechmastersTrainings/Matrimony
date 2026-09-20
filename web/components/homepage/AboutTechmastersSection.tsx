@@ -9,11 +9,6 @@ export function AboutTechmastersSection() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
         {/* Section Header */}
         <div className="text-center max-w-2xl mx-auto space-y-2">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-50 border border-cyan-200 text-cyan-950 text-xs sm:text-sm font-bold uppercase tracking-wider shadow-2xs">
-            <span className="w-1.5 h-1.5 rounded-full bg-cyan-600" />
-            <span>About Us &amp; Engineering Backbone</span>
-          </div>
-
           <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight font-brand">
             Our Purpose &amp; Technology Partnership
           </h2>

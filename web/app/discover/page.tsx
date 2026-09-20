@@ -366,24 +366,6 @@ export default function DiscoverPage() {
         {/* Top Header Card */}
         <div className="bg-white border border-[#ece2d1] rounded-3xl p-6 sm:p-8 shadow-sm flex flex-col md:flex-row md:items-center md:justify-between gap-6">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-wider mb-2 shadow-2xs border">
-              {myGender === 'FEMALE' ? (
-                <span className="bg-cyan-50 border-cyan-200 text-cyan-800 flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-cyan-500" />
-                  Groom Matches for Christian Brides
-                </span>
-              ) : myGender === 'MALE' ? (
-                <span className="bg-orange-50 border-orange-200 text-orange-800 flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-orange-500" />
-                  Bride Matches for Christian Grooms
-                </span>
-              ) : (
-                <span className="bg-emerald-50 border-emerald-200 text-emerald-800 flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500" />
-                  Verified Matrimonial Search
-                </span>
-              )}
-            </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight font-brand">
               {myGender === 'FEMALE' ? (
                 <>

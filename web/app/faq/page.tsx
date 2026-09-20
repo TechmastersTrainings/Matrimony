@@ -112,21 +112,6 @@ export default function FAQPage() {
         <div className="absolute -top-16 left-1/2 -translate-x-1/2 w-96 h-40 bg-gradient-to-r from-amber-200/30 via-rose-200/20 to-amber-200/30 blur-2xl pointer-events-none" />
 
         <div className="relative max-w-4xl mx-auto px-4 sm:px-6 text-center space-y-3">
-          {/* Breadcrumb & Badge */}
-          <div className="flex items-center justify-center gap-2 flex-wrap text-xs">
-            <Link
-              href="/"
-              className="font-medium text-stone-500 hover:text-[#8c1936] transition-colors"
-            >
-              Home
-            </Link>
-            <span className="text-stone-300">•</span>
-            <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-gradient-to-r from-amber-50 to-rose-50 border border-amber-300/60 text-[#8c1936] font-bold text-[11px] tracking-wide shadow-2xs">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#c59b27]" />
-              HELP &amp; FREQUENTLY ASKED QUESTIONS
-            </span>
-          </div>
-
           {/* Heading */}
           <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#1e1b18] font-brand tracking-tight">
             Frequently Asked <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#8c1936] to-[#b82d4f]">Questions</span>

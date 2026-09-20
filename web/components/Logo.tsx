@@ -54,7 +54,7 @@ export function Logo({
         
         <div className="flex flex-wrap items-center gap-2 mt-1">
           <span className={`font-sans font-black tracking-[0.16em] uppercase ${lightText ? 'text-cyan-300' : 'text-cyan-800'} ${sizeClasses.sub} hidden sm:inline-block`}>
-            CHRISTIAN MATRIMONY • BIDAR &amp; KARNATAKA
+            CHRISTIAN MATRIMONY • BIDAR
           </span>
           <span className={`font-sans font-black tracking-wider uppercase ${lightText ? 'text-cyan-300' : 'text-cyan-800'} text-[8.5px] sm:hidden`}>
             CHRISTIAN MATRIMONY
@@ -64,7 +64,6 @@ export function Logo({
             <>
               <span className="text-slate-400 font-bold hidden xl:inline">•</span>
               <span className={`font-sans font-semibold tracking-wider hidden xl:flex items-center gap-1.5 px-2 py-0.5 rounded-full ${lightText ? 'text-slate-200 bg-white/10 border border-white/20' : 'text-charcoal-800 bg-cyan-50/80 border border-cyan-200'} ${sizeClasses.tag}`}>
-                <span className="inline-block w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
                 Techmasters Innovations
               </span>
             </>

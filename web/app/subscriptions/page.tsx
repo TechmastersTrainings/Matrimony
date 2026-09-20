@@ -212,10 +212,6 @@ export default function SubscriptionsPage() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-8 sm:space-y-10">
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto space-y-2.5">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-cyan-50 border border-cyan-200 text-cyan-950 text-xs font-bold uppercase tracking-wider shadow-2xs">
-            <span className="w-2 h-2 rounded-full bg-cyan-500 animate-pulse" />
-            <span>Transparent Christian Membership Plans</span>
-          </div>
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-extrabold text-charcoal-900 tracking-tight">
             Blessed Matrimony Plans
           </h1>

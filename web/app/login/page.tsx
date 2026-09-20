@@ -82,10 +82,6 @@ function LoginFormContent() {
       <div className="relative z-10 w-full max-w-md">
         {/* Branding Header */}
         <div className="text-center mb-8 space-y-2">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-50 border border-cyan-200 text-cyan-950 text-xs font-bold uppercase tracking-wider shadow-2xs">
-            <span className="w-2 h-2 rounded-full bg-cyan-500 animate-pulse" />
-            <span>CovenantNest Member Portal</span>
-          </div>
           <h1 className="text-3xl font-serif font-extrabold text-charcoal-900 tracking-tight">
             Welcome <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-600 to-cyan-700">Back</span>
           </h1>

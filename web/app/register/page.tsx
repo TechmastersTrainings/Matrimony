@@ -109,12 +109,12 @@ function RegisterFormContent() {
         {/* Warm Header Branding */}
         <div className="text-center mb-8 space-y-2">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-50 border border-cyan-200 text-cyan-950 text-xs font-semibold tracking-wide shadow-2xs">
-            <span className="w-2 h-2 rounded-full bg-cyan-500 animate-pulse" />
+            <span className="w-2 h-2 rounded-full bg-cyan-500" />
             <span className="font-extrabold">CovenantNest</span>
             <span className="text-orange-400">•</span>
             <span>Christian Matrimony</span>
             <span className="text-emerald-500">•</span>
-            <span className="text-emerald-800 font-medium text-[11px]">Bidar &amp; Karnataka</span>
+            <span className="text-emerald-800 font-medium text-[11px]">Bidar</span>
           </div>
 
           <h1 className="text-3xl sm:text-4xl font-serif font-extrabold text-charcoal-900 tracking-tight">

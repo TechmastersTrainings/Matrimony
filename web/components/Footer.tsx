@@ -17,14 +17,14 @@ export function Footer() {
       {/* 2. Main Multi-Column Structured Directory */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-14 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-10">
-          {/* Column 1: Brand, Mission & Corporate Attribution (4 cols on lg) */}
-          <div className="lg:col-span-4 space-y-4">
+          {/* Column 1: Brand, Mission & Corporate Attribution (3 cols on lg) */}
+          <div className="lg:col-span-3 space-y-4">
             <Link href="/" className="inline-block group">
               <Logo size="md" lightText={true} showTechmastersTag={true} />
             </Link>
 
             <p className="text-xs sm:text-sm text-slate-300/85 leading-relaxed max-w-sm">
-              A sacred initiative by <strong className="text-amber-200">Techmasters Innovations Private Limited</strong>, headquartered in Bidar, Karnataka, India. Safeguarding candidate dignity, pastoral honor, and family privacy at every step.
+              A sacred initiative by <strong className="text-amber-200">Techmasters Innovations Private Limited</strong>, headquartered in Bidar. Safeguarding candidate dignity, pastoral honor, and family privacy at every step.
             </p>
 
             <div className="space-y-1 text-[11px] text-slate-400 pt-1 break-words">
@@ -34,28 +34,11 @@ export function Footer() {
               <p className="text-slate-300">
                 Managing Director: <span className="font-semibold text-white">Mr. Sachin Anil Themgyale</span>
               </p>
-              <p>Corporate Office: Mailoor Road, Bidar, Karnataka - 585403.</p>
-              <p className="pt-0.5 flex flex-wrap items-center gap-x-1.5 gap-y-0.5">
-                <span>Contact:</span>
-                <a href="mailto:info@techmastersinnovations.in" className="hover:text-amber-300 transition-colors underline break-all">
-                  info@techmastersinnovations.in
-                </a>
-                <span>|</span>
-                <a href="mailto:techmastersinnovations@gmail.com" className="hover:text-amber-300 transition-colors underline break-all">
-                  techmastersinnovations@gmail.com
-                </a>
-              </p>
-              <p className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5">
-                <span>Support:</span>
-                <a href="mailto:support@techmastersinnovations.in" className="hover:text-amber-300 transition-colors underline break-all">
-                  support@techmastersinnovations.in
-                </a>
-              </p>
             </div>
           </div>
 
-          {/* Column 2: Christian Denominations (3 cols on lg) */}
-          <div className="lg:col-span-3 space-y-3">
+          {/* Column 2: Christian Denominations & Corporate Address / Contacts (4 cols on lg) */}
+          <div className="lg:col-span-4 space-y-3">
             <h4 className="font-brand text-xs sm:text-sm font-bold text-amber-300 uppercase tracking-wider border-b border-slate-800/80 pb-2.5">
               Christian Denominations
             </h4>
@@ -124,6 +107,29 @@ export function Footer() {
                 </Link>
               </li>
             </ul>
+
+            {/* Shifted toward center below Christian Denominations */}
+            <div className="pt-3 mt-3 border-t border-slate-800/80 space-y-1 text-[11px] text-slate-400 break-words">
+              <p className="text-slate-300 font-medium">
+                Corporate Office: Mailoor Road, Bidar, Karnataka - 585403.
+              </p>
+              <p className="pt-0.5 flex flex-wrap items-center gap-x-1.5 gap-y-0.5">
+                <span className="text-slate-400">Contact:</span>
+                <a href="mailto:info@techmastersinnovations.in" className="hover:text-amber-300 transition-colors underline break-all">
+                  info@techmastersinnovations.in
+                </a>
+                <span className="text-slate-500">|</span>
+                <a href="mailto:techmastersinnovations@gmail.com" className="hover:text-amber-300 transition-colors underline break-all">
+                  techmastersinnovations@gmail.com
+                </a>
+              </p>
+              <p className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5">
+                <span className="text-slate-400">Support:</span>
+                <a href="mailto:support@techmastersinnovations.in" className="hover:text-amber-300 transition-colors underline break-all">
+                  support@techmastersinnovations.in
+                </a>
+              </p>
+            </div>
           </div>
 
           {/* Column 3: Quick Navigation (2 cols on lg) */}
@@ -286,7 +292,7 @@ export function Footer() {
               © 2026 <strong className="text-amber-300 font-bold">Techmasters Innovations Pvt. Ltd.</strong> All rights reserved.
             </p>
             <p className="text-[11px] text-rose-100/80">
-              Covenant Nest • A sacred initiative headquartered in Bidar, Karnataka, India.
+              Covenant Nest • A sacred initiative headquartered in Bidar.
             </p>
           </div>
 
