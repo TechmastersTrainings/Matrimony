@@ -47,9 +47,9 @@ export function MatrimonyCovenantSection() {
   ];
 
   return (
-    <section className="py-14 sm:py-20 bg-gradient-to-b from-[#fdfbf7] via-[#faf6ee] to-[#fdfbf7] text-[#1e1b18] border-t border-charcoal-100/80 relative overflow-hidden select-none">
+    <section className="py-10 sm:py-14 bg-gradient-to-b from-[#fdfbf7] via-[#faf6ee] to-[#fdfbf7] text-[#1e1b18] border-t border-charcoal-100/80 relative overflow-hidden select-none">
       {/* Background Subtle Watermark */}
-      <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[500px] h-[500px] opacity-5 pointer-events-none rounded-full overflow-hidden">
+      <div className="absolute right-0 top-1/2 -translate-y-1/2 w-96 h-96 opacity-5 pointer-events-none rounded-full overflow-hidden">
         <img
           src="/images/christian-wedding-rings-bible.jpg"
           alt="Holy Bible and Rings"
@@ -57,65 +57,66 @@ export function MatrimonyCovenantSection() {
         />
       </div>
 
-      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-10 sm:space-y-12">
+      {/* Edge-to-Edge Full Width Stretch Container */}
+      <div className="w-full px-4 sm:px-8 md:px-12 lg:px-14 xl:px-16 relative z-10 space-y-6 sm:space-y-8">
         {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 25 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-50px' }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          className="text-center max-w-3xl mx-auto space-y-3"
+          viewport={{ once: true, margin: '-40px' }}
+          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          className="text-center max-w-2xl mx-auto space-y-2"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-cyan-50 via-orange-50 to-emerald-50 border border-cyan-200/80 text-charcoal-900 text-xs sm:text-sm font-extrabold uppercase tracking-wider shadow-2xs">
-            <span className="w-2.5 h-2.5 rounded-full bg-cyan-500 animate-pulse" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gradient-to-r from-cyan-50 via-orange-50 to-emerald-50 border border-cyan-200/80 text-charcoal-900 text-xs font-extrabold uppercase tracking-wider shadow-2xs">
+            <span className="w-2 h-2 rounded-full bg-cyan-500 animate-pulse" />
             <span>Our Sacred Covenant &amp; Trust Pillars</span>
           </div>
 
-          <h2 className="text-2xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight font-brand">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight font-brand">
             Built on Faith, Protected by Reverence
           </h2>
 
-          <p className="text-sm sm:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed font-normal">
+          <p className="text-xs sm:text-sm text-slate-600 max-w-xl mx-auto leading-relaxed font-normal">
             Christian marriage is a holy covenant instituted by God. We hold our platform to the highest biblical integrity and family security standards.
           </p>
         </motion.div>
 
         {/* 3 Pillars Grid with Scroll-Triggered Staggered Single-Card Entrances */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6 lg:gap-8">
           {pillars.map((p, idx) => (
             <motion.div
               key={idx}
-              initial={{ opacity: 0, y: 45, scale: 0.96 }}
+              initial={{ opacity: 0, y: 35, scale: 0.97 }}
               whileInView={{ opacity: 1, y: 0, scale: 1 }}
-              viewport={{ once: true, margin: '-40px', amount: 0.2 }}
+              viewport={{ once: true, margin: '-30px', amount: 0.2 }}
               transition={{
-                duration: 0.7,
-                delay: idx * 0.2, // Staggered entry card bring up one by one!
+                duration: 0.6,
+                delay: idx * 0.15, // Staggered entry card bring up one by one!
                 ease: [0.16, 1, 0.3, 1],
               }}
-              whileHover={{ y: -8, scale: 1.02 }}
-              className={`p-6 sm:p-8 rounded-3xl ${p.bg} border ${p.border} transition-all duration-300 shadow-sm hover:shadow-2xl flex flex-col justify-between cursor-pointer group`}
+              whileHover={{ y: -6, scale: 1.015 }}
+              className={`p-5 sm:p-6 rounded-2xl ${p.bg} border ${p.border} transition-all duration-300 shadow-2xs hover:shadow-xl flex flex-col justify-between cursor-pointer group`}
             >
-              <div className="space-y-4">
+              <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="w-10 h-10 rounded-xl bg-white border border-slate-200/80 flex items-center justify-center text-xl shadow-xs group-hover:scale-110 transition-transform">
+                  <span className="w-9 h-9 rounded-xl bg-white border border-slate-200/80 flex items-center justify-center text-lg shadow-xs group-hover:scale-105 transition-transform">
                     {p.icon}
                   </span>
-                  <span className="text-xs sm:text-sm font-extrabold uppercase tracking-wider text-slate-800 bg-white/95 border border-slate-200 px-3 py-1 rounded-md shadow-2xs">
+                  <span className="text-xs font-extrabold uppercase tracking-wider text-slate-800 bg-white/95 border border-slate-200 px-2.5 py-0.5 rounded-md shadow-2xs">
                     {p.badge}
                   </span>
                 </div>
 
-                <h3 className={`text-lg sm:text-xl font-extrabold ${p.titleColor} font-brand leading-snug group-hover:text-burgundy-900 transition-colors`}>
+                <h3 className={`text-base sm:text-lg font-extrabold ${p.titleColor} font-brand leading-snug group-hover:text-burgundy-900 transition-colors`}>
                   {p.title}
                 </h3>
 
-                <p className="text-sm sm:text-base text-slate-700 leading-relaxed pt-1 font-normal">
+                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
                   {p.description}
                 </p>
               </div>
 
-              <div className="pt-4 mt-6 border-t border-slate-200/70 flex items-center justify-between text-xs sm:text-sm font-bold text-slate-800">
+              <div className="pt-3 mt-4 border-t border-slate-200/70 flex items-center justify-between text-xs font-bold text-slate-800">
                 <span className="inline-flex items-center gap-1.5 text-emerald-700 font-extrabold">
                   <span>✓</span>
                   <span>{p.highlight}</span>
