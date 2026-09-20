@@ -157,17 +157,12 @@ export function HowItWorksSection() {
           transition={{ duration: 0.6 }}
           className="text-center max-w-2xl mx-auto space-y-2"
         >
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gradient-to-r from-amber-50 via-rose-50 to-cyan-50 border border-amber-200/80 text-xs font-extrabold uppercase tracking-wider text-amber-950 shadow-2xs">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
-            <span>Matrimonial Journey</span>
-          </div>
-
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight font-brand">
             How Covenant Nest Works
           </h2>
 
           <p className="text-xs sm:text-base text-slate-600 max-w-xl mx-auto leading-relaxed font-normal">
-            A simple, trusted way for Christian brides, grooms, and families to connect across India.
+            A simple, trusted way for Christian brides, grooms, and families to connect in Bidar.
           </p>
         </motion.div>
 

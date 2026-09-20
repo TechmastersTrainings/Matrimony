@@ -28,10 +28,6 @@ export function ScriptureSanctuarySection() {
                   alt="Wedding Rings resting on open Holy Bible"
                   className="w-full h-full object-cover object-center transform group-hover:scale-105 transition-transform duration-700 ease-out"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
-                <div className="absolute bottom-2.5 left-1/2 -translate-x-1/2 bg-white/95 backdrop-blur-md px-3 py-0.5 rounded-full border border-amber-300 text-[11px] font-extrabold text-amber-950 uppercase tracking-wider shadow-sm whitespace-nowrap">
-                  Holy Bible • Sacred Vows
-                </div>
               </div>
             </div>
 

@@ -24,7 +24,7 @@ const heroSlides: SlideData[] = [
     badge: 'Christian Matrimony • Sacred Vows',
     title: 'Where Holy Covenants Build Blessed Homes',
     subtitle:
-      'Connecting devout Christian brides & bridegrooms across Bidar, Karnataka, and beyond through prayerful, verified matrimonial introductions.',
+      'Connecting devout Christian brides & bridegrooms in Bidar through prayerful, verified matrimonial introductions.',
     scripture: '“Therefore what God has joined together, let no one separate.” — Mark 10:9',
     floatingCard: {
       icon: '✝️',
@@ -143,7 +143,7 @@ export function MatrimonyHeroSection() {
           >
             {/* Top Pill Badge */}
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-amber-400/40 text-xs sm:text-sm font-extrabold uppercase tracking-wider text-amber-300 w-fit backdrop-blur-md shadow-lg">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+              <span className="w-2 h-2 rounded-full bg-emerald-400" />
               <span>{activeSlide.badge}</span>
             </div>
 

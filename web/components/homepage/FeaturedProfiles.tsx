@@ -186,9 +186,6 @@ export function FeaturedProfiles() {
         {/* Section Header */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-5 sm:mb-8 gap-3 sm:gap-4">
           <div>
-            <span className="text-xs sm:text-sm font-extrabold uppercase tracking-widest text-cyan-800 block mb-1">
-              Verified Profiles
-            </span>
             <h2 className="font-brand text-2xl sm:text-4xl font-bold text-slate-900 tracking-tight">
               Meet People Who Share Your Faith &amp; Values
             </h2>

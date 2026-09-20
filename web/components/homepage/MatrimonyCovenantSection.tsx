@@ -67,11 +67,6 @@ export function MatrimonyCovenantSection() {
           transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
           className="text-center max-w-2xl mx-auto space-y-2"
         >
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gradient-to-r from-cyan-50 via-orange-50 to-emerald-50 border border-cyan-200/80 text-charcoal-900 text-xs font-extrabold uppercase tracking-wider shadow-2xs">
-            <span className="w-2 h-2 rounded-full bg-cyan-500 animate-pulse" />
-            <span>Our Sacred Covenant &amp; Trust Pillars</span>
-          </div>
-
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight font-brand">
             Built on Faith, Protected by Reverence
           </h2>
