@@ -1,3 +1,4 @@
+import datetime
 from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
@@ -54,10 +55,12 @@ async def search_profiles(
     )
 
     is_subscriber = False
+    now = datetime.datetime.utcnow()
     if current_user:
         active_sub = db.query(UserSubscription).filter(
             UserSubscription.user_id == current_user.id,
-            UserSubscription.status == "ACTIVE"
+            UserSubscription.status == "ACTIVE",
+            UserSubscription.end_date >= now,
         ).first()
         is_subscriber = active_sub is not None or current_user.role in [UserRole.ADMIN, UserRole.SUPER_ADMIN]
 
@@ -94,10 +97,12 @@ async def get_candidate_profile(
 
     # Check subscription status
     is_subscriber = False
+    now = datetime.datetime.utcnow()
     if current_user:
         active_sub = db.query(UserSubscription).filter(
             UserSubscription.user_id == current_user.id,
-            UserSubscription.status == "ACTIVE"
+            UserSubscription.status == "ACTIVE",
+            UserSubscription.end_date >= now,
         ).first()
         is_subscriber = active_sub is not None or current_user.role in [UserRole.ADMIN, UserRole.SUPER_ADMIN] or current_user.id == profile.user_id
 

@@ -22,7 +22,7 @@ class ApiClient {
       headers['Content-Type'] = 'application/json';
     }
     if (typeof window !== 'undefined') {
-      const token = localStorage.getItem('access_token');
+      const token = localStorage.getItem('access_token') || localStorage.getItem('token');
       if (token) {
         headers['Authorization'] = `Bearer ${token}`;
       }
@@ -210,7 +210,7 @@ class ApiClient {
   }
 
   // ------------------ DISCOVERY ------------------
-  async searchProfiles(params: Record<string, any> = {}): Promise<{ total: number; profiles: CandidateCard[] }> {
+  async searchProfiles(params: Record<string, any> = {}): Promise<{ total: number; profiles: CandidateCard[]; is_subscriber?: boolean }> {
     const searchParams = new URLSearchParams();
     Object.entries(params).forEach(([key, val]) => {
       if (val !== undefined && val !== null && val !== '') {
@@ -330,9 +330,14 @@ class ApiClient {
   // ------------------ SUBSCRIPTIONS & PAYMENTS ------------------
   async getMySubscription(): Promise<{ has_active_subscription: boolean; plan_name?: string; [key: string]: any }> {
     try {
-      const res = await fetch(`${API_BASE_URL}/subscriptions/my`, {
+      let res = await fetch(`${API_BASE_URL}/subscriptions/my`, {
         headers: this.getHeaders(),
       });
+      if (!res.ok && res.status === 404) {
+        res = await fetch(`${API_BASE_URL}/subscriptions/my-subscription`, {
+          headers: this.getHeaders(),
+        });
+      }
       if (!res.ok) return { has_active_subscription: false };
       return res.json();
     } catch {
@@ -344,7 +349,7 @@ class ApiClient {
     const res = await fetch(`${API_BASE_URL}/subscriptions/plans`);
     if (!res.ok) throw new Error('Failed to fetch plans');
     const data = await res.json();
-    return data.plans;
+    return data.plans || [];
   }
 
   async createSubscriptionOrder(planId: number): Promise<any> {

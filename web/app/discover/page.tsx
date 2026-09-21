@@ -62,6 +62,9 @@ export default function DiscoverPage() {
       });
       setCandidates(data.profiles || []);
       setTotal(data.total || 0);
+      if (data.is_subscriber) {
+        setIsSubscribed(true);
+      }
       setIsAuthRequired(false);
     } catch (err: any) {
       const msg = err.message || '';
@@ -190,7 +193,6 @@ export default function DiscoverPage() {
       return;
     }
     if (!isSubscribed && !isAdmin) {
-      alert('Payment Required: An active subscription plan is required to express interest to candidates.');
       setSelectedCandidate(candidate);
       setModalActionType('interest');
       setSubscriptionModalOpen(true);
@@ -207,14 +209,8 @@ export default function DiscoverPage() {
       router.push('/login?redirect=/discover');
       return;
     }
-    if (!isSubscribed && !isAdmin) {
-      e.preventDefault();
-      alert('Payment Required: An active subscription plan is required to view full candidate details.');
-      setSelectedCandidate(candidate);
-      setModalActionType('view_profile');
-      setSubscriptionModalOpen(true);
-      return;
-    }
+    // Navigate directly to profile detail page:
+    // Subscribed users view full unlocked details; unpaid users see the preview teaser with upgrade prompt.
     router.push(`/profile/${candidate.id}`);
   };
 

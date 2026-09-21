@@ -1,3 +1,4 @@
+import datetime
 from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel
@@ -5,7 +6,7 @@ from sqlalchemy.orm import Session
 
 from backend.app.core.config import settings
 from backend.app.core.security import get_current_user, get_optional_current_user
-from backend.app.models.enums import PaymentPurpose
+from backend.app.models.enums import PaymentPurpose, UserRole
 from backend.app.models.subscription import SubscriptionPlan, UserSubscription
 from backend.app.models.user import User
 from backend.app.services.database import get_db
@@ -44,15 +45,12 @@ async def get_plans(db: Session = Depends(get_db)):
         "plans": [
             {
                 "id": p.id,
-                "plan_code": p.plan_code.value,
+                "plan_code": p.plan_code.value if hasattr(p.plan_code, "value") else str(p.plan_code),
                 "name": p.name,
                 "price_inr": p.price_inr,
                 "duration_days": p.duration_days,
                 "contact_reveals_limit": p.contact_reveals_limit,
-                "messaging_limit": p.messaging_limit,
-                "photo_upload_limit": p.photo_upload_limit,
-                "interest_express_limit": p.interest_express_limit,
-                "priority_support": p.priority_support,
+                "features": p.features or [],
                 "is_active": p.is_active,
             }
             for p in plans
@@ -64,15 +62,42 @@ async def get_plans(db: Session = Depends(get_db)):
     "/subscriptions/my-subscription",
     summary="Get Current User Subscription Status",
 )
+@router.get(
+    "/subscriptions/my",
+    summary="Get Current User Subscription Status (Alias)",
+)
 async def get_my_subscription(
-    current_user: User = Depends(get_current_user),
+    current_user: Optional[User] = Depends(get_optional_current_user),
     db: Session = Depends(get_db),
 ):
+    if not current_user:
+        return {
+            "has_active_subscription": False,
+            "plan_name": "Free Exploration",
+            "reveals_remaining": 0,
+            "can_reveal_contacts": False,
+        }
+
+    # Admin and Super Admin accounts get lifetime access
+    if current_user.role in [UserRole.ADMIN, UserRole.SUPER_ADMIN]:
+        return {
+            "has_active_subscription": True,
+            "plan_id": 999,
+            "plan_name": "Super Admin All-Access",
+            "plan_code": "PREMIUM",
+            "start_date": datetime.datetime.utcnow().isoformat(),
+            "end_date": (datetime.datetime.utcnow() + datetime.timedelta(days=3650)).isoformat(),
+            "reveals_used": 0,
+            "reveals_limit": 9999,
+        }
+
+    now = datetime.datetime.utcnow()
     sub = (
         db.query(UserSubscription)
         .filter(
             UserSubscription.user_id == current_user.id,
             UserSubscription.status == "ACTIVE",
+            UserSubscription.end_date >= now,
         )
         .order_by(UserSubscription.created_at.desc())
         .first()
@@ -88,12 +113,12 @@ async def get_my_subscription(
     return {
         "has_active_subscription": True,
         "plan_id": sub.plan_id,
-        "plan_name": sub.plan.name,
-        "plan_code": sub.plan.plan_code.value,
-        "start_date": sub.start_date,
-        "end_date": sub.end_date,
+        "plan_name": sub.plan.name if sub.plan else "Active Plan",
+        "plan_code": sub.plan.plan_code.value if (sub.plan and hasattr(sub.plan.plan_code, "value")) else "ACTIVE",
+        "start_date": sub.start_date.isoformat() if hasattr(sub.start_date, "isoformat") else str(sub.start_date),
+        "end_date": sub.end_date.isoformat() if hasattr(sub.end_date, "isoformat") else str(sub.end_date),
         "reveals_used": sub.reveals_used,
-        "reveals_limit": sub.plan.contact_reveals_limit,
+        "reveals_limit": sub.plan.contact_reveals_limit if sub.plan else 50,
     }
 
 
