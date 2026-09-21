@@ -233,7 +233,7 @@ class MockOtpService(OtpServiceBase):
                     import urllib.parse
                     import base64
                     twilio_url = f"https://api.twilio.com/2010-04-01/Accounts/{twilio_sid}/Messages.json"
-                    msg_body = f"Your CovenantNest verification code is: {code}. Valid for 10 minutes. Do not share this OTP."
+                    msg_body = f"Your Shalom verification code is: {code}. Valid for 10 minutes. Do not share this OTP."
                     data = urllib.parse.urlencode({
                         "To": f"+91{clean_mobile}",
                         "From": twilio_from,

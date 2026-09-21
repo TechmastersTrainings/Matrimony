@@ -158,7 +158,7 @@ function DashboardContent() {
                   Profile Details Updated Successfully!
                 </h3>
                 <p className="text-xs text-emerald-900/80">
-                  Your updated personal, faith, career, and family information has been synchronized and saved to your CovenantNest account.
+                  Your updated personal, faith, career, and family information has been synchronized and saved to your Shalom account.
                 </p>
               </div>
             </div>

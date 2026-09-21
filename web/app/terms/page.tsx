@@ -2,8 +2,8 @@ import React from 'react';
 import Link from 'next/link';
 
 export const metadata = {
-  title: 'Terms of Service | CovenantNest — Christian Matrimony',
-  description: 'Official Terms of Service and user conduct agreement for CovenantNest Christian Matrimony.',
+  title: 'Terms of Service | Shalom — Christian Matrimony',
+  description: 'Official Terms of Service and user conduct agreement for Shalom Christian Matrimony.',
 };
 
 export default function TermsPage() {
@@ -19,7 +19,7 @@ export default function TermsPage() {
             Terms of Service
           </h1>
           <p className="text-xs sm:text-sm text-slate-500">
-            Last Updated: September 2026 • CovenantNest Christian Matrimony
+            Last Updated: September 2026 • Shalom Christian Matrimony
           </p>
         </div>
 
@@ -29,7 +29,7 @@ export default function TermsPage() {
             1. Acceptance of Terms
           </h2>
           <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-            By registering on Covenant Nest (<a href="https://covenantnest.techmaster.space" className="text-cyan-900 underline font-semibold">covenantnest.techmaster.space</a>), you agree to these Terms of Service. If you do not agree, please do not use this platform.
+            By registering on Shalom (<a href="https://covenantnest.techmaster.space" className="text-cyan-900 underline font-semibold">covenantnest.techmaster.space</a>), you agree to these Terms of Service. If you do not agree, please do not use this platform.
           </p>
         </div>
 
@@ -67,7 +67,7 @@ export default function TermsPage() {
             4. Verification &amp; Account Termination
           </h2>
           <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-            Covenant Nest reserves the right to request additional verification documents at any time. We reserve the right to suspend or permanently terminate any account that violates these terms, engages in fraudulent behavior, or disrespects the dignity of the community, without prior notice.
+            Shalom reserves the right to request additional verification documents at any time. We reserve the right to suspend or permanently terminate any account that violates these terms, engages in fraudulent behavior, or disrespects the dignity of the community, without prior notice.
           </p>
         </div>
 
@@ -77,7 +77,7 @@ export default function TermsPage() {
             5. Limitation of Liability
           </h2>
           <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-            While we strive to verify all profiles, Covenant Nest and Techmasters Innovations Pvt. Ltd. act only as a facilitator. We are not liable for the actions, intentions, or outcomes of interactions between members. Users are strongly advised to involve their families and pastoral guides before proceeding to any physical meetings or financial commitments.
+            While we strive to verify all profiles, Shalom and Techmasters Innovations Pvt. Ltd. act only as a facilitator. We are not liable for the actions, intentions, or outcomes of interactions between members. Users are strongly advised to involve their families and pastoral guides before proceeding to any physical meetings or financial commitments.
           </p>
         </div>
 

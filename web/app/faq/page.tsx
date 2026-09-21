@@ -48,7 +48,7 @@ const faqList: FAQItem[] = [
     id: 5,
     category: 'Church Fellowships',
     tag: 'All Fellowships',
-    question: 'Which Christian denominations and churches are supported on Covenant Nest?',
+    question: 'Which Christian denominations and churches are supported on Shalom?',
     answer:
       'We proudly support devout Christian families across all major denominations in Bidar, Karnataka, Telangana, and beyond — including Methodist Church in India (MCI), Church of South India (CSI), Roman Catholic (RC), Baptist, Pentecostal / Assemblies of God / Born-Again, Mar Thoma, and Bible-believing Protestant and independent fellowships.',
   },

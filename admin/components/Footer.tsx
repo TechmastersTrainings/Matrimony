@@ -25,7 +25,7 @@ export function Footer() {
             </Link>
 
             <p className="text-xs sm:text-sm text-slate-300/85 leading-relaxed max-w-sm">
-              Administrative Command Center &amp; Pastoral Moderation Gateway for CovenantNest Christian Matrimony. Dedicated to candidate dignity, church verification, and family privacy.
+              Administrative Command Center &amp; Pastoral Moderation Gateway for Shalom Christian Matrimony. Dedicated to candidate dignity, church verification, and family privacy.
             </p>
 
             <p className="text-[11px] text-slate-400 pt-1">
@@ -182,7 +182,7 @@ export function Footer() {
                   className="hover:text-amber-300 hover:translate-x-1 transition-all inline-flex items-center gap-2"
                 >
                   <span className="text-amber-400 text-xs font-bold">›</span>
-                  <span>About CovenantNest</span>
+                  <span>About Shalom</span>
                 </a>
               </li>
             </ul>
@@ -258,7 +258,7 @@ export function Footer() {
       <div className="border-t border-slate-800/80 bg-[#03060d] py-5 sm:py-6 relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-3 text-xs sm:text-sm text-slate-400 text-center md:text-left">
           <p className="leading-relaxed">
-            © 2026 CovenantNest • Official Product of{' '}
+            © 2026 Shalom • Official Product of{' '}
             <strong className="text-amber-300 font-bold">Techmasters Innovations Private Limited</strong>. All rights reserved.
           </p>
 

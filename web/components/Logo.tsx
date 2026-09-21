@@ -38,17 +38,17 @@ export function Logo({
         <div className="relative w-full h-full rounded-full p-[1.5px] bg-gradient-to-tr from-amber-400 via-rose-500 to-purple-600 shadow-md group-hover:scale-105 transition-all duration-300 ring-1 ring-white/30 overflow-hidden">
           <img
             src="/images/covenant-nest-logo.png"
-            alt="CovenantNest Logo"
+            alt="Shalom Logo"
             className="w-full h-full rounded-full object-cover"
           />
         </div>
       </div>
 
-      {/* Brand Text: CovenantNest */}
+      {/* Brand Text: Shalom */}
       <div className="flex flex-col">
         <div className="flex items-center leading-none">
           <span className={`font-serif font-extrabold tracking-tight ${lightText ? 'text-white' : 'text-charcoal-900'} ${sizeClasses.text}`}>
-            Covenant<span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-600 via-rose-600 to-cyan-600">Nest</span>
+            Sha<span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-600 via-rose-600 to-cyan-600">lom</span>
           </span>
         </div>
         

@@ -30,7 +30,7 @@ export function AboutTechmastersSection() {
                 Faith-Centered Marriages for the Christian Community
               </h3>
               <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                CovenantNest provides Christian brides, bridegrooms, and prayerful families with a safe, confidential, and honorable environment to seek God&apos;s ordained life partner across Methodist (MCI), CSI, Roman Catholic, Baptist, and Pentecostal fellowships.
+                Shalom provides Christian brides, bridegrooms, and prayerful families with a safe, confidential, and honorable environment to seek God&apos;s ordained life partner across Methodist (MCI), CSI, Roman Catholic, Baptist, and Pentecostal fellowships.
               </p>
             </div>
 

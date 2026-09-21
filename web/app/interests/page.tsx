@@ -54,7 +54,7 @@ export default function InterestsPage() {
         <div className="bg-white rounded-3xl p-6 sm:p-8 border border-[#ece2d1] shadow-sm mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <span className="text-[11px] font-bold uppercase tracking-widest text-cyan-800 block mb-1">
-              CovenantNest Connections
+              Shalom Connections
             </span>
             <h1 className="text-2xl sm:text-3xl font-serif font-extrabold text-charcoal-900">
               Interests &amp; Mutual Matches

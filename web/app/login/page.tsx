@@ -56,7 +56,7 @@ function LoginFormContent() {
         login_type: loginType,
       });
 
-      alert('Login successful! Welcome back to CovenantNest.');
+      alert('Login successful! Welcome back to Shalom.');
 
       // If super_admin or admin, direct to admin command center
       if (res?.role === 'SUPER_ADMIN' || res?.role === 'ADMIN') {

@@ -267,7 +267,7 @@ export default function DiscoverPage() {
               <p className="text-xs sm:text-sm text-charcoal-600 max-w-sm mx-auto leading-relaxed">
                 {modalActionType === 'interest'
                   ? 'To express matrimonial interest and connect directly with verified candidates, an active membership plan is required.'
-                  : 'Detailed family background, parish endorsements, and mutual contact exchange upon accepted interest are reserved for active CovenantNest members.'}
+                  : 'Detailed family background, parish endorsements, and mutual contact exchange upon accepted interest are reserved for active Shalom members.'}
               </p>
             </div>
 
@@ -428,7 +428,7 @@ export default function DiscoverPage() {
               href="/admin"
               className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-cyan-700 to-teal-700 hover:from-cyan-600 hover:to-teal-600 text-white font-extrabold text-xs text-center shadow-xs transition-all shrink-0 flex items-center gap-1.5"
             >
-              <span>Open CovenantNest Admin Command Center</span>
+              <span>Open Shalom Admin Command Center</span>
               <span>→</span>
             </Link>
           </div>
@@ -787,7 +787,7 @@ export default function DiscoverPage() {
                             ) : (
                               <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-b from-[#0f172a] to-[#1e293b] text-amber-400 p-2 select-none">
                                 <span className="font-mono font-black text-base tracking-wider text-amber-400">
-                                  CN-{c.id}
+                                  SH-{c.id}
                                 </span>
                                 <span className="text-[10px] font-bold text-slate-300 uppercase tracking-widest mt-0.5">
                                   Profile
@@ -807,7 +807,7 @@ export default function DiscoverPage() {
 
                         <div className="mt-4 text-center">
                           <span className="font-mono font-black text-xs text-amber-900 bg-amber-50 border border-amber-200 px-3 py-0.5 rounded-full">
-                            CN-{c.id}
+                            SH-{c.id}
                           </span>
                         </div>
                       </div>
@@ -1027,7 +1027,7 @@ export default function DiscoverPage() {
                           </span>
 
                           <span className="font-mono font-black text-xs text-amber-900 bg-amber-50 border border-amber-200 px-2.5 py-0.5 rounded-full">
-                            CN-{c.id}
+                            SH-{c.id}
                           </span>
                         </div>
 
@@ -1047,7 +1047,7 @@ export default function DiscoverPage() {
                               ) : (
                                 <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-b from-[#0f172a] to-[#1e293b] text-amber-400 p-2 select-none">
                                   <span className="font-mono font-black text-base tracking-wider text-amber-400">
-                                    CN-{c.id}
+                                    SH-{c.id}
                                   </span>
                                   <span className="text-[10px] font-bold text-slate-300 uppercase tracking-widest mt-0.5">
                                     Profile

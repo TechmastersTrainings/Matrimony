@@ -60,7 +60,7 @@ export default function AdminUsersPage() {
         <div>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-50 border border-cyan-200 text-cyan-950 text-xs font-bold uppercase tracking-wider shadow-2xs mb-2">
             <span className="w-2 h-2 rounded-full bg-cyan-500 animate-pulse" />
-            <span>CovenantNest Directory</span>
+            <span>Shalom Directory</span>
           </div>
           <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight font-brand">
             User Account Management

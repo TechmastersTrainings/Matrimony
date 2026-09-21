@@ -29,7 +29,7 @@ export function AdminNavbar() {
               Official
             </span>
             <span>
-              A <strong className="text-white font-bold">Techmasters Innovations</strong> Product • CovenantNest Administrative Console
+              A <strong className="text-white font-bold">Techmasters Innovations</strong> Product • Shalom Administrative Console
             </span>
           </div>
           <div className="flex items-center gap-2">

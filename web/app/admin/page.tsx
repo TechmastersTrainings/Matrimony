@@ -91,7 +91,7 @@ function AdminDashboardContent() {
     setFeedbackMessage(null);
     try {
       await apiClient.approveProfile(profileId);
-      setFeedbackMessage({ type: 'success', text: `Profile CN-${profileId} approved successfully!` });
+      setFeedbackMessage({ type: 'success', text: `Profile SH-${profileId} approved successfully!` });
       await loadData();
     } catch (err: any) {
       setFeedbackMessage({ type: 'error', text: err.message || 'Failed to approve profile' });
@@ -108,7 +108,7 @@ function AdminDashboardContent() {
     setFeedbackMessage(null);
     try {
       await apiClient.rejectProfile(profileId, reason.trim());
-      setFeedbackMessage({ type: 'success', text: `Profile CN-${profileId} rejected.` });
+      setFeedbackMessage({ type: 'success', text: `Profile SH-${profileId} rejected.` });
       await loadData();
     } catch (err: any) {
       setFeedbackMessage({ type: 'error', text: err.message || 'Failed to reject profile' });
@@ -125,7 +125,7 @@ function AdminDashboardContent() {
     setFeedbackMessage(null);
     try {
       await apiClient.requestProfileChanges(profileId, notes.trim());
-      setFeedbackMessage({ type: 'success', text: `Change request sent to candidate CN-${profileId}.` });
+      setFeedbackMessage({ type: 'success', text: `Change request sent to candidate SH-${profileId}.` });
       await loadData();
     } catch (err: any) {
       setFeedbackMessage({ type: 'error', text: err.message || 'Failed to request changes' });
@@ -206,9 +206,9 @@ function AdminDashboardContent() {
     return (
       <div className="min-h-[calc(100vh-80px)] flex flex-col items-center justify-center bg-[#fdfbf7] text-charcoal-900 font-sans">
         <div className="w-12 h-12 rounded-2xl bg-cyan-800 text-amber-300 font-black flex items-center justify-center animate-pulse mb-3 shadow-md">
-          CN
+          SH
         </div>
-        <p className="text-sm text-charcoal-600 font-bold">Loading CovenantNest Administration Portal...</p>
+        <p className="text-sm text-charcoal-600 font-bold">Loading Shalom Administration Portal...</p>
       </div>
     );
   }
@@ -236,12 +236,12 @@ function AdminDashboardContent() {
   return (
     <div className="min-h-screen bg-[#fdfbf7] text-[#1e1b18] py-8 sm:py-10 px-4 sm:px-6 lg:px-8 font-sans">
       <div className="max-w-7xl mx-auto space-y-6 sm:space-y-8">
-        {/* Top Header Banner matching CovenantNest styling */}
+        {/* Top Header Banner matching Shalom styling */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-charcoal-200/80">
           <div className="space-y-1.5">
             <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-cyan-50 border border-cyan-200 text-cyan-950 text-xs font-bold uppercase tracking-wider shadow-2xs">
               <span className="w-2 h-2 rounded-full bg-cyan-500 animate-pulse" />
-              <span>CovenantNest Administration &amp; Moderation</span>
+              <span>Shalom Administration &amp; Moderation</span>
               <span className="text-orange-400 font-bold">•</span>
               <span className="text-emerald-800 font-bold bg-emerald-100 px-2 py-0.5 rounded-md text-xs">
                 Super Admin Active
@@ -317,7 +317,7 @@ function AdminDashboardContent() {
               {metrics?.approved_profiles ?? profiles.filter((p) => p.status === 'APPROVED').length}
             </div>
             <span className="text-xs text-emerald-900/80 font-medium block">
-              Live on CovenantNest
+              Live on Shalom
             </span>
           </div>
 
@@ -465,7 +465,7 @@ function AdminDashboardContent() {
                   const photoUrl = getPhotoUrl(
                     p.photos?.find((ph: any) => ph.is_primary)?.url || p.photos?.[0]?.url || p.primary_photo
                   );
-                  const candidateCode = `CN-${p.id || 1}`;
+                  const candidateCode = `SH-${p.id || 1}`;
                   const isBusy = actionLoading === p.id;
 
                   return (

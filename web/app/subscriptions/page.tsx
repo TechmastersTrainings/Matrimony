@@ -151,13 +151,13 @@ export default function SubscriptionsPage() {
       if (typeof window !== 'undefined' && window.Razorpay) {
         const userEmail = localStorage.getItem('user_email') || '';
         const userMobile = localStorage.getItem('user_mobile') || '';
-        const userName = localStorage.getItem('user_name') || 'CovenantNest Member';
+        const userName = localStorage.getItem('user_name') || 'Shalom Member';
 
         const options = {
           key: razorpayKey,
           amount: order.amount || plan.price_inr * 100,
           currency: order.currency || 'INR',
-          name: 'CovenantNest Christian Matrimony',
+          name: 'Shalom Christian Matrimony',
           description: `${plan.name} (${plan.duration_days} Days)`,
           order_id: order.order_id,
           handler: async function (response: any) {
@@ -277,7 +277,7 @@ export default function SubscriptionsPage() {
               </span>
             </div>
             <p className="text-xs sm:text-sm text-slate-700 leading-relaxed font-medium">
-              At CovenantNest, contact phone numbers and email addresses are <strong className="text-slate-950 font-bold">never revealed or sold to anyone</strong> simply by purchasing a plan. Contact details remain strictly locked and private until <strong className="text-slate-950 font-bold">BOTH candidates accept interest and give mutual consent to exchange contacts</strong>. No unwanted calls, zero personal policy breach, and total peace of mind for your family.
+              At Shalom, contact phone numbers and email addresses are <strong className="text-slate-950 font-bold">never revealed or sold to anyone</strong> simply by purchasing a plan. Contact details remain strictly locked and private until <strong className="text-slate-950 font-bold">BOTH candidates accept interest and give mutual consent to exchange contacts</strong>. No unwanted calls, zero personal policy breach, and total peace of mind for your family.
             </p>
           </div>
         </div>

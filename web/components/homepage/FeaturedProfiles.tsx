@@ -14,7 +14,7 @@ function ProfileCardItem({ profile: p }: { profile: CandidateCard }) {
       ? p.primary_photo
       : (p.primary_photo as any)?.photo_url
   );
-  const candidateCode = `CN-${p.id || 1}`;
+  const candidateCode = `SH-${p.id || 1}`;
   const hasPhoto = !!photoUrl && !imageError;
 
   return (

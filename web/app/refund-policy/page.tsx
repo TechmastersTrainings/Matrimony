@@ -2,8 +2,8 @@ import React from 'react';
 import Link from 'next/link';
 
 export const metadata = {
-  title: 'Refund & Cancellation Policy | CovenantNest — Christian Matrimony',
-  description: 'Official Refund & Cancellation Policy for CovenantNest, operated by Techmasters Innovations Private Limited.',
+  title: 'Refund & Cancellation Policy | Shalom — Christian Matrimony',
+  description: 'Official Refund & Cancellation Policy for Shalom, operated by Techmasters Innovations Private Limited.',
 };
 
 export default function RefundPolicyPage() {
@@ -19,7 +19,7 @@ export default function RefundPolicyPage() {
             Refund &amp; Cancellation Policy
           </h1>
           <p className="text-xs sm:text-sm text-slate-500">
-            Last Updated: September 2026 • CovenantNest Christian Matrimony
+            Last Updated: September 2026 • Shalom Christian Matrimony
           </p>
         </div>
 
@@ -29,7 +29,7 @@ export default function RefundPolicyPage() {
             1. Free Registration
           </h2>
           <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-            Creating a profile, browsing verified matches, and expressing holy interest on CovenantNest is completely free of charge. No mandatory registration fees or initial consultation charges are levied on Christian brides, grooms, or families.
+            Creating a profile, browsing verified matches, and expressing holy interest on Shalom is completely free of charge. No mandatory registration fees or initial consultation charges are levied on Christian brides, grooms, or families.
           </p>
         </div>
 
@@ -53,7 +53,7 @@ export default function RefundPolicyPage() {
             3. Refund Policy for Future Premium Features
           </h2>
           <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-            If CovenantNest introduces optional premium features (e.g., priority matching or featured profiles), please note:
+            If Shalom introduces optional premium features (e.g., priority matching or featured profiles), please note:
           </p>
           <ul className="list-disc pl-5 space-y-2 text-xs sm:text-sm text-slate-600 leading-relaxed">
             <li>

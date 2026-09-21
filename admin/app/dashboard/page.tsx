@@ -49,7 +49,7 @@ export default function AdminDashboardPage() {
         <div className="space-y-1.5">
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-cyan-50 border border-cyan-200 text-cyan-950 text-xs font-bold uppercase tracking-wider shadow-2xs">
             <span className="w-2 h-2 rounded-full bg-cyan-500 animate-pulse" />
-            <span>CovenantNest Administration &amp; Operations</span>
+            <span>Shalom Administration &amp; Operations</span>
             <span className="text-orange-400 font-bold">•</span>
             <span className="text-emerald-800 font-bold bg-emerald-100 px-2 py-0.5 rounded-md text-[11px]">
               Super Admin Active

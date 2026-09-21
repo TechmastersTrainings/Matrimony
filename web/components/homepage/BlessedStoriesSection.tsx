@@ -65,7 +65,7 @@ const galleryItems: GalleryItem[] = [
     title: 'Diverse Christian Fellowships in Bidar',
     image: '/images/sacred-diverse-fellowships-couple.jpg',
     description:
-      'CovenantNest respectfully brings together Christian brides, grooms, and prayerful families across Methodist (MCI), CSI, Roman Catholic, Baptist, and Pentecostal fellowships, preserving distinct church heritages.',
+      'Shalom respectfully brings together Christian brides, grooms, and prayerful families across Methodist (MCI), CSI, Roman Catholic, Baptist, and Pentecostal fellowships, preserving distinct church heritages.',
     highlight1: {
       title: '⛪ All Major Church Fellowships',
       desc: 'Connecting believers across denominations with genuine church validation.',

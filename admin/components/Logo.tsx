@@ -58,11 +58,11 @@ export function Logo({
         </div>
       </div>
 
-      {/* Brand Text: CovenantNest */}
+      {/* Brand Text: Shalom */}
       <div className="flex flex-col">
         <div className="flex items-center leading-none">
           <span className={`font-serif font-extrabold tracking-tight ${lightText ? 'text-white' : 'text-slate-900'} ${sizeClasses.text}`}>
-            Covenant<span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-600 via-rose-600 to-cyan-600">Nest</span>
+            Sha<span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-600 via-rose-600 to-cyan-600">lom</span>
           </span>
         </div>
         

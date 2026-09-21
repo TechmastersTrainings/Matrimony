@@ -198,7 +198,7 @@ export function Footer() {
                   className="hover:text-amber-300 hover:translate-x-1 transition-all inline-flex items-center gap-2"
                 >
                   <span className="text-amber-400 text-xs font-bold">›</span>
-                  <span>About CovenantNest</span>
+                  <span>About Shalom</span>
                 </Link>
               </li>
               <li>
@@ -292,7 +292,7 @@ export function Footer() {
               © 2026 <strong className="text-amber-300 font-bold">Techmasters Innovations Pvt. Ltd.</strong> All rights reserved.
             </p>
             <p className="text-[11px] text-rose-100/80">
-              Covenant Nest • A sacred initiative headquartered in Bidar.
+              Shalom • A sacred initiative headquartered in Bidar.
             </p>
           </div>
 

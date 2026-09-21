@@ -150,7 +150,7 @@ export function HowItWorksSection() {
           className="text-center max-w-2xl mx-auto space-y-2"
         >
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight font-brand">
-            How Covenant Nest Works
+            How Shalom Works
           </h2>
 
           <p className="text-xs sm:text-base text-slate-600 max-w-xl mx-auto leading-relaxed font-normal">

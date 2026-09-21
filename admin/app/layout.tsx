@@ -5,8 +5,8 @@ import { AdminInactivityHandler } from '../components/AdminInactivityHandler';
 import { Footer } from '../components/Footer';
 
 export const metadata = {
-  title: 'CovenantNest Admin | Administrative Command Center',
-  description: 'Administrative moderation, church verification, and safety portal for CovenantNest.',
+  title: 'Shalom Admin | Administrative Command Center',
+  description: 'Administrative moderation, church verification, and safety portal for Shalom.',
 };
 
 export default function RootLayout({

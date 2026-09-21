@@ -66,12 +66,12 @@ function AdminProfilesContent() {
   }, [statusFilter]);
 
   const handleApprove = async (profileId: number) => {
-    if (!confirm(`Approve Profile CN-${profileId}? This candidate will immediately become searchable on Discovery search.`)) return;
+    if (!confirm(`Approve Profile SH-${profileId}? This candidate will immediately become searchable on Discovery search.`)) return;
     setActionLoading(true);
     try {
       await adminApiClient.approveProfile(profileId);
-      alert(`Profile CN-${profileId} approved successfully! This candidate is now published and live on the main site.`);
-      showToast(`✓ Profile CN-${profileId} approved successfully and published.`);
+      alert(`Profile SH-${profileId} approved successfully! This candidate is now published and live on the main site.`);
+      showToast(`✓ Profile SH-${profileId} approved successfully and published.`);
 
       setProfiles((prev) =>
         prev.map((p) =>
@@ -103,8 +103,8 @@ function AdminProfilesContent() {
     setActionLoading(true);
     try {
       await adminApiClient.rejectProfile(pId, rejectReason.trim());
-      alert(`Profile CN-${pId} rejected successfully.`);
-      showToast(`Profile CN-${pId} rejected.`);
+      alert(`Profile SH-${pId} rejected successfully.`);
+      showToast(`Profile SH-${pId} rejected.`);
       setActionType(null);
       setRejectReason('');
 
@@ -129,7 +129,7 @@ function AdminProfilesContent() {
     setActionLoading(true);
     try {
       await adminApiClient.requestChanges(pId, changesNotes.trim());
-      showToast(`✓ Changes requested from candidate for Profile CN-${pId}.`);
+      showToast(`✓ Changes requested from candidate for Profile SH-${pId}.`);
       setActionType(null);
       setChangesNotes('');
 
@@ -155,7 +155,7 @@ function AdminProfilesContent() {
     setActionLoading(true);
     try {
       await adminApiClient.deleteProfile(pId, deleteReason.trim());
-      showToast(`✓ Profile CN-${pId} (${pName}) permanently purged.`);
+      showToast(`✓ Profile SH-${pId} (${pName}) permanently purged.`);
       setActionType(null);
       setDeleteReason('Candidate found match / requested decommission');
       setSelectedProfile(null);
@@ -194,7 +194,7 @@ function AdminProfilesContent() {
         <div>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-50 border border-cyan-200 text-cyan-950 text-xs font-bold uppercase tracking-wider shadow-2xs mb-2">
             <span className="w-2 h-2 rounded-full bg-cyan-500 animate-pulse" />
-            <span>CovenantNest Moderation Suite</span>
+            <span>Shalom Moderation Suite</span>
           </div>
           <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight font-brand">
             Candidate Moderation Queue
@@ -247,7 +247,7 @@ function AdminProfilesContent() {
               const photoUrl = getPhotoUrl(
                 p.photos?.find((ph: any) => ph.is_primary)?.url || p.photos?.[0]?.url
               );
-              const candidateCode = `CN-${p.id}`;
+              const candidateCode = `SH-${p.id}`;
 
               return (
                 <div
@@ -343,7 +343,7 @@ function AdminProfilesContent() {
                     </span>
                   </div>
                   <p className="text-xs text-slate-500 mt-1 font-mono">
-                    Candidate Code: CN-{selectedProfile.id} • User ID: #{selectedProfile.user_id}
+                    Candidate Code: SH-{selectedProfile.id} • User ID: #{selectedProfile.user_id}
                   </p>
                 </div>
 
@@ -399,7 +399,7 @@ function AdminProfilesContent() {
                 <div className="p-3.5 px-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-950 text-xs font-medium flex flex-wrap items-center justify-between gap-3">
                   <span className="flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                    <span>Active &amp; Publicly Searchable on CovenantNest Discovery</span>
+                    <span>Active &amp; Publicly Searchable on Shalom Discovery</span>
                   </span>
                   <a
                     href={`${webUrl}/profile/${selectedProfile.id}`}
@@ -407,7 +407,7 @@ function AdminProfilesContent() {
                     rel="noreferrer"
                     className="px-3.5 py-1.5 rounded-xl bg-cyan-700 hover:bg-cyan-600 text-white font-bold text-xs shadow-xs transition-all shrink-0 flex items-center gap-1.5"
                   >
-                    <span>View Public Profile CN-{selectedProfile.id} ↗</span>
+                    <span>View Public Profile SH-{selectedProfile.id} ↗</span>
                   </a>
                 </div>
               )}

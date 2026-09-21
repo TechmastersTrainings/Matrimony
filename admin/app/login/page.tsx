@@ -51,7 +51,7 @@ function AdminLoginFormContent() {
 
       localStorage.setItem('admin_access_token', data.access_token);
       localStorage.setItem('admin_role', data.role);
-      alert('Login successful! Welcome to CovenantNest Admin Command Center.');
+      alert('Login successful! Welcome to Shalom Admin Command Center.');
       router.push('/dashboard');
     } catch (err: any) {
       setError(err.message || 'Login failed.');
@@ -63,7 +63,7 @@ function AdminLoginFormContent() {
   return (
     <div className="min-h-screen flex items-center justify-center py-12 px-4 bg-[#fdfbf7] text-[#1e1b18] font-sans">
       <div className="w-full max-w-md space-y-6">
-        {/* Header with CovenantNest Logo */}
+        {/* Header with Shalom Logo */}
         <div className="text-center space-y-3 flex flex-col items-center">
           <Logo size="lg" showTechmastersTag={false} lightText={false} />
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-50 border border-cyan-200 text-cyan-950 text-xs font-bold uppercase tracking-wider shadow-2xs mt-2">
