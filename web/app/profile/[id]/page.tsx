@@ -361,31 +361,38 @@ export default function CandidateProfileDetailPage() {
               <span>Controlled Contact Reveal</span>
             </div>
 
-            {/* Admin Unlocked Direct Contact Info Box */}
-            {profile.is_admin_override && (profile.mobile_number || profile.email) && (
-              <div className="p-4 rounded-2xl bg-gold-50 border border-gold-200 text-xs space-y-2">
-                <div className="flex items-center justify-between text-burgundy-800 font-bold uppercase tracking-wider text-[10px]">
-                  <span>👑 Admin Direct Candidate Contact</span>
-                  <span>UNLOCKED</span>
+            {/* Contact Info Box (Admin or Mutual Consent Unlocked) */}
+            {(profile.is_admin_override || profile.contact_revealed || profile.is_mutual_match) && (profile.mobile_number || profile.email) ? (
+              <div className="p-4 rounded-2xl bg-emerald-50/90 border border-emerald-300 text-xs space-y-2">
+                <div className="flex items-center justify-between text-emerald-900 font-bold uppercase tracking-wider text-[10px]">
+                  <span>{profile.is_admin_override ? '👑 Admin Direct Candidate Contact' : '🤝 Mutual Consent Verified Contact'}</span>
+                  <span className="bg-emerald-200 text-emerald-950 px-2 py-0.5 rounded-full">UNLOCKED</span>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 font-medium text-charcoal-800">
                   {profile.mobile_number && (
                     <div className="flex items-center gap-2">
-                      <span className="text-burgundy-700">📞 Phone:</span>
-                      <a href={`tel:${profile.mobile_number}`} className="underline hover:text-burgundy-900 font-mono">
-                        {profile.mobile_number}
+                      <span className="text-emerald-800 font-bold">📞 Phone:</span>
+                      <a href={`tel:${profile.mobile_number}`} className="underline hover:text-emerald-950 font-mono font-bold">
+                        +91 {profile.mobile_number}
                       </a>
                     </div>
                   )}
                   {profile.email && (
                     <div className="flex items-center gap-2">
-                      <span className="text-burgundy-700">✉️ Email:</span>
-                      <a href={`mailto:${profile.email}`} className="underline hover:text-burgundy-900 font-mono">
+                      <span className="text-emerald-800 font-bold">✉️ Email:</span>
+                      <a href={`mailto:${profile.email}`} className="underline hover:text-emerald-950 font-mono">
                         {profile.email}
                       </a>
                     </div>
                   )}
                 </div>
+              </div>
+            ) : (
+              <div className="p-3 rounded-xl bg-[#faf6ee] border border-[#ece2d1] text-[11px] text-slate-600 flex items-center gap-2">
+                <span>🔒</span>
+                <span>
+                  <strong>Sacred Privacy:</strong> Contact phone and email remain locked until both candidates mutually accept interest.
+                </span>
               </div>
             )}
 

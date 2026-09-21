@@ -42,6 +42,25 @@ class ChatService:
                 detail="Chat is restricted to mutually accepted matches.",
             )
 
+        # Enforce Basic Christian Plan limit: In-app messaging with up to 5 matches
+        from backend.app.models.subscription import UserSubscription
+        from backend.app.models.enums import SubscriptionPlanCode, UserRole
+        if sender.role not in [UserRole.ADMIN, UserRole.SUPER_ADMIN]:
+            user_sub = db.query(UserSubscription).filter(
+                UserSubscription.user_id == sender.id,
+                UserSubscription.status == "ACTIVE"
+            ).first()
+            if user_sub and getattr(user_sub, "plan", None) and user_sub.plan.plan_code == SubscriptionPlanCode.BASIC:
+                chatted_partners = db.query(ChatMessage.receiver_id).filter(
+                    ChatMessage.sender_id == sender.id
+                ).distinct().all()
+                chatted_ids = {c[0] for c in chatted_partners}
+                if receiver_id not in chatted_ids and len(chatted_ids) >= 5:
+                    raise HTTPException(
+                        status_code=status.HTTP_400_BAD_REQUEST,
+                        detail="Your Basic Christian Plan includes in-app messaging with up to 5 matches. Please upgrade to Standard or Premium for unlimited messaging with all matches.",
+                    )
+
         msg = ChatMessage(
             sender_id=sender.id,
             receiver_id=receiver_id,

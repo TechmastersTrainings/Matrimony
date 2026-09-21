@@ -11,7 +11,7 @@ from backend.app.models.user import User
 from backend.app.services.database import get_db
 from backend.app.services.payment_service import PaymentService
 
-router = APIRouter(tags=["Subscriptions & Cashfree Payments"])
+router = APIRouter(tags=["Subscriptions & Razorpay Payments"])
 
 
 class CreateOrderRequest(BaseModel):
@@ -91,7 +91,7 @@ async def create_order(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    amount_inr = 499
+    amount_inr = 299
     ref_id = None
 
     if payload.plan_id:
@@ -115,8 +115,8 @@ async def create_order(
 
 
 # Step 3: Verify Razorpay Payment Signature Endpoints
-@router.post("/subscriptions/verify-payment", summary="Verify Cashfree Payment Status")
-@router.post("/verify-payment", summary="Verify Cashfree Payment (Standard API)")
+@router.post("/subscriptions/verify-payment", summary="Verify Razorpay Payment Status")
+@router.post("/verify-payment", summary="Verify Razorpay Payment (Standard API)")
 async def verify_payment(
     payload: VerifyPaymentRequest,
     current_user: User = Depends(get_current_user),

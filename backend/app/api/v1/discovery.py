@@ -142,6 +142,21 @@ async def get_candidate_profile(
     # Full details for paid active subscribers or Admins
     candidate_user = db.query(User).filter(User.id == profile.user_id).first()
     is_admin = current_user is not None and current_user.role in [UserRole.ADMIN, UserRole.SUPER_ADMIN]
+    is_owner = current_user is not None and current_user.id == profile.user_id
+
+    # Check mutual consent (accepted interest between both candidates)
+    is_mutual_match = False
+    if current_user and profile and current_user.id != profile.user_id:
+        from backend.app.models.interaction import UserInterest
+        from backend.app.models.enums import InterestStatus
+        mutual_interest = db.query(UserInterest).filter(
+            ((UserInterest.sender_id == current_user.id) & (UserInterest.receiver_id == profile.user_id)) |
+            ((UserInterest.sender_id == profile.user_id) & (UserInterest.receiver_id == current_user.id)),
+            UserInterest.status == InterestStatus.ACCEPTED,
+        ).first()
+        is_mutual_match = mutual_interest is not None
+
+    can_view_contact = is_admin or is_owner or is_mutual_match
 
     return {
         "id": profile.id,
@@ -153,9 +168,11 @@ async def get_candidate_profile(
         "manager_contact": profile.manager_contact or "",
         "first_name": profile.first_name,
         "last_name": profile.last_name if is_admin else (profile.last_name[0] + "." if profile.last_name else ""),
-        "mobile_number": candidate_user.mobile_number if (is_admin and candidate_user) else None,
-        "email": candidate_user.email if (is_admin and candidate_user) else None,
+        "mobile_number": candidate_user.mobile_number if (can_view_contact and candidate_user) else None,
+        "email": candidate_user.email if (can_view_contact and candidate_user) else None,
         "is_admin_override": is_admin,
+        "is_mutual_match": is_mutual_match,
+        "contact_revealed": can_view_contact,
         "gender": profile.gender.value if profile.gender else "MALE",
         "marital_status": profile.marital_status.value if profile.marital_status else "NEVER_MARRIED",
         "age": profile.age,

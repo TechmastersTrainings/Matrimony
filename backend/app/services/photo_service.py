@@ -85,12 +85,28 @@ class PhotoService:
         r2_main_key = f"profiles/{profile.id}/photos/{photo_id}.jpg"
         r2_thumb_key = f"profiles/{profile.id}/photos/thumbs/{photo_id}.jpg"
 
+        # Determine order index & enforce plan limits
+        current_photos_count = db.query(ProfilePhoto).filter(ProfilePhoto.profile_id == profile.id).count()
+
+        # Check subscription photo upload limits: Basic Plan allows up to 5 photos
+        from backend.app.models.subscription import UserSubscription
+        from backend.app.models.enums import SubscriptionPlanCode
+        user_sub = db.query(UserSubscription).filter(
+            UserSubscription.user_id == profile.user_id,
+            UserSubscription.status == "ACTIVE"
+        ).first()
+
+        is_unlimited = user_sub and getattr(user_sub, "plan", None) and user_sub.plan.plan_code in [SubscriptionPlanCode.STANDARD, SubscriptionPlanCode.PREMIUM]
+        if not is_unlimited and current_photos_count >= 5:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="The Basic Christian Plan allows up to 5 photo uploads. Please upgrade to Standard or Premium to upload additional photos."
+            )
+
         storage = get_storage_service()
         main_url = storage.upload_file(compressed_bytes, r2_main_key, "image/jpeg")
         thumb_url = storage.upload_file(thumb_bytes, r2_thumb_key, "image/jpeg")
 
-        # Determine order index
-        current_photos_count = db.query(ProfilePhoto).filter(ProfilePhoto.profile_id == profile.id).count()
         if current_photos_count == 0 or is_primary:
             # First photo is primary by default
             is_primary = True

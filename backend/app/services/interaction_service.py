@@ -29,6 +29,17 @@ class InteractionService:
                 detail="An active subscription plan is required to express interest in Christian matrimonial profiles."
             )
 
+        # Plan limit check: Basic Christian Plan allows 5 matrimonial interests
+        if active_sub and getattr(active_sub, "plan", None) and sender.role not in [UserRole.ADMIN, UserRole.SUPER_ADMIN]:
+            from backend.app.models.enums import SubscriptionPlanCode
+            if active_sub.plan.plan_code == SubscriptionPlanCode.BASIC:
+                sent_count = db.query(UserInterest).filter(UserInterest.sender_id == sender.id).count()
+                if sent_count >= 5:
+                    raise HTTPException(
+                        status_code=status.HTTP_400_BAD_REQUEST,
+                        detail="You have reached your limit of 5 matrimonial interests on the Basic Christian Plan. Upgrade to Standard or Premium for unlimited interests.",
+                    )
+
         # Strict Christian Matrimony gender validation: Groom matches Bride only
         sender_profile = db.query(Profile).filter(Profile.user_id == sender.id).first()
         target_profile = db.query(Profile).filter(Profile.user_id == target_user_id).first()
