@@ -167,7 +167,7 @@ function AdminProfilesContent() {
     }
   };
 
-  const webUrl = (process.env.NEXT_PUBLIC_WEB_URL || 'https://covenantnest.techmaster.space').replace(/\/+$/, '');
+  const webUrl = (process.env.NEXT_PUBLIC_WEB_URL || 'https://shalom.techmaster.space').replace(/\/+$/, '');
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 text-[#1e1b18] font-sans">

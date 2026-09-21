@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Logo } from './Logo';
 
 export function Footer() {
-  const mainSiteUrl = 'https://covenantnest.techmaster.space';
+  const mainSiteUrl = 'https://shalom.techmaster.space';
 
   return (
     <footer className="bg-gradient-to-b from-[#080d19] via-[#050811] to-[#020307] text-slate-300 relative overflow-hidden border-t-2 border-slate-800 font-sans">

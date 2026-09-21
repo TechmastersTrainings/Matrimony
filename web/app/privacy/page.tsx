@@ -29,7 +29,7 @@ export default function PrivacyPage() {
             1. Introduction
           </h2>
           <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-            Welcome to Shalom (<a href="https://covenantnest.techmaster.space" className="text-cyan-900 underline font-semibold">covenantnest.techmaster.space</a>), a faith-based matrimonial platform operated by <strong>Techmasters Innovations Private Limited</strong>, headquartered in Bidar, Karnataka. We are committed to protecting your privacy and handling your personal data with the highest level of sacred reverence and security, in compliance with the Information Technology Act, 2000, and the Digital Personal Data Protection (DPDP) Act, 2023.
+            Welcome to Shalom (<a href="https://shalom.techmaster.space" className="text-cyan-900 underline font-semibold">shalom.techmaster.space</a>), a faith-based matrimonial platform operated by <strong>Techmasters Innovations Private Limited</strong>, headquartered in Bidar, Karnataka. We are committed to protecting your privacy and handling your personal data with the highest level of sacred reverence and security, in compliance with the Information Technology Act, 2000, and the Digital Personal Data Protection (DPDP) Act, 2023.
           </p>
         </div>
 

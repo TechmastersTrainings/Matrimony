@@ -29,7 +29,7 @@ export default function TermsPage() {
             1. Acceptance of Terms
           </h2>
           <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-            By registering on Shalom (<a href="https://covenantnest.techmaster.space" className="text-cyan-900 underline font-semibold">covenantnest.techmaster.space</a>), you agree to these Terms of Service. If you do not agree, please do not use this platform.
+            By registering on Shalom (<a href="https://shalom.techmaster.space" className="text-cyan-900 underline font-semibold">shalom.techmaster.space</a>), you agree to these Terms of Service. If you do not agree, please do not use this platform.
           </p>
         </div>
 
