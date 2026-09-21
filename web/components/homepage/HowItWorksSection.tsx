@@ -12,11 +12,9 @@ interface StepPoint {
 
 interface StepData {
   id: number;
-  badge: string;
   title: string;
   frontDesc: string;
   image: string;
-  badgeStyle: string;
   borderStyle: string;
   activeGlow: string;
   backGradient: string;
@@ -28,12 +26,10 @@ interface StepData {
 const roadmapSteps: StepData[] = [
   {
     id: 1,
-    badge: 'Free Signup',
     title: 'Create a protected faith profile',
     frontDesc:
       'Fill in your profile with your details, education, work, and church name. Your phone number is never displayed publicly.',
     image: '/images/christian-wedding-rings-bible.jpg',
-    badgeStyle: 'bg-amber-500/15 text-amber-900 border-amber-300/80',
     borderStyle: 'hover:border-amber-400/80 hover:shadow-amber-500/10',
     activeGlow: 'from-amber-500 to-amber-600',
     backGradient: 'from-[#1a0f0a] via-[#26150c] to-[#0f0805]',
@@ -59,12 +55,10 @@ const roadmapSteps: StepData[] = [
   },
   {
     id: 2,
-    badge: 'Find Match',
     title: 'Discover compatibility, then express interest',
     frontDesc:
       'Look through genuine Christian profiles filtered by church or city. Conversation begins only after interest is mutual.',
     image: '/images/hero-sunset-covenant-hands.jpg',
-    badgeStyle: 'bg-cyan-500/15 text-cyan-900 border-cyan-300/80',
     borderStyle: 'hover:border-cyan-400/80 hover:shadow-cyan-500/10',
     activeGlow: 'from-cyan-500 to-teal-600',
     backGradient: 'from-[#07171d] via-[#0b242e] to-[#040d11]',
@@ -90,12 +84,10 @@ const roadmapSteps: StepData[] = [
   },
   {
     id: 3,
-    badge: 'Family Meeting',
     title: 'Connect families and prepare for marriage',
     frontDesc:
       'When both of you accept interest, verified family numbers are shared. Both people control when family contact is opened.',
     image: '/images/christian-couple-church-prayer.jpg',
-    badgeStyle: 'bg-emerald-500/15 text-emerald-900 border-emerald-300/80',
     borderStyle: 'hover:border-emerald-400/80 hover:shadow-emerald-500/10',
     activeGlow: 'from-emerald-500 to-green-600',
     backGradient: 'from-[#061c14] via-[#092b1e] to-[#030e0a]',
@@ -203,14 +195,6 @@ export function HowItWorksSection() {
                         alt={step.title}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent" />
-
-                      {/* Phase Badge */}
-                      <div className="absolute top-3 left-3">
-                        <span className={`text-xs font-extrabold px-2.5 py-0.5 rounded-full border shadow-xs backdrop-blur-md ${step.badgeStyle}`}>
-                          {step.badge}
-                        </span>
-                      </div>
                     </div>
 
                     {/* Step Card Text Body */}
