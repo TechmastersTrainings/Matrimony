@@ -145,7 +145,7 @@ export default function SubscriptionsPage() {
     try {
       // Step 1: Create Razorpay Order via Backend API
       const order = await apiClient.createSubscriptionOrder(plan.id);
-      const razorpayKey = order.key_id || process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || 'rzp_test_MatrimonyKey2026';
+      const razorpayKey = order.key_id || process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || 'rzp_test_TeqmLkAiBwoZp0';
 
       // Step 2: Open Razorpay Standard Checkout Modal
       if (typeof window !== 'undefined' && window.Razorpay) {

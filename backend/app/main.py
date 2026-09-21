@@ -130,6 +130,10 @@ app.include_router(health_router, prefix="", tags=["Health"])
 # API v1 Router
 app.include_router(api_v1_router, prefix=settings.API_V1_STR)
 
+# Top-level Razorpay Standard Checkout Routes (/api/create-order, /api/verify-payment)
+from backend.app.api.v1.subscriptions import router as subscriptions_router
+app.include_router(subscriptions_router, prefix="/api", tags=["Razorpay Standard Checkout"])
+
 
 @app.api_route("/media/{file_path:path}", methods=["GET", "HEAD"], tags=["Media"])
 async def serve_media(file_path: str):

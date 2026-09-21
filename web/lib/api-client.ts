@@ -354,7 +354,18 @@ class ApiClient {
       body: JSON.stringify({ plan_id: planId }),
     });
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error?.message || 'Failed to create order');
+    if (!res.ok) throw new Error(data.error?.message || data.detail || 'Failed to create order');
+    return data;
+  }
+
+  async createRazorpayOrder(amountPaise: number, currency: string = 'INR', receipt?: string): Promise<any> {
+    const res = await fetch(`${API_BASE_URL}/create-order`, {
+      method: 'POST',
+      headers: this.getHeaders(),
+      body: JSON.stringify({ amount: amountPaise, currency, receipt }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error?.message || data.detail || 'Failed to create Razorpay order');
     return data;
   }
 

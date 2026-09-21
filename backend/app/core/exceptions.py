@@ -79,6 +79,7 @@ async def http_exception_handler(request: Request, exc: Any) -> JSONResponse:
         headers=_cors_headers(request),
         content={
             "success": False,
+            "detail": detail,
             "error": {
                 "message": detail,
                 "type": "HTTPException",

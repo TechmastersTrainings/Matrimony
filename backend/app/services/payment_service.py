@@ -126,63 +126,90 @@ class PaymentService:
 
     @staticmethod
     def create_razorpay_order(
-        user: User,
-        amount_inr: int,
+        user: Optional[User] = None,
+        amount_inr: Optional[int] = None,
+        amount_paise: Optional[int] = None,
+        currency: str = "INR",
+        receipt: Optional[str] = None,
         purpose: PaymentPurpose = PaymentPurpose.SUBSCRIPTION,
         reference_id: Optional[str] = None,
         db: Optional[Session] = None,
     ) -> Dict[str, Any]:
-        amount_paise = amount_inr * 100
-        if amount_paise < 100:
+        if amount_paise is not None:
+            paise = int(amount_paise)
+        elif amount_inr is not None:
+            paise = int(amount_inr * 100)
+        else:
+            paise = 29900  # Default ₹299
+
+        if paise < 100:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Minimum order amount must be at least 100 paise (₹1).",
             )
 
-        receipt_id = f"CM_RC_{uuid.uuid4().hex[:10].upper()}"
-        order_id = None
+        currency = currency.upper() if currency else "INR"
+        receipt_id = receipt or f"CM_RC_{uuid.uuid4().hex[:10].upper()}"
 
         client = PaymentService.get_razorpay_client()
-        if client:
-            try:
-                rzp_order = client.order.create({
-                    "amount": amount_paise,
-                    "currency": "INR",
-                    "receipt": receipt_id,
-                    "notes": {
-                        "user_id": str(user.id),
-                        "user_email": user.email or "",
-                        "purpose": purpose.value if hasattr(purpose, "value") else str(purpose),
-                        "reference_id": str(reference_id or ""),
-                    },
-                })
-                order_id = rzp_order.get("id")
-                logger.info(f"Razorpay Order Created: {order_id} for User {user.id}")
-            except Exception as err:
-                logger.warning(f"Razorpay API Order Creation Failed (using fallback): {str(err)}")
+        if not client:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Razorpay client could not be initialized. Check API keys.",
+            )
 
-        if not order_id:
-            order_id = f"order_rzp_{uuid.uuid4().hex[:14]}"
+        try:
+            notes = {
+                "purpose": purpose.value if hasattr(purpose, "value") else str(purpose),
+                "reference_id": str(reference_id or ""),
+            }
+            if user:
+                notes["user_id"] = str(user.id)
+                notes["user_email"] = user.email or ""
+
+            rzp_order = client.order.create({
+                "amount": paise,
+                "currency": currency,
+                "receipt": receipt_id,
+                "notes": notes,
+            })
+            order_id = rzp_order.get("id")
+            logger.info(f"Razorpay Order Created: {order_id} for Amount {paise} paise")
+        except Exception as err:
+            err_msg = str(err)
+            logger.error(f"Razorpay API Order Creation Failed: {err_msg}")
+            if "Authentication failed" in err_msg or "auth" in err_msg.lower():
+                raise HTTPException(
+                    status_code=status.HTTP_401_UNAUTHORIZED,
+                    detail=f"Razorpay authentication failed: {err_msg}",
+                )
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Razorpay order creation failed: {err_msg}",
+            )
 
         if db is not None:
-            order = PaymentOrder(
-                order_id=order_id,
-                user_id=user.id,
-                amount_inr=amount_inr,
-                currency="INR",
-                purpose=purpose,
-                reference_id=str(reference_id or ""),
-                status=PaymentStatus.CREATED,
-            )
-            db.add(order)
-            db.commit()
+            try:
+                order = PaymentOrder(
+                    order_id=order_id,
+                    user_id=user.id if user else 1,
+                    amount_inr=max(1, paise // 100),
+                    currency=currency,
+                    purpose=purpose,
+                    reference_id=str(reference_id or ""),
+                    status=PaymentStatus.CREATED,
+                )
+                db.add(order)
+                db.commit()
+            except Exception as db_err:
+                logger.warning(f"Database logging notice for order {order_id}: {db_err}")
 
         return {
             "order_id": order_id,
-            "amount": amount_paise,
-            "amount_inr": amount_inr,
-            "currency": "INR",
-            "key_id": settings.RAZORPAY_KEY_ID or "rzp_test_MatrimonyKey2026",
+            "amount": paise,
+            "amount_inr": max(1, paise // 100),
+            "currency": currency,
+            "key_id": settings.RAZORPAY_KEY_ID or "rzp_test_TeqmLkAiBwoZp0",
             "receipt": receipt_id,
         }
 
@@ -195,14 +222,26 @@ class PaymentService:
         razorpay_payment_id: str,
         razorpay_signature: str,
     ) -> bool:
-        if not razorpay_order_id or not razorpay_payment_id:
-            return False
+        if not razorpay_order_id or not razorpay_payment_id or not razorpay_signature:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Missing required fields: order_id, payment_id, and signature are required.",
+            )
 
-        # Support test/simulation bypass in dev environments
-        if (razorpay_signature and "sim_" in razorpay_signature) or (razorpay_payment_id and "sim_" in razorpay_payment_id):
-            logger.info(f"Simulation test signature accepted for order {razorpay_order_id}")
-            return True
+        # Standard HMAC-SHA256(order_id + "|" + payment_id, KEY_SECRET)
+        if settings.RAZORPAY_KEY_SECRET:
+            try:
+                generated_signature = hmac.new(
+                    settings.RAZORPAY_KEY_SECRET.encode("utf-8"),
+                    f"{razorpay_order_id}|{razorpay_payment_id}".encode("utf-8"),
+                    hashlib.sha256,
+                ).hexdigest()
+                if hmac.compare_digest(generated_signature, razorpay_signature):
+                    return True
+            except Exception as hmac_err:
+                logger.warning(f"HMAC fallback signature calculation error: {hmac_err}")
 
+        # Razorpay SDK utility verification as fallback
         client = PaymentService.get_razorpay_client()
         if client:
             try:
@@ -214,22 +253,6 @@ class PaymentService:
                 return True
             except Exception as e:
                 logger.warning(f"Razorpay utility signature verification error: {e}")
-
-        # Fallback HMAC SHA256 verification
-        if settings.RAZORPAY_KEY_SECRET:
-            try:
-                generated_signature = hmac.new(
-                    settings.RAZORPAY_KEY_SECRET.encode("utf-8"),
-                    f"{razorpay_order_id}|{razorpay_payment_id}".encode("utf-8"),
-                    hashlib.sha256,
-                ).hexdigest()
-                return hmac.compare_digest(generated_signature, razorpay_signature)
-            except Exception as hmac_err:
-                logger.warning(f"HMAC fallback signature calculation error: {hmac_err}")
-
-        # If Razorpay keys are default test placeholders, allow verification
-        if settings.RAZORPAY_KEY_ID == "rzp_test_MatrimonyKey2026":
-            return True
 
         return False
 
@@ -300,7 +323,10 @@ class PaymentService:
 
                 return {
                     "success": True,
-                    "status": "PAID",
+                    "status": "success",
+                    "payment_status": "PAID",
+                    "order_id": order_id,
+                    "payment_id": gateway_payment_id,
                     "message": f"Payment verified! {plan.name} is now ACTIVE until {end_date.strftime('%d %b %Y')}.",
                     "subscription_id": sub.id,
                     "plan_name": plan.name,
@@ -310,7 +336,10 @@ class PaymentService:
         db.commit()
         return {
             "success": True,
-            "status": "PAID",
+            "status": "success",
+            "payment_status": "PAID",
+            "order_id": order_id,
+            "payment_id": gateway_payment_id,
             "message": "Payment verified and completed successfully.",
         }
 

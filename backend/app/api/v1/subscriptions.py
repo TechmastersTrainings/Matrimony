@@ -4,7 +4,7 @@ from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
 from backend.app.core.config import settings
-from backend.app.core.security import get_current_user
+from backend.app.core.security import get_current_user, get_optional_current_user
 from backend.app.models.enums import PaymentPurpose
 from backend.app.models.subscription import SubscriptionPlan, UserSubscription
 from backend.app.models.user import User
@@ -16,7 +16,8 @@ router = APIRouter(tags=["Subscriptions & Razorpay Payments"])
 
 class CreateOrderRequest(BaseModel):
     plan_id: Optional[int] = None
-    amount: Optional[int] = None
+    amount: Optional[int] = None  # Amount in paise (minimum 100 paise)
+    amount_paise: Optional[int] = None
     currency: Optional[str] = "INR"
     receipt: Optional[str] = None
 
@@ -48,7 +49,11 @@ async def get_plans(db: Session = Depends(get_db)):
                 "price_inr": p.price_inr,
                 "duration_days": p.duration_days,
                 "contact_reveals_limit": p.contact_reveals_limit,
-                "features": p.features,
+                "messaging_limit": p.messaging_limit,
+                "photo_upload_limit": p.photo_upload_limit,
+                "interest_express_limit": p.interest_express_limit,
+                "priority_support": p.priority_support,
+                "is_active": p.is_active,
             }
             for p in plans
         ]
@@ -56,8 +61,8 @@ async def get_plans(db: Session = Depends(get_db)):
 
 
 @router.get(
-    "/subscriptions/my",
-    summary="Get Current User Active Subscription",
+    "/subscriptions/my-subscription",
+    summary="Get Current User Subscription Status",
 )
 async def get_my_subscription(
     current_user: User = Depends(get_current_user),
@@ -65,17 +70,26 @@ async def get_my_subscription(
 ):
     sub = (
         db.query(UserSubscription)
-        .filter(UserSubscription.user_id == current_user.id, UserSubscription.status == "ACTIVE")
-        .order_by(UserSubscription.id.desc())
+        .filter(
+            UserSubscription.user_id == current_user.id,
+            UserSubscription.status == "ACTIVE",
+        )
+        .order_by(UserSubscription.created_at.desc())
         .first()
     )
     if not sub:
-        return {"has_active_subscription": False, "plan": None}
+        return {
+            "has_active_subscription": False,
+            "plan_name": "Free Exploration",
+            "reveals_remaining": 0,
+            "can_reveal_contacts": False,
+        }
 
     return {
         "has_active_subscription": True,
-        "subscription_id": sub.id,
+        "plan_id": sub.plan_id,
         "plan_name": sub.plan.name,
+        "plan_code": sub.plan.plan_code.value,
         "start_date": sub.start_date,
         "end_date": sub.end_date,
         "reveals_used": sub.reveals_used,
@@ -88,25 +102,36 @@ async def get_my_subscription(
 @router.post("/create-order", summary="Create Razorpay Order (Standard API)")
 async def create_order(
     payload: CreateOrderRequest,
-    current_user: User = Depends(get_current_user),
+    current_user: Optional[User] = Depends(get_optional_current_user),
     db: Session = Depends(get_db),
 ):
-    amount_inr = 299
+    amount_paise = None
     ref_id = None
 
     if payload.plan_id:
         plan = db.query(SubscriptionPlan).filter(SubscriptionPlan.id == payload.plan_id).first()
         if not plan:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Subscription plan not found.")
-        amount_inr = plan.price_inr
+        amount_paise = plan.price_inr * 100
         ref_id = str(plan.id)
-    elif payload.amount:
-        # Amount supplied directly in paise or INR
-        amount_inr = payload.amount // 100 if payload.amount >= 1000 else payload.amount
+    elif payload.amount_paise is not None:
+        amount_paise = payload.amount_paise
+    elif payload.amount is not None:
+        amount_paise = payload.amount
+    else:
+        amount_paise = 29900  # Default Basic plan ₹299
+
+    if amount_paise < 100:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Minimum order amount must be at least 100 paise (₹1).",
+        )
 
     order_data = PaymentService.create_razorpay_order(
         user=current_user,
-        amount_inr=amount_inr,
+        amount_paise=amount_paise,
+        currency=payload.currency or "INR",
+        receipt=payload.receipt,
         purpose=PaymentPurpose.SUBSCRIPTION,
         reference_id=ref_id,
         db=db,
@@ -119,17 +144,17 @@ async def create_order(
 @router.post("/verify-payment", summary="Verify Razorpay Payment (Standard API)")
 async def verify_payment(
     payload: VerifyPaymentRequest,
-    current_user: User = Depends(get_current_user),
+    current_user: Optional[User] = Depends(get_optional_current_user),
     db: Session = Depends(get_db),
 ):
     order_id = payload.order_id or payload.razorpay_order_id
-    payment_id = payload.payment_id or payload.gateway_payment_id or payload.razorpay_payment_id or ""
-    signature = payload.signature or payload.gateway_signature or payload.razorpay_signature or ""
+    payment_id = payload.payment_id or payload.gateway_payment_id or payload.razorpay_payment_id
+    signature = payload.signature or payload.gateway_signature or payload.razorpay_signature
 
-    if not order_id:
+    if not order_id or not payment_id or not signature:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Missing required field: order_id is required.",
+            detail="Missing required fields: order_id, payment_id, and signature are required.",
         )
 
     res = PaymentService.verify_and_complete_payment(

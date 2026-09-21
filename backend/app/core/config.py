@@ -90,8 +90,8 @@ class Settings(BaseSettings):
     SENTRY_DSN: Optional[str] = None
 
     # Payment Gateway Configuration (Razorpay)
-    RAZORPAY_KEY_ID: str = "rzp_test_MatrimonyKey2026"
-    RAZORPAY_KEY_SECRET: str = "rzp_secret_Matrimony2026"
+    RAZORPAY_KEY_ID: str = "rzp_test_TeqmLkAiBwoZp0"
+    RAZORPAY_KEY_SECRET: str = ""
     # SMS & WhatsApp Gateway Configuration
     INDIAN_SMS_PROVIDER_API_KEY: Optional[str] = None
     FAST2SMS_API_KEY: Optional[str] = None
