@@ -115,10 +115,6 @@ export function Footer() {
               </p>
               <p className="pt-0.5 flex flex-wrap items-center gap-x-1.5 gap-y-0.5">
                 <span className="text-slate-400">Contact:</span>
-                <a href="mailto:info@techmastersinnovations.in" className="hover:text-amber-300 transition-colors underline break-all">
-                  info@techmastersinnovations.in
-                </a>
-                <span className="text-slate-500">|</span>
                 <a href="mailto:techmastersinnovations@gmail.com" className="hover:text-amber-300 transition-colors underline break-all">
                   techmastersinnovations@gmail.com
                 </a>
