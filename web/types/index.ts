@@ -151,8 +151,49 @@ export interface ChatMessageItem {
   receiver_id: number;
   message_text: string;
   is_read: boolean;
+  is_redacted?: boolean;
+  redaction_reason?: string;
+  attachment_url?: string;
+  attachment_type?: string;
   created_at: string;
   is_me: boolean;
+}
+
+export interface ChatSuggestionPrompt {
+  id: string;
+  text: string;
+}
+
+export interface ChatSuggestionsResponse {
+  language: 'en' | 'kn' | 'hi';
+  candidate_name: string;
+  district: string;
+  denomination: string;
+  categories: {
+    greetings: ChatSuggestionPrompt[];
+    dating_and_meeting: ChatSuggestionPrompt[];
+    faith_and_church: ChatSuggestionPrompt[];
+    family_values: ChatSuggestionPrompt[];
+    career_and_life: ChatSuggestionPrompt[];
+  };
+}
+
+export interface ChatModerationEventItem {
+  id: number;
+  message_id?: number;
+  sender_id: number;
+  sender_name?: string;
+  receiver_id?: number;
+  receiver_name?: string;
+  event_type: string;
+  severity: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+  detection_source: string;
+  detection_category: string;
+  action_taken: string;
+  redacted_snippet?: string;
+  review_status: 'PENDING' | 'REVIEWED' | 'RESOLVED' | 'DISMISSED';
+  admin_notes?: string;
+  created_at: string;
 }
 
 export interface SubscriptionPlanItem {

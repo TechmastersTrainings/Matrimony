@@ -1,11 +1,23 @@
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, List, Optional
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, status
 
 from backend.app.core.logger import logger
-from backend.app.models.enums import AccountStatus, AuditAction, Gender, PhotoStatus, ProfileStatus, ReportStatus, UserRole
-from backend.app.models.interaction import UserReport
+from backend.app.models.enums import (
+    AccountStatus,
+    AuditAction,
+    Gender,
+    ModerationAction,
+    ModerationCategory,
+    ModerationSeverity,
+    ModerationStatus,
+    PhotoStatus,
+    ProfileStatus,
+    ReportStatus,
+    UserRole,
+)
+from backend.app.models.interaction import ChatModerationEvent, UserChatRestriction, UserReport
 from backend.app.models.photo import ProfilePhoto
 from backend.app.models.profile import Profile
 from backend.app.models.settings import PlatformSetting
@@ -404,3 +416,125 @@ class AdminService:
             db=db,
         )
         return user
+
+    # ------------------ CHAT SAFETY & MODERATION ------------------
+    @staticmethod
+    def get_chat_moderation_events(
+        db: Session,
+        status_filter: Optional[ModerationStatus] = None,
+        severity_filter: Optional[ModerationSeverity] = None,
+        category_filter: Optional[ModerationCategory] = None,
+        skip: int = 0,
+        limit: int = 50,
+    ) -> Dict[str, Any]:
+        query = db.query(ChatModerationEvent)
+        if status_filter:
+            query = query.filter(ChatModerationEvent.review_status == status_filter)
+        if severity_filter:
+            query = query.filter(ChatModerationEvent.severity == severity_filter)
+        if category_filter:
+            query = query.filter(ChatModerationEvent.detection_category == category_filter)
+
+        total = query.count()
+        events = query.order_by(ChatModerationEvent.id.desc()).offset(skip).limit(limit).all()
+
+        results = []
+        for e in events:
+            sender_profile = db.query(Profile).filter(Profile.user_id == e.sender_id).first() if e.sender_id else None
+            receiver_profile = db.query(Profile).filter(Profile.user_id == e.receiver_id).first() if e.receiver_id else None
+            results.append({
+                "id": e.id,
+                "message_id": e.message_id,
+                "sender_id": e.sender_id,
+                "sender_name": f"{sender_profile.first_name} {sender_profile.last_name}" if sender_profile else f"User #{e.sender_id}",
+                "receiver_id": e.receiver_id,
+                "receiver_name": f"{receiver_profile.first_name} {receiver_profile.last_name}" if receiver_profile else (f"User #{e.receiver_id}" if e.receiver_id else "N/A"),
+                "event_type": e.event_type,
+                "severity": e.severity.value if hasattr(e.severity, 'value') else str(e.severity),
+                "detection_source": e.detection_source,
+                "detection_category": e.detection_category.value if hasattr(e.detection_category, 'value') else str(e.detection_category),
+                "action_taken": e.action_taken.value if hasattr(e.action_taken, 'value') else str(e.action_taken),
+                "redacted_snippet": e.redacted_snippet,
+                "review_status": e.review_status.value if hasattr(e.review_status, 'value') else str(e.review_status),
+                "admin_notes": e.admin_notes,
+                "created_at": e.created_at.isoformat() if e.created_at else None,
+            })
+
+        return {"total": total, "events": results}
+
+    @staticmethod
+    def resolve_chat_moderation_event(
+        admin: User,
+        event_id: int,
+        review_status: ModerationStatus,
+        admin_notes: Optional[str],
+        db: Session,
+    ) -> ChatModerationEvent:
+        event = db.query(ChatModerationEvent).filter(ChatModerationEvent.id == event_id).first()
+        if not event:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Moderation event not found.")
+
+        old_status = event.review_status.value if hasattr(event.review_status, 'value') else str(event.review_status)
+        event.review_status = review_status
+        event.reviewed_by = admin.id
+        event.reviewed_at = datetime.utcnow()
+        if admin_notes:
+            event.admin_notes = admin_notes
+        db.commit()
+
+        AdminService.log_audit(
+            admin=admin,
+            action=AuditAction.CHAT_MODERATE,
+            target_entity="CHAT_MODERATION_EVENT",
+            target_id=event.id,
+            old_val={"review_status": old_status},
+            new_val={"review_status": review_status.value if hasattr(review_status, 'value') else str(review_status)},
+            reason=admin_notes or "Resolved chat moderation event",
+            db=db,
+        )
+        return event
+
+    @staticmethod
+    def restrict_user_chat(
+        admin: User,
+        user_id: int,
+        is_restricted: bool,
+        reason: str,
+        duration_hours: Optional[int],
+        db: Session,
+    ) -> UserChatRestriction:
+        restriction = db.query(UserChatRestriction).filter(UserChatRestriction.user_id == user_id).first()
+        restricted_until = None
+        if is_restricted and duration_hours and duration_hours > 0:
+            restricted_until = datetime.utcnow() + timedelta(hours=duration_hours)
+
+        if not restriction:
+            restriction = UserChatRestriction(
+                user_id=user_id,
+                is_restricted=is_restricted,
+                reason=reason,
+                restricted_until=restricted_until,
+                violation_count=1,
+            )
+            db.add(restriction)
+        else:
+            restriction.is_restricted = is_restricted
+            restriction.reason = reason
+            restriction.restricted_until = restricted_until
+            if is_restricted:
+                restriction.violation_count += 1
+            restriction.updated_at = datetime.utcnow()
+
+        db.commit()
+
+        AdminService.log_audit(
+            admin=admin,
+            action=AuditAction.CHAT_RESTRICT,
+            target_entity="USER_CHAT_RESTRICTION",
+            target_id=user_id,
+            old_val=None,
+            new_val={"is_restricted": is_restricted, "duration_hours": duration_hours},
+            reason=reason,
+            db=db,
+        )
+        return restriction

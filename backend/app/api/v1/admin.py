@@ -4,7 +4,18 @@ from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
 from backend.app.core.security import get_current_user
-from backend.app.models.enums import AccountStatus, AuditAction, PaymentStatus, PhotoStatus, ProfileStatus, ReportStatus, UserRole
+from backend.app.models.enums import (
+    AccountStatus,
+    AuditAction,
+    ModerationCategory,
+    ModerationSeverity,
+    ModerationStatus,
+    PaymentStatus,
+    PhotoStatus,
+    ProfileStatus,
+    ReportStatus,
+    UserRole,
+)
 from backend.app.models.interaction import UserReport
 from backend.app.models.photo import ProfilePhoto
 from backend.app.models.profile import Profile
@@ -17,6 +28,17 @@ from backend.app.services.admin_service import AdminService
 from backend.app.services.database import get_db
 
 router = APIRouter(prefix="/admin", tags=["Admin Platform Management"])
+
+
+class ResolveModerationEventRequest(BaseModel):
+    review_status: ModerationStatus
+    admin_notes: Optional[str] = None
+
+
+class RestrictUserChatRequest(BaseModel):
+    is_restricted: bool = True
+    reason: str
+    duration_hours: Optional[int] = None
 
 
 class RejectProfileRequest(BaseModel):
@@ -412,3 +434,69 @@ async def save_setting(
 
     db.commit()
     return {"success": True, "message": f"Setting '{payload.key}' saved successfully."}
+
+
+# ------------------ CHAT SAFETY & MODERATION ------------------
+@router.get("/chat-moderation-events", summary="List Chat Moderation Interception Events")
+async def list_chat_moderation_events(
+    status_filter: Optional[ModerationStatus] = Query(None),
+    severity_filter: Optional[ModerationSeverity] = Query(None),
+    category_filter: Optional[ModerationCategory] = Query(None),
+    skip: int = Query(0, ge=0),
+    limit: int = Query(50, ge=1, le=100),
+    current_user: User = Depends(require_admin_user),
+    db: Session = Depends(get_db),
+):
+    return AdminService.get_chat_moderation_events(
+        db=db,
+        status_filter=status_filter,
+        severity_filter=severity_filter,
+        category_filter=category_filter,
+        skip=skip,
+        limit=limit,
+    )
+
+
+@router.post("/chat-moderation-events/{event_id}/resolve", summary="Resolve or Confirm Chat Moderation Event")
+async def resolve_chat_moderation_event(
+    event_id: int,
+    payload: ResolveModerationEventRequest,
+    current_user: User = Depends(require_admin_user),
+    db: Session = Depends(get_db),
+):
+    event = AdminService.resolve_chat_moderation_event(
+        admin=current_user,
+        event_id=event_id,
+        review_status=payload.review_status,
+        admin_notes=payload.admin_notes,
+        db=db,
+    )
+    return {
+        "success": True,
+        "event_id": event.id,
+        "review_status": event.review_status.value if hasattr(event.review_status, 'value') else str(event.review_status),
+    }
+
+
+@router.post("/users/{user_id}/restrict-chat", summary="Apply or Revoke Chat Restriction for a User")
+async def restrict_user_chat(
+    user_id: int,
+    payload: RestrictUserChatRequest,
+    current_user: User = Depends(require_admin_user),
+    db: Session = Depends(get_db),
+):
+    restriction = AdminService.restrict_user_chat(
+        admin=current_user,
+        user_id=user_id,
+        is_restricted=payload.is_restricted,
+        reason=payload.reason,
+        duration_hours=payload.duration_hours,
+        db=db,
+    )
+    return {
+        "success": True,
+        "user_id": restriction.user_id,
+        "is_restricted": restriction.is_restricted,
+        "restricted_until": restriction.restricted_until.isoformat() if restriction.restricted_until else None,
+        "violation_count": restriction.violation_count,
+    }

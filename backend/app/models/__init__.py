@@ -22,8 +22,19 @@ from backend.app.models.enums import (
     ReportType,
     SubscriptionPlanCode,
     UserRole,
+    ModerationAction,
+    ModerationCategory,
+    ModerationSeverity,
+    ModerationStatus,
 )
-from backend.app.models.interaction import ChatMessage, UserBlock, UserInterest, UserReport
+from backend.app.models.interaction import (
+    ChatMessage,
+    ChatModerationEvent,
+    UserBlock,
+    UserChatRestriction,
+    UserInterest,
+    UserReport,
+)
 from backend.app.models.photo import ProfilePhoto
 from backend.app.models.profile import Profile, ProfileDraft
 from backend.app.models.settings import PlatformSetting
@@ -44,6 +55,8 @@ __all__ = [
     "UserBlock",
     "UserReport",
     "ChatMessage",
+    "ChatModerationEvent",
+    "UserChatRestriction",
     "SubscriptionPlan",
     "UserSubscription",
     "PaymentOrder",
@@ -72,4 +85,9 @@ __all__ = [
     "PaymentPurpose",
     "ContactRevealStatus",
     "AuditAction",
+    "ModerationCategory",
+    "ModerationAction",
+    "ModerationSeverity",
+    "ModerationStatus",
 ]
+

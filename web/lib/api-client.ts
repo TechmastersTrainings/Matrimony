@@ -1,6 +1,8 @@
 import {
   CandidateCard,
   ChatMessageItem,
+  ChatModerationEventItem,
+  ChatSuggestionsResponse,
   HealthCheckResponse,
   InterestItem,
   ProfilePhotoItem,
@@ -284,14 +286,44 @@ class ApiClient {
     return data.messages;
   }
 
-  async sendMessage(otherUserId: number, text: string): Promise<ChatMessageItem> {
+  async sendMessage(
+    otherUserId: number,
+    text: string,
+    attachmentUrl?: string,
+    attachmentType?: string,
+  ): Promise<ChatMessageItem> {
     const res = await fetch(`${API_BASE_URL}/chat/${otherUserId}`, {
       method: 'POST',
       headers: this.getHeaders(),
-      body: JSON.stringify({ message_text: text }),
+      body: JSON.stringify({
+        message_text: text,
+        attachment_url: attachmentUrl,
+        attachment_type: attachmentType,
+      }),
     });
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error?.message || 'Failed to send message');
+    if (!res.ok) throw new Error(data.error?.message || data.detail || 'Failed to send message');
+    return data;
+  }
+
+  async getChatSuggestions(otherUserId: number, language: 'en' | 'kn' | 'hi' = 'en'): Promise<ChatSuggestionsResponse> {
+    const res = await fetch(`${API_BASE_URL}/chat/${otherUserId}/suggestions?language=${language}`, {
+      headers: this.getHeaders(),
+    });
+    if (!res.ok) throw new Error('Failed to fetch conversation suggestions');
+    return res.json();
+  }
+
+  async uploadChatAttachment(file: File): Promise<{ attachment_url: string; attachment_type: string }> {
+    const formData = new FormData();
+    formData.append('file', file);
+    const res = await fetch(`${API_BASE_URL}/chat/upload-attachment`, {
+      method: 'POST',
+      headers: this.getHeaders(true),
+      body: formData,
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.detail || data.error?.message || 'Failed to upload chat attachment');
     return data;
   }
 
@@ -432,6 +464,66 @@ class ApiClient {
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.detail || 'Failed to update user status');
+    return data;
+  }
+
+  // ------------------ ADMIN CHAT MODERATION ------------------
+  async getChatModerationEvents(params?: {
+    status?: string;
+    severity?: string;
+    category?: string;
+    skip?: number;
+    limit?: number;
+  }): Promise<{ total: number; events: ChatModerationEventItem[] }> {
+    const searchParams = new URLSearchParams();
+    if (params?.status) searchParams.append('status_filter', params.status);
+    if (params?.severity) searchParams.append('severity_filter', params.severity);
+    if (params?.category) searchParams.append('category_filter', params.category);
+    if (params?.skip !== undefined) searchParams.append('skip', String(params.skip));
+    if (params?.limit !== undefined) searchParams.append('limit', String(params.limit));
+
+    const res = await fetch(`${API_BASE_URL}/admin/chat-moderation-events?${searchParams.toString()}`, {
+      headers: this.getHeaders(),
+    });
+    if (!res.ok) throw new Error('Failed to fetch chat moderation events');
+    return res.json();
+  }
+
+  async resolveChatModerationEvent(
+    eventId: number,
+    reviewStatus: string,
+    adminNotes?: string,
+  ): Promise<any> {
+    const res = await fetch(`${API_BASE_URL}/admin/chat-moderation-events/${eventId}/resolve`, {
+      method: 'POST',
+      headers: this.getHeaders(),
+      body: JSON.stringify({
+        review_status: reviewStatus,
+        admin_notes: adminNotes,
+      }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.detail || 'Failed to resolve moderation event');
+    return data;
+  }
+
+  async restrictUserChat(
+    userId: number,
+    isRestricted: boolean,
+    reason: string,
+    durationHours?: number,
+  ): Promise<any> {
+    const res = await fetch(`${API_BASE_URL}/admin/users/${userId}/restrict-chat`, {
+      method: 'POST',
+      headers: this.getHeaders(),
+      body: JSON.stringify({
+        is_restricted: isRestricted,
+        reason: reason,
+        duration_hours: durationHours,
+      }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.detail || 'Failed to update user chat restriction');
     return data;
   }
 }

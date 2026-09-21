@@ -13,7 +13,14 @@ function AdminDashboardContent() {
   const [metrics, setMetrics] = useState<any>(null);
   const [profiles, setProfiles] = useState<any[]>([]);
   const [users, setUsers] = useState<any[]>([]);
-  const [activeTab, setActiveTab] = useState<'profiles' | 'users' | 'operations'>('profiles');
+  const [activeTab, setActiveTab] = useState<'profiles' | 'users' | 'operations' | 'chat_moderation'>('profiles');
+
+  // Moderation state
+  const [modEvents, setModEvents] = useState<any[]>([]);
+  const [modTotal, setModTotal] = useState(0);
+  const [modStatusFilter, setModStatusFilter] = useState('ALL');
+  const [modSeverityFilter, setModSeverityFilter] = useState('ALL');
+  const [loadingModEvents, setLoadingModEvents] = useState(false);
 
   // Filters
   const [statusFilter, setStatusFilter] = useState('ALL');
@@ -42,17 +49,38 @@ function AdminDashboardContent() {
     initAdmin();
   }, [router]);
 
+  async function loadModEvents(status = modStatusFilter, severity = modSeverityFilter) {
+    setLoadingModEvents(true);
+    try {
+      const res = await apiClient.getChatModerationEvents({
+        status: status !== 'ALL' ? status : undefined,
+        severity: severity !== 'ALL' ? severity : undefined,
+      });
+      setModEvents(res.events || []);
+      setModTotal(res.total || 0);
+    } catch (e) {
+      console.error('Error loading chat moderation events', e);
+    } finally {
+      setLoadingModEvents(false);
+    }
+  }
+
   async function loadData() {
     try {
-      const [mRes, pRes, uRes] = await Promise.allSettled([
+      const [mRes, pRes, uRes, modRes] = await Promise.allSettled([
         apiClient.getAdminMetrics(),
         apiClient.getAdminProfiles('ALL'),
         apiClient.getAdminUsers(),
+        apiClient.getChatModerationEvents(),
       ]);
 
       if (mRes.status === 'fulfilled') setMetrics(mRes.value);
       if (pRes.status === 'fulfilled' && pRes.value?.profiles) setProfiles(pRes.value.profiles);
       if (uRes.status === 'fulfilled' && uRes.value?.users) setUsers(uRes.value.users);
+      if (modRes.status === 'fulfilled' && modRes.value) {
+        setModEvents(modRes.value.events || []);
+        setModTotal(modRes.value.total || 0);
+      }
     } catch (e) {
       console.error('Error loading admin records', e);
     }
@@ -101,6 +129,54 @@ function AdminDashboardContent() {
       await loadData();
     } catch (err: any) {
       setFeedbackMessage({ type: 'error', text: err.message || 'Failed to request changes' });
+    } finally {
+      setActionLoading(null);
+    }
+  }
+
+  async function handleResolveModEvent(eventId: number, status: string) {
+    setActionLoading(eventId);
+    setFeedbackMessage(null);
+    try {
+      await apiClient.resolveChatModerationEvent(eventId, status);
+      setFeedbackMessage({ type: 'success', text: `Moderation event #${eventId} marked as ${status}.` });
+      await loadModEvents();
+    } catch (err: any) {
+      setFeedbackMessage({ type: 'error', text: err.message || 'Failed to update moderation event' });
+    } finally {
+      setActionLoading(null);
+    }
+  }
+
+  async function handleRestrictChat(userId: number, hours = 24) {
+    const reason = window.prompt(`Enter reason for restricting User #${userId} from sending chat messages:`, 'Contact sharing policy breach');
+    if (!reason) return;
+
+    setActionLoading(userId);
+    setFeedbackMessage(null);
+    try {
+      await apiClient.restrictUserChat(userId, true, reason, hours);
+      setFeedbackMessage({ type: 'success', text: `Chat restricted for User #${userId} for ${hours} hours.` });
+      await loadModEvents();
+    } catch (err: any) {
+      setFeedbackMessage({ type: 'error', text: err.message || 'Failed to restrict user chat' });
+    } finally {
+      setActionLoading(null);
+    }
+  }
+
+  async function handleSuspendUser(userId: number) {
+    if (!window.confirm(`⚠️ ZERO-TOLERANCE ACTION: Are you sure you want to permanently SUSPEND User #${userId} and blacklist their credentials?`)) {
+      return;
+    }
+    setActionLoading(userId);
+    setFeedbackMessage(null);
+    try {
+      await apiClient.updateAdminUserStatus(userId, 'SUSPENDED');
+      setFeedbackMessage({ type: 'success', text: `User #${userId} has been SUSPENDED and blacklisted.` });
+      await loadData();
+    } catch (err: any) {
+      setFeedbackMessage({ type: 'error', text: err.message || 'Failed to suspend user' });
     } finally {
       setActionLoading(null);
     }
@@ -306,6 +382,21 @@ function AdminDashboardContent() {
             }`}
           >
             <span>Operations &amp; Security Queue</span>
+          </button>
+
+          <button
+            onClick={() => {
+              setActiveTab('chat_moderation');
+              loadModEvents();
+            }}
+            className={`px-5 py-2.5 rounded-xl font-bold text-sm sm:text-base transition-all flex items-center gap-2 ${
+              activeTab === 'chat_moderation'
+                ? 'bg-burgundy-800 text-gold-300 shadow-sm'
+                : 'bg-white hover:bg-gold-50 text-slate-700 border border-slate-200'
+            }`}
+          >
+            <span>🛡️</span>
+            <span>Chat Moderation ({modTotal})</span>
           </button>
         </div>
 
@@ -689,6 +780,223 @@ function AdminDashboardContent() {
                   <strong className="text-slate-900 block">Media Storage:</strong>
                   <span className="font-mono text-slate-600">Cloudflare R2 Encrypted Bucket</span>
                 </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 4: CHAT SAFETY & CONTACT INTERCEPTION QUEUE */}
+        {activeTab === 'chat_moderation' && (
+          <div className="space-y-6">
+            {/* Header info banner */}
+            <div className="bg-gradient-to-r from-burgundy-950 via-burgundy-900 to-amber-950 border border-gold-500/40 rounded-3xl p-5 text-white shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <span className="text-xl">🛡️</span>
+                  <h3 className="font-serif font-extrabold text-lg text-gold-300">
+                    Matrimony Chat Safety &amp; Zero-Tolerance Contact Moderation
+                  </h3>
+                  <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 text-[10px] font-bold px-2 py-0.5 rounded-full">
+                    ⏱️ 4-Hour Auto-Purge Live
+                  </span>
+                </div>
+                <p className="text-xs text-gold-100/80 leading-relaxed max-w-3xl">
+                  Deterministic server-side rules intercept disguised phone numbers, spelled numbers (*e.g. &quot;NINE EIGHT...&quot;*), emails, and external links before delivery. Raw numbers are never saved. Violations escalate to 24-hour chat restrictions and permanent account suspensions.
+                </p>
+              </div>
+
+              <button
+                onClick={() => loadModEvents()}
+                disabled={loadingModEvents}
+                className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 border border-gold-400/30 text-gold-200 text-xs font-bold transition-all shrink-0 flex items-center gap-1.5 self-start md:self-auto"
+              >
+                <span>🔄</span>
+                <span>{loadingModEvents ? 'Refreshing...' : 'Refresh Queue'}</span>
+              </button>
+            </div>
+
+            {/* Filter Controls */}
+            <div className="bg-white border border-charcoal-200/80 rounded-2xl p-4 shadow-2xs flex flex-wrap items-center justify-between gap-3">
+              <div className="flex flex-wrap items-center gap-2 text-xs font-bold">
+                <span className="text-slate-500 text-xs">Status:</span>
+                {['ALL', 'PENDING', 'REVIEWED', 'RESOLVED', 'DISMISSED'].map((st) => (
+                  <button
+                    key={st}
+                    onClick={() => {
+                      setModStatusFilter(st);
+                      loadModEvents(st, modSeverityFilter);
+                    }}
+                    className={`px-3 py-1.5 rounded-lg uppercase transition-all ${
+                      modStatusFilter === st
+                        ? 'bg-burgundy-900 text-gold-200 shadow-xs'
+                        : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
+                    }`}
+                  >
+                    {st === 'ALL' ? 'All Events' : st}
+                  </button>
+                ))}
+              </div>
+
+              <div className="flex flex-wrap items-center gap-2 text-xs font-bold">
+                <span className="text-slate-500 text-xs">Severity:</span>
+                {['ALL', 'CRITICAL', 'HIGH', 'MEDIUM', 'LOW'].map((sev) => (
+                  <button
+                    key={sev}
+                    onClick={() => {
+                      setModSeverityFilter(sev);
+                      loadModEvents(modStatusFilter, sev);
+                    }}
+                    className={`px-2.5 py-1.5 rounded-lg transition-all ${
+                      modSeverityFilter === sev
+                        ? 'bg-amber-600 text-white shadow-xs'
+                        : 'bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200'
+                    }`}
+                  >
+                    {sev}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Events Records Table */}
+            <div className="bg-white border border-charcoal-200/80 rounded-3xl overflow-hidden shadow-2xs">
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs border-collapse">
+                  <thead>
+                    <tr className="bg-slate-50 border-b border-slate-200 text-slate-500 font-bold uppercase tracking-wider text-[10px]">
+                      <th className="p-3.5">ID / Time</th>
+                      <th className="p-3.5">Sender</th>
+                      <th className="p-3.5">Receiver</th>
+                      <th className="p-3.5">Category</th>
+                      <th className="p-3.5">Severity</th>
+                      <th className="p-3.5">Action Taken</th>
+                      <th className="p-3.5">Sanitized Snippet</th>
+                      <th className="p-3.5">Status</th>
+                      <th className="p-3.5 text-right">Moderator Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 font-medium text-slate-700">
+                    {loadingModEvents ? (
+                      <tr>
+                        <td colSpan={9} className="p-8 text-center text-slate-400 animate-pulse">
+                          Loading intercepted chat events...
+                        </td>
+                      </tr>
+                    ) : modEvents.length === 0 ? (
+                      <tr>
+                        <td colSpan={9} className="p-12 text-center space-y-2">
+                          <div className="text-2xl">✨</div>
+                          <div className="font-bold text-slate-900">Zero Pending Interceptions</div>
+                          <div className="text-slate-500 text-xs">All messages comply with Christian Matrimonial privacy standards.</div>
+                        </td>
+                      </tr>
+                    ) : (
+                      modEvents.map((e) => (
+                        <tr key={e.id} className="hover:bg-slate-50/80 transition-colors">
+                          <td className="p-3.5 font-mono text-[11px]">
+                            <span className="font-bold text-slate-900 block">#{e.id}</span>
+                            <span className="text-slate-400 text-[10px]">
+                              {e.created_at ? new Date(e.created_at).toLocaleString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '—'}
+                            </span>
+                          </td>
+
+                          <td className="p-3.5">
+                            <span className="font-bold text-slate-900 block">{e.sender_name || `User #${e.sender_id}`}</span>
+                            <span className="text-[10px] text-slate-400 font-mono">UID: {e.sender_id}</span>
+                          </td>
+
+                          <td className="p-3.5">
+                            <span className="font-bold text-slate-900 block">{e.receiver_name || `User #${e.receiver_id}`}</span>
+                            <span className="text-[10px] text-slate-400 font-mono">UID: {e.receiver_id || 'N/A'}</span>
+                          </td>
+
+                          <td className="p-3.5">
+                            <span className="px-2 py-0.5 rounded-md font-bold text-[10px] bg-rose-50 text-rose-900 border border-rose-200">
+                              {e.detection_category}
+                            </span>
+                          </td>
+
+                          <td className="p-3.5">
+                            <span
+                              className={`px-2 py-0.5 rounded-md font-bold text-[10px] ${
+                                e.severity === 'CRITICAL'
+                                  ? 'bg-red-600 text-white'
+                                  : e.severity === 'HIGH'
+                                  ? 'bg-amber-100 text-amber-900 border border-amber-300'
+                                  : 'bg-slate-100 text-slate-700'
+                              }`}
+                            >
+                              {e.severity}
+                            </span>
+                          </td>
+
+                          <td className="p-3.5">
+                            <span className="px-2 py-0.5 rounded-md font-bold text-[10px] bg-cyan-50 text-cyan-950 border border-cyan-200">
+                              {e.action_taken}
+                            </span>
+                          </td>
+
+                          <td className="p-3.5 max-w-xs truncate text-[11px] font-mono text-slate-600" title={e.redacted_snippet}>
+                            {e.redacted_snippet || '—'}
+                          </td>
+
+                          <td className="p-3.5">
+                            <span
+                              className={`px-2 py-0.5 rounded-md font-bold text-[10px] ${
+                                e.review_status === 'RESOLVED'
+                                  ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
+                                  : e.review_status === 'DISMISSED'
+                                  ? 'bg-slate-100 text-slate-600'
+                                  : 'bg-amber-50 text-amber-900 border border-amber-300'
+                              }`}
+                            >
+                              {e.review_status}
+                            </span>
+                          </td>
+
+                          <td className="p-3.5 text-right">
+                            <div className="flex items-center justify-end gap-1.5 flex-wrap">
+                              {e.review_status === 'PENDING' && (
+                                <>
+                                  <button
+                                    onClick={() => handleResolveModEvent(e.id, 'RESOLVED')}
+                                    className="px-2 py-1 rounded-md bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[10px] transition-all"
+                                    title="Mark as confirmed violation & resolved"
+                                  >
+                                    Confirm
+                                  </button>
+                                  <button
+                                    onClick={() => handleResolveModEvent(e.id, 'DISMISSED')}
+                                    className="px-2 py-1 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-[10px] transition-all"
+                                    title="Dismiss as false positive"
+                                  >
+                                    Dismiss
+                                  </button>
+                                </>
+                              )}
+
+                              <button
+                                onClick={() => handleRestrictChat(e.sender_id, 24)}
+                                className="px-2 py-1 rounded-md bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 font-bold text-[10px] transition-all"
+                                title="Restrict user chat for 24h"
+                              >
+                                Restrict 24h
+                              </button>
+
+                              <button
+                                onClick={() => handleSuspendUser(e.sender_id)}
+                                className="px-2 py-1 rounded-md bg-rose-600 hover:bg-rose-700 text-white font-bold text-[10px] transition-all"
+                                title="Zero tolerance: Permanently suspend user"
+                              >
+                                Suspend User
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
