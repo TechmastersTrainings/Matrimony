@@ -165,7 +165,7 @@ class PaymentService:
             }
             if user:
                 notes["user_id"] = str(user.id)
-                notes["user_email"] = user.email or ""
+                notes["user_email"] = str(user.email or "")
 
             rzp_order = client.order.create({
                 "amount": paise,
@@ -335,7 +335,7 @@ class PaymentService:
                 ).update({"status": "EXPIRED"})
 
                 start_date = datetime.utcnow()
-                end_date = start_date + timedelta(days=plan.duration_days)
+                end_date = start_date + timedelta(days=int(plan.duration_days))
 
                 sub = UserSubscription(
                     user_id=target_user_id,
@@ -483,7 +483,7 @@ class PaymentService:
         reveal_req = db.query(ContactRevealRequest).filter(
             ((ContactRevealRequest.requester_id == current_user.id) & (ContactRevealRequest.target_id == target_profile.user_id)) |
             ((ContactRevealRequest.requester_id == target_profile.user_id) & (ContactRevealRequest.target_id == current_user.id)),
-            ContactRevealRequest.status.in_([ContactRevealStatus.COMPLETED, ContactRevealStatus.APPROVED]),
+            ContactRevealRequest.status.in_([ContactRevealStatus.COMPLETED, ContactRevealStatus.APPROVED_PENDING_PAYMENT]),
         ).first()
 
         if not mutual_interest and not reveal_req:
