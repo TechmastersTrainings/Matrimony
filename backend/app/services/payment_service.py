@@ -384,8 +384,27 @@ class PaymentService:
     # ------------------ CONTACT REVEAL & MUTUAL CONSENT ------------------
     @staticmethod
     def request_contact_reveal(requester: User, target_user_id: int, db: Session) -> ContactRevealRequest:
-        if requester.id == target_user_id:
+        target_profile = db.query(Profile).filter(
+            (Profile.user_id == target_user_id) | (Profile.id == target_user_id)
+        ).first()
+        if not target_profile:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Target candidate profile not found.")
+
+        resolved_target_user_id = target_profile.user_id
+
+        if requester.id == resolved_target_user_id:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Cannot request contact reveal with yourself.")
+
+        # Strict Christian Matrimony gender validation: Groom matches Bride only
+        requester_profile = db.query(Profile).filter(Profile.user_id == requester.id).first()
+        if requester_profile and target_profile and requester.role not in [UserRole.ADMIN, UserRole.SUPER_ADMIN]:
+            req_g = str(getattr(requester_profile.gender, "value", requester_profile.gender) or "").upper()
+            tar_g = str(getattr(target_profile.gender, "value", target_profile.gender) or "").upper()
+            if req_g and tar_g and req_g == tar_g:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="Christian Matrimony connects grooms with brides and brides with grooms. Contact reveal can only be requested for the opposite gender.",
+                )
 
         # Require active subscription or Admin override
         active_sub = db.query(UserSubscription).filter(
@@ -400,16 +419,16 @@ class PaymentService:
 
         # Check existing reveal request
         existing = db.query(ContactRevealRequest).filter(
-            ((ContactRevealRequest.requester_id == requester.id) & (ContactRevealRequest.target_id == target_user_id)) |
-            ((ContactRevealRequest.requester_id == target_user_id) & (ContactRevealRequest.target_id == requester.id))
+            ((ContactRevealRequest.requester_id == requester.id) & (ContactRevealRequest.target_id == resolved_target_user_id)) |
+            ((ContactRevealRequest.requester_id == resolved_target_user_id) & (ContactRevealRequest.target_id == requester.id))
         ).first()
         if existing:
             return existing
 
         # Check if already mutually accepted via UserInterest
         mutual_interest = db.query(UserInterest).filter(
-            ((UserInterest.sender_id == requester.id) & (UserInterest.receiver_id == target_user_id)) |
-            ((UserInterest.sender_id == target_user_id) & (UserInterest.receiver_id == requester.id)),
+            ((UserInterest.sender_id == requester.id) & (UserInterest.receiver_id == resolved_target_user_id)) |
+            ((UserInterest.sender_id == resolved_target_user_id) & (UserInterest.receiver_id == requester.id)),
             UserInterest.status == InterestStatus.ACCEPTED,
         ).first()
 
@@ -417,7 +436,7 @@ class PaymentService:
 
         req = ContactRevealRequest(
             requester_id=requester.id,
-            target_id=target_user_id,
+            target_id=resolved_target_user_id,
             status=initial_status,
             requester_paid=True,
             target_paid=True,

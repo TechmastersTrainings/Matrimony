@@ -21,6 +21,9 @@ function ProfileCardItem({ profile: p }: { profile: CandidateCard }) {
     <motion.div
       whileHover={{ y: -6, scale: 1.015 }}
       transition={{ duration: 0.25, ease: 'easeOut' }}
+      onClick={() => {
+        window.location.href = '/discover';
+      }}
       className="w-[240px] sm:w-[260px] md:w-[275px] shrink-0 snap-start bg-white border border-[#ece2d1] hover:border-cyan-500/80 rounded-2xl p-3 sm:p-3.5 shadow-xs hover:shadow-xl transition-shadow duration-300 flex flex-col justify-between group cursor-pointer"
     >
       <div>
@@ -105,24 +108,16 @@ function ProfileCardItem({ profile: p }: { profile: CandidateCard }) {
         </div>
       </div>
 
-      {/* Action Button */}
-      <div className="mt-3.5 pt-1 px-1">
-        <button
-          type="button"
-          onClick={() => {
-            const token = typeof window !== 'undefined' ? (localStorage.getItem('access_token') || localStorage.getItem('token')) : null;
-            if (!token) {
-              alert('Need to login: Please log in to your account to view candidate profiles.');
-              window.location.href = `/login?redirect=/profile/${p.id}`;
-              return;
-            }
-            window.location.href = `/profile/${p.id}`;
-          }}
-          className="w-full py-2 px-4 rounded-xl bg-cyan-50/90 hover:bg-gradient-to-r hover:from-cyan-700 hover:to-teal-700 text-cyan-950 hover:text-white border border-cyan-200 hover:border-cyan-700 text-xs sm:text-sm font-bold transition-all duration-200 flex items-center justify-center gap-1.5 shadow-2xs group/btn cursor-pointer"
-        >
-          <span>View Profile</span>
-          <span className="transition-transform group-hover/btn:translate-x-0.5">→</span>
-        </button>
+      {/* Action Footer: Seamlessly Route to Discover */}
+      <div className="mt-3.5 pt-2.5 border-t border-slate-100 flex items-center justify-between text-xs">
+        <span className="flex items-center gap-1.5 text-[11px] font-semibold text-slate-500">
+          <span>✨</span>
+          <span>Verified Member</span>
+        </span>
+        <span className="inline-flex items-center gap-1 text-[11px] font-bold text-cyan-900 bg-cyan-50 group-hover:bg-cyan-100 border border-cyan-200/80 px-2.5 py-1 rounded-full transition-colors">
+          <span>Discover</span>
+          <span className="transition-transform group-hover:translate-x-0.5">→</span>
+        </span>
       </div>
     </motion.div>
   );
@@ -223,7 +218,7 @@ export function FeaturedProfiles() {
               href="/discover"
               className="inline-flex items-center gap-1.5 text-xs sm:text-base font-bold text-cyan-900 hover:text-cyan-700 group bg-cyan-50/80 border border-cyan-200 px-4 sm:px-5 py-2 sm:py-2.5 rounded-full hover:bg-cyan-100 transition-all shadow-2xs"
             >
-              <span>Search All Profiles</span>
+              <span>Discover Matching Profiles</span>
               <span className="group-hover:translate-x-1 transition-transform">→</span>
             </Link>
           </div>

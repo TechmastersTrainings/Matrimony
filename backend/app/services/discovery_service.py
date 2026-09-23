@@ -81,21 +81,26 @@ class DiscoveryService:
             )
 
         # Gender Filter:
-        if gender and gender.strip():
+        if not is_admin and current_user:
+            # Strict reciprocal opposite-gender matching for registered candidates (Groom sees Bride, Bride sees Groom)
+            my_profile = db.query(Profile).filter(Profile.user_id == current_user.id).first()
+            if my_profile and my_profile.gender:
+                opposite_gender = Gender.FEMALE if my_profile.gender == Gender.MALE else Gender.MALE
+                query = query.filter(Profile.gender == opposite_gender)
+            elif gender and gender.strip() and gender.strip().upper() not in ["ALL", "BOTH", "ALL_PROFILES"]:
+                try:
+                    query = query.filter(Profile.gender == Gender(gender.strip().upper()))
+                except ValueError:
+                    pass
+        elif gender and gender.strip():
             clean_gender = gender.strip().upper()
             if clean_gender in ["ALL", "BOTH", "ALL_PROFILES"]:
-                pass  # Explicitly allow seeing all profiles (both brides and grooms)
+                pass  # Explicitly allow seeing all profiles (e.g. public homepage showcase or admin)
             else:
                 try:
                     query = query.filter(Profile.gender == Gender(clean_gender))
                 except ValueError:
                     pass
-        elif not is_admin and current_user:
-            # Automatic reciprocal opposite-gender discovery matching for regular members
-            my_profile = db.query(Profile).filter(Profile.user_id == current_user.id).first()
-            if my_profile and my_profile.gender:
-                opposite_gender = Gender.FEMALE if my_profile.gender == Gender.MALE else Gender.MALE
-                query = query.filter(Profile.gender == opposite_gender)
 
         if age_min:
             query = query.filter(Profile.age >= age_min)

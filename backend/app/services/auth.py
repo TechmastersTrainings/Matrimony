@@ -132,8 +132,12 @@ class AuthService:
         db.commit()
 
         profile_status = "DRAFT"
-        if getattr(user, "profile", None) and hasattr(user.profile, "status"):
-            profile_status = str(getattr(user.profile.status, "value", user.profile.status))
+        user_gender: Optional[str] = None
+        if getattr(user, "profile", None):
+            if hasattr(user.profile, "status"):
+                profile_status = str(getattr(user.profile.status, "value", user.profile.status))
+            if hasattr(user.profile, "gender") and user.profile.gender:
+                user_gender = str(getattr(user.profile.gender, "value", user.profile.gender)).upper()
 
         return TokenResponse(
             access_token=access_token,
@@ -145,6 +149,7 @@ class AuthService:
             is_mobile_verified=is_mobile_ver,
             is_email_verified=is_email_ver,
             profile_status=profile_status,
+            gender=user_gender,
         )
 
     @staticmethod

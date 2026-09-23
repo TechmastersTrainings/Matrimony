@@ -15,8 +15,28 @@ class InteractionService:
     # ------------------ INTERESTS & MATCHES ------------------
     @staticmethod
     def send_interest(sender: User, target_user_id: int, message: Optional[str], db: Session) -> UserInterest:
-        if sender.id == target_user_id:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Cannot send interest to yourself.")
+        target_profile = db.query(Profile).filter(
+            (Profile.user_id == target_user_id) | (Profile.id == target_user_id)
+        ).first()
+
+        resolved_target_user_id = target_profile.user_id if target_profile else target_user_id
+
+        if sender.id == resolved_target_user_id:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Cannot express interest in your own profile.",
+            )
+
+        # Strict Christian Matrimony gender validation: Groom matches Bride only
+        sender_profile = db.query(Profile).filter(Profile.user_id == sender.id).first()
+        if sender_profile and target_profile and sender.role not in [UserRole.ADMIN, UserRole.SUPER_ADMIN]:
+            send_g = str(getattr(sender_profile.gender, "value", sender_profile.gender) or "").upper()
+            tar_g = str(getattr(target_profile.gender, "value", target_profile.gender) or "").upper()
+            if send_g and tar_g and send_g == tar_g:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="Christian Matrimony connects grooms with brides and brides with grooms. Matrimonial interests can only be sent to the opposite gender.",
+                )
 
         # Require active subscription for sender
         active_sub = db.query(UserSubscription).filter(
@@ -40,20 +60,10 @@ class InteractionService:
                         detail="You have reached your limit of 5 matrimonial interests on the Basic Christian Plan. Upgrade to Standard or Premium for unlimited interests.",
                     )
 
-        # Strict Christian Matrimony gender validation: Groom matches Bride only
-        sender_profile = db.query(Profile).filter(Profile.user_id == sender.id).first()
-        target_profile = db.query(Profile).filter(Profile.user_id == target_user_id).first()
-        if sender_profile and target_profile and sender.role not in [UserRole.ADMIN, UserRole.SUPER_ADMIN]:
-            if sender_profile.gender and target_profile.gender and sender_profile.gender == target_profile.gender:
-                raise HTTPException(
-                    status_code=status.HTTP_400_BAD_REQUEST,
-                    detail="Christian Matrimony connects grooms with brides and brides with grooms. Matrimonial interests can only be sent to the opposite gender.",
-                )
-
         # Check existing block
         blocked = db.query(UserBlock).filter(
-            ((UserBlock.blocker_id == sender.id) & (UserBlock.blocked_id == target_user_id)) |
-            ((UserBlock.blocker_id == target_user_id) & (UserBlock.blocked_id == sender.id))
+            ((UserBlock.blocker_id == sender.id) & (UserBlock.blocked_id == resolved_target_user_id)) |
+            ((UserBlock.blocker_id == resolved_target_user_id) & (UserBlock.blocked_id == sender.id))
         ).first()
         if blocked:
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Cannot interact with this profile.")
@@ -61,7 +71,7 @@ class InteractionService:
         # Check existing interest
         existing = db.query(UserInterest).filter(
             UserInterest.sender_id == sender.id,
-            UserInterest.receiver_id == target_user_id,
+            UserInterest.receiver_id == resolved_target_user_id,
         ).first()
 
         if existing:
@@ -75,7 +85,7 @@ class InteractionService:
 
         interest = UserInterest(
             sender_id=sender.id,
-            receiver_id=target_user_id,
+            receiver_id=resolved_target_user_id,
             status=InterestStatus.PENDING,
             message=message,
         )

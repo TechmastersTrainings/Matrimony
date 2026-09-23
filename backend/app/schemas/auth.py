@@ -48,6 +48,7 @@ class TokenResponse(BaseModel):
     is_mobile_verified: bool
     is_email_verified: bool
     profile_status: Optional[str] = "DRAFT"
+    gender: Optional[str] = None
 
 
 class UserResponse(BaseModel):

@@ -22,8 +22,20 @@ export default function DiscoverPage() {
 
   // Filter States
   const [searchQuery, setSearchQuery] = useState('');
-  const [gender, setGender] = useState<'FEMALE' | 'MALE' | string>('FEMALE');
-  const [myGender, setMyGender] = useState<'MALE' | 'FEMALE' | null>(null);
+  const [myGender, setMyGender] = useState<'MALE' | 'FEMALE' | null>(() => {
+    if (typeof window !== 'undefined') {
+      const g = localStorage.getItem('user_gender');
+      if (g) return g.toUpperCase() as 'MALE' | 'FEMALE';
+    }
+    return null;
+  });
+  const [gender, setGender] = useState<'FEMALE' | 'MALE' | string>(() => {
+    if (typeof window !== 'undefined') {
+      const g = localStorage.getItem('user_gender');
+      if (g) return g.toUpperCase() === 'MALE' ? 'FEMALE' : 'MALE';
+    }
+    return 'FEMALE';
+  });
   const [denomination, setDenomination] = useState('');
   const [district, setDistrict] = useState('');
   const [ageMin, setAgeMin] = useState('');
@@ -44,11 +56,17 @@ export default function DiscoverPage() {
     setError(null);
     try {
       // Strict matrimonial matching: Brides strictly see Grooms, Grooms strictly see Brides
+      const effectiveMyGender =
+        myGender ||
+        (typeof window !== 'undefined'
+          ? (localStorage.getItem('user_gender')?.toUpperCase() as 'MALE' | 'FEMALE' | null)
+          : null);
+
       const activeGender = isAdmin
         ? (gender || undefined)
-        : myGender === 'FEMALE'
+        : effectiveMyGender === 'FEMALE'
         ? 'MALE'
-        : myGender === 'MALE'
+        : effectiveMyGender === 'MALE'
         ? 'FEMALE'
         : (gender || 'FEMALE');
 
@@ -133,6 +151,7 @@ export default function DiscoverPage() {
               const g = res.profile?.gender || res.draft?.draft_data?.gender;
               if (g) {
                 const uGen = String(g).toUpperCase() as 'MALE' | 'FEMALE';
+                localStorage.setItem('user_gender', uGen);
                 setMyGender(uGen);
                 const targetOpposite = uGen === 'FEMALE' ? 'MALE' : 'FEMALE';
                 setGender(targetOpposite);
@@ -143,7 +162,7 @@ export default function DiscoverPage() {
       }
     }
     fetchProfiles();
-  }, [gender, denomination, district]);
+  }, [gender, myGender, denomination, district]);
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();

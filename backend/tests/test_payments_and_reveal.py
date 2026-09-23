@@ -59,3 +59,38 @@ def test_subscription_and_payment_flow(client, test_user):
     assert my_sub_res.status_code == status.HTTP_200_OK
     assert my_sub_res.json()["has_active_subscription"] is True
     assert my_sub_res.json()["plan_name"] == std_plan["name"]
+
+
+def test_same_gender_matchmaking_rejected(client, test_user):
+    headers = test_user["headers"]
+
+    # Register another MALE user
+    groom2 = {
+        "mobile_number": "9876543602",
+        "email": "groom2@example.com",
+        "password": "Password123!",
+        "first_name": "Thomas",
+        "last_name": "Mathew",
+        "gender": "MALE",
+    }
+    client.post("/api/v1/auth/register", json=groom2)
+    verify = client.post("/api/v1/auth/verify-otp", json={"target": "9876543602", "otp_code": "123456"})
+    groom2_user_id = verify.json()["user_id"]
+
+    # 1. Attempt to send interest to fellow Groom (should fail with 400 Bad Request)
+    interest_res = client.post(
+        "/api/v1/interests/send",
+        json={"target_user_id": groom2_user_id, "message": "Hello"},
+        headers=headers,
+    )
+    assert interest_res.status_code == status.HTTP_400_BAD_REQUEST
+    assert "opposite gender" in interest_res.json()["detail"].lower()
+
+    # 2. Attempt to request contact reveal to fellow Groom (should fail with 400 Bad Request)
+    reveal_res = client.post(
+        f"/api/v1/contact-reveal/request/{groom2_user_id}",
+        headers=headers,
+    )
+    assert reveal_res.status_code == status.HTTP_400_BAD_REQUEST
+    assert "opposite gender" in reveal_res.json()["detail"].lower()
+

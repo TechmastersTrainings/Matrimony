@@ -72,6 +72,7 @@ class ApiClient {
       if (resData.refresh_token) localStorage.setItem('refresh_token', resData.refresh_token);
       if (resData.role) localStorage.setItem('user_role', resData.role);
       if (resData.profile_status) localStorage.setItem('profile_status', resData.profile_status);
+      if (resData.gender) localStorage.setItem('user_gender', resData.gender);
     }
     return resData;
   }
@@ -90,6 +91,7 @@ class ApiClient {
       if (resData.role) localStorage.setItem('user_role', resData.role);
       if (resData.profile_status) localStorage.setItem('profile_status', resData.profile_status);
       if (resData.user_id) localStorage.setItem('user_id', String(resData.user_id));
+      if (resData.gender) localStorage.setItem('user_gender', resData.gender);
     }
     return resData;
   }
@@ -112,6 +114,7 @@ class ApiClient {
       if (typeof window !== 'undefined') {
         localStorage.removeItem('access_token');
         localStorage.removeItem('refresh_token');
+        localStorage.removeItem('user_gender');
       }
     }
   }
@@ -121,7 +124,12 @@ class ApiClient {
       headers: this.getHeaders(),
     });
     if (!res.ok) throw new Error('Failed to fetch user state');
-    return res.json();
+    const data = await res.json();
+    if (typeof window !== 'undefined' && data) {
+      const g = data.profile?.gender || data.draft?.draft_data?.gender;
+      if (g) localStorage.setItem('user_gender', String(g).toUpperCase());
+    }
+    return data;
   }
 
   async getRegistrationMe(): Promise<any> {

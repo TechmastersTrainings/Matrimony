@@ -18,6 +18,13 @@ export default function CandidateProfileDetailPage() {
   const [actionMessage, setActionMessage] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'faith' | 'career' | 'family' | 'lifestyle' | 'preferences'>('faith');
   const [shortlisted, setShortlisted] = useState(false);
+  const [myGender, setMyGender] = useState<'MALE' | 'FEMALE' | null>(() => {
+    if (typeof window !== 'undefined') {
+      const g = localStorage.getItem('user_gender');
+      if (g) return g.toUpperCase() as 'MALE' | 'FEMALE';
+    }
+    return null;
+  });
 
   useEffect(() => {
     async function loadData() {
@@ -31,10 +38,37 @@ export default function CandidateProfileDetailPage() {
       }
     }
     if (profileId) loadData();
+
+    if (typeof window !== 'undefined') {
+      const token = localStorage.getItem('access_token') || localStorage.getItem('token');
+      if (token) {
+        apiClient
+          .getRegistrationMe()
+          .then((res) => {
+            const g = res.profile?.gender || res.draft?.draft_data?.gender;
+            if (g) {
+              const uGen = String(g).toUpperCase() as 'MALE' | 'FEMALE';
+              localStorage.setItem('user_gender', uGen);
+              setMyGender(uGen);
+            }
+          })
+          .catch(() => {});
+      }
+    }
   }, [profileId]);
+
+  const isSameGender = Boolean(
+    myGender &&
+      profile?.gender &&
+      myGender.toUpperCase() === String(profile.gender).toUpperCase()
+  );
 
   const handleSendInterest = async () => {
     if (!profile) return;
+    if (isSameGender) {
+      alert('Matrimonial Notice: Christian Matrimony connects grooms with brides and brides with grooms. Interactions can only be sent to the opposite gender.');
+      return;
+    }
     const token = typeof window !== 'undefined' ? (localStorage.getItem('access_token') || localStorage.getItem('token')) : null;
     if (!token) {
       alert('Need to login: Please log in to your account to express matrimonial interest.');
@@ -63,6 +97,10 @@ export default function CandidateProfileDetailPage() {
 
   const handleRequestReveal = async () => {
     if (!profile) return;
+    if (isSameGender) {
+      alert('Matrimonial Notice: Christian Matrimony connects grooms with brides and brides with grooms. Contact details can only be requested for the opposite gender.');
+      return;
+    }
     const token = typeof window !== 'undefined' ? (localStorage.getItem('access_token') || localStorage.getItem('token')) : null;
     if (!token) {
       alert('Need to login: Please log in to your account to request candidate contact details.');
@@ -159,6 +197,30 @@ export default function CandidateProfileDetailPage() {
         {actionMessage && (
           <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold">
             {actionMessage}
+          </div>
+        )}
+
+        {/* Same-Gender Matrimonial Notice Banner */}
+        {isSameGender && (
+          <div className="p-4 sm:p-5 rounded-2xl bg-amber-50 border border-amber-300 text-amber-950 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+            <div className="flex items-center gap-3">
+              <span className="text-2xl">ℹ️</span>
+              <div>
+                <h4 className="font-serif font-extrabold text-amber-900 text-sm">
+                  Same-Gender Candidate Preview
+                </h4>
+                <p className="text-amber-800 text-xs mt-0.5 leading-relaxed">
+                  In accordance with Christian Matrimony matchmaking principles, matchmaking actions (Expressing Interest and Requesting Contact Details) are reserved for matching candidate brides and grooms.
+                </p>
+              </div>
+            </div>
+            <Link
+              href="/discover"
+              className="px-5 py-2.5 rounded-xl bg-cyan-800 hover:bg-cyan-900 text-white font-extrabold text-xs text-center shrink-0 shadow-sm transition-all flex items-center justify-center gap-1.5"
+            >
+              <span>Find Matching {myGender === 'MALE' ? 'Brides' : 'Grooms'}</span>
+              <span>→</span>
+            </Link>
           </div>
         )}
 
@@ -397,24 +459,39 @@ export default function CandidateProfileDetailPage() {
             )}
 
             {/* CTAs Bar */}
-            <div className="flex flex-col sm:flex-row items-center gap-3">
-              <button
-                type="button"
-                onClick={handleSendInterest}
-                className="w-full sm:flex-1 py-3 px-5 rounded-xl bg-gradient-to-r from-burgundy-700 to-burgundy-800 hover:from-burgundy-600 hover:to-burgundy-700 text-white font-extrabold text-xs text-center transition-all shadow-md shadow-burgundy-900/10 flex items-center justify-center gap-1.5"
-              >
-                <span>Express Interest</span>
-                <span>➔</span>
-              </button>
+            {isSameGender ? (
+              <div className="p-3.5 rounded-2xl bg-amber-50/90 border border-amber-200 text-center space-y-2">
+                <p className="text-xs text-amber-900 font-semibold">
+                  You are previewing a candidate of the same gender ({myGender === 'MALE' ? 'Fellow Groom' : 'Fellow Bride'}). Expressing interest and contact reveal are reserved for matching opposite-gender candidates.
+                </p>
+                <Link
+                  href="/discover"
+                  className="inline-flex items-center gap-1.5 px-6 py-2.5 rounded-xl bg-gradient-to-r from-burgundy-700 to-burgundy-800 hover:from-burgundy-600 hover:to-burgundy-700 text-white font-extrabold text-xs shadow-md transition-all"
+                >
+                  <span>Explore Matching {myGender === 'MALE' ? 'Brides' : 'Grooms'} on Discover</span>
+                  <span>➔</span>
+                </Link>
+              </div>
+            ) : (
+              <div className="flex flex-col sm:flex-row items-center gap-3">
+                <button
+                  type="button"
+                  onClick={handleSendInterest}
+                  className="w-full sm:flex-1 py-3 px-5 rounded-xl bg-gradient-to-r from-burgundy-700 to-burgundy-800 hover:from-burgundy-600 hover:to-burgundy-700 text-white font-extrabold text-xs text-center transition-all shadow-md shadow-burgundy-900/10 flex items-center justify-center gap-1.5"
+                >
+                  <span>Express Interest</span>
+                  <span>➔</span>
+                </button>
 
-              <button
-                type="button"
-                onClick={handleRequestReveal}
-                className="w-full sm:flex-1 py-3 px-5 rounded-xl bg-white hover:bg-[#faf6ee] text-charcoal-800 text-xs font-bold text-center border border-[#ece2d1] transition-all flex items-center justify-center gap-1.5"
-              >
-                <span>Request Contact Reveal</span>
-              </button>
-            </div>
+                <button
+                  type="button"
+                  onClick={handleRequestReveal}
+                  className="w-full sm:flex-1 py-3 px-5 rounded-xl bg-white hover:bg-[#faf6ee] text-charcoal-800 text-xs font-bold text-center border border-[#ece2d1] transition-all flex items-center justify-center gap-1.5"
+                >
+                  <span>Request Contact Reveal</span>
+                </button>
+              </div>
+            )}
           </div>
         </div>
 
