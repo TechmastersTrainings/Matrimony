@@ -1,0 +1,69 @@
+services:
+  - type: web
+    name: matrimony-backend
+    runtime: python
+    region: singapore
+    plan: free
+    branch: main
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: uvicorn backend.app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.8
+      - key: ENVIRONMENT
+        value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: DB_POOL_SIZE
+        value: "10"
+      - key: DB_MAX_OVERFLOW
+        value: "20"
+      - key: DB_POOL_TIMEOUT
+        value: "30"
+      - key: DB_POOL_RECYCLE
+        value: "1800"
+      - key: RAZORPAY_KEY_ID
+        sync: false
+      - key: RAZORPAY_KEY_SECRET
+        sync: false
+      - key: SMS_PROVIDER
+        value: fast2sms
+      - key: FAST2SMS_API_KEY
+        sync: false
+      - key: MSG91_AUTH_KEY
+        sync: false
+      - key: INDIAN_SMS_PROVIDER_API_KEY
+        sync: false
+      - key: OTP_TEST_MODE
+        value: "False"
+      - key: MOCK_OTP_CODE
+        value: "False"
+      - key: R2_ACCOUNT_ID
+        sync: false
+      - key: R2_ACCESS_KEY_ID
+        sync: false
+      - key: R2_SECRET_ACCESS_KEY
+        sync: false
+      - key: R2_BUCKET_NAME
+        value: christian-matrimony-media
+      - key: ADMIN_EMAIL
+        value: techmastersinnovations@gmail.com
+      - key: ADMIN_MOBILE
+        value: "9880768222"
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: SMTP_HOST
+        value: smtp.gmail.com
+      - key: SMTP_PORT
+        value: "587"
+      - key: SMTP_USER
+        value: Techmastersinnovations@gmail.com
+      - key: SMTP_PASSWORD
+        sync: false
+      - key: SMTP_FROM_EMAIL
+        value: Techmastersinnovations@gmail.com
+      - key: SMTP_FROM_NAME
+        value: "Christian Matrimony (Techmasters Innovations)"
+      - key: SENTRY_DSN
+        sync: false
