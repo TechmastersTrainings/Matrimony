@@ -13,7 +13,7 @@ import {
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL ||
   process.env.NEXT_PUBLIC_API_URL ||
-  'https://matrimony-hxs5.onrender.com/api/v1';
+  'https://matrimony-rn8q.onrender.com/api/v1';
 
 class ApiClient {
   private getHeaders(isFormData = false): HeadersInit {

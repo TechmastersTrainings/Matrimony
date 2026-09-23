@@ -26,7 +26,7 @@ export function getPhotoUrl(url?: string | null): string {
   const backendBase = (
     process.env.NEXT_PUBLIC_API_BASE_URL ||
     process.env.NEXT_PUBLIC_API_URL ||
-    'https://matrimony-hxs5.onrender.com'
+    'https://matrimony-rn8q.onrender.com'
   )
     .replace(/\/api\/v1\/?$/, '')
     .replace(/\/+$/, '');
