@@ -55,7 +55,7 @@ async def search_profiles(
     )
 
     is_subscriber = False
-    now = datetime.datetime.utcnow()
+    now = datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None)
     if current_user:
         active_sub = db.query(UserSubscription).filter(
             UserSubscription.user_id == current_user.id,
@@ -97,7 +97,7 @@ async def get_candidate_profile(
 
     # Check subscription status
     is_subscriber = False
-    now = datetime.datetime.utcnow()
+    now = datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None)
     if current_user:
         active_sub = db.query(UserSubscription).filter(
             UserSubscription.user_id == current_user.id,
