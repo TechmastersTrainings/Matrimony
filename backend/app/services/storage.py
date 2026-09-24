@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 import io
 import os
-from typing import BinaryIO, Dict, Optional, Tuple, Union
+from typing import Any, BinaryIO, Dict, Optional, Tuple, Union, cast
 import boto3
 from botocore.config import Config
 from botocore.exceptions import ClientError
@@ -62,7 +62,8 @@ class CloudflareR2StorageService(IStorageService):
         self._client = None
         if self.account_id and self.access_key_id and self.secret_access_key:
             endpoint_url = f"https://{self.account_id}.r2.cloudflarestorage.com"
-            self._client = boto3.client(
+            boto_client_fn = cast(Any, boto3.client)
+            self._client = boto_client_fn(
                 "s3",
                 endpoint_url=endpoint_url,
                 aws_access_key_id=self.access_key_id,
@@ -77,7 +78,8 @@ class CloudflareR2StorageService(IStorageService):
         if self._client is None:
             if settings.R2_ACCOUNT_ID and settings.R2_ACCESS_KEY_ID and settings.R2_SECRET_ACCESS_KEY:
                 endpoint_url = f"https://{settings.R2_ACCOUNT_ID}.r2.cloudflarestorage.com"
-                self._client = boto3.client(
+                boto_client_fn = cast(Any, boto3.client)
+                self._client = boto_client_fn(
                     "s3",
                     endpoint_url=endpoint_url,
                     aws_access_key_id=settings.R2_ACCESS_KEY_ID,
