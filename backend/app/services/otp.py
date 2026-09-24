@@ -182,46 +182,44 @@ class MockOtpService(OtpServiceBase):
             except Exception as e:
                 logger.warning(f"[EMAIL OTP] Delivery failed for {email_recipient}: {e}")
 
-        # 2. Live Mobile SMS / WhatsApp Gateways
+        # 2. Live Mobile SMS / WhatsApp Gateways (Asynchronous non-blocking)
         if target.replace("+91", "").strip().isdigit():
             clean_mobile = target.replace("+91", "").strip()[-10:]
+
+            import httpx
 
             # Option A: MSG91 OTP Gateway (DLT compliant, standard OTP route)
             msg91_key = getattr(settings, "MSG91_AUTH_KEY", None) or getattr(settings, "INDIAN_SMS_PROVIDER_API_KEY", None)
             msg91_template = getattr(settings, "MSG91_TEMPLATE_ID", None)
             if msg91_key:
                 try:
-                    import urllib.request
-                    import json
                     msg91_url = f"https://control.msg91.com/api/v5/otp?mobile=91{clean_mobile}&authkey={msg91_key}&otp={code}"
                     if msg91_template:
                         msg91_url += f"&template_id={msg91_template}"
-                    req = urllib.request.Request(msg91_url, headers={"Content-Type": "application/json"})
-                    with urllib.request.urlopen(req, timeout=10) as resp:
-                        resp_data = json.loads(resp.read().decode())
+                    async with httpx.AsyncClient(timeout=3.0) as client:
+                        resp = await client.post(msg91_url, headers={"Content-Type": "application/json"})
+                        resp_data = resp.json()
                         if resp_data.get("type") == "success":
                             logger.info(f"[SMS GATEWAY - MSG91] Live OTP {code} successfully dispatched to +91-{clean_mobile} (Request ID: {resp_data.get('request_id')})")
                         else:
                             logger.warning(f"[SMS GATEWAY - MSG91] Provider response: {resp_data}")
                 except Exception as msg91_err:
-                    logger.warning(f"[SMS GATEWAY - MSG91] Delivery error: {msg91_err}")
+                    logger.warning(f"[SMS GATEWAY - MSG91] Delivery notice: {msg91_err}")
 
             # Option B: Fast2SMS DLT Gateway (if distinct FAST2SMS_API_KEY configured)
             fast2sms_key = getattr(settings, "FAST2SMS_API_KEY", None)
             if fast2sms_key and fast2sms_key != msg91_key:
                 try:
-                    import urllib.request
-                    import json
                     fast2sms_url = f"https://www.fast2sms.com/dev/bulkV2?authorization={fast2sms_key}&variables_values={code}&route=otp&numbers={clean_mobile}"
-                    req = urllib.request.Request(fast2sms_url, headers={"User-Agent": "ChristianMatrimony/1.0"})
-                    with urllib.request.urlopen(req, timeout=10) as resp:
-                        resp_data = json.loads(resp.read().decode())
+                    async with httpx.AsyncClient(timeout=3.0) as client:
+                        resp = await client.get(fast2sms_url, headers={"User-Agent": "ChristianMatrimony/1.0"})
+                        resp_data = resp.json()
                         if resp_data.get("return"):
                             logger.info(f"[SMS GATEWAY - Fast2SMS] Live SMS successfully delivered to +91-{clean_mobile}")
                         else:
                             logger.warning(f"[SMS GATEWAY - Fast2SMS] Provider response: {resp_data}")
                 except Exception as sms_err:
-                    logger.warning(f"[SMS GATEWAY - Fast2SMS] Delivery error: {sms_err}")
+                    logger.warning(f"[SMS GATEWAY - Fast2SMS] Delivery notice: {sms_err}")
 
             # Option C: Twilio SMS / WhatsApp Gateway
             twilio_sid = getattr(settings, "TWILIO_ACCOUNT_SID", None)
@@ -229,22 +227,17 @@ class MockOtpService(OtpServiceBase):
             twilio_from = getattr(settings, "TWILIO_PHONE_NUMBER", None)
             if twilio_sid and twilio_token and twilio_from:
                 try:
-                    import urllib.request
-                    import urllib.parse
-                    import base64
                     twilio_url = f"https://api.twilio.com/2010-04-01/Accounts/{twilio_sid}/Messages.json"
                     msg_body = f"Your Shalom verification code is: {code}. Valid for 10 minutes. Do not share this OTP."
-                    data = urllib.parse.urlencode({
-                        "To": f"+91{clean_mobile}",
-                        "From": twilio_from,
-                        "Body": msg_body,
-                    }).encode("utf-8")
-                    auth_header = "Basic " + base64.b64encode(f"{twilio_sid}:{twilio_token}".encode("utf-8")).decode("utf-8")
-                    req = urllib.request.Request(twilio_url, data=data, headers={"Authorization": auth_header})
-                    with urllib.request.urlopen(req, timeout=10) as resp:
+                    async with httpx.AsyncClient(timeout=3.0) as client:
+                        await client.post(
+                            twilio_url,
+                            data={"To": f"+91{clean_mobile}", "From": twilio_from, "Body": msg_body},
+                            auth=(twilio_sid, twilio_token),
+                        )
                         logger.info(f"[SMS GATEWAY - Twilio] Live SMS OTP dispatched to +91-{clean_mobile}")
                 except Exception as twilio_err:
-                    logger.warning(f"[SMS GATEWAY - Twilio] Delivery error: {twilio_err}")
+                    logger.warning(f"[SMS GATEWAY - Twilio] Delivery notice: {twilio_err}")
 
         logger.info(f"[OTP SERVICE] Target: {target} | Code: {code} | Type: {otp_type.value}")
         return True

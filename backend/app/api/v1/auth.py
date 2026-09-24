@@ -56,7 +56,7 @@ async def send_otp(
 
     target_clean = payload.target.strip().lower()
     user = AuthService.find_user_by_identifier(payload.target, db)
-    norm_target = user.mobile_number if (user and user.mobile_number and payload.otp_type != OtpType.EMAIL_VERIFICATION) else target_clean
+    norm_target = user.mobile_number if (user and user.mobile_number and payload.otp_type not in [OtpType.VERIFY_EMAIL, OtpType.EMAIL_VERIFICATION]) else target_clean
 
     otp_service = get_otp_service()
     ok, msg, debug_otp = await otp_service.send_otp(norm_target, payload.otp_type, db)

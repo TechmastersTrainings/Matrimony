@@ -118,6 +118,7 @@ class OtpType(str, enum.Enum):
     PASSWORD_RESET = "PASSWORD_RESET"
     VERIFY_MOBILE = "VERIFY_MOBILE"
     VERIFY_EMAIL = "VERIFY_EMAIL"
+    EMAIL_VERIFICATION = "EMAIL_VERIFICATION"
 
 
 class InterestStatus(str, enum.Enum):
