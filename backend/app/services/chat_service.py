@@ -194,9 +194,14 @@ class ChatService:
             UserInterest.status == InterestStatus.ACCEPTED,
         ).all()
 
+        seen_partners = set()
         results = []
         for m in matches:
             other_id = m.sender_id if m.receiver_id == user.id else m.receiver_id
+            if other_id in seen_partners:
+                continue
+            seen_partners.add(other_id)
+
             other_profile = db.query(Profile).filter(Profile.user_id == other_id).first()
             primary_photo = (
                 db.query(ProfilePhoto)
@@ -229,14 +234,71 @@ class ChatService:
                 .count()
             )
 
+            other_user_data = {
+                "id": other_id,
+                "profile_id": other_profile.id if other_profile else None,
+                "first_name": other_profile.first_name if other_profile else "Member",
+                "last_name": (other_profile.last_name[0] + ".") if (other_profile and other_profile.last_name) else "",
+                "gender": str(getattr(other_profile.gender, "value", other_profile.gender) or "") if other_profile else "",
+                "age": other_profile.age if other_profile else None,
+                "height_cm": other_profile.height_cm if other_profile else None,
+                "marital_status": str(getattr(other_profile.marital_status, "value", other_profile.marital_status) or "") if other_profile else "",
+                "denomination": str(getattr(other_profile.denomination, "value", other_profile.denomination) or "") if other_profile else "Christian",
+                "sub_denomination": other_profile.sub_denomination if other_profile else None,
+                "church_name": other_profile.church_name if other_profile else None,
+                "district": other_profile.district if other_profile else None,
+                "state": other_profile.state if other_profile else None,
+                "highest_education": other_profile.highest_education if other_profile else None,
+                "occupation_title": other_profile.occupation_title if other_profile else None,
+                "about_me": other_profile.bio if other_profile else None,
+                "bio": other_profile.bio if other_profile else None,
+                "primary_photo": primary_photo.r2_url if primary_photo else None,
+            } if other_profile else None
+
             results.append({
                 "other_user_id": other_id,
                 "name": f"{other_profile.first_name} {other_profile.last_name[:1]}." if other_profile else "User",
-                "denomination": other_profile.denomination.value if other_profile and other_profile.denomination else "Methodist",
+                "denomination": other_profile.denomination.value if (other_profile and other_profile.denomination) else "Christian",
                 "primary_photo": primary_photo.r2_url if primary_photo else None,
                 "last_message": last_msg.message_text if last_msg else "No active messages (Auto-cleared after 4h)",
                 "last_message_at": last_msg.created_at if last_msg else m.responded_at,
                 "unread_count": unread_count,
+                "other_user": other_user_data,
             })
 
         return results
+
+    @staticmethod
+    def get_partner_profile(user_id: int, other_user_id: int, db: Session) -> Optional[Dict[str, Any]]:
+        """Returns verified candidate profile details for mutually accepted matches."""
+        if not ChatService.check_chat_permission(user_id, other_user_id, db):
+            return None
+        profile = db.query(Profile).filter(Profile.user_id == other_user_id).first()
+        if not profile:
+            return None
+        primary_photo = (
+            db.query(ProfilePhoto)
+            .filter(ProfilePhoto.profile_id == profile.id, ProfilePhoto.is_primary == True)
+            .first()
+        )
+        return {
+            "id": other_user_id,
+            "profile_id": profile.id,
+            "first_name": profile.first_name,
+            "last_name": (profile.last_name[0] + ".") if profile.last_name else "",
+            "gender": str(getattr(profile.gender, "value", profile.gender) or ""),
+            "age": profile.age,
+            "height_cm": profile.height_cm,
+            "marital_status": str(getattr(profile.marital_status, "value", profile.marital_status) or ""),
+            "denomination": str(getattr(profile.denomination, "value", profile.denomination) or "Christian"),
+            "sub_denomination": profile.sub_denomination,
+            "church_name": profile.church_name,
+            "district": profile.district,
+            "state": profile.state,
+            "highest_education": profile.highest_education,
+            "occupation_title": profile.occupation_title,
+            "annual_income_min": profile.annual_income_min,
+            "about_me": profile.bio,
+            "bio": profile.bio,
+            "primary_photo": primary_photo.r2_url if primary_photo else None,
+        }

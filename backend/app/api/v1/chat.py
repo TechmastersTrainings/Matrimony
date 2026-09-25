@@ -152,3 +152,21 @@ async def send_message(
         "attachment_type": msg.attachment_type,
         "created_at": msg.created_at,
     }
+
+
+@router.get(
+    "/{other_user_id}/partner-profile",
+    summary="Get Matched Candidate Profile for Chatbox Display",
+)
+async def get_partner_profile(
+    other_user_id: int,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    profile_data = ChatService.get_partner_profile(current_user.id, other_user_id, db)
+    if not profile_data:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Candidate profile is only accessible for mutually accepted matches.",
+        )
+    return profile_data

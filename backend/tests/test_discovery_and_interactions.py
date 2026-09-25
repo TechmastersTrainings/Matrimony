@@ -28,6 +28,20 @@ def groom_client(client):
     # Admin approve
     me = client.get("/api/v1/registration/me", headers=headers).json()
     client.post(f"/api/v1/admin/profiles/{me['profile']['id']}/approve", headers=headers)
+
+    # Activate subscription
+    plans = client.get("/api/v1/subscriptions/plans").json().get("plans", [])
+    if plans:
+        std_plan = plans[0]
+        order_res = client.post("/api/v1/subscriptions/create-order", json={"plan_id": std_plan["id"]}, headers=headers)
+        if order_res.status_code == 200:
+            order_id = order_res.json()["order_id"]
+            client.post(
+                "/api/v1/subscriptions/verify-payment",
+                json={"order_id": order_id, "gateway_payment_id": f"pay_test_groom_{user_id}", "gateway_signature": "sig_test_abcdef"},
+                headers=headers,
+            )
+
     return {"headers": headers, "user_id": user_id}
 
 
@@ -57,6 +71,20 @@ def bride_client(client):
     # Admin approve
     me = client.get("/api/v1/registration/me", headers=headers).json()
     client.post(f"/api/v1/admin/profiles/{me['profile']['id']}/approve", headers=headers)
+
+    # Activate subscription
+    plans = client.get("/api/v1/subscriptions/plans").json().get("plans", [])
+    if plans:
+        std_plan = plans[0]
+        order_res = client.post("/api/v1/subscriptions/create-order", json={"plan_id": std_plan["id"]}, headers=headers)
+        if order_res.status_code == 200:
+            order_id = order_res.json()["order_id"]
+            client.post(
+                "/api/v1/subscriptions/verify-payment",
+                json={"order_id": order_id, "gateway_payment_id": f"pay_test_bride_{user_id}", "gateway_signature": "sig_test_abcdef"},
+                headers=headers,
+            )
+
     return {"headers": headers, "user_id": user_id}
 
 

@@ -263,7 +263,11 @@ class ApiClient {
       body: JSON.stringify({ accept }),
     });
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error?.message || 'Failed to respond to interest');
+    if (!res.ok) {
+      const err: any = new Error(data.detail || data.error?.message || 'Failed to respond to interest');
+      err.status = res.status;
+      throw err;
+    }
     return data;
   }
 
@@ -283,6 +287,14 @@ class ApiClient {
     if (!res.ok) throw new Error('Failed to fetch conversations');
     const data = await res.json();
     return data.conversations;
+  }
+
+  async getPartnerProfile(otherUserId: number): Promise<any> {
+    const res = await fetch(`${API_BASE_URL}/chat/${otherUserId}/partner-profile`, {
+      headers: this.getHeaders(),
+    });
+    if (!res.ok) throw new Error('Failed to load candidate partner profile');
+    return res.json();
   }
 
   async getChatHistory(otherUserId: number): Promise<ChatMessageItem[]> {

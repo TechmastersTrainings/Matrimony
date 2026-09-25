@@ -133,14 +133,20 @@ export interface InterestItem {
   message?: string;
   created_at: string;
   responded_at?: string;
-  is_sender: boolean;
+  is_sender?: boolean;
+  is_locked?: boolean;
+  requires_subscription?: boolean;
   other_user: {
-    id: number;
+    id?: number;
+    user_id?: number;
     first_name: string;
     last_name: string;
     age?: number;
-    denomination: string;
-    district: string;
+    gender?: string;
+    denomination?: string;
+    district?: string;
+    occupation_title?: string;
+    highest_education?: string;
     primary_photo?: string;
   };
 }

@@ -96,16 +96,17 @@ class InteractionService:
 
     @staticmethod
     def respond_interest(user: User, interest_id: int, accept: bool, db: Session) -> UserInterest:
-        # Require active subscription to accept/decline match
-        active_sub = db.query(UserSubscription).filter(
-            UserSubscription.user_id == user.id,
-            UserSubscription.status == "ACTIVE"
-        ).first()
-        if not active_sub and user.role not in [UserRole.ADMIN, UserRole.SUPER_ADMIN]:
-            raise HTTPException(
-                status_code=status.HTTP_402_PAYMENT_REQUIRED,
-                detail="An active subscription plan is required to view candidate details and accept matches."
-            )
+        # Require active subscription only when accepting match
+        if accept:
+            active_sub = db.query(UserSubscription).filter(
+                UserSubscription.user_id == user.id,
+                UserSubscription.status == "ACTIVE"
+            ).first()
+            if not active_sub and user.role not in [UserRole.ADMIN, UserRole.SUPER_ADMIN]:
+                raise HTTPException(
+                    status_code=status.HTTP_402_PAYMENT_REQUIRED,
+                    detail="An active subscription plan is required to accept matrimonial matches."
+                )
 
         interest = db.query(UserInterest).filter(
             UserInterest.id == interest_id,

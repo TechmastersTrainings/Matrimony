@@ -55,7 +55,14 @@ async def respond_interest(
         db=db,
     )
     action = "accepted" if payload.accept else "declined"
-    return {"success": True, "message": f"Interest {action} successfully.", "status": interest.status.value}
+    other_user_id = interest.sender_id if interest.receiver_id == current_user.id else interest.receiver_id
+    return {
+        "success": True,
+        "message": f"Interest {action} successfully.",
+        "status": interest.status.value,
+        "interest_id": interest.id,
+        "other_user_id": other_user_id,
+    }
 
 
 @router.get(
